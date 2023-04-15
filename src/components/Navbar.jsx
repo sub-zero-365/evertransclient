@@ -6,8 +6,12 @@ import { useNavigate } from 'react-router-dom';
 const Navbar = () => {
     const navigate = useNavigate()
     const gotoLoginPage = () => {
-    
     navigate("/login")
+    setIsOpen(false)
+    
+    }
+    const gotoRegisterPage = () => {
+    navigate("/register")
     setIsOpen(false)
     
     }
@@ -69,7 +73,7 @@ const Navbar = () => {
   active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
   dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                            onClick={gotoLoginPage}
+                            onClick={gotoRegisterPage}
                         >
                             Register
                         </button>
