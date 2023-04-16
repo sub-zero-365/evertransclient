@@ -50,3 +50,26 @@ body {
 .btn-success {
     @apply rounded-3xl text-lg border-2 border-green-400 text-white bg-green-400 w-fit px-6 py-0 shadow mr-6 mb-2
 }
+
+.testimonial {
+    @apply transition-all translate-y-10 opacity-0 duration-700
+}
+
+.testimonial.active {
+    @apply opacity-100 translate-y-0
+}
+
+.cal-width {
+    --w: 400px;
+    width: min(var(--w), calc(100vw - 30px));
+}
+
+.scale-info {
+    animation: scaleanimation 0.4s;
+}
+
+@keyframes scaleanimation {
+    to {
+        transform: scale(1.2);
+    }
+}

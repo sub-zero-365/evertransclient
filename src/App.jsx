@@ -1,6 +1,6 @@
 // import './App.css';
 import { Navbar } from "./components";
-import { Home,Login,Register } from "./pages";
+import { Home,Login,Register,Booking, BusSits } from "./pages";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 function App() {
   return (
@@ -12,6 +12,8 @@ function App() {
       <Route path="/" element={<Home/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/register" element={<Register/>}/>
+      <Route path="/booking" element={<Booking/>}/>
+      <Route path="/bussits/:id" element={<BusSits/>}/>
       </Routes>
     </BrowserRouter>
   </div>
