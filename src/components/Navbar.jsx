@@ -3,6 +3,8 @@ import { AiOutlineMenu } from 'react-icons/ai'
 import { IoMdClose } from 'react-icons/io'
 import { BsMoonStars, BsSun } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+
+
 const Navbar = () => {
     const navigate = useNavigate()
     const gotoLoginPage = () => {
@@ -23,11 +25,28 @@ const Navbar = () => {
     }
     const toggleDarkTheme = () => {
         setDarkTheme(c => !c)
+        changeTheme()
+        
+    }
+    const navigateToHome=()=>navigate("/")
+    // const [theme,setTeme]
+    const changeTheme = () => {
+
+        // if (localStorage.theme === 'dark' || (!('theme' in localStorage)
+        // && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        //     document.documentElement.classList.add('dark')
+            
+            
+        //   } else {
+        //     document.documentElement.classList.remove('dark')
+        //   }
+            document.documentElement.classList.toggle('dark')
+            // setDarkTheme(!theme)
     }
     return (
-        <div className="sticky top-0 left-0 shadow-lg select-none bg-white">
+        <div className="sticky top-0 left-0 shadow-lg select-none bg-color_light  dark:bg-color_dark dark:text-white z-20">
             <div className="container mx-auto  h-[60px] items-center  px-4 flex justify-between relative  ">
-                <div className="text-2xl font-montserrat">Atem_Bus</div>
+                <div className="text-2xl font-montserrat cursor-pointer hover:text-slate-950 hover:font-light transition-[color] " onClick={navigateToHome}>Afri-Con</div>
                 <ul className="hidden flex-col md:flex-row  md:flex items-center">
                     <li className='links-item mx-4 md:mx-2  my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus ticket</li>
                     <li className='links-item mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus Here</li>
@@ -35,7 +54,8 @@ const Navbar = () => {
 
                 </ul>
                 <ul className={`${!isOpen ? " max-h-0" :
-                    " max-h-screen"} overflow-hidden transition-[max-height] duration-500  md:hidden absolute top-[60px] left-0 bg-slate-100  w-full `}>
+                    " max-h-screen"} overflow-hidden transition-[max-height] duration-500
+                    md:hidden absolute top-[60px] left-0 bg-color_light  dark:bg-color_dark dark:text-white  w-full `}>
                     <li className='links-item border-b-2 mx-4 md:mx-2  my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus ticket</li>
                     <li className='links-item border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus Here</li>
 

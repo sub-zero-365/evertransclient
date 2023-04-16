@@ -9,10 +9,7 @@
 }
 
 body {
-    /* font-family: 'Manrope', sans-serif;
-    font-family: 'Montserrat', sans-serif;
-    font-family: 'Poppins', sans-serif; */
-    @apply font-poppins bg-slate-200
+    @apply font-poppins
 }
 
 .links-item {
@@ -32,9 +29,14 @@ body {
 
 @media screen and (max-width:640px) {
     .links-item::before {
-        @apply left-0;
-        transform: translateX(0) !important;
+        @apply left-0 translate-x-0;
     }
+}
+
+.transiton-bg-color {
+    /* @apply transition; */
+    cursor: pointer;
+    transition: background-color 0.4s ease;
 }
 
 .transition-bg:hover {

@@ -4,6 +4,7 @@ import { Home,Login,Register } from "./pages";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 function App() {
   return (
+  <div className="bg-color_light  dark:bg-color_dark dark:text-white">
     <BrowserRouter>
         <Navbar />
     
@@ -13,6 +14,8 @@ function App() {
       <Route path="/register" element={<Register/>}/>
       </Routes>
     </BrowserRouter>
+  </div>
+    
   );
 }
 
