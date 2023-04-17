@@ -13,7 +13,6 @@ const Booking = () => {
   const [from, setFrom] = useState(null)
   const [_to,setTo]=useState(null)
   const [visible, setVisible] = useState(false)
-  // const [formatDate,setFormatDate]=useState(null)
   function onSelectTo({ key }) {
     setFrom(key)
   }
@@ -24,11 +23,6 @@ const Booking = () => {
   }
   function onVisibleChange(visible) {
     console.log(visible);
-    if (visible) {
-      setVisible(true)
-    }
-    window.history.pushState({}, window.location.href, null)
-
   }
 
 
@@ -93,7 +87,7 @@ const Booking = () => {
 
      
       onClick={onClick} ref={ref}>
-        <div className="flex-none h-[50px] w-[50px] bg-slate-500">
+        <div className="flex-none rounded-lg h-[50px] w-[50px] bg-slate-500">
                 </div>
                 <div className="flex-1">
                   <h4 className="text-lg leading-6 capitalize"> {value}</h4>
@@ -110,7 +104,7 @@ const Booking = () => {
 
 
   return (
-    <div className="md:mt-5 mb-20">
+    <div className="md:mt-5 pb-20 min-h-screen">
       <Loader toggle={demoFetch}></Loader>
 
 
@@ -123,8 +117,8 @@ const Booking = () => {
 
         </div>
 
-        <div className=" h-[400px] -mt-10 mx-4 bg-white flex-1 md:mt-5">
-          <div className="shadow-lg mx-4 h-[50px] -mt-[25px] bg-white rounded-lg flex p-1 ">
+        <div className="  -mt-10 mx-4  flex-1 md:mt-5">
+          <div className="shadow-lg mx-4 h-[50px] -mt-[25px] bg-white dark:bg-slate-700 rounded-lg flex p-1 ">
 
             <div className="w-1/2 bg-blue-500 text-center text-white flex items-center justify-center rounded-sm ">One Way</div>
             <div className="w-1/2 text-center text-black flex items-center justify-center
@@ -140,7 +134,7 @@ const Booking = () => {
               onVisibleChange={onVisibleChange}
             >
               <div>
-                <div className="flex-none h-[50px] w-[50px] bg-slate-500">
+                <div className="flex-none rounded-lg h-[50px] w-[50px] bg-slate-500">
                 </div>
                 <div className="flex-1">
                   <h4 className="text-lg leading-6 capitalize">from</h4>
@@ -161,7 +155,7 @@ const Booking = () => {
               onVisibleChange={onVisibleChange}
             >
               <div>
-                <div className="flex-none h-[50px] w-[50px] bg-slate-500">
+                <div className="flex-none rounded-lg h-[50px] w-[50px] bg-slate-500">
                 </div>
                 <div className="flex-1">
                   <h4 className="text-lg leading-6 capitalize">to</h4>
@@ -185,7 +179,6 @@ const Booking = () => {
             customInput={<ExampleCustomInput />}
           />
 
-<input type="time" />
 
 
 

@@ -8,3 +8,7 @@ export { default as Booking }
 from './Booking'
 export { default as BusSits }
 from './BusSits'
+export { default as CheckOut }
+from './CheckOut'
+export { default as CheckOutInfo }
+from './CheckOutInfo'

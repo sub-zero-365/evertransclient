@@ -30,7 +30,7 @@ _ref.current.onclick=function(){
         <div className={`h-screen  w-full fixed top-0 left-0 z-[30] ${toggle ? "block" : "hidden"}`} ref={_ref}>
             <div
             onClick={stopPropagation}
-            className=" shadow-lg wrapper cal-width bg-slate-400 mx-auto my-2 rounded-md px-4 py-5 " style={{ "--w": "400px" }}>
+            className=" shadow-2xl wrapper cal-width bg-white dark:bg-slate-800 text-black dark:text-white mx-auto my-2 rounded-md px-4 py-5 " style={{ "--w": "400px" }}>
                 <h2 className="text-red-400 text-2xl text-center font-semibold font-montserrat">Information</h2>
                 <p className="pl-2 py-4 text-lg leading-7">{information || "this is an empt modal tat needs information"}</p>
                 <div className="ml-auto w-fit">

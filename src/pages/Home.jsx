@@ -88,7 +88,7 @@ const Home = () => {
             </div>
             {/* why choose use */}
             <div className="container rounded-lg overflow-hidden
-            mx-auto shadow-2xl bg-white
+            mx-auto shadow-2xl  py-10
              z-40  mb-[90px]   flex ">
                 <div className="flex-none hidden md:block w-[150px]  relative overflow-hidden">
                     <div className="absolute top-0 bg-red-500 
