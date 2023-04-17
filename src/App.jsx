@@ -4,7 +4,13 @@ import { Home,Login,Register,Booking, BusSits } from "./pages";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 function App() {
   return (
-  <div className="bg-color_light  dark:bg-color_dark dark:text-white">
+  <div className="bg-color_light  dark:bg-color_dark dark:text-white" 
+  
+  onTouchStart={e=>e.preventDefault()}
+  onTouchMove={e=>e.preventDefault()}
+  
+  
+  >
     <BrowserRouter>
         <Navbar />
     

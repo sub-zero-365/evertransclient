@@ -9,7 +9,8 @@
 }
 
 body {
-    @apply font-poppins
+    @apply font-poppins;
+    overscroll-behavior: contain;
 }
 
 .links-item {
