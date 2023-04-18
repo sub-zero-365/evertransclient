@@ -12,3 +12,5 @@ export { default as CheckOut }
 from './CheckOut'
 export { default as CheckOutInfo }
 from './CheckOutInfo'
+export { default as NotFound }
+from './NotFound'

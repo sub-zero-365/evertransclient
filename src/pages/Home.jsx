@@ -59,7 +59,6 @@ const Home = () => {
                                     <p className="text-sm">To</p>
                                 </div>
                             </div>
-                            {/* <p className="text-center leading-[2rem]">very fast and reliable to an extend</p> */}
 
                         </div>
 

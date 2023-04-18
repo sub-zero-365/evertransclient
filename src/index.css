@@ -28,9 +28,26 @@ body {
     @apply w-full
 }
 
+@keyframes scaleanimation {
+    from {
+        transform: scale(0.9) translateY(-100%);
+    }
+    to {
+        transform: scale(1, 1) translateY(0%);
+    }
+}
+
 @media screen and (max-width:640px) {
     .links-item::before {
         @apply left-0 translate-x-0;
+    }
+    @keyframes scaleanimation {
+        from {
+            transform: scale(0.9) translateX(-100%);
+        }
+        to {
+            transform: scale(1, 1) translateX(0%);
+        }
     }
 }
 
@@ -67,10 +84,4 @@ body {
 
 .scale-info {
     animation: scaleanimation 0.4s;
-}
-
-@keyframes scaleanimation {
-    to {
-        transform: scale(1.2);
-    }
 }
