@@ -1,14 +1,19 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Footer } from "../components"
-import { AiOutlinePlus } from "react-icons/ai"
+import { AiOutlinePlus, AiOutlineArrowUp } from "react-icons/ai"
 const Home = () => {
     const testimonials = useRef(null)
     const navigate = useNavigate()
-    
-    const site_name="Afri-Con"
+    const [up, setUp] = useState(0);
+
+
+    const site_name = "Afri-Con"
     const gotoBookings = () => navigate("/booking")
+
     useEffect(() => {
+        var counter = 0
+
         const children = [...testimonials.current.querySelectorAll(".testimonial")]
         window.addEventListener("scroll", function () {
             children.forEach((testimonial) => {
@@ -24,19 +29,41 @@ const Home = () => {
                     }
                 }
             })
+
+            const { pageYOffset } = window
+            // if (pageYOffset < 0.25 * window.innerHeight ) return
+            if (pageYOffset >= counter) {
+                setUp(1)
+            } else if (pageYOffset < counter) {
+                setUp(0)
+            }
+            counter = pageYOffset <= 0 ? 0 : pageYOffset
         })
     }, [])
 
     return (
+
         <div className="ol">
 
-            <div className="bottom-4 shadow-2xl  top-auto bg-blue-400 
-            w-[60px] h-[60px] rounded-full left-[50%] 
+            <div className={`fixed w-[40px] h-[40px] bottom-[5rem] bg-white right-[2rem] md:right-[4rem] 
+        cursor-pointer scale-navigate
+rounded-full z-[200] flex items-center justify-center shadow-2xl dark:text-black  duration-500
+transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "smooth"
+            })}>
+
+                <AiOutlineArrowUp size={30} />
+
+            </div>
+            <div className="bottom-4 shadow-2xl button-add  top-auto bg-blue-400 
+            w-[60px] h-[60px] rounded-full left-[50%] overflow-hidden 
            translate-x-[-50%] 
             z-10 fixed md:hidden " onClick={gotoBookings}>
-            <div className="flex h-full w-full items-center justify-center ">
-                <AiOutlinePlus size={40} color="#fff"className="" />
-            </div>
+                <div className="flex h-full w-full items-center scale-animation justify-center ">
+                    <AiOutlinePlus size={40} color="#fff" className="" />
+                </div>
             </div>
 
             <div className="container mx-auto py-[2rem] pb-[5rem]">
@@ -46,7 +73,7 @@ const Home = () => {
                         <h1 className="text-2xl uppercase md:text-3xl text-red-700">start tracking</h1>
                         <p className="text-lg my-10">
 
-                        Introducing the revolutionary bus ticket app - The smarter way to travel! With just a few clicks, you can book your bus tickets hassle-free, at any time of the day, from anywhere you may be. Our app is designed to make your travel experience a breeze. Whether you're commuting to work, exploring a new city or planning a family vacation, our app will make sure you get where you need to go safely and comfortably. Say goodbye to long queues and unreliable vendors, and say hello to fast and secure booking with our bus ticket app. Travel made easy. Get the app now!
+                            Introducing the revolutionary bus ticket app - The smarter way to travel! With just a few clicks, you can book your bus tickets hassle-free, at any time of the day, from anywhere you may be. Our app is designed to make your travel experience a breeze. Whether you're commuting to work, exploring a new city or planning a family vacation, our app will make sure you get where you need to go safely and comfortably. Say goodbye to long queues and unreliable vendors, and say hello to fast and secure booking with our bus ticket app. Travel made easy. Get the app now!
                         </p>
 
                         <div className="shadow-2xl w-full md:w-[300px]  my-5 py-2">
@@ -81,7 +108,7 @@ const Home = () => {
                         </button>
                     </div>
                     <div className="flex-1">
-                        <img src="https://www.pngmart.com/files/6/Bus-Transparent-Images-PNG.png" alt="bus image" />
+                        <img src="https://www.pngmart.com/files/6/Bus-Transparent-Images-PNG.png" alt="bus" />
                     </div>
 
 
@@ -103,55 +130,64 @@ const Home = () => {
                     <div className="md:flex flex-wrap  mt-10">
 
                         <div className="md:w-1/2 flex my-4 gap-2">
-                            <div className="flex-none w-[80px] h-full  flex justify-center"> 
-                            <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                            alt="excellent" className="h-[60px] w-[60px] rounded-full" />
-                            
+                            <div className="flex-none w-[80px] h-full  flex justify-center">
+                                <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+                                    alt="excellent" className="h-[60px] w-[60px] rounded-full" />
+
                             </div>
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Mission</h2>
                                 <p className="text-slate-500 text-[14px]">
-                                
-                              At  {site_name} our mission is to give people the power to build community and bring the world closer together.
-                                
+
+                                    At  {site_name} our mission is to give people the power to build community and bring the world closer together.
+
                                 </p>
                             </div>
                         </div>
                         <div className="md:w-1/2 flex my-4 gp-2">
-                        <div className="flex-none w-[80px] h-full  flex justify-center"> 
-                            <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                            alt="excellent" className="h-[60px] w-[60px] rounded-full" />
-                            
+                            <div className="flex-none w-[80px] h-full  flex justify-center">
+                                <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+                                    alt="excellent" className="h-[60px] w-[60px] rounded-full" />
+
                             </div>
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
-                                >Lorem ipsum  c.</h2>
-                                <p className="text-slate-500 text-[14px]">dolor sit amet consectetur adipisicing elit. Rerum, nesciunt.F</p>
+                                >Benefits</h2>
+                                <p className="text-slate-500 text-[14px]">
+                                    We invest in training and development in a big way, so you can build your future along with ours, creating an impactful career unique to you.
+                                </p>
                             </div>
                         </div>
                         <div className="md:w-1/2 flex my-4 gap-2">
-                        <div className="flex-none w-[80px] h-full  flex justify-center"> 
-                            <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                            alt="excellent" className="h-[60px] w-[60px] rounded-full" />
-                            
+                            <div className="flex-none w-[80px] h-full  flex justify-center">
+                                <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+                                    alt="excellent" className="h-[60px] w-[60px] rounded-full" />
+
                             </div>
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
-                                >Lorem ipsum  c.</h2>
-                                <p className="text-slate-500 text-[14px]">dolor sit amet consectetur adipisicing elit. Rerum, nesciunt.F</p>
+                                >Our Desire</h2>
+                                <p className="text-slate-500 text-[14px]">
+                                    SAP started in 1972 as a team of five colleagues with a desire to do something new. Together, they changed enterprise software and reinvented how business was done. Today, as a market leader in enterprise application software, we remain true to our roots.
+
+                                </p>
                             </div>
                         </div>
                         <div className="md:w-1/2 flex my-4 gap-2">
-                        <div className="flex-none w-[80px] h-full  flex justify-center"> 
-                            <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                            alt="excellent" className="h-[60px] w-[60px] rounded-full" />
-                            
+                            <div className="flex-none w-[80px] h-full  flex justify-center">
+                                <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+                                    alt="excellent" className="h-[60px] w-[60px] rounded-full" />
+
                             </div>
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
-                                >Lorem ipsum  c.</h2>
-                                <p className="text-slate-500 text-[14px]">dolor sit amet consectetur adipisicing elit. Rerum, nesciunt.F</p>
+                                >Vison</h2>
+                                <p className="text-slate-500 text-[14px]">
+
+                                    What has remained constant throughout this history of transformation is our dedication to our customers, to our employees, and to the values on which American Express was built: integrity, quality, respect, and community.
+
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -159,7 +195,63 @@ const Home = () => {
                 </div>
             </div>
 
+            {/* cities */}
 
+            <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12 mb-10">
+            <h1 className="text-2xl mt-5 mb-2 uppercase font-[500] text-center md:text-left">View Cities In A Goal</h1>
+                    <span className="w-[90px] mb-6 block rounded-md h-[5px] mx-auto md:mx-0 hover:bg-red-200 transiton-bg-color bg-red-500"></span>
+                  
+                <div class="-m-1 flex flex-wrap md:-m-2">
+                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
+                        <div class="w-full p-1 md:p-2">
+                            <img
+                                alt="gallery"
+                                class="block h-full w-full rounded-lg object-cover object-center"
+                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp" />
+                        </div>
+                    </div>
+                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
+                        <div class="w-full p-1 md:p-2">
+                            <img
+                                alt="gallery"
+                                class="block h-full w-full rounded-lg object-cover object-center"
+                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp" />
+                        </div>
+                    </div>
+                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
+                        <div class="w-full p-1 md:p-2">
+                            <img
+                                alt="gallery"
+                                class="block h-full w-full rounded-lg object-cover object-center"
+                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(75).webp" />
+                        </div>
+                    </div>
+                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
+                        <div class="w-full p-1 md:p-2">
+                            <img
+                                alt="gallery"
+                                class="block h-full w-full rounded-lg object-cover object-center"
+                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp" />
+                        </div>
+                    </div>
+                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
+                        <div class="w-full p-1 md:p-2">
+                            <img
+                                alt="gallery"
+                                class="block h-full w-full rounded-lg object-cover object-center"
+                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(76).webp" />
+                        </div>
+                    </div>
+                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
+                        <div class="w-full p-1 md:p-2">
+                            <img
+                                alt="gallery"
+                                class="block h-full w-full rounded-lg object-cover object-center"
+                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(72).webp" />
+                        </div>
+                    </div>
+                </div>
+            </div>
             {/* testimonails */}
 
             <section class="text-neutral-700 dark:text-neutral-300 container mx-auto mb-10" ref={testimonials}>
@@ -180,7 +272,7 @@ const Home = () => {
                             <div
                                 class="mx-auto -mt-12 w-24 overflow-hidden rounded-full border-2 border-white bg-white dark:border-neutral-800 dark:bg-neutral-800">
                                 <img
-                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(1).webp" />
+                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(1).webp" alt="testimonials" />
                             </div>
                             <div class="p-6">
                                 <h4 class="mb-4 text-2xl font-semibold">Maria Smantha</h4>
@@ -207,7 +299,7 @@ const Home = () => {
                             <div
                                 class="mx-auto -mt-12 w-24 overflow-hidden rounded-full border-2 border-white bg-white dark:border-neutral-800 dark:bg-neutral-800">
                                 <img
-                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(9).webp" />
+                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(9).webp" alt="testimonials" />
                             </div>
                             <div class="p-6">
                                 <h4 class="mb-4 text-2xl font-semibold">John Smith</h4>
@@ -234,7 +326,7 @@ const Home = () => {
                             <div
                                 class="mx-auto -mt-12 w-24 overflow-hidden rounded-full border-2 border-white bg-white dark:border-neutral-800 dark:bg-neutral-800">
                                 <img
-                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(2).webp" />
+                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(2).webp" alt="testimonials" />
                             </div>
                             <div class="p-6">
                                 <h4 class="mb-4 text-2xl font-semibold">Lisa Cudrow</h4>
@@ -262,7 +354,7 @@ const Home = () => {
                             <div
                                 class="mx-auto -mt-12 w-24 overflow-hidden rounded-full border-2 border-white bg-white dark:border-neutral-800 dark:bg-neutral-800">
                                 <img
-                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(9).webp" />
+                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(9).webp" alt="testimonials" />
                             </div>
                             <div class="p-6">
                                 <h4 class="mb-4 text-2xl font-semibold">John Smith</h4>
@@ -289,7 +381,7 @@ const Home = () => {
                             <div
                                 class="mx-auto -mt-12 w-24 overflow-hidden rounded-full border-2 border-white bg-white dark:border-neutral-800 dark:bg-neutral-800">
                                 <img
-                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(1).webp" />
+                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(1).webp" alt="testimonials" />
                             </div>
                             <div class="p-6">
                                 <h4 class="mb-4 text-2xl font-semibold">Maria Smantha</h4>
@@ -316,7 +408,7 @@ const Home = () => {
                             <div
                                 class="mx-auto -mt-12 w-24 overflow-hidden rounded-full border-2 border-white bg-white dark:border-neutral-800 dark:bg-neutral-800">
                                 <img
-                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(9).webp" />
+                                    src="https://tecdn.b-cdn.net/img/Photos/Avatars/img%20(9).webp" alt="testimonials" />
                             </div>
                             <div class="p-6">
                                 <h4 class="mb-4 text-2xl font-semibold">John Smith</h4>

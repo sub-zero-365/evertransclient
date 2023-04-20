@@ -62,6 +62,14 @@ body {
     transition: background-color 0.4s ease;
 }
 
+.scale-navigate {
+    @apply scale-0;
+}
+
+.scale-navigate.active {
+    @apply scale-100
+}
+
 
 /* button here */
 
@@ -84,4 +92,38 @@ body {
 
 .scale-info {
     animation: scaleanimation 0.4s;
+}
+
+.scrollto::-webkit-scrollbar {
+    width: 12px;
+    height: var(--scroll-to-height);
+}
+
+.scrollto::-webkit-scrollbar-thumb {
+    @apply border-slate-400 bg-slate-600 border-[3px] rounded-[20px];
+}
+
+.scrollto:hover::-webkit-scrollbar-thumb {
+    @apply bg-slate-400;
+}
+
+.scrollto::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-600;
+}
+
+.scale-animation {
+    animation: scale-animation 1s infinite;
+}
+
+.button-add {
+    perspective: 100px
+}
+
+@keyframes scale-animation {
+    from {
+        transform: scale(0.8);
+    }
+    to {
+        transform: scale(1.3) rotateX(30deg);
+    }
 }

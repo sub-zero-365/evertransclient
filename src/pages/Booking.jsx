@@ -1,18 +1,29 @@
 import { useNavigate } from "react-router-dom"
 import { Loader, Modal } from "../components"
-import { useState, forwardRef } from "react"
+import { useState, forwardRef, useEffect } from "react"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { IoMdArrowDropdown } from 'react-icons/io'
+import { IoMdArrowDropdown, } from 'react-icons/io'
 import Dropdown from 'rc-dropdown';
 import Menu, { Item as MenuItem, Divider } from 'rc-menu';
+import {MdOutlineLocationOn} from 'react-icons/md'
+import {CiTimer} from 'react-icons/ci'
+import {BiCurrentLocation} from 'react-icons/bi'
 import 'rc-dropdown/assets/index.css';
 import React from 'react';
 const Booking = () => {
+  useEffect(()=>{
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        // behavior: "smooth"
+    })
+
+},[])
 
   const [from, setFrom] = useState(null)
   const [_to,setTo]=useState(null)
-  const [visible, setVisible] = useState(false)
+  // const [visible, setVisible] = useState(false)
   function onSelectTo({ key }) {
     setFrom(key)
   }
@@ -28,7 +39,7 @@ const Booking = () => {
 
   const from_ = (
     <Menu onSelect={onSelectTo} onClick={click} className="bg-slate-400 text-orange-400 cal-width py-10
-    max-h-screen overflow-auto mx-auto" style={{ "--w": "400px" }}>
+    max-h-screen overflow-auto mx-auto scrollto" style={{ "--w": "400px" }}>
 
       {
         Array.from({ length: 50 }, (arr, index) => {
@@ -44,7 +55,7 @@ const Booking = () => {
 
   const to = (
     <Menu onSelect={onSelectFrom} onClick={click}   className="bg-slate-400 text-green-400 cal-width
-    max-h-screen overflow-auto" style={{ "--w": "400px" ,padding:"5rem 0"}}>
+    max-h-screen overflow-auto scrollto" style={{ "--w": "400px" ,padding:"5rem 0"}}>
 
       {
         Array.from({ length: 50 }, (arr, index) => {
@@ -87,7 +98,8 @@ const Booking = () => {
 
      
       onClick={onClick} ref={ref}>
-        <div className="flex-none rounded-lg h-[50px] w-[50px] bg-slate-500">
+        <div className="flex-none rounded-lg h-[50px] w-[50px] flex items-center justify-center">
+        <CiTimer size={30} />
                 </div>
                 <div className="flex-1">
                   <h4 className="text-lg leading-6 capitalize"> {value}</h4>
@@ -134,7 +146,8 @@ const Booking = () => {
               onVisibleChange={onVisibleChange}
             >
               <div>
-                <div className="flex-none rounded-lg h-[50px] w-[50px] bg-slate-500">
+                <div className="flex-none rounded-lg h-[50px] w-[50px]  flex items-center justify-center">
+                <BiCurrentLocation size={40}/>
                 </div>
                 <div className="flex-1">
                   <h4 className="text-lg leading-6 capitalize">from</h4>
@@ -155,7 +168,10 @@ const Booking = () => {
               onVisibleChange={onVisibleChange}
             >
               <div>
-                <div className="flex-none rounded-lg h-[50px] w-[50px] bg-slate-500">
+                <div className="flex-none rounded-lg h-[50px] w-[50px]">
+                
+                <BiCurrentLocation size={40}/>
+                
                 </div>
                 <div className="flex-1">
                   <h4 className="text-lg leading-6 capitalize">to</h4>
