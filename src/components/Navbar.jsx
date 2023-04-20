@@ -4,7 +4,7 @@ import { IoMdClose } from 'react-icons/io'
 import { BsMoonStars, BsSun } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 // const isLogin = true
-
+import { useravatar } from '../Assets/images';
 const Navbar = () => {
 const [isLogin,setIslogin]=useState(true)
     const navigate = useNavigate()
@@ -42,7 +42,6 @@ const [isLogin,setIslogin]=useState(true)
         //     document.documentElement.classList.remove('dark')
         //   }
         document.documentElement.classList.toggle('dark')
-        // setDarkTheme(!theme)
     }
     return (
         <div className="sticky top-0 left-0 shadow-lg select-none bg-color_light  dark:bg-color_dark dark:text-white z-20">
@@ -69,8 +68,8 @@ const [isLogin,setIslogin]=useState(true)
                         isLogin ? (
                         
                         <>
-                        <div className="h-[80px] w-[80px]  mx-auto shadow-2xl bg-slate-400 rounded-full mt-4 ">
-                        
+                        <div className="h-[80px] w-[80px]  mx-auto shadow-2xl border-2 overflow-hidden  rounded-full mt- p-0 ">
+                        <img src={useravatar} alt="user " className='w-full h-full m-0  object-cover scale-[1.3]' />
                         </div>
                         <p className="w-fit mx-auto ">User_K</p>
                         <div className="flex justify-center pt-1">
@@ -164,8 +163,9 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                             ? (
 
 
-                                <div className="w-[50px] h-[50px] rounded-full bg-slate-300 shadow-2xl">
+                                <div className="w-[50px] h-[50px] rounded-full overflow-hidden shadow-2xl">
 
+<img src={useravatar} alt="user " className='w-full h-full' />
 
                                 </div>
 
