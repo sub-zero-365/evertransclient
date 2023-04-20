@@ -5,6 +5,8 @@ import { AiOutlinePlus } from "react-icons/ai"
 const Home = () => {
     const testimonials = useRef(null)
     const navigate = useNavigate()
+    
+    const site_name="Afri-Con"
     const gotoBookings = () => navigate("/booking")
     useEffect(() => {
         const children = [...testimonials.current.querySelectorAll(".testimonial")]
@@ -44,7 +46,8 @@ const Home = () => {
                         <h1 className="text-2xl uppercase md:text-3xl text-red-700">start tracking</h1>
                         <p className="text-lg my-10">
 
-                            mollitia ipsa. Minima error ipsum tempora beatae, asperiores deleniti.</p>
+                        Introducing the revolutionary bus ticket app - The smarter way to travel! With just a few clicks, you can book your bus tickets hassle-free, at any time of the day, from anywhere you may be. Our app is designed to make your travel experience a breeze. Whether you're commuting to work, exploring a new city or planning a family vacation, our app will make sure you get where you need to go safely and comfortably. Say goodbye to long queues and unreliable vendors, and say hello to fast and secure booking with our bus ticket app. Travel made easy. Get the app now!
+                        </p>
 
                         <div className="shadow-2xl w-full md:w-[300px]  my-5 py-2">
                             <div className="flex">
@@ -107,8 +110,12 @@ const Home = () => {
                             </div>
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
-                                >Lorem ipsum  c.</h2>
-                                <p className="text-slate-500 text-[14px]">dolor sit amet consectetur adipisicing elit. Rerum, nesciunt.F</p>
+                                >Mission</h2>
+                                <p className="text-slate-500 text-[14px]">
+                                
+                              At  {site_name} our mission is to give people the power to build community and bring the world closer together.
+                                
+                                </p>
                             </div>
                         </div>
                         <div className="md:w-1/2 flex my-4 gp-2">
