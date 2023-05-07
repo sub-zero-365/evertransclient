@@ -8,6 +8,23 @@
     box-sizing: border-box;
 }
 
+:root {
+    --gradient-text: linear-gradient(89.97deg, #AE67FA 1.84%, #f49345);
+    --gradient-bar: linear-gradient(103.97deg, #AE67FA -13.86%, #f49345);
+    --color-bg: #040C18;
+    --color-footer: #031B34;
+    --color-blog: #042c54;
+    --color-text: #B1AFFD;
+    --color-subtext: #FFBA71;
+}
+
+.gradient__text {
+    background: var(--gradient-text);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 body {
     @apply font-poppins;
     overscroll-behavior: contain;
@@ -117,6 +134,22 @@ body {
 
 .button-add {
     perspective: 100px
+}
+
+.icons-container .icon {
+    @apply scale-0 rotate-90
+}
+
+.icons-container .icon.active {
+    animation-name: spinicon;
+    animation-duration: 0.7s;
+    animation-fill-mode: both;
+}
+
+@keyframes spinicon {
+    to {
+        @apply scale-125 rotate-0
+    }
 }
 
 @keyframes scale-animation {

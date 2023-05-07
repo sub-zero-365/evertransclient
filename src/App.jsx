@@ -28,7 +28,6 @@ function App() {
             <Route path="/information" element={<CheckOutInfo />} />
             <Route path="/auth" element={<AdminLogin />} />
             <Route path="/dashboard" element={<DashBoadLayout />} />
-            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

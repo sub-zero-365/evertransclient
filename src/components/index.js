@@ -6,3 +6,5 @@ export { default as Loader }
 from './Load'
 export { default as Modal }
 from './Modal'
+export { default as OurServices }
+from './OurServices'
