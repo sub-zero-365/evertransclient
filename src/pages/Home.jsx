@@ -16,6 +16,7 @@ const Home = () => {
 
         const children = [...testimonials.current.querySelectorAll(".testimonial")]
         window.addEventListener("scroll", function () {
+            if (!children) return
             children.forEach((testimonial) => {
                 if (testimonial) {
                     const top = testimonial.getBoundingClientRect().top
@@ -29,9 +30,7 @@ const Home = () => {
                     }
                 }
             })
-
             const { pageYOffset } = window
-            // if (pageYOffset < 0.25 * window.innerHeight ) return
             if (pageYOffset >= counter) {
                 setUp(1)
             } else if (pageYOffset < counter) {
@@ -53,9 +52,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                 left: 0,
                 behavior: "smooth"
             })}>
-
                 <AiOutlineArrowUp size={30} />
-
             </div>
             <div className="bottom-4 shadow-2xl button-add  top-auto bg-blue-400 
             w-[60px] h-[60px] rounded-full left-[50%] overflow-hidden 
@@ -115,9 +112,8 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                 </div>
 
             </div>
-            {/* why choose use */}
             <div className="container rounded-lg overflow-hidden
-            mx-auto shadow-2xl  py-10
+            mx-auto shadow-2xl  py-10-
              z-40  mb-[90px]   flex ">
                 <div className="flex-none hidden md:block w-[150px]  relative overflow-hidden">
                     <div className="absolute top-0 bg-red-500 
@@ -195,12 +191,11 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                 </div>
             </div>
 
-            {/* cities */}
 
             <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12 mb-10">
-            <h1 className="text-2xl mt-5 mb-2 uppercase font-[500] text-center md:text-left">View Cities In A Goal</h1>
-                    <span className="w-[90px] mb-6 block rounded-md h-[5px] mx-auto md:mx-0 hover:bg-red-200 transiton-bg-color bg-red-500"></span>
-                  
+                <h1 className="text-2xl mt-5 mb-2 uppercase font-[500] text-center md:text-left">View Cities In A Goal</h1>
+                <span className="w-[90px] mb-6 block rounded-md h-[5px] mx-auto md:mx-0 hover:bg-red-200 transiton-bg-color bg-red-500"></span>
+
                 <div class="-m-1 flex flex-wrap md:-m-2">
                     <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
                         <div class="w-full p-1 md:p-2">

@@ -6,24 +6,23 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { IoMdArrowDropdown, } from 'react-icons/io'
 import Dropdown from 'rc-dropdown';
 import Menu, { Item as MenuItem, Divider } from 'rc-menu';
-import {MdOutlineLocationOn} from 'react-icons/md'
-import {CiTimer} from 'react-icons/ci'
-import {BiCurrentLocation} from 'react-icons/bi'
+import { CiTimer } from 'react-icons/ci'
+import { BiCurrentLocation } from 'react-icons/bi'
 import 'rc-dropdown/assets/index.css';
+import Select from 'react-select'
+import Select2 from 'react-select'
 import React from 'react';
 const Booking = () => {
-  useEffect(()=>{
+  useEffect(() => {
     window.scrollTo({
-        top: 0,
-        left: 0,
-        // behavior: "smooth"
+      top: 0,
+      left: 0,
     })
 
-},[])
+  }, [])
 
   const [from, setFrom] = useState(null)
-  const [_to,setTo]=useState(null)
-  // const [visible, setVisible] = useState(false)
+  const [_to, setTo] = useState(null)
   function onSelectTo({ key }) {
     setFrom(key)
   }
@@ -35,8 +34,15 @@ const Booking = () => {
   function onVisibleChange(visible) {
     console.log(visible);
   }
-
-
+  const [fromCities, setFromCities] = useState("choose starting point")
+  const options = [
+    { value: "limbe", label: "limbe" },
+    { value: "douala", label: "douala" },
+    { value: "yaounde", label: "yaounde" },
+    { value: "kumba", label: "kumba" },
+    { value: "kribi", label: "kribi" },
+    { value: "bamenda", label: "bamenda" },
+  ]
   const from_ = (
     <Menu onSelect={onSelectTo} onClick={click} className="bg-slate-400 text-orange-400 cal-width py-10
     max-h-screen overflow-auto mx-auto scrollto" style={{ "--w": "400px" }}>
@@ -54,14 +60,14 @@ const Booking = () => {
   );
 
   const to = (
-    <Menu onSelect={onSelectFrom} onClick={click}   className="bg-slate-400 text-green-400 cal-width
-    max-h-screen overflow-auto scrollto" style={{ "--w": "400px" ,padding:"5rem 0"}}>
+    <Menu onSelect={onSelectFrom} onClick={click} className="bg-slate-400 text-green-400 cal-width
+    max-h-screen overflow-auto scrollto" style={{ "--w": "400px", padding: "5rem 0" }}>
 
       {
-        Array.from({ length: 50 }, (arr, index) => {
+        Array.from({ length: 24 }, (arr, index) => {
 
           return (
-            <MenuItem key={index} className="text-2xl text-center hover:bg-slate-400 w-full">{index}</MenuItem>
+            <MenuItem key={index} className="text-2xl text-center hover:bg-slate-400 w-full">{index}:00 am</MenuItem>
           )
 
         })
@@ -92,23 +98,23 @@ const Booking = () => {
   }
   const [startDate, setStartDate] = useState(new Date());
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
-  
-    <div style={{ "--w": "200px" }}
-    className="w-full border-2 mt-[20px] shadow-xl border-blue-500 gap-2  flex p-1 rounded-md my-1  "
 
-     
+    <div style={{ "--w": "200px" }}
+      className="w-full border-2 mt-[20px] shadow-xl border-blue-500 gap-2  flex p-1 rounded-md my-1  "
+
+
       onClick={onClick} ref={ref}>
-        <div className="flex-none rounded-lg h-[50px] w-[50px] flex items-center justify-center">
+      <div className="flex-none rounded-lg h-[50px] w-[50px] flex items-center justify-center">
         <CiTimer size={30} />
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-lg leading-6 capitalize"> {value}</h4>
-                  <p className="text-sm md:text-lg text-slate-500 font-[500]">{ new Date(value).toDateString()}</p>
-                </div>
-     
+      </div>
+      <div className="flex-1">
+        <h4 className="text-lg leading-6 capitalize"> {value}</h4>
+        <p className="text-sm md:text-lg text-slate-500 font-[500]">{new Date(value).toDateString()}</p>
+      </div>
+
     </div>
-    
-    
+
+
   ));
 
 
@@ -133,66 +139,74 @@ const Booking = () => {
           <div className="shadow-lg mx-4 h-[50px] -mt-[25px] bg-white dark:bg-slate-700 rounded-lg flex p-1 ">
 
             <div className="w-1/2 bg-blue-500 text-center text-white flex items-center justify-center rounded-sm ">One Way</div>
-            <div className="w-1/2 text-center text-black flex items-center justify-center
+            <div className="w-1/2 bg-orange-400 text-center text-black flex items-center justify-center
           rounded-sm ">Round Trip</div>
           </div>
+          <h1 className="text-xl mb-3 mt-5 font-manrope">Select starting point <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>  
 
 
-            <Dropdown className="w-full border-2 mt-[20px] shadow-xl border-blue-500 gap-2  flex p-1
+          <Select defaultValues={fromCities} onChange={setFromCities}
+            options={options} />
+              <h1 className="text-xl mb-3 mt-5 font-manrope">Select Destination <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>  
+          <Select2 defaultValues={fromCities} onChange={setFromCities}
+            options={options} />
+
+          {/* <Dropdown className="w-full border-2 mt-[20px] shadow-xl border-blue-500 gap-2  flex p-1
             rounded-md my-1  "
-              trigger={['click', "mouseover"]}
-              overlay={from_}
-              animation="slide-up"
-              onVisibleChange={onVisibleChange}
-            >
-              <div>
-                <div className="flex-none rounded-lg h-[50px] w-[50px]  flex items-center justify-center">
-                <BiCurrentLocation size={40}/>
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-lg leading-6 capitalize">from</h4>
-                  <p className="text-sm md:text-lg text-slate-500 font-[500]">{from || "Buea"}</p>
-                </div>
-
-                <div className="flex-none h-full w-[40px]">
-                  <IoMdArrowDropdown size={40} />
-                </div>
+            trigger={['click', "mouseover"]}
+            overlay={from_}
+            animation="slide-up"
+            onVisibleChange={onVisibleChange}
+          >
+            <div>
+              <div className="flex-none rounded-lg h-[50px] w-[50px]  flex items-center justify-center">
+                <BiCurrentLocation size={40} />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-lg leading-6 capitalize">from</h4>
+                <p className="text-sm md:text-lg text-slate-500 font-[500]">{from || "Buea"}</p>
               </div>
 
-            </Dropdown>
-            <Dropdown className="w-full border-2 mt-[20px]
+              <div className="flex-none h-full w-[40px]">
+                <IoMdArrowDropdown size={40} />
+              </div>
+            </div>
+
+          </Dropdown> */}
+          <Dropdown className="w-full border-2 mt-[20px]
             shadow-xl border-blue-500 gap-2  flex p-1 rounded-md my-1  "
-              trigger={['click', "mouseover"]}
-              overlay={to}
-              animation="slide-up"
-              onVisibleChange={onVisibleChange}
-            >
-              <div>
-                <div className="flex-none rounded-lg h-[50px] w-[50px]">
-                
-                <BiCurrentLocation size={40}/>
-                
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-lg leading-6 capitalize">to</h4>
-                  <p className="text-sm md:text-lg text-slate-500 font-[500]">{_to || "Buea"}</p>
-                </div>
-
-                <div className="flex-none h-full w-[40px]">
-                  <IoMdArrowDropdown size={40} />
-                </div>
+            trigger={['click', "mouseover"]}
+            overlay={to}
+            animation="slide-up"
+            onVisibleChange={onVisibleChange}
+          >
+            <div className="flex items-center">
+              <div className="flex-none rounded-lg h-[2.5rem] flex items-center justify-center w-[2.5rem]">
+              <CiTimer size={25} />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-lg leading-6 capitalize">Select Travel time</h4>
+                <p className="text-sm md:text-lg text-slate-500 font-[500]">{_to +":00 am"|| "00:00 am"}</p>
               </div>
 
-            </Dropdown>
+              <div className="flex-none h-full w-[40px]">
+                <IoMdArrowDropdown size={40} />
+              </div>
+            </div>
+
+          </Dropdown>
 
 
-        
+
 
 
           <DatePicker
+          
             selected={startDate}
             onChange={(date) => setStartDate(date)}
-            customInput={<ExampleCustomInput />}
+            customInput={<ExampleCustomInput />
+            
+            }
           />
 
 

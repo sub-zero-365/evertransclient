@@ -14,3 +14,5 @@ export { default as CheckOutInfo }
 from './CheckOutInfo'
 export { default as NotFound }
 from './NotFound'
+export { default as AdminLogin }
+from './AdminLogin'

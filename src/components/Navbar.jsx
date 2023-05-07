@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { IoMdClose } from 'react-icons/io'
 import { BsMoonStars, BsSun } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
-// const isLogin = true
+import { useNavigate,NavLink } from 'react-router-dom';
 import { useravatar } from '../Assets/images';
 const Navbar = () => {
 const [isLogin,setIslogin]=useState(true)
@@ -30,17 +29,7 @@ const [isLogin,setIslogin]=useState(true)
 
     }
     const navigateToHome = () => navigate("/")
-    // const [theme,setTeme]
     const changeTheme = () => {
-
-        // if (localStorage.theme === 'dark' || (!('theme' in localStorage)
-        // && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        //     document.documentElement.classList.add('dark')
-
-
-        //   } else {
-        //     document.documentElement.classList.remove('dark')
-        //   }
         document.documentElement.classList.toggle('dark')
     }
     return (
@@ -48,19 +37,38 @@ const [isLogin,setIslogin]=useState(true)
             <div className="container mx-auto  h-[60px] items-center  px-4 flex justify-between relative  ">
                 <div className="text-2xl font-montserrat cursor-pointer hover:text-slate-950 hover:font-light transition-[color] " onClick={navigateToHome}>Afri-Con</div>
                 <ul className="hidden flex-col md:flex-row  md:flex items-center">
-                    <li className='links-item mx-4 md:mx-2  my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus ticket</li>
-                    <li className='links-item mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus Here</li>
-                    <li className='links-item mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Contact Us</li>
-
+                <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                        to="/booking"
+                        className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
+                    >Bus Here</NavLink></li>
+                    {/* <li className='links-item mx-4 md:mx-2  my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus ticket</li> */}
+                    <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                        to="/about-us"
+                        className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
+                    >About Us</NavLink></li>
+                    <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                        to="/contact-us"
+                        className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
+                    >Contact Us</NavLink></li>
                 </ul>
                 <ul className={`${!isOpen ? " max-h-0" :
                     " max-h-screen"} overflow-hidden transition-[max-height] duration-500 border-b-2 shadow
                     md:hidden absolute top-[60px] left-0 bg-color_light  dark:bg-color_dark dark:text-white  w-full `}>
-                    <li className='links-item border-b-2 mx-4 md:mx-2  my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus ticket</li>
-                    <li className='links-item border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus Here</li>
-
-
-                    <li className='links-item border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Contact Us</li>
+                    <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                        to="/booking"
+                        className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
+                    >Bus Here</NavLink></li>
+                    {/* <li className='links-item border-b-2 mx-4 md:mx-2  my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus ticket</li> */}
+                    {/* <li className='links-item border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>About us</li> */}
+                    <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                        to="/about-us"
+                        className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
+                    >About Us</NavLink></li>
+                    <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                        to="/contact-us"
+                        className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
+                    >Contact Us</NavLink></li>
+                    {/* <li className='links-item border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Contact Us</li> */}
 
                     {
 
@@ -86,15 +94,10 @@ focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18p
 focus:outline-none focus:ring-0 active:bg-primary-700
 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
 dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-
                                     onClick={()=>{
-                                    
                                     if(window.confirm("do you want to logout out")){
                                         setIslogin(false)
-                                    
-                                    
                                     }
-                                    
                                     }}
                                 >
                                     LogOut
