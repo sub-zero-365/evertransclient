@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { Link, NavLink, useNavigate } from "react-router-dom"
 import { Footer ,OurServices} from "../components"
 import { AiOutlinePlus, AiOutlineArrowUp } from "react-icons/ai"
+import {motion} from "framer-motion"
 const Home = () => {
     const testimonials = useRef(null)
     const navigate = useNavigate()
@@ -63,59 +64,15 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                 </div>
             </div>
 
-            {/* <div className="container mx-auto py-[2rem] pb-[5rem]">
-                <div className="md:flex px-4 items-center">
-                    <div className=" flex-1">
-                        <h1 className="text-2xl uppercase md:text-3xl">stop looking</h1>
-                        <h1 className="text-2xl uppercase md:text-3xl text-red-700">start tracking</h1>
-                        <p className="text-lg my-10">
-
-                            Introducing the revolutionary bus ticket app - The smarter way to travel! With just a few clicks, you can book your bus tickets hassle-free, at any time of the day, from anywhere you may be. Our app is designed to make your travel experience a breeze. Whether you're commuting to work, exploring a new city or planning a family vacation, our app will make sure you get where you need to go safely and comfortably. Say goodbye to long queues and unreliable vendors, and say hello to fast and secure booking with our bus ticket app. Travel made easy. Get the app now!
-                        </p>
-
-                        <div className="shadow-2xl w-full md:w-[300px]  my-5 py-2">
-                            <div className="flex">
-                                <div className="flex-1 flex flex-col items-center justify-center">
-                                    <div className="icon">icon</div>
-                                    <h1 className="text-lg text-blue-500">Buea</h1>
-                                    <p className="text-sm">from</p>
-                                </div>
-                                <div className="flex-1 flex flex-col items-center justify-center">
-                                    <div className="icon">icon</div>
-                                    <h1 className="text-lg text-blue-500">Baffousam</h1>
-                                    <p className="text-sm">To</p>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <button
-                            type="button"
-                            data-te-ripple-init
-                            data-te-ripple-color="light"
-                            class="inline-block rounded bg-blue-400 px-6 pb-2 pt-2.5 text-xs font-medium uppercase
-  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-  transition duration-150 ease-in-out hover:bg-primary-600
-  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                            onClick={gotoBookings}
-                        >
-                            Get Started
-                        </button>
-                    </div>
-                    <div className="flex-1">
-                        <img src="https://www.pngmart.com/files/6/Bus-Transparent-Images-PNG.png" alt="bus" />
-                    </div>
-
-
-                </div>
-
-            </div> */}
             <section class="bg-white dark:bg-gray-900">
     <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
         <div class="mr-auto place-self-center lg:col-span-7">
-            <h1 class="max-w-2xl mb-4 text-3xl font-extrabold tracking-tight leading-none md:text-4xl xl:text-5xl dark:text-white">Stop Findng and Start Tracking</h1>
+            <motion.h1
+            
+             initial={{x:-100,opacity:0,y:10,scale:0.8}}
+             whileInView={{x:0,opacity:1,y:0,scale:1}}
+             transition={{duration:0.4}}
+             class="max-w-2xl mb-4 text-3xl font-extrabold tracking-tight leading-8 md:text-4xl xl:text-5xl dark:text-white">Stop Findng <br/> and Start Tracking</motion.h1>
             <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">From checkout to global sales tax compliance, companies around the world use Flowbite to simplify their payment stack.</p>
             <Link href="#" to={"/booking"}class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
                 Get started
@@ -141,7 +98,11 @@ Learn More
                     </div>
                 </div>
                 <div className="flex-1">
-                    <h1 className="text-2xl mt-5 mb-2 uppercase font-[500] text-center md:text-left">Why Choose us</h1>
+                    <motion.h1 initial={{y:30,opacity:0}}
+                    whileInView={{opacity:1,y:0}}
+                    transition={{duration:1}}
+                    
+                    className="text-2xl mt-5 mb-2 uppercase font-[500] text-center md:text-left">Why Choose us</motion.h1>
                     <span className="w-[90px] block rounded-md h-[5px] mx-auto md:mx-0 hover:bg-red-200 transiton-bg-color bg-red-500"></span>
                     <div className="md:flex flex-wrap  mt-10">
 

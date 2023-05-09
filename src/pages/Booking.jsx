@@ -12,6 +12,7 @@ import 'rc-dropdown/assets/index.css';
 import Select from 'react-select'
 import Select2 from 'react-select'
 import React from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react'
 const Booking = () => {
   useEffect(() => {
     window.scrollTo({
@@ -23,9 +24,7 @@ const Booking = () => {
 
   const [from, setFrom] = useState(null)
   const [_to, setTo] = useState(null)
-  function onSelectTo({ key }) {
-    setFrom(key)
-  }
+ 
   function onSelectFrom({ key }) {
     setTo(key)
   }
@@ -35,6 +34,7 @@ const Booking = () => {
     console.log(visible);
   }
   const [fromCities, setFromCities] = useState("choose starting point")
+  const [toCities, setToCities] = useState("choose starting point")
   const options = [
     { value: "limbe", label: "limbe" },
     { value: "douala", label: "douala" },
@@ -43,21 +43,7 @@ const Booking = () => {
     { value: "kribi", label: "kribi" },
     { value: "bamenda", label: "bamenda" },
   ]
-  const from_ = (
-    <Menu onSelect={onSelectTo} onClick={click} className="bg-slate-400 text-orange-400 cal-width py-10
-    max-h-screen overflow-auto mx-auto scrollto" style={{ "--w": "400px" }}>
-
-      {
-        Array.from({ length: 50 }, (arr, index) => {
-
-          return (
-            <MenuItem key={index} className="text-2xl text-center hover:bg-slate-400">{index}</MenuItem>
-          )
-
-        })
-      }
-    </Menu>
-  );
+ 
 
   const to = (
     <Menu onSelect={onSelectFrom} onClick={click} className="bg-slate-400 text-green-400 cal-width
@@ -85,12 +71,10 @@ const Booking = () => {
 
 
   const navigate = useNavigate()
-  const gotoBusSits = () => navigate("/bussits/99388863")
+  const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${startDate}&date=${startDate}`)
   const [demoFetch, setDemoFetch] = useState(false)
   const loadDemoData = () => {
-
     setDemoFetch(true)
-
     setTimeout(() => {
       setDemoFetch(false)
       gotoBusSits()
@@ -127,12 +111,9 @@ const Booking = () => {
 
 
       <div className="container mx-auto md:flex ">
-        <div className="image flex-none h-[200px] md:h-[80vh] 
+        <div className="image flex-none h-[200px] md:h-[calc(100vh-60px)]
         w-full rounded-b-[3rem] md:rounded-none md:w-[300px] lg:w-[700px] overflow-hidden">
-
-          <img src="https://th.bing.com/th/id/OIP.83QkNLDMdg1mZ1rn6bnx-gHaHa?pid=ImgDet&rs=1" className="h-full w-full" alt="bus pic" />
-
-
+              <img src="https://th.bing.com/th/id/OIP.83QkNLDMdg1mZ1rn6bnx-gHaHa?pid=ImgDet&rs=1" className="h-full w-full" alt="bus pic" />
         </div>
 
         <div className="  -mt-10 mx-4  flex-1 md:mt-5">
@@ -142,38 +123,16 @@ const Booking = () => {
             <div className="w-1/2 bg-orange-400 text-center text-black flex items-center justify-center
           rounded-sm ">Round Trip</div>
           </div>
-          <h1 className="text-xl mb-3 mt-5 font-manrope">Select starting point <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>  
+          <h1 className="text-xl mb-3 mt-5 font-manrope">Select starting point <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
 
 
-          <Select defaultValues={fromCities} onChange={setFromCities}
+          <Select defaultValues={fromCities} onChange={evt=>setFromCities(evt.value)}
             options={options} />
-              <h1 className="text-xl mb-3 mt-5 font-manrope">Select Destination <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>  
-          <Select2 defaultValues={fromCities} onChange={setFromCities}
+          <h1 className="text-xl mb-3 mt-5 font-manrope">Select Destination <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
+          <Select2 defaultValues={fromCities} onChange={evt=>setToCities(evt.value)}
             options={options} />
 
-          {/* <Dropdown className="w-full border-2 mt-[20px] shadow-xl border-blue-500 gap-2  flex p-1
-            rounded-md my-1  "
-            trigger={['click', "mouseover"]}
-            overlay={from_}
-            animation="slide-up"
-            onVisibleChange={onVisibleChange}
-          >
-            <div>
-              <div className="flex-none rounded-lg h-[50px] w-[50px]  flex items-center justify-center">
-                <BiCurrentLocation size={40} />
-              </div>
-              <div className="flex-1">
-                <h4 className="text-lg leading-6 capitalize">from</h4>
-                <p className="text-sm md:text-lg text-slate-500 font-[500]">{from || "Buea"}</p>
-              </div>
-
-              <div className="flex-none h-full w-[40px]">
-                <IoMdArrowDropdown size={40} />
-              </div>
-            </div>
-
-          </Dropdown> */}
-          <Dropdown className="w-full border-2 mt-[20px]
+       <Dropdown className="w-full border-2 mt-[20px]
             shadow-xl border-blue-500 gap-2  flex p-1 rounded-md my-1  "
             trigger={['click', "mouseover"]}
             overlay={to}
@@ -182,11 +141,11 @@ const Booking = () => {
           >
             <div className="flex items-center">
               <div className="flex-none rounded-lg h-[2.5rem] flex items-center justify-center w-[2.5rem]">
-              <CiTimer size={25} />
+                <CiTimer size={25} />
               </div>
               <div className="flex-1">
                 <h4 className="text-lg leading-6 capitalize">Select Travel time</h4>
-                <p className="text-sm md:text-lg text-slate-500 font-[500]">{_to +":00 am"|| "00:00 am"}</p>
+                <p className="text-sm md:text-lg text-slate-500 font-[500]">{_to + ":00 am" || "00:00 am"}</p>
               </div>
 
               <div className="flex-none h-full w-[40px]">
@@ -196,16 +155,11 @@ const Booking = () => {
 
           </Dropdown>
 
-
-
-
-
           <DatePicker
-          
+            // inline
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             customInput={<ExampleCustomInput />
-            
             }
           />
 

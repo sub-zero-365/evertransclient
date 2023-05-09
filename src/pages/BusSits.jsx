@@ -2,11 +2,13 @@ import { useState, useEffect } from "react"
 import { Modal } from "../components"
 import { useNavigate } from "react-router-dom"
 import {AiOutlineArrowRight} from 'react-icons/ai'
-import {NavLink} from 'react-router-dom'
+import {NavLink,useSearchParams} from 'react-router-dom'
 
 
 import { TbArmchair2, TbArchiveOff, TbArmchairOff } from 'react-icons/tb'
 const BusSits = () => {
+const [queryParameters]=useSearchParams();
+console.log(queryParameters.get("from"))
   const weekDay = (index=0) => {
     const _days = [
 
@@ -112,7 +114,7 @@ return _days[index]
                                         From
                                     </span>
                                     <div className="relative uppercase">
-                                        buea
+                                   {queryParameters.get("from") || !"invalid location"}
                                     </div>
 
                                 </div>
@@ -124,7 +126,8 @@ return _days[index]
                                         To
                                     </span>
                                     <div className="relative uppercase">
-                                        Baffousam
+                                    {queryParameters.get("to") || !"invalid location"}
+
                                     </div>
 
                                 </div>

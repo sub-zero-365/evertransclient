@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import {motion } from 'framer-motion'
 export default function OurServices (){
     const icons = useRef(null)
     useEffect(() => {
@@ -28,14 +29,18 @@ export default function OurServices (){
   <h2 className="text-2xl font-montserrat leading-6 lg:text-3xl font-bold mb-12 gradient__text">Our Services </h2>
   <div className="grid md:grid-cols-3 lg:gap-x-12">
     <div className="mb-12 md:mb-0">
-      <div className="p-4 bg-blue-600 rounded-lg shadow-lg inline-block mb-6 icon">
+      <motion.div whileHover={{scale:1.2,rotate:90}}
+      
+      whileTap={{scale:0.8,rotate:-90,borderRadius:"100%"}}
+      
+      className="p-4 bg-blue-600 rounded-lg shadow-lg inline-block mb-6 icon">
         <svg className="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path fill="currentColor"
             d="M192 208c0-17.67-14.33-32-32-32h-16c-35.35 0-64 28.65-64 64v48c0 35.35 28.65 64 64 64h16c17.67 0 32-14.33 32-32V208zm176 144c35.35 0 64-28.65 64-64v-48c0-35.35-28.65-64-64-64h-16c-17.67 0-32 14.33-32 32v112c0 17.67 14.33 32 32 32h16zM256 0C113.18 0 4.58 118.83 0 256v16c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-16c0-114.69 93.31-208 208-208s208 93.31 208 208h-.12c.08 2.43.12 165.72.12 165.72 0 23.35-18.93 42.28-42.28 42.28H320c0-26.51-21.49-48-48-48h-32c-26.51 0-48 21.49-48 48s21.49 48 48 48h181.72c49.86 0 90.28-40.42 90.28-90.28V256C507.42 118.83 398.82 0 256 0z">
           </path>
         </svg>
-      </div>
-      <h5 className="text-lg font-bold mb-4">Ticket Booking</h5>
+      </motion.div>
+      <motion.h5 drag dragConstraints={{top:-50,left:-50,right:50,bottom:50}}  className="text-lg font-bold mb-4">Ticket Booking</motion.h5>
       <p className="text-gray-500 dark:text-white">
         Laudantium totam quas cumque pariatur at doloremque hic quos quia eius. Reiciendis
         optio minus mollitia rerum labore facilis inventore voluptatem ad, quae quia sint.
