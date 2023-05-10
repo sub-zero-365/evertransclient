@@ -75,7 +75,9 @@ const Booking = () => {
   const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${startDate}&date=${startDate}`)
   const [demoFetch, setDemoFetch] = useState(false)
   const loadDemoData = (evt) => {
+  
     evt.preventDefault()
+    // if()
     setDemoFetch(true)
     setTimeout(() => {
       setDemoFetch(false)
@@ -192,12 +194,13 @@ const Booking = () => {
 
           </div>
         
-          <div className="md:hidden h-[50px] flex items-center justify-center mt-5 fixed bottom-8 w-full">
+          <div className="md:hidden h-[50px]
+           flex items-center justify-center mt-5 fixed left-0 bottom-8 w-full">
           <button
             // type="submit"
             data-te-ripple-init
             data-te-ripple-color="light"
-            class="inline-block  rounded bg-blue-500 cal-width  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
+            class="inline-block  rounded bg-blue-500 cal-width [--w:400px]  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
   transition duration-150 ease-in-out hover:bg-primary-600
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]

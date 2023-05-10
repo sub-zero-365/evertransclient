@@ -24,7 +24,7 @@ export default function OurServices (){
   
    return (
 
-<div className="container mt-24 mb-10 px-6 mx-auto">
+<div className="container mt-24 mb-10 px-6 mx-auto" id="ourservices">
 <section className="mb-20 text-gray-800 dark:text-white text-center icons-container" ref={icons}>
   <h2 className="text-2xl font-montserrat leading-6 lg:text-3xl font-bold mb-12 gradient__text">Our Services </h2>
   <div className="grid md:grid-cols-3 lg:gap-x-12">

@@ -36,6 +36,24 @@ const [isLogin,setIslogin]=useState(true)
     const changeTheme = () => {
         document.documentElement.classList.toggle('dark')
     }
+    
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.5,
+      staggerDirection: -1,duration:4
+    }
+  }
+}
+
+const item = {
+  hidden: { opacity: 0,x:-1000 },
+  show: { opacity: 1,x:0 }
+}
+    
     return (
         <div className="sticky top-0 left-0 shadow-lg select-none bg-color_light  dark:bg-color_dark dark:text-white z-20">
             
@@ -62,34 +80,61 @@ const [isLogin,setIslogin]=useState(true)
                         className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
                     >Contact Us</NavLink></li>
                 </ul>
-                <ul className={`${!isOpen ? " max-h-0" :
+                <motion.ul
+                
+                variant={isOpen?container:null}
+                initial="hidden"
+                animate="show"
+                
+                className={`${!isOpen ? " max-h-0" :
                     " max-h-screen"} overflow-hidden transition-[max-height] duration-500 border-b-2 shadow
                     md:hidden absolute top-[60px] left-0 bg-color_light  dark:bg-color_dark dark:text-white  w-full `}>
-                    <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                    <motion.li
+                    
+                    initial={false}
+                    animate={{x:isOpen?0:-100}}
+                    
+                    className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                        to="/?#ourservices"
+                        className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
+                    >Our Services</NavLink></motion.li>
+                    <motion.li
+                    
+                    initial={false}
+                    animate={{x:isOpen?0:-100}}
+                    
+                    className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/booking"
                         className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
-                    >Bus Here</NavLink></li>
-                    {/* <li className='links-item border-b-2 mx-4 md:mx-2  my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus ticket</li> */}
-                    {/* <li className='links-item border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>About us</li> */}
-                    <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                    >Bus Here</NavLink></motion.li>
+                    <motion.li
+                    initial={false}
+                    animate={{x:isOpen?0:-100}}
+                    transition={{delay:0.1}}
+                    
+                    className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/about-us"
                         className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
-                    >About Us</NavLink></li>
-                    <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                    >About Us</NavLink></motion.li>
+                    <motion.li 
+                    
+                    initial={false}
+                    animate={{x:isOpen?0:-100}}
+                    transition={{delay:0.2}}
+                    
+                    className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/contact-us"
                         className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
-                    >Contact Us</NavLink></li>
-                    {/* <li className='links-item border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Contact Us</li> */}
-
+                    >Contact Us</NavLink></motion.li>
                     {
-
-
                         isLogin ? (
-                        
                         <>
-                        <div className="h-[80px] w-[80px]  mx-auto shadow-2xl border-2 overflow-hidden  rounded-full mt- p-0 ">
+                        <motion.div
+                        initial={false}
+                        animate={{y:isOpen?0:-100}}
+                        className="h-[80px] w-[80px]  mx-auto shadow-2xl border-2 overflow-hidden  rounded-full mt- p-0 ">
                         <img src={useravatar} alt="user " className='w-full h-full m-0  object-cover scale-[1.3]' />
-                        </div>
+                        </motion.div>
                         <p className="w-fit mx-auto ">User_K</p>
                         <div className="flex justify-center pt-1">
                         
@@ -163,7 +208,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
 
 
-                </ul>
+                </motion.ul>
                 <div className='hidden md:flex gap-3 items-center'>
                     <div className='hover:bg-slate-300  w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={toggleDarkTheme}>
                         {

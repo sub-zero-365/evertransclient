@@ -3,6 +3,9 @@ import { Link, NavLink, useNavigate } from "react-router-dom"
 import { Footer, OurServices } from "../components"
 import { AiOutlinePlus, AiOutlineArrowUp } from "react-icons/ai"
 import { motion } from "framer-motion"
+
+
+import {image2,image3,image4,image1} from "../Assets/images"
 const Home = () => {
     const testimonials = useRef(null)
     const navigate = useNavigate()
@@ -55,14 +58,26 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
             })}>
                 <AiOutlineArrowUp size={30} />
             </div>
-            <div className="bottom-6 shadow-2xl button-add  top-auto bg-blue-400 
+            <motion.div
+            
+            animate={{scale:[0.7,1.2,0.8]}}
+            
+            transition={{
+                duration: 2,
+                ease: "easeInOut",
+                times: [0, 0.2, 0.5, 0.8, 1],
+                repeat: Infinity,
+                repeatDelay: 1}
+           
+        }
+            className="bottom-6 shadow-2xl button-add  top-auto bg-blue-400 
             w-[2.5rem] h-[2.5rem] rounded-full left-1/2 overflow-hidden 
            -translate-x-1/2
             z-10 fixed md:hidden " onClick={gotoBookings}>
                 <div className="flex h-full w-full items-center scale-animation justify-center ">
                     <AiOutlinePlus size={30} color="#fff" className="" />
                 </div>
-            </div>
+            </motion.div>
 
             <section class="bg-white dark:bg-gray-900">
                 <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
@@ -106,7 +121,8 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                     <span className="w-[90px] block rounded-md h-[5px] mx-auto md:mx-0 hover:bg-red-200 transiton-bg-color bg-red-500"></span>
                     <div className="md:flex flex-wrap  mt-10">
                         <div className="md:w-1/2  items-start flex my-4 gap-2 relative">
-                                <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+                                <img src={image1 ||
+                                    "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
                                     alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
@@ -120,9 +136,10 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                             </div>
                         </div>
                         <div className="md:w-1/2  flex items-start my-4 gap-2">
-                                <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                                    alt="excellent" className="h-[60px] w-[60px] rounded-full sticky top-[60px]" />
-
+                        <img src={image2 ||
+                                    "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
+                                    alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
+                            
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Benefits</h2>
@@ -135,9 +152,10 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                             </div>
                         </div>
                         <div className="md:w-1/2  flex items-start my-4 gap-2">
-                        <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                                    alt="excellent" className="h-[60px] w-[60px] rounded-full sticky top-[60px]" />
-
+                        <img src={image3 ||
+                                    "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
+                                    alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
+                            
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Our Desire</h2>
@@ -151,9 +169,10 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                             </div>
                         </div>
                         <div className="md:w-1/2  flex items-start my-4 gap-2">
-                        <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                                    alt="excellent" className="h-[60px] w-[60px] rounded-full sticky top-[60px]" />
-
+                        <img src={image4 ||
+                                    "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
+                                    alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
+                            
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Vison</h2>
