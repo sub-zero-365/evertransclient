@@ -13,6 +13,7 @@ import Select from 'react-select'
 import Select2 from 'react-select'
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react'
+import {motion} from 'framer-motion'
 const Booking = () => {
   useEffect(() => {
     window.scrollTo({
@@ -24,7 +25,7 @@ const Booking = () => {
 
   const [from, setFrom] = useState(null)
   const [_to, setTo] = useState(null)
- 
+
   function onSelectFrom({ key }) {
     setTo(key)
   }
@@ -43,7 +44,7 @@ const Booking = () => {
     { value: "kribi", label: "kribi" },
     { value: "bamenda", label: "bamenda" },
   ]
- 
+
 
   const to = (
     <Menu onSelect={onSelectFrom} onClick={click} className="bg-slate-400 text-green-400 cal-width
@@ -73,7 +74,8 @@ const Booking = () => {
   const navigate = useNavigate()
   const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${startDate}&date=${startDate}`)
   const [demoFetch, setDemoFetch] = useState(false)
-  const loadDemoData = () => {
+  const loadDemoData = (evt) => {
+    evt.preventDefault()
     setDemoFetch(true)
     setTimeout(() => {
       setDemoFetch(false)
@@ -106,33 +108,39 @@ const Booking = () => {
 
 
   return (
-    <div className="md:mt-5 pb-20 min-h-screen">
+    <motion.div 
+    
+    initial={{y:100,opacity:0.4}}
+    animate={{y:0,opacity:1}}
+    
+    className="md:mt-5 pb-20 min-h-screen">
       <Loader toggle={demoFetch}></Loader>
 
 
       <div className="container mx-auto md:flex ">
         <div className="image flex-none h-[200px] md:h-[calc(100vh-60px)]
         w-full rounded-b-[3rem] md:rounded-none md:w-[300px] lg:w-[700px] overflow-hidden">
-              <img src="https://th.bing.com/th/id/OIP.83QkNLDMdg1mZ1rn6bnx-gHaHa?pid=ImgDet&rs=1" className="h-full w-full" alt="bus pic" />
+          <img src="https://th.bing.com/th/id/OIP.83QkNLDMdg1mZ1rn6bnx-gHaHa?pid=ImgDet&rs=1" className="h-full w-full" alt="bus pic" />
         </div>
 
-        <div className="  -mt-10 mx-4  flex-1 md:mt-5">
+        <form onSubmit={loadDemoData} className="-mt-10 mx-4  flex-1 md:mt-5">
           <div className="shadow-lg mx-4 h-[50px] -mt-[25px] bg-white dark:bg-slate-700 rounded-lg flex p-1 ">
 
             <div className="w-1/2 bg-blue-500 text-center text-white flex items-center justify-center rounded-sm ">One Way</div>
             <div className="w-1/2 bg-orange-400 text-center text-black flex items-center justify-center
           rounded-sm ">Round Trip</div>
           </div>
+
           <h1 className="text-xl mb-3 mt-5 font-manrope">Select starting point <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
 
 
-          <Select defaultValues={fromCities} onChange={evt=>setFromCities(evt.value)}
+          <Select required defaultValues={fromCities} onChange={evt => setFromCities(evt.value)}
             options={options} />
           <h1 className="text-xl mb-3 mt-5 font-manrope">Select Destination <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
-          <Select2 defaultValues={fromCities} onChange={evt=>setToCities(evt.value)}
+          <Select2 required defaultValues={fromCities} onChange={evt => setToCities(evt.value)}
             options={options} />
 
-       <Dropdown className="w-full border-2 mt-[20px]
+          <Dropdown className="w-full border-2 mt-[20px]
             shadow-xl border-blue-500 gap-2  flex p-1 rounded-md my-1  "
             trigger={['click', "mouseover"]}
             overlay={to}
@@ -168,7 +176,7 @@ const Booking = () => {
 
           <div className="hidden h-[50px] md:flex items-center justify-center mt-auto">
             <button
-              type="button"
+              type="submit"
               data-te-ripple-init
               data-te-ripple-color="light"
               className="inline-block  rounded bg-blue-500 cal-width  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
@@ -177,19 +185,16 @@ const Booking = () => {
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-              onClick={loadDemoData}
+            // onClick={loadDemoData}
             >
               Find Bus
             </button>
 
           </div>
-        </div>
-
-
-
-        <div className="md:hidden h-[50px] flex items-center justify-center mt-5 fixed bottom-8 w-full">
+        
+          <div className="md:hidden h-[50px] flex items-center justify-center mt-5 fixed bottom-8 w-full">
           <button
-            type="button"
+            // type="submit"
             data-te-ripple-init
             data-te-ripple-color="light"
             class="inline-block  rounded bg-blue-500 cal-width  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
@@ -198,17 +203,21 @@ const Booking = () => {
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-            onClick={loadDemoData}
+          // onClick={loadDemoData}
 
           >
             Find Bus
           </button>
 
         </div>
+        </form>
+
+
+
       </div>
 
 
-    </div>
+    </motion.div>
   )
 }
 

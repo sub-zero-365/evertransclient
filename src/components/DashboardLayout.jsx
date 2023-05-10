@@ -1,7 +1,7 @@
 import {Outlet} from "react-router-dom"
 const DashBoardLayout =()=>{
-    return (<>dashboard layout
-    
+    return (<>
+    dashboard layout
     <Outlet/>
     </>)
     

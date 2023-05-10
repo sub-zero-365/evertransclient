@@ -8,3 +8,9 @@ export { default as Modal }
 from './Modal'
 export { default as OurServices }
 from './OurServices'
+export { default as SideBar }
+from './SideBar'
+export { default as UserLayout }
+from './UserLayout'
+export { default as DashboardLayout }
+from './DashboardLayout'

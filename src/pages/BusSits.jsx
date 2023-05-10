@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom"
 import {AiOutlineArrowRight} from 'react-icons/ai'
 import {NavLink,useSearchParams} from 'react-router-dom'
 
-
 import { TbArmchair2, TbArchiveOff, TbArmchairOff } from 'react-icons/tb'
-const BusSits = () => {
+const 
+BusSits = () => {
 const [queryParameters]=useSearchParams();
 console.log(queryParameters.get("from"))
   const weekDay = (index=0) => {
@@ -140,7 +140,8 @@ return _days[index]
             <h1 className="text-lg pb-4">On {new Date().getDay()}th Sept2021 at </h1>
             <h2 className="text-lg">{new Date().getHours()} am</h2>
           </div>
-          <p className="text-lg text-center capitalize pb-2 ">please select your bus shit </p>
+          <p className="text-lg text-center capitalize pb-2 ">please 
+          your bus shit </p>
 
           <div className="flex justify-between px-2 pb-2">
             <h1 className="text-xs lg:text- shadom-lg lg flex-1">
@@ -244,7 +245,7 @@ return _days[index]
                             </div>
                             <div className="relative mb-6" data-te-input-wrapper-init>
                                 <input
-                                    type="number"
+                                    type="tel"
                                     className="peer block min-h-[auto] w-full 
                 rounded 
                 border-2

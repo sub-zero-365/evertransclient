@@ -4,8 +4,12 @@ import { IoMdClose } from 'react-icons/io'
 import { BsMoonStars, BsSun } from 'react-icons/bs';
 import { useNavigate,NavLink } from 'react-router-dom';
 import { useravatar } from '../Assets/images';
+
+import { motion, useScroll } from "framer-motion"
+
 const Navbar = () => {
 const [isLogin,setIslogin]=useState(true)
+    const {scrollYProgress }=useScroll()
     const navigate = useNavigate()
     const gotoLoginPage = () => {
         navigate("/login")
@@ -34,13 +38,20 @@ const [isLogin,setIslogin]=useState(true)
     }
     return (
         <div className="sticky top-0 left-0 shadow-lg select-none bg-color_light  dark:bg-color_dark dark:text-white z-20">
+            
             <div className="container mx-auto  h-[60px] items-center  px-4 flex justify-between relative  ">
+            <motion.div
+            // animate={{scaleX:225}}
+            
+            className="h-1 absolute right-0 transform-origin-0 left-0 bottom-0 w-full- bg-slate-400"
+      style={{ scaleX: scrollYProgress }}
+    />
                 <div className="text-2xl font-montserrat cursor-pointer hover:text-slate-950 hover:font-light transition-[color] " onClick={navigateToHome}>Afri-Con</div>
                 <ul className="hidden flex-col md:flex-row  md:flex items-center">
-                <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                <motion.li whileHover={{scaleX:1.2}} className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/booking"
                         className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "text-blue-500" : ""}
-                    >Bus Here</NavLink></li>
+                    >Bus Here</NavLink></motion.li>
                     {/* <li className='links-item mx-4 md:mx-2  my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'>Bus ticket</li> */}
                     <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/about-us"

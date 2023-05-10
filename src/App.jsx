@@ -1,8 +1,8 @@
-import { Navbar ,Loader} from "./components";
+import { Navbar, Loader, UserLayout, DashboardLayout } from "./components";
 import { Home, Login, Register, Booking, BusSits, CheckOut, CheckOutInfo, NotFound, AdminLogin } from "./pages";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
-import DashBoadLayout from "./components/DashboardLayout"
+// import DashBoadLayout from "./components/DashboardLayout"
 const ContactUs = lazy(() => import("./pages/Contact"));
 const Aboutus = lazy(() => import("./pages/Aboutus"));
 
@@ -14,20 +14,23 @@ function App() {
 
     >
       <BrowserRouter>
-        <Navbar />
-        <Suspense fallback={<Loader/>}>
+        <Suspense fallback={<Loader />}>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/booking" element={<Booking />} />
-            <Route path="/bussits/:id" element={<BusSits />} />
-            {/* <Route path="/checkout" element={<CheckOut />} /> */}
-            <Route path="/contact-us" element={<ContactUs />} />
-            <Route path="/about-us" element={<Aboutus />} />
-            <Route path="/information" element={<CheckOutInfo />} />
-            <Route path="/auth" element={<AdminLogin />} />
-            <Route path="/dashboard" element={<DashBoadLayout />} />
+            <Route path="/" element={<UserLayout />}>
+              <Route index element={<Home />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+              <Route path="booking" element={<Booking />} />
+              <Route path="bussits/:id" element={<BusSits />} />
+              <Route path="contact-us" element={<ContactUs />} />
+              <Route path="about-us" element={<Aboutus />} />
+              <Route path="information" element={<CheckOutInfo />} />
+              <Route path="auth" element={<AdminLogin />} />
+            </Route>
+            {/* dashboardlayout here  */}
+            <Route path="/dashboard" element={<DashboardLayout />} >
+              <Route index  element={<>Ticket with</>} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

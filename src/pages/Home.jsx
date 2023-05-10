@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import { Link, NavLink, useNavigate } from "react-router-dom"
-import { Footer ,OurServices} from "../components"
+import { Footer, OurServices } from "../components"
 import { AiOutlinePlus, AiOutlineArrowUp } from "react-icons/ai"
-import {motion} from "framer-motion"
+import { motion } from "framer-motion"
 const Home = () => {
     const testimonials = useRef(null)
     const navigate = useNavigate()
@@ -65,98 +65,95 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
             </div>
 
             <section class="bg-white dark:bg-gray-900">
-    <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
-        <div class="mr-auto place-self-center lg:col-span-7">
-            <motion.h1
-            
-             initial={{x:-100,opacity:0,y:10,scale:0.8}}
-             whileInView={{x:0,opacity:1,y:0,scale:1}}
-             transition={{duration:0.4}}
-             class="max-w-2xl mb-4 text-3xl font-extrabold tracking-tight leading-8 md:text-4xl xl:text-5xl dark:text-white">Stop Findng <br/> and Start Tracking</motion.h1>
-            <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">From checkout to global sales tax compliance, companies around the world use Flowbite to simplify their payment stack.</p>
-            <Link href="#" to={"/booking"}class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
-                Get started
-                <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-            </Link>
-            <Link to={"/about-us"} href="#" class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-Learn More
-            </Link> 
-        </div>
-        <div class="hidden- mt-2 lg:mt-0 lg:col-span-5 lg:flex">
-        <img src="https://www.pngmart.com/files/6/Bus-Transparent-Images-PNG.png" alt="bus" />
-            {/* <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" alt="mockup"/> */}
-        </div>                
-    </div>
-</section>
-          <OurServices/>
-            <div className="container rounded-lg overflow-hidden
+                <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
+                    <div class="mr-auto place-self-center lg:col-span-7">
+                        <motion.h1
+
+                            initial={{ x: -100, opacity: 0, y: 10, scale: 0.8 }}
+                            whileInView={{ x: 0, opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.4 }}
+                            class="max-w-2xl mb-4 text-3xl font-extrabold tracking-tight leading-8 md:text-4xl xl:text-5xl dark:text-white">Stop Findng <br /> and Start Tracking</motion.h1>
+                        <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">From checkout to global sales tax compliance, companies around the world use Flowbite to simplify their payment stack.</p>
+                        <Link href="#" to={"/booking"} class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                            Get started
+                            <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </Link> 
+                        <Link to={"/about-us"} href="#" class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                            Learn More
+                        </Link>
+                    </div>
+                    <div class="hidden- mt-2 lg:mt-0 lg:col-span-5 lg:flex">
+                        <img src="https://www.pngmart.com/files/6/Bus-Transparent-Images-PNG.png" alt="bus" />
+                        {/* <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" alt="mockup"/> */}
+                    </div>
+                </div>
+            </section>
+            <OurServices />
+            <div className="container rounded-lg md:overflow-hidden
             mx-auto shadow-2xl  py-10-
              z-40  mb-[90px]   flex ">
-                <div className="flex-none hidden md:block w-[150px]  relative overflow-hidden">
-                    <div className="absolute top-0 bg-red-500 
+                <div className="flex-none hidden md:block w-[150px]  md:relative ">
+                    <div className="absolute top-0 bg-red-500  overflow-hidden
                     left-[-50px] h-screen rotate-[-12deg] w-full">
                     </div>
                 </div>
                 <div className="flex-1">
-                    <motion.h1 initial={{y:30,opacity:0}}
-                    whileInView={{opacity:1,y:0}}
-                    transition={{duration:1}}
-                    
-                    className="text-2xl mt-5 mb-2 uppercase font-[500] text-center md:text-left">Why Choose us</motion.h1>
+                    <motion.h1 initial={{ y: 30, opacity: 0 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1 }}
+
+                        className="text-2xl mt-5 mb-2 uppercase font-[500] text-center md:text-left">Why Choose us</motion.h1>
                     <span className="w-[90px] block rounded-md h-[5px] mx-auto md:mx-0 hover:bg-red-200 transiton-bg-color bg-red-500"></span>
                     <div className="md:flex flex-wrap  mt-10">
-
-                        <div className="md:w-1/2 flex my-4 gap-2">
-                            <div className="flex-none w-[80px] h-full  flex justify-center">
+                        <div className="md:w-1/2  items-start flex my-4 gap-2 relative">
                                 <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                                    alt="excellent" className="h-[60px] w-[60px] rounded-full" />
-
-                            </div>
+                                    alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Mission</h2>
                                 <p className="text-slate-500 text-[14px]">
-
                                     At  {site_name} our mission is to give people the power to build community and bring the world closer together.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed accusantium suscipit sapiente laudantium iusto quos maiores temporibus minima blanditiis eos, laborum corporis culpa mollitia, expedita neque commodi soluta optio rem natus veniam asperiores enim deleniti explicabo ea. Quam dolor quasi maxime labore nisi, quos nulla fuga molestias
+                                    corrupti magnam cupiditate a repellendus ipsum totam error libero harum voluptatem? Corporis, itaque.
 
                                 </p>
                             </div>
                         </div>
-                        <div className="md:w-1/2 flex my-4 gp-2">
-                            <div className="flex-none w-[80px] h-full  flex justify-center">
+                        <div className="md:w-1/2  flex items-start my-4 gap-2">
                                 <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                                    alt="excellent" className="h-[60px] w-[60px] rounded-full" />
+                                    alt="excellent" className="h-[60px] w-[60px] rounded-full sticky top-[60px]" />
 
-                            </div>
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Benefits</h2>
                                 <p className="text-slate-500 text-[14px]">
                                     We invest in training and development in a big way, so you can build your future along with ours, creating an impactful career unique to you.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed accusantium suscipit sapiente laudantium iusto quos maiores temporibus minima blanditiis eos, laborum corporis culpa mollitia, expedita neque commodi soluta optio rem natus veniam asperiores enim deleniti explicabo ea. Quam dolor quasi maxime labore nisi, quos nulla fuga molestias
+                                    corrupti magnam cupiditate a repellendus ipsum totam error libero harum voluptatem? Corporis, itaque.
+
                                 </p>
                             </div>
                         </div>
-                        <div className="md:w-1/2 flex my-4 gap-2">
-                            <div className="flex-none w-[80px] h-full  flex justify-center">
-                                <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                                    alt="excellent" className="h-[60px] w-[60px] rounded-full" />
+                        <div className="md:w-1/2  flex items-start my-4 gap-2">
+                        <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+                                    alt="excellent" className="h-[60px] w-[60px] rounded-full sticky top-[60px]" />
 
-                            </div>
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Our Desire</h2>
                                 <p className="text-slate-500 text-[14px]">
                                     SAP started in 1972 as a team of five colleagues with a desire to do something new. Together, they changed enterprise software and reinvented how business was done. Today, as a market leader in enterprise application software, we remain true to our roots.
+                                    We invest in training and development in a big way, so you can build your future along with ours, creating an impactful career unique to you.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed accusantium suscipit sapiente laudantium iusto quos maiores temporibus minima blanditiis eos, laborum corporis culpa mollitia, expedita neque commodi soluta optio rem natus veniam asperiores enim deleniti explicabo ea. Quam dolor quasi maxime labore nisi, quos nulla fuga molestias
+                                    corrupti magnam cupiditate a repellendus ipsum totam error libero harum voluptatem? Corporis, itaque.
 
                                 </p>
                             </div>
                         </div>
-                        <div className="md:w-1/2 flex my-4 gap-2">
-                            <div className="flex-none w-[80px] h-full  flex justify-center">
-                                <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
-                                    alt="excellent" className="h-[60px] w-[60px] rounded-full" />
+                        <div className="md:w-1/2  flex items-start my-4 gap-2">
+                        <img src="https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+                                    alt="excellent" className="h-[60px] w-[60px] rounded-full sticky top-[60px]" />
 
-                            </div>
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Vison</h2>
