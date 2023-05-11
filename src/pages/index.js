@@ -16,3 +16,5 @@ export { default as NotFound }
 from './NotFound'
 export { default as AdminLogin }
 from './AdminLogin'
+export { default as UserBoard }
+from './UserBoard'

@@ -21,6 +21,7 @@ const [isLogin,setIslogin]=useState(true)
         setIsOpen(false)
 
     }
+    const gotoUserPage=()=>navigate("/user")
     const [isOpen, setIsOpen] = useState(false)
     const [darkTheme, setDarkTheme] = useState(false)
     const toggleNavBar = () => {
@@ -50,7 +51,7 @@ const container = {
 }
 
 const item = {
-  hidden: { opacity: 0,x:-1000 },
+  hidden: { opacity: 0,x:-10000 },
   show: { opacity: 1,x:0 }
 }
     
@@ -92,7 +93,7 @@ const item = {
                     <motion.li
                     
                     initial={false}
-                    animate={{x:isOpen?0:-100}}
+                    animate={{x:isOpen?0:-1000}}
                     
                     className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/?#ourservices"
@@ -101,7 +102,7 @@ const item = {
                     <motion.li
                     
                     initial={false}
-                    animate={{x:isOpen?0:-100}}
+                    animate={{x:isOpen?[1000,0,100,0]:-1000}}
                     
                     className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/booking"
@@ -109,7 +110,7 @@ const item = {
                     >Bus Here</NavLink></motion.li>
                     <motion.li
                     initial={false}
-                    animate={{x:isOpen?0:-100}}
+                    animate={{x:isOpen?0:-1000}}
                     transition={{delay:0.1}}
                     
                     className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
@@ -119,7 +120,7 @@ const item = {
                     <motion.li 
                     
                     initial={false}
-                    animate={{x:isOpen?0:-100}}
+                    animate={{x:isOpen?0:-1000}}
                     transition={{delay:0.2}}
                     
                     className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
@@ -129,11 +130,11 @@ const item = {
                     {
                         isLogin ? (
                         <>
-                        <motion.div
+                        <motion.div 
                         initial={false}
-                        animate={{y:isOpen?0:-100}}
+                        animate={{y:isOpen?0:-1000}}
                         className="h-[80px] w-[80px]  mx-auto shadow-2xl border-2 overflow-hidden  rounded-full mt- p-0 ">
-                        <img src={useravatar} alt="user " className='w-full h-full m-0  object-cover scale-[1.3]' />
+                        <img src={useravatar} alt="user " onClick={gotoUserPage} className='w-full h-full m-0  object-cover scale-[1.3]' />
                         </motion.div>
                         <p className="w-fit mx-auto ">User_K</p>
                         <div className="flex justify-center pt-1">
@@ -222,7 +223,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                             ? (
 
 
-                                <div className="w-[50px] h-[50px] rounded-full overflow-hidden shadow-2xl">
+                                <div className="w-[50px] h-[50px] rounded-full overflow-hidden shadow-2xl" onClick={gotoUserPage}>
 
 <img src={useravatar} alt="user " className='w-full h-full' />
 

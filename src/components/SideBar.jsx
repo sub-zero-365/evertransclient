@@ -6,14 +6,14 @@ import { NavLink, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { useState, useEffect } from 'react'
 import {actions} from '../actions/toggleSide'
-
+import {motion} from 'framer-motion'
 const SideBar = () => {
   useEffect(() => {
     navigate("/dashboard")
   }, [])
   const dispatch = useDispatch()
-  const isSideOpen= useSelector((state) => state.sidebar.isOpen)
   const toggleSideBar = () => dispatch(actions.toggleSideBar())
+  const isSideOpen= useSelector((state) => state.sidebar.isOpen)
   const [active, setActive] = useState(0);
   const navigate = useNavigate()
   const navLinks = [
@@ -28,24 +28,24 @@ const SideBar = () => {
 
     {
 
-      name: "Messages",
+      name: "Users",
       icon: <TiMessages size={25} />
 
-      , to: "messages"
+      , to: "/dashboard"
     },
     
     {
 
       name: "Services",
       icon: <GrServicePlay size={25} />
-      , to: "services"
+      , to: "/dashboard"
 
     },
     {
 
       name: "Contacts",
       icon: <GrServicePlay size={25} />
-      , to: "services"
+      , to: "/dashboard"
 
     },
 
@@ -55,7 +55,7 @@ const SideBar = () => {
 
   return (
 
-    <div className={`w-[12.5rem] select-none max-w-[calc(100vw-2.5rem)] z-[100]
+    <div className={`w-[12.5rem]  select-none max-w-[calc(100vw-2.5rem)] z-[100]
     px-4 text-xs overflow-y--auto flex-none fixed md:static transition-[left] duration-700
     ${isSideOpen ? "left-0" : "left-[-100%]"} top-0 h-full md:top-0 bg-color_light md:h-[calc(100svh-3.75rem)] overflow-visible border`}>
     
@@ -71,7 +71,14 @@ const SideBar = () => {
 
       {
 
-        navLinks.map(({ name, icon, to }, index) => (<NavLink to={to}
+        navLinks.map(({ name, icon, to }, index) => (
+        <motion.div
+        initial={false}
+        animate={{x:isSideOpen?0:-100}}
+        transition={{delay:index*0.2}}
+        
+        className="">
+        <NavLink to={to}
           key={index}
           onClick={() => {
 
@@ -88,7 +95,7 @@ const SideBar = () => {
  duration-300 py-2 px-3 mt-4 shadow-md ring-offset-slate-200 mb-2 rounded-lg`}>
           {icon}
           <h3 className="text-sm ml-5">{name}</h3>
-        </NavLink>))
+        </NavLink></motion.div>))
 
       }
       {/*  */}
