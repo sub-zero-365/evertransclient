@@ -1,18 +1,55 @@
-import { useState,useEffect } from "react"
-import {  NavLink,useSearchParams } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { NavLink, useSearchParams,useNavigate } from "react-router-dom"
 import Alert from '../components/Alert'
-import {motion} from 'framer-motion'
+import { motion } from 'framer-motion'
+import axios from 'axios'
 const BusSits = () => {
+
+const navigate=useNavigate()
   const [queryParameters] = useSearchParams()
   const [toggle, setToggle] = useState(false)
-useEffect(()=>{window.scrollTo(0,0)},[])
+  useEffect(() => { window.scrollTo(0, 0) }, [])
   const proccedCheckout = () => {
     setToggle(true)
   }
+
+
+  const url = process.env.REACT_APP_LOCAL_URL + "/ticket"
+  const handleSubmit = async () => {
+  
+  const token= localStorage.token
+  if(!token) return navigate("/login")
+    try {
+      // const url = process.env.REACT_APP_BASE_URL + "/ticket";
+      const res = await axios.post(url, {
+        from: queryParameters.get("from"),
+        to: queryParameters.get("to"),
+        traveldate: new Date(),
+        traveltime: "12/02/22",
+        price: 2000
+      },{
+      
+      headers:{
+      "Authorization":"makingmoney "+token
+      
+      }
+      
+      })
+      // console.log(res)
+      setTimeout(()=>{
+        navigate("/user")
+      },4000)
+      proccedCheckout()
+    } catch (err) {
+
+      console.log(err)
+    }
+
+  }
   return (
     <motion.div
-    initial={{x:-10,y:40}}
-    animate={{x:0,y:0}}
+      initial={{ x: -10, y: 40 }}
+      animate={{ x: 0, y: 0 }}
       className="min-h-screen"
     >
       <Alert toggle={toggle} setToggle={setToggle} message={"successfully!! thanks for using our service"} />
@@ -27,7 +64,7 @@ useEffect(()=>{window.scrollTo(0,0)},[])
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-          onClick={proccedCheckout}
+          onClick={handleSubmit}
         >
           &lt;&lt;&lt;&nbsp;  PAY&nbsp; &gt;&gt;&gt;
         </button>
@@ -100,7 +137,7 @@ useEffect(()=>{window.scrollTo(0,0)},[])
 
           <div className="hidden h-[80px] md:flex items-center justify-center mt-auto">
             <button
-              onClick={proccedCheckout}
+              onClick={handleSubmit}
               type="button"
               data-te-ripple-init
               data-te-ripple-color="light"

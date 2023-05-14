@@ -1,5 +1,45 @@
-
+import { useRef } from "react"
+import axios from 'axios'
+import { useDispatch } from 'react-redux';
+import {setUserName} from "../actions/userName"
+import {useNavigate} from "react-router-dom"
 const Login = () => {
+const navigate=useNavigate();
+  const password = useRef(null)
+  const phone = useRef(null)
+  const dispatch = useDispatch();
+  const setuserName = (username) => {
+  
+dispatch(setUserName(username))
+
+  }
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const url = process.env.REACT_APP_LOCAL_URL + "/auth/login"
+    try {
+      const res = await axios.post(
+        url, {
+        password: password.current.value,
+        phone: phone.current.value,
+      }
+      )
+      const { data: { fullname, token } } = res
+      console.log(fullname, token);
+      setuserName(fullname)
+      localStorage.token=token
+      navigate("/user")
+
+    } catch (err) {
+      console.log(err)
+
+    }
+
+  }
+
+
+  
   return (
 <section className="h-screen">
   <div className="container h-full px-6 py-24">
@@ -13,10 +53,10 @@ const Login = () => {
       </div>
 
       <div className="md:w-8/12 lg:ml-6 lg:w-5/12">
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="relative mb-6" data-te-input-wrapper-init>
-            <input
-              type="text"
+            <input ref={phone}
+              type="tel"
               className="peer block min-h-[auto] w-full 
               rounded 
               border-2
@@ -71,12 +111,12 @@ const Login = () => {
               dark:text-neutral-200
               dark:peer-focus:text-primary"
               
-              >Email address
+              >Phone Number
             </label>
           </div>
 
           <div className="relative mb-6" data-te-input-wrapper-init>
-            <input
+            <input ref={password}
               type="password"
               className="
               peer block min-h-[auto] border-2 w-full rounded shadow-none

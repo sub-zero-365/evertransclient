@@ -13,23 +13,47 @@ import Select from 'react-select'
 import Select2 from 'react-select'
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react'
-import {motion} from 'framer-motion'
+import Alert from '../components/Alert'
+import { motion } from 'framer-motion'
 const Booking = () => {
+  const [toggle, setToggle] = useState(false)
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log("token :", token == "null")
     window.scrollTo({
       top: 0,
       left: 0,
     })
 
-  }, [])
+    if (!token) {
+      // alert("enter here")
+      setToggle(true);
+      setTimeout(() => {
+        navigate("/login")
+      }, 4000)
 
-  const [from, setFrom] = useState(null)
+    }
+  }, [])
+  useEffect(() => {
+
+
+    if (!toggle) {
+      // settimeout is out now 
+      // navigate("/login")
+
+    }
+
+
+
+  }, [toggle])
+
+  // const [from, setFrom] = useState(null)
   const [_to, setTo] = useState(null)
 
   function onSelectFrom({ key }) {
     setTo(key)
   }
-  function click({ key }) {
+  function click({ }) {
   }
   function onVisibleChange(visible) {
     console.log(visible);
@@ -75,7 +99,7 @@ const Booking = () => {
   const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${startDate}&date=${startDate}`)
   const [demoFetch, setDemoFetch] = useState(false)
   const loadDemoData = (evt) => {
-  
+
     evt.preventDefault()
     // if()
     setDemoFetch(true)
@@ -110,12 +134,14 @@ const Booking = () => {
 
 
   return (
-    <motion.div 
-    
-    initial={{y:100,opacity:0.4}}
-    animate={{y:0,opacity:1}}
-    
-    className="md:mt-5 pb-20 min-h-screen">
+    <motion.div
+
+      initial={{ y: 100, opacity: 0.4 }}
+      animate={{ y: 0, opacity: 1 }}
+
+      className="md:mt-5 pb-20 min-h-screen">
+      <Alert toggle={toggle} message={"please login or signup to get started"}
+        setToggle={setToggle} />
       <Loader toggle={demoFetch}></Loader>
 
 
@@ -193,26 +219,26 @@ const Booking = () => {
             </button>
 
           </div>
-        
+
           <div className="md:hidden h-[50px]
            flex items-center justify-center mt-5 fixed left-0 bottom-8 w-full">
-          <button
-            // type="submit"
-            data-te-ripple-init
-            data-te-ripple-color="light"
-            class="inline-block  rounded bg-blue-500 cal-width [--w:400px]  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
+            <button
+              // type="submit"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              class="inline-block  rounded bg-blue-500 cal-width [--w:400px]  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
   transition duration-150 ease-in-out hover:bg-primary-600
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-          // onClick={loadDemoData}
+            // onClick={loadDemoData}
 
-          >
-            Find Bus
-          </button>
+            >
+              Find Bus
+            </button>
 
-        </div>
+          </div>
         </form>
 
 
