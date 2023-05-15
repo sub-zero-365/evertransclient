@@ -1,9 +1,14 @@
-import { useRef } from "react"
+import { useRef,useState } from "react"
 import axios from 'axios'
 import { useDispatch } from 'react-redux';
 import {setUserName} from "../actions/userName"
 import {useNavigate} from "react-router-dom"
+import { Loadingbtn } from "../components";
+import {motion} from "framer-motion"
 const Login = () => {
+  const [isLoading,setIsLoading]=useState(false);
+  const [error,setError]=useState("")
+
 const navigate=useNavigate();
   const password = useRef(null)
   const phone = useRef(null)
@@ -16,6 +21,8 @@ dispatch(setUserName(username))
   
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsLoading(true)
+    
 
     const url = process.env.REACT_APP_LOCAL_URL + "/auth/login"
     try {
@@ -33,6 +40,13 @@ dispatch(setUserName(username))
 
     } catch (err) {
       console.log(err)
+setIsLoading(false)
+setError("loading fail");
+const timer=setTimeout(() => {
+clearTimeout(timer)
+  setError("")
+}, 5000);
+      
 
     }
 
@@ -73,14 +87,9 @@ dispatch(setUserName(username))
               focus:placeholder:opacity-100
               data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
               id="exampleFormControlInput3"
-              placeholder="Email address" required />
+              placeholder="Phone Number" required />
             <label
               htmlFor="exampleFormControlInput3"
-              // className="
-              // pointer-events-none 
-              // absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0]
-              // truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200
-              // ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
               className="pointer-events-none 
               absolute left-3
               top-0 mb-0
@@ -167,27 +176,18 @@ dispatch(setUserName(username))
             </label>
           </div>
 
-          <div className="mb-6 flex items-center justify-between">
-            <div className="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]">
-              <input
-                className="relative float-left -ml-[1.5rem] mr-[6px] mt-[0.15rem] h-[1.125rem] w-[1.125rem] appearance-none rounded-[0.25rem] border-[0.125rem] border-solid border-neutral-300 outline-none before:pointer-events-none before:absolute before:h-[0.875rem] before:w-[0.875rem] before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] checked:border-primary checked:bg-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:-mt-px checked:after:ml-[0.25rem] checked:after:block checked:after:h-[0.8125rem] checked:after:w-[0.375rem] checked:after:rotate-45 checked:after:border-[0.125rem] checked:after:border-l-0 checked:after:border-t-0 checked:after:border-solid checked:after:border-white checked:after:bg-transparent checked:after:content-[''] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:transition-[border-color_0.2s] focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-[0.875rem] focus:after:w-[0.875rem] focus:after:rounded-[0.125rem] focus:after:content-[''] checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:after:-mt-px checked:focus:after:ml-[0.25rem] checked:focus:after:h-[0.8125rem] checked:focus:after:w-[0.375rem] checked:focus:after:rotate-45 checked:focus:after:rounded-none checked:focus:after:border-[0.125rem] checked:focus:after:border-l-0 checked:focus:after:border-t-0 checked:focus:after:border-solid checked:focus:after:border-white checked:focus:after:bg-transparent dark:border-neutral-600 dark:checked:border-primary dark:checked:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
-                type="checkbox"
-                value=""
-                id="exampleCheck3"
-                checked />
-              <label
-                className="inline-block  pl-[0.15rem] hover:cursor-pointer"
-                for="exampleCheck3">
-                Remember me
-              </label>
-            </div>
-
-            <a
-              href="#!"
-              className="text-primary
-              transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
-              >Forgot password?</a
-            >
+          <div className="mb-6 flex items-center justify-between  text-lg font-medium md:text-xl text-orange-600">
+         <motion.h1 
+         animate={{
+         opacity:error?1:0,
+        //  y:error?0:-40,
+         x:error?[-100,100,0,-100,100,0]:null
+         
+         }}
+         transition={{duration:0.3}}
+         
+         
+         className="text-center w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
           </div>
 
           <button
@@ -211,7 +211,8 @@ dispatch(setUserName(username))
             dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
             data-te-ripple-init
             data-te-ripple-color="light">
-            Sign in
+                       {isLoading?<Loadingbtn/>:"Sign In"}
+
           </button>
 
           <div
@@ -222,21 +223,13 @@ dispatch(setUserName(username))
             </p>
           </div>
 
-          <a
+          <a onClick={()=>navigate("/register")}
             className="mb-3 flex w-full items-center bg-orange-300 justify-center rounded bg-primary px-7 pb-2.5 pt-3 text-center text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-            // style={{"backgroundColor":"#3b5998"}}
             href="#!"
             role="button"
             data-te-ripple-init
             data-te-ripple-color="light">
-            {/* <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="mr-2 h-3.5 w-3.5"
-              fill="currentColor"
-              viewBox="0 0 24 24">
-              <path
-                d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-            </svg> */}
+         
          Create an account
           </a>
     

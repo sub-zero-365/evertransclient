@@ -55,7 +55,7 @@ const SideBar = () => {
 
   return (
 
-    <div className={`w-[12.5rem]  select-none max-w-[calc(100vw-2.5rem)] z-[100]
+    <div className={`w-[12.5rem]   select-none max-w-[calc(100vw-2.5rem)] z-[100]
     px-4 text-xs overflow-y--auto flex-none fixed md:static transition-[left] duration-700
     ${isSideOpen ? "left-0" : "left-[-100%]"} top-0 h-full md:top-0 bg-color_light md:h-[calc(100svh-3.75rem)] overflow-visible border`}>
     
@@ -74,16 +74,18 @@ const SideBar = () => {
         navLinks.map(({ name, icon, to }, index) => (
         <motion.div
         initial={false}
-        animate={{x:isSideOpen?0:-100}}
-        transition={{delay:index*0.2}}
+        // animate={{opacity:isSideOpen?1:0}}
+        // transition={{delay:index*0.2}}
         
         className="">
         <NavLink to={to}
           key={index}
           onClick={() => {
+if(window.innerWidth<=600){
 
-            toggleSideBar()
+  toggleSideBar()
 
+}
             setActive(index)
           }
 

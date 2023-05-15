@@ -136,8 +136,8 @@ const Booking = () => {
   return (
     <motion.div
 
-      initial={{ y: 100, opacity: 0.4 }}
-      animate={{ y: 0, opacity: 1 }}
+      initial={{ opacity: 0.4 }}
+      animate={{ opacity: 1 }}
 
       className="md:mt-5 pb-20 min-h-screen">
       <Alert toggle={toggle} message={"please login or signup to get started"}

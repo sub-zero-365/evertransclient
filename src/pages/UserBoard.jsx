@@ -1,15 +1,23 @@
 import { useSelector } from 'react-redux'
 import { useravatar } from '../Assets/images';
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { useState,useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import "swiper/css"
 import { motion } from 'framer-motion'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
+import Alert from '../components/Alert'
 const UserBoard = () => {
     const token = localStorage.token
-
+    const [toggle, setToggle] = useState(false)
+    const navigate = useNavigate()
     useEffect(() => {
-        if (!token) return
+        if (!token) {
+            setToggle(true)
+            setTimeout(() => {
+                navigate("/login")
+            }, 4000);
+        }
 
         async function getData() {
             const url = process.env.REACT_APP_LOCAL_URL + "/ticket";
@@ -22,7 +30,7 @@ const UserBoard = () => {
                 })
                 console.log(res)
                 // const { data: { fullname, } } = res
-setTickets(res?.data?.tickets);
+                setTickets(res?.data?.tickets);
             } catch (err) {
                 console.log(err)
             }
@@ -38,6 +46,7 @@ setTickets(res?.data?.tickets);
     // const isToken=localStorage.token;
     return (
         <div className="max-w-5xl mx-auto min-h-screen">
+            <Alert toggle={toggle} setToggle={setToggle} message={"please login to continue "} />
             <div className="flex  justify-between px-4 my-2 py-2">
                 <div className="leading-2">
                     <h2 className="text-lg leading-5">welcome back</h2>
@@ -101,7 +110,7 @@ setTickets(res?.data?.tickets);
 
                         {
 
-                            tickets.map(({ from, to, price,traveldate }, index) => (<motion.tr
+                            tickets.map(({ from, to, price, traveldate, _id }, index) => (<motion.tr
 
                                 whileInView={{ y: 0 }}
                                 initial={{ y: 10 }}
@@ -119,21 +128,21 @@ setTickets(res?.data?.tickets);
                                     {to}
                                 </th>
                                 <td className="px-6 py-4">
-                                    <a href={`https://wa.me/237672301714`} className="font-medium cursor:pointer text-blue-500 dark:text-blue-500 hover:underline">{price} frs</a>
+                                    <span href={`https://wa.me/237672301714`} className="font-medium cursor:pointer text-blue-500 dark:text-blue-500 hover:underline">{price}frs</span>
 
                                 </td>
                                 <td className="px-6 py-4">
-                                    <a href={`mailto:bateemma14@gmail.com`} className="font-medium cursor:pointer text-blue-500 dark:text-blue-500 hover:underline">11:00am</a>
+                                    <span href={`mailto:bateemma14@gmail.com`} className="font-medium cursor:pointer text-blue-500 dark:text-blue-500 hover:underline">11:00am</span>
 
 
                                 </td>
                                 <td className="px-6 py-4">
-                                   {traveldate}
+                                    {traveldate}
                                 </td>
                                 <motion.td
                                     whileInView={{ scale: 1, x: 0 }}
                                     initial={{ scale: 0.5, x: -30 }}
-                                    className="px-6 py-4" onClick={() => 0}>
+                                    className="px-6 py-4" onClick={() => navigate(`${_id}`)}>
                                     <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Details</a>
                                 </motion.td>
                             </motion.tr>

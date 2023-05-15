@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react"
-import { NavLink, useSearchParams,useNavigate } from "react-router-dom"
+import { NavLink, useSearchParams, useNavigate } from "react-router-dom"
 import Alert from '../components/Alert'
 import { motion } from 'framer-motion'
 import axios from 'axios'
+import { Loadingbtn } from "../components"
 const BusSits = () => {
 
-const navigate=useNavigate()
+  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
+
   const [queryParameters] = useSearchParams()
   const [toggle, setToggle] = useState(false)
   useEffect(() => { window.scrollTo(0, 0) }, [])
@@ -16,32 +19,30 @@ const navigate=useNavigate()
 
   const url = process.env.REACT_APP_LOCAL_URL + "/ticket"
   const handleSubmit = async () => {
-  
-  const token= localStorage.token
-  if(!token) return navigate("/login")
+    setIsLoading(true)
+    const token = localStorage.token
+    if (!token) return navigate("/login")
     try {
-      // const url = process.env.REACT_APP_BASE_URL + "/ticket";
       const res = await axios.post(url, {
         from: queryParameters.get("from"),
         to: queryParameters.get("to"),
         traveldate: new Date(),
         traveltime: "12/02/22",
         price: 2000
-      },{
-      
-      headers:{
-      "Authorization":"makingmoney "+token
-      
-      }
-      
+      }, {
+
+        headers: {
+          "Authorization": "makingmoney " + token
+
+        }
+
       })
-      // console.log(res)
-      setTimeout(()=>{
+      setTimeout(() => {
         navigate("/user")
-      },4000)
+      }, 4000)
       proccedCheckout()
     } catch (err) {
-
+      setIsLoading(false)
       console.log(err)
     }
 
@@ -66,7 +67,7 @@ const navigate=useNavigate()
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
           onClick={handleSubmit}
         >
-          &lt;&lt;&lt;&nbsp;  PAY&nbsp; &gt;&gt;&gt;
+          {isLoading ? <Loadingbtn /> : "Pay And Go"}
         </button>
       </div>
       <div className="flex container mx-auto">
@@ -147,9 +148,8 @@ const navigate=useNavigate()
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-
             >
-              PAY &gt
+              {isLoading ? <Loadingbtn /> : "Pay And Go"}
             </button>
 
           </div>

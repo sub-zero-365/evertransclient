@@ -1,28 +1,34 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-// import axios from 'axios'
-const Login = () => {
-  const url = "https://mrjamesserviceappbackend.vercel.app/admin/login"
+import axios from 'axios'
+import { Loadingbtn } from "../components";
+import { motion } from "framer-motion"
+
+// import {}
+const AdminLogin = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const url = process.env.REACT_APP_LOCAL_URL + "/auth/admin"
   const [number, setNumber] = useState(null)
   const [password, setPassword] = useState("")
-const [error,setError]=useState(false)
+  const [error, setError] = useState(false)
   const navigate = useNavigate();
-  const [active, setActive] = useState(false)
   const handeSubmit = async (e) => {
     e.preventDefault()
-    setActive(true)
-    // try {
-    //   const data = await axios.post(url, { phone: number, password })
-    //   localStorage.setItem("admin_token",data?.data?.token)
-    //   navigate("/dashboard")
-    // } catch (err) {
-    //   console.log(err.response.data);
-    //   setActive(false);
-    //   setError(err.response.data)
-    //   setTimeout(() => {
-    //     setError(false)
-    //   }, 4000);
-    // }
+    setIsLoading(true)
+
+    try {
+      const data = await axios.post(url, { phone: number, password })
+      localStorage.setItem("admin_token", data?.data?.token)
+      navigate("/dashboard")
+    } catch (err) {
+      console.log(err.response.data);
+      setIsLoading(false)
+      setError("logging fail");
+      const timer = setTimeout(() => {
+        clearTimeout(timer)
+        setError("")
+      }, 5000);
+    }
 
 
   }
@@ -154,11 +160,23 @@ const [error,setError]=useState(false)
                 </label>
               </div>
 
-<span className={`text-red-400 text-lg pl-4 ${error?"block":"hidden"}`}>{error}</span>
+              {/* <span className={`text-red-400 text-lg pl-4 ${error ? "block" : "hidden"}`}>{error}</span> */}
+              <div className="mb-6 flex items-center justify-between  text-lg font-medium md:text-xl text-orange-600">
+                <motion.h1
+                  animate={{
+                    opacity: error ? 1 : 0,
+                    //  y:error?0:-40,
+                    x: error ? [-100, 100, 0, -100, 100, 0] : null
 
+                  }}
+                  transition={{ duration: 0.3 }}
+
+
+                  className="text-center w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
+              </div>
               <button
                 type="submit"
-                className={`inline-block bg-blue-400 task-btn relative ${active ? "active" : ""}
+                className={`inline-block bg-blue-400 task-btn relative 
               w-full rounded bg-primary px-7
               pb-2.5 pt-3 text-sm font-medium
               uppercase leading-normal
@@ -177,7 +195,7 @@ const [error,setError]=useState(false)
               dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]`}
                 data-te-ripple-init
                 data-te-ripple-color="light" >
-                Sign in
+                {isLoading ? <Loadingbtn /> : "Sign In"}
               </button>
 
             </form>
@@ -189,4 +207,4 @@ const [error,setError]=useState(false)
   )
 }
 
-export default Login
+export default AdminLogin

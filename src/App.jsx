@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react'
-import { useState, useEffect } from 'react'
+import {  useEffect } from 'react'
 import axios from "axios"
-import { Navbar, Loader, UserLayout, DashboardLayout } from "./components";
-import { Home, Login, Register, Booking, BusSits, CheckOut, CheckOutInfo, NotFound, AdminLogin, UserBoard } from "./pages";
+import {  UserLayout, DashboardLayout } from "./components";
+import { Home ,Auth,SingleTicket} from "./pages";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import { useDispatch } from 'react-redux';
@@ -12,6 +12,15 @@ import {setUserName} from "./actions/userName"
 const ContactUs = lazy(() => import("./pages/Contact"));
 const Aboutus = lazy(() => import("./pages/Aboutus"));
 const Appointment = lazy(() => import("./pages/Appointment"));
+const CheckOutInfo =lazy(()=>import("./pages/CheckOutInfo"));
+const UserBoard =lazy(()=>import("./pages/UserBoard"));
+const NotFound =lazy(()=>import("./pages/NotFound"));
+const Login =lazy(()=>import("./pages/Login"));
+const Register =lazy(()=>import("./pages/Register"));
+const Booking =lazy(()=>import("./pages/Booking"));
+const BusSits =lazy(()=>import("./pages/BusSits"));
+// const AdminLogin =lazy=(()=> import("./pages/AdminLogin"));
+// const Auth =lazy(()=>("./pages/AdminLogin"))
 
 function App() {
   const dispatch = useDispatch();
@@ -65,8 +74,9 @@ dispatch(setUserName(username))
                 <Route path="contact-us" element={<ContactUs />} />
                 <Route path="about-us" element={<Aboutus />} />
                 <Route path="information" element={<CheckOutInfo />} />
-                <Route path="auth" element={<AdminLogin />} />
+                <Route path="auth" element={<Auth />} />
                 <Route path="user" element={<UserBoard />} />
+                <Route path="user/:id" element={<SingleTicket />} />
               </Route>
               {/* dashboardlayout here  */}
               <Route path="/dashboard" element={<DashboardLayout />} >
