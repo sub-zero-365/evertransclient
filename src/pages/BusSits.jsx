@@ -13,7 +13,7 @@ const
     console.log(queryParameters.get("from"))
     const [userInfo, setUserInfo] = useState({
       name: null, age: null, phone: null, gender: "male", from: queryParameters.get("from"),
-      to: queryParameters.get("to"),email:null
+      to: queryParameters.get("to"),email:null,date:queryParameters.get("date"),time:queryParameters.get("time")
     })
     const weekDay = (index = 0) => {
       const _days = [
@@ -67,7 +67,7 @@ const
       gotoCheckOut()
     }
     const gotoCheckOut = () =>
-    navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}`)
+    navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}`)
     return (
       <div
         className="min-h-screen"
@@ -132,8 +132,8 @@ const
             </div>
             <div className="flex justify-between px-2 items-center">
               <h1 className="text-lg">{weekDay(new Date().getDay())}</h1>
-              <h1 className="text-lg pb-4">On {new Date().getDay()}th Sept2021 at </h1>
-              <h2 className="text-lg">{new Date().getHours()} am</h2>
+              <h1 className="text-lg pb-4">On {new Date(queryParameters.get("date")).toLocaleDateString()}  at </h1>
+              <h2 className="text-lg">{queryParameters.get("time")}</h2>
             </div>
             <p className="text-lg text-center capitalize pb-2 ">please
               your bus shit </p>
@@ -372,6 +372,10 @@ const
                         id="male"
                         name="gender"
                         checked
+                        onChange={e=>setUserInfo({
+                        ...userInfo,
+                      gender:e.target.value
+                        })}
                       />
                       <label
                         className="inline-block  pl-[0.15rem] hover:cursor-pointer"
@@ -386,6 +390,12 @@ const
                         value="female"
                         id="female"
                         name="gender"
+                        // onChange={e=>setUserInfo(e.target.value)}
+                        onChange={e=>setUserInfo({
+                          ...userInfo,
+                        gender:e.target.value
+                          })}
+                        
                       />
                       <label
                         className="inline-block  pl-[0.15rem] hover:cursor-pointer"

@@ -19,6 +19,8 @@ const Login =lazy(()=>import("./pages/Login"));
 const Register =lazy(()=>import("./pages/Register"));
 const Booking =lazy(()=>import("./pages/Booking"));
 const BusSits =lazy(()=>import("./pages/BusSits"));
+const Cities =lazy(()=>import("./pages/Cities"));
+const Users =lazy(()=>import("./pages/Users"));
 // const AdminLogin =lazy=(()=> import("./pages/AdminLogin"));
 // const Auth =lazy(()=>("./pages/AdminLogin"))
 
@@ -81,6 +83,11 @@ dispatch(setUserName(username))
               {/* dashboardlayout here  */}
               <Route path="/dashboard" element={<DashboardLayout />} >
                 <Route index element={<Appointment />} />
+                <Route path=":id" element={<SingleTicket />} />
+                {/* <Route path="user" element={<SingleTicket />} /> */}
+                <Route path="cities" element={<Cities />} />
+                <Route path="users" element={<Users />} />
+                
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

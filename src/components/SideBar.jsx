@@ -31,14 +31,14 @@ const SideBar = () => {
       name: "Users",
       icon: <TiMessages size={25} />
 
-      , to: "/dashboard"
+      , to: "/dashboard/users"
     },
     
     {
 
-      name: "Services",
+      name: "Cities",
       icon: <GrServicePlay size={25} />
-      , to: "/dashboard"
+      , to: "/dashboard/cities"
 
     },
     {

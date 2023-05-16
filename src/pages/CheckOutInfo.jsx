@@ -28,7 +28,14 @@ const BusSits = () => {
         to: queryParameters.get("to"),
         traveldate: new Date(),
         traveltime: "12/02/22",
-        price: 2000
+        price: 2000,
+        sex:queryParameters.get("gender"),
+        email:queryParameters.get("email"),
+        age:queryParameters.get("age"),
+        time:queryParameters.get("time").toLowerCase(),
+        phone:queryParameters.get("phone"),
+        fullname:queryParameters.get("name"),
+        
       }, {
 
         headers: {
@@ -123,11 +130,11 @@ const BusSits = () => {
             </div>
             <div className="flex mb-3 flex-wrap">
               <div className="w-1/2 text-sm">Date to Travel</div>
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">24/02/2025</div>
+              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("date")}</div>
             </div>
             <div className="flex mb-3 flex-wrap">
               <div className="w-1/2 text-sm">Travel Time</div>
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">3:00 AM</div>
+              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("time")}</div>
             </div>
             <div className="flex mb-3 flex-wrap">
               <div className="w-1/2 text-sm">Travel Cost</div>

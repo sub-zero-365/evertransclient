@@ -4,19 +4,22 @@ import { useState, forwardRef, useEffect } from "react"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { IoMdArrowDropdown, } from 'react-icons/io'
-import Dropdown from 'rc-dropdown';
-import Menu, { Item as MenuItem, Divider } from 'rc-menu';
+// import Dropdown from 'rc-dropdown';
+// import Menu, { Item as MenuItem, Divider } from 'rc-menu';
 import { CiTimer } from 'react-icons/ci'
 import { BiCurrentLocation } from 'react-icons/bi'
 import 'rc-dropdown/assets/index.css';
 import Select from 'react-select'
 import Select2 from 'react-select'
 import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react'
+// import { Swiper, SwiperSlide } from 'swiper/react'
 import Alert from '../components/Alert'
 import { motion } from 'framer-motion'
+import { TimePicker } from 'react-ios-time-picker';
 const Booking = () => {
   const [toggle, setToggle] = useState(false)
+  const [value, setValue] = useState('10:00');
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     console.log("token :", token == "null")
@@ -47,17 +50,13 @@ const Booking = () => {
 
   }, [toggle])
 
-  // const [from, setFrom] = useState(null)
-  const [_to, setTo] = useState(null)
+  const onChange = (timeValue) => {
+    setValue(timeValue);
+    window.navigator.vibrate([40])
+    
+ }
+ 
 
-  function onSelectFrom({ key }) {
-    setTo(key)
-  }
-  function click({ }) {
-  }
-  function onVisibleChange(visible) {
-    console.log(visible);
-  }
   const [fromCities, setFromCities] = useState("choose starting point")
   const [toCities, setToCities] = useState("choose starting point")
   const options = [
@@ -70,21 +69,7 @@ const Booking = () => {
   ]
 
 
-  const to = (
-    <Menu onSelect={onSelectFrom} onClick={click} className="bg-slate-400 text-green-400 cal-width
-    max-h-screen overflow-auto scrollto" style={{ "--w": "400px", padding: "5rem 0" }}>
-
-      {
-        Array.from({ length: 24 }, (arr, index) => {
-
-          return (
-            <MenuItem key={index} className="text-2xl text-center hover:bg-slate-400 w-full">{index}:00 am</MenuItem>
-          )
-
-        })
-      }
-    </Menu>
-  );
+  
 
 
 
@@ -96,7 +81,7 @@ const Booking = () => {
 
 
   const navigate = useNavigate()
-  const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${startDate}&date=${startDate}`)
+  const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${value}&date=${startDate}`)
   const [demoFetch, setDemoFetch] = useState(false)
   const loadDemoData = (evt) => {
 
@@ -167,29 +152,20 @@ const Booking = () => {
           <h1 className="text-xl mb-3 mt-5 font-manrope">Select Destination <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
           <Select2 required defaultValues={fromCities} onChange={evt => setToCities(evt.value)}
             options={options} />
-
-          <Dropdown className="w-full border-2 mt-[20px]
-            shadow-xl border-blue-500 gap-2  flex p-1 rounded-md my-1  "
-            trigger={['click', "mouseover"]}
-            overlay={to}
-            animation="slide-up"
-            onVisibleChange={onVisibleChange}
-          >
-            <div className="flex items-center">
+          <h1 className="text-xl mb-3 mt-5 font-manrope">Select time <CiTimer size={25} className="inline-block ml-4" /></h1>
+            
+      <div className="w-full border-2 mt-[20px]
+            shadow-xl border-blue-500 gap-2   p-1 rounded-md my-1 flex items-center ">
               <div className="flex-none rounded-lg h-[2.5rem] flex items-center justify-center w-[2.5rem]">
                 <CiTimer size={25} />
               </div>
-              <div className="flex-1">
-                <h4 className="text-lg leading-6 capitalize">Select Travel time</h4>
-                <p className="text-sm md:text-lg text-slate-500 font-[500]">{_to + ":00 am" || "00:00 am"}</p>
-              </div>
-
-              <div className="flex-none h-full w-[40px]">
+         <TimePicker onChange={onChange} className="flex-1" cellHeight={40} pickerDefaultValue={""}  value={value} required   />
+         {/* <div className="flex-none h-full w-[40px]">
                 <IoMdArrowDropdown size={40} />
-              </div>
-            </div>
+              </div> */}
+      </div>
 
-          </Dropdown>
+          
 
           <DatePicker
             // inline
