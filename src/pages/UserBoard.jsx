@@ -28,7 +28,7 @@ const UserBoard = () => {
                         'Authorization': "makingmoney " + token
                     }
                 })
-                console.log(res)
+                console.log(res.data)
                 // const { data: { fullname, } } = res
                 setTickets(res?.data?.tickets);
             } catch (err) {
@@ -59,14 +59,13 @@ const UserBoard = () => {
                 onSlideChange={(e) => console.log(setctiveSlide(e.activeIndex))}
             >
 
-                {Array.from({ length: 10 }, (arr, index) => (<SwiperSlide >
-                    <motion.div className={`min-h-[200px] mx-2 ${activeSlide == index ? "bg-orange-500" : "bg-orange-200"}  rounded-lg `}
+                {[1,2,3].map((arr, index) => (<SwiperSlide >
+                    <motion.div className={`min-h-[200px] grid place-items-center mx-2 ${activeSlide == index ? "bg-orange-500" : "bg-orange-200"}  rounded-lg `}
                         animate={{
-                            y: activeSlide == index ? [40, 0] : null,
+                            y: activeSlide == index ? [40,0]:null,scale: activeSlide == index ? [1,1.02,1] : null,
                         }}
                     >
-
-                        <p className='text-center pt-4'>12/23/2021</p>
+                        <p className='text-center pt-4 text-3xl'>{index+1}</p>
 
 
                     </motion.div>
@@ -111,12 +110,9 @@ const UserBoard = () => {
                         {
 
                             tickets.map(({ from, to, price, traveldate, _id }, index) => (<motion.tr
-
                                 whileInView={{ y: 0 }}
                                 initial={{ y: 10 }}
-
-                                key={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
-
+                                key={_id} className="bg-white text-xs hover:bg-slate-200 transition-colors duration-300 md:text-sm lg:text-lg border-b dark:bg-gray-900 dark:border-gray-700"
                             >
                                 <td className="px-2 py-4 border flex items-center justify-center">
                                     {index + 1}
@@ -137,13 +133,13 @@ const UserBoard = () => {
 
                                 </td>
                                 <td className="px-6 py-4">
-                                    {traveldate}
+                                    {(new Date(traveldate).toLocaleDateString())}
                                 </td>
                                 <motion.td
                                     whileInView={{ scale: 1, x: 0 }}
                                     initial={{ scale: 0.5, x: -30 }}
                                     className="px-6 py-4" onClick={() => navigate(`${_id}`)}>
-                                    <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Details</a>
+                                    <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Details</a>
                                 </motion.td>
                             </motion.tr>
                             ))

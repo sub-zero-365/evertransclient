@@ -5,7 +5,7 @@ import { AiOutlinePlus, AiOutlineArrowUp } from "react-icons/ai"
 import { motion } from "framer-motion"
 
 
-import {image2,image3,image4,image1} from "../Assets/images"
+import { image2, image3, image4, image1 } from "../Assets/images"
 const Home = () => {
     const testimonials = useRef(null)
     const navigate = useNavigate()
@@ -59,18 +59,19 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                 <AiOutlineArrowUp size={30} />
             </div>
             <motion.div
-            
-            animate={{scale:[0.7,1.2,0.8]}}
-            
-            transition={{
-                duration: 2,
-                ease: "easeInOut",
-                times: [0, 0.2, 0.5, 0.8, 1],
-                repeat: Infinity,
-                repeatDelay: 1}
-           
-        }
-            className="bottom-6 shadow-2xl button-add  top-auto bg-blue-400 
+
+                animate={{ scale: [0.7, 1.2, 0.8] }}
+
+                transition={{
+                    duration: 2,
+                    ease: "easeInOut",
+                    times: [0, 0.2, 0.5, 0.8, 1],
+                    repeat: Infinity,
+                    repeatDelay: 1
+                }
+
+                }
+                className="bottom-6 shadow-2xl button-add  top-auto bg-blue-400 
             w-[2.5rem] h-[2.5rem] rounded-full left-1/2 overflow-hidden 
            -translate-x-1/2
             z-10 fixed md:hidden " onClick={gotoBookings}>
@@ -87,12 +88,12 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                             initial={{ x: -100, opacity: 0, y: 10, scale: 0.8 }}
                             whileInView={{ x: 0, opacity: 1, y: 0, scale: 1 }}
                             transition={{ duration: 0.4 }}
-                            class="max-w-2xl mb-4 text-3xl font-extrabold tracking-tight leading-8 md:text-4xl xl:text-5xl dark:text-white">Stop Findng <br /> and Start Tracking</motion.h1>
+                            class="max-w-2xl mb-4 text-3xl font-extrabold tracking-tight leading-8 md:text-4xl xl:text-5xl dark:text-white">Stop Finding <br /> and Start Tracking</motion.h1>
                         <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">From checkout to global sales tax compliance, companies around the world use Flowbite to simplify their payment stack.</p>
                         <Link href="#" to={"/booking"} class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
                             Get started
                             <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                        </Link> 
+                        </Link>
                         <Link to={"/about-us"} href="#" class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
                             Learn More
                         </Link>
@@ -103,7 +104,10 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                     </div>
                 </div>
             </section>
-            <OurServices />
+            <div id="ourservices">
+                <OurServices />
+            </div>
+
             <div className="container rounded-lg md:overflow-hidden
             mx-auto shadow-2xl  py-10-
              z-40  mb-[90px]   flex ">
@@ -121,9 +125,9 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                     <span className="w-[90px] block rounded-md h-[5px] mx-auto md:mx-0 hover:bg-red-200 transiton-bg-color bg-red-500"></span>
                     <div className="md:flex flex-wrap  mt-10">
                         <div className="md:w-1/2  items-start flex my-4 gap-2 relative">
-                                <img src={image1 ||
-                                    "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
-                                    alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
+                            <img src={image1 ||
+                                "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
+                                alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Mission</h2>
@@ -136,10 +140,10 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                             </div>
                         </div>
                         <div className="md:w-1/2  flex items-start my-4 gap-2">
-                        <img src={image2 ||
-                                    "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
-                                    alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
-                            
+                            <img src={image2 ||
+                                "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
+                                alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
+
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Benefits</h2>
@@ -152,10 +156,10 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                             </div>
                         </div>
                         <div className="md:w-1/2  flex items-start my-4 gap-2">
-                        <img src={image3 ||
-                                    "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
-                                    alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
-                            
+                            <img src={image3 ||
+                                "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
+                                alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
+
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Our Desire</h2>
@@ -169,10 +173,10 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                             </div>
                         </div>
                         <div className="md:w-1/2  flex items-start my-4 gap-2">
-                        <img src={image4 ||
-                                    "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
-                                    alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
-                            
+                            <img src={image4 ||
+                                "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
+                                alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
+
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Vison</h2>
@@ -189,61 +193,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
             </div>
 
 
-            <div class="container mx-auto px-5 py-2 lg:px-32 lg:pt-12 mb-10">
-                <h1 className="text-2xl mt-5 mb-2 uppercase font-[500] text-center md:text-left">View Cities In A Goal</h1>
-                <span className="w-[90px] mb-6 block rounded-md h-[5px] mx-auto md:mx-0 hover:bg-red-200 transiton-bg-color bg-red-500"></span>
 
-                <div class="-m-1 flex flex-wrap md:-m-2">
-                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
-                        <div class="w-full p-1 md:p-2">
-                            <img
-                                alt="gallery"
-                                class="block h-full w-full rounded-lg object-cover object-center"
-                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp" />
-                        </div>
-                    </div>
-                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
-                        <div class="w-full p-1 md:p-2">
-                            <img
-                                alt="gallery"
-                                class="block h-full w-full rounded-lg object-cover object-center"
-                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp" />
-                        </div>
-                    </div>
-                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
-                        <div class="w-full p-1 md:p-2">
-                            <img
-                                alt="gallery"
-                                class="block h-full w-full rounded-lg object-cover object-center"
-                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(75).webp" />
-                        </div>
-                    </div>
-                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
-                        <div class="w-full p-1 md:p-2">
-                            <img
-                                alt="gallery"
-                                class="block h-full w-full rounded-lg object-cover object-center"
-                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp" />
-                        </div>
-                    </div>
-                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
-                        <div class="w-full p-1 md:p-2">
-                            <img
-                                alt="gallery"
-                                class="block h-full w-full rounded-lg object-cover object-center"
-                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(76).webp" />
-                        </div>
-                    </div>
-                    <div class="flex md:w-1/2 lg:w-1/3 flex-wrap">
-                        <div class="w-full p-1 md:p-2">
-                            <img
-                                alt="gallery"
-                                class="block h-full w-full rounded-lg object-cover object-center"
-                                src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(72).webp" />
-                        </div>
-                    </div>
-                </div>
-            </div>
             {/* testimonails */}
 
             <section class="text-neutral-700 dark:text-neutral-300 container mx-auto mb-10" ref={testimonials}>

@@ -9,17 +9,19 @@ import { motion, useScroll } from "framer-motion";
 
 const Navbar = () => {
     const isUserName = useSelector(state => state.username.username);
-    const isToken = localStorage.token;
-    console.log(isUserName)
+    // const isToken = localStorage.token;
+    const isToken =localStorage.getItem("token")
+    // console.log(isUserName)
     // const [isLogin,setIslogin]=useState(true)
-    const isLogin = localStorage.token;
+    const isLogin = localStorage.getItem("token");
     const { scrollYProgress } = useScroll()
     const navigate = useNavigate()
     const gotoLoginPage = () => {
+        // localStorage.token = ""
+        localStorage.removeItem("token")
         navigate("/login")
         setIsOpen(false)
-        localStorage.token=""
-        
+
 
     }
     const gotoRegisterPage = () => {
@@ -62,17 +64,26 @@ const Navbar = () => {
     }
 
     return (
-        <div className="sticky top-0 left-0 shadow-lg select-none bg-color_light  dark:bg-color_dark dark:text-white z-20">
+        <div className="sticky top-0 left-0 shadow-lg dark:shadow-black select-none bg-color_light  dark:bg-color_dark dark:text-white z-20">
 
             <div className="container mx-auto  h-[60px] items-center  px-4 flex justify-between relative  ">
                 <motion.div
-                    // animate={{scaleX:225}}
 
-                    className="h-1 absolute right-0 transform-origin-0 left-0 bottom-0 w-full- bg-slate-400"
+                    className="h-[1px] absolute right-0 transform-origin-0 left-0 bottom-0 w-full- bg-slate-400"
                     style={{ scaleX: scrollYProgress }}
                 />
-                <div className="text-2xl font-montserrat cursor-pointer hover:text-slate-950 hover:font-light transition-[color] " onClick={navigateToHome}>Afri-Con</div>
+                <div className="text-2xl font-montserrat cursor-pointer hover:text-slate-950 dark:hover:text-white duration-300 hover:font-light transition-[color] " onClick={navigateToHome}>Afri-Con</div>
                 <ul className="hidden flex-col md:flex-row  md:flex items-center">
+                    <motion.li
+
+                        initial={false}
+                        // animate={{ x: isOpen ? 0 : -1000 }}
+
+                        className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                            to="/?#ourservices"
+                            className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                        >Our Services</NavLink></motion.li>
+
                     <motion.li whileHover={{ scaleX: 1.2 }} className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/booking"
                         className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
@@ -88,13 +99,13 @@ const Navbar = () => {
                     >Contact Us</NavLink></li>
                 </ul>
                 <motion.ul
-
+                    onClick={() => isOpen && setIsOpen(false)}
                     variant={isOpen ? container : null}
                     initial="hidden"
                     animate="show"
 
                     className={`${!isOpen ? " max-h-0" :
-                        " max-h-screen"} overflow-hidden transition-[max-height] duration-500 border-b-2 shadow
+                        " max-h-screen"} overflow-hidden transition-[max-height] duration-500 border-b-0 
                     md:hidden absolute top-[60px] left-0 bg-color_light  dark:bg-color_dark dark:text-white  w-full `}>
                     <motion.li
 
@@ -106,10 +117,8 @@ const Navbar = () => {
                             className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                         >Our Services</NavLink></motion.li>
                     <motion.li
-
                         initial={false}
                         animate={{ x: isOpen ? [1000, 0, 100, 0] : -1000 }}
-
                         className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                             to="/booking"
                             className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
@@ -160,7 +169,8 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                         onClick={() => {
                                             if (window.confirm("do you want to logout out")) {
                                                 // setIslogin(false)
-                                                localStorage.token = ""
+                                                // localStorage.token = ""
+                                                localStorage.removeItem("token")
                                                 navigate("/login")
                                             }
                                         }}
@@ -232,13 +242,13 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
 
                                 <div className=" relative flex gap-4 items-center   rounded-full overflow-hidden- " >
-                                    <img src={useravatar} alt="user " className='w-[40px] h-[40px] rounded-full shadow-2xl ' onClick={gotoUserPage}/>
+                                    <img src={useravatar} alt="user " className='w-[40px] h-[40px] rounded-full shadow-2xl ' onClick={gotoUserPage} />
 
-<button
-                                    type="button"
-                                    data-te-ripple-init
-                                    data-te-ripple-color="light"
-                                    class="inline-block rounded bg-red-400 px-4 py-1 text-xs font-medium capitalize
+                                    <button
+                                        type="button"
+                                        data-te-ripple-init
+                                        data-te-ripple-color="light"
+                                        class="inline-block rounded bg-red-400 px-4 py-1 text-xs font-medium capitalize
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150
   ease-in-out hover:bg-primary-600
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
@@ -247,10 +257,10 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
   active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
   dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                                    onClick={gotoLoginPage}
-                                >
-                                    logout
-                                </button>
+                                        onClick={gotoLoginPage}
+                                    >
+                                        logout
+                                    </button>
 
 
 

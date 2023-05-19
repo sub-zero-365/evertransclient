@@ -144,7 +144,11 @@ const Appointment = () => {
                                 </th>
                         
                                 <td className="px-6 py-4">
-                                {user?.createdAt || "n/a"}
+                                
+                                
+                                {user?.createdAt?
+                                    (new Date(user?.createdAt).toLocaleDateString()):"n/a"}
+                                {/* {user?.createdAt || "n/a"} */}
 
                                 </td>
                             
@@ -156,7 +160,7 @@ const Appointment = () => {
                              
                          
                                 <td className="px-6 py-4 text-xs" onClick={() => navigate(`/dashboard/${user?._id || index}?admin=true`)}>
-                                    <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline">more details</a>
+                                    <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline">details</a>
                                 </td>
                             </tr>
                             ))

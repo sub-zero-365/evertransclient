@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { IoMdArrowDropdown, } from 'react-icons/io'
 // import Dropdown from 'rc-dropdown';
+
 // import Menu, { Item as MenuItem, Divider } from 'rc-menu';
 import { CiTimer } from 'react-icons/ci'
 import { BiCurrentLocation } from 'react-icons/bi'
@@ -16,10 +17,10 @@ import React from 'react';
 import Alert from '../components/Alert'
 import { motion } from 'framer-motion'
 import { TimePicker } from 'react-ios-time-picker';
+import TimePicker_1 from 'react-gradient-timepicker'
 const Booking = () => {
   const [toggle, setToggle] = useState(false)
   const [value, setValue] = useState('10:00');
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     console.log("token :", token == "null")
@@ -27,9 +28,7 @@ const Booking = () => {
       top: 0,
       left: 0,
     })
-
     if (!token) {
-      // alert("enter here")
       setToggle(true);
       setTimeout(() => {
         navigate("/login")
@@ -38,24 +37,14 @@ const Booking = () => {
     }
   }, [])
   useEffect(() => {
-
-
-    if (!toggle) {
-      // settimeout is out now 
-      // navigate("/login")
-
-    }
-
-
-
   }, [toggle])
 
   const onChange = (timeValue) => {
     setValue(timeValue);
     window.navigator.vibrate([40])
-    
- }
- 
+
+  }
+
 
   const [fromCities, setFromCities] = useState("choose starting point")
   const [toCities, setToCities] = useState("choose starting point")
@@ -69,24 +58,11 @@ const Booking = () => {
   ]
 
 
-  
-
-
-
-
-
-
-
-
-
-
   const navigate = useNavigate()
   const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${value}&date=${startDate}`)
   const [demoFetch, setDemoFetch] = useState(false)
   const loadDemoData = (evt) => {
-
     evt.preventDefault()
-    // if()
     setDemoFetch(true)
     setTimeout(() => {
       setDemoFetch(false)
@@ -131,49 +107,58 @@ const Booking = () => {
 
 
       <div className="container mx-auto md:flex ">
-        <div className="image flex-none h-[200px] md:h-[calc(100vh-60px)]
-        w-full rounded-b-[3rem] md:rounded-none md:w-[300px] lg:w-[700px] overflow-hidden">
+        <div className="image flex-1 h-[200px] md:h-[calc(100vh-70px)]
+        w-full rounded-b-[3rem] md:rounded-none  overflow-hidden">
           <img src="https://th.bing.com/th/id/OIP.83QkNLDMdg1mZ1rn6bnx-gHaHa?pid=ImgDet&rs=1" className="h-full w-full" alt="bus pic" />
         </div>
 
-        <form onSubmit={loadDemoData} className="-mt-10 mx-4  flex-1 md:mt-5">
+        <form onSubmit={loadDemoData} className="-mt-10 mx-4   md:mt-5  md:w-[25rem] md:max-w-[calc(100vw-2.5rem)]">
           <div className="shadow-lg mx-4 h-[50px] -mt-[25px] bg-white dark:bg-slate-700 rounded-lg flex p-1 ">
-
             <div className="w-1/2 bg-blue-500 text-center text-white flex items-center justify-center rounded-sm ">One Way</div>
             <div className="w-1/2 bg-orange-400 text-center text-black flex items-center justify-center
           rounded-sm ">Round Trip</div>
           </div>
-
-          <h1 className="text-xl mb-3 mt-5 font-manrope">Select starting point <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
-
-
-          <Select required defaultValues={fromCities} onChange={evt => setFromCities(evt.value)}
-            options={options} />
-          <h1 className="text-xl mb-3 mt-5 font-manrope">Select Destination <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
-          <Select2 required defaultValues={fromCities} onChange={evt => setToCities(evt.value)}
-            options={options} />
-          <h1 className="text-xl mb-3 mt-5 font-manrope">Select time <CiTimer size={25} className="inline-block ml-4" /></h1>
-            
-      <div className="w-full border-2 mt-[20px]
-            shadow-xl border-blue-500 gap-2   p-1 rounded-md my-1 flex items-center ">
-              <div className="flex-none rounded-lg h-[2.5rem] flex items-center justify-center w-[2.5rem]">
-                <CiTimer size={25} />
-              </div>
-         <TimePicker onChange={onChange} className="flex-1" cellHeight={40} pickerDefaultValue={""}  value={value} required   />
-         {/* <div className="flex-none h-full w-[40px]">
-                <IoMdArrowDropdown size={40} />
-              </div> */}
-      </div>
-
-          
-
-          <DatePicker
-            // inline
+          <div className="flex justify-center items-center mt-4"><DatePicker
+            inline
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             customInput={<ExampleCustomInput />
             }
-          />
+          /> </div>
+          <h1 className="text-xl mb-3 mt-5 font-manrope">Select starting point <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
+
+          <Select className="dark:bg-slate-900 text-black text-lg md:text-xl" required defaultValues={fromCities} onChange={evt => setFromCities(evt.value)}
+            options={options} />
+          <h1 className="text-xl mb-3 mt-5 font-manrope">Select Destination <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
+          <Select2 required className="dark:bg-slate-900 text-black text-lg md:text-xl " defaultValues={fromCities} onChange={evt => setToCities(evt.value)}
+            options={options} />
+          <h1 className="text-xl mb-3 mt-5 font-manrope">Select time <CiTimer size={25} className="inline-block ml-4" /></h1>
+          {/* <TimePicker_1
+          // time="00:00"
+          theme="Bourbon"
+    
+    placeholder="Star time"  
+    onSet={(val)=>{
+    alert("val :"+val.format12)
+    }}
+          /> */}
+          
+          
+          
+          <div className="w-full border-2 mt-[20px]
+            shadow-xl border-blue-500 gap-2   p-1 rounded-md my-1 flex items-center ">
+            <div className="flex-none rounded-lg h-[2.5rem] flex items-center justify-center w-[2.5rem]">
+              <CiTimer size={25} />
+            </div>
+            <TimePicker onChange={onChange} className="flex-1" cellHeight={40} pickerDefaultValue={""} value={value} required />
+            {/* <div className="flex-none h-full w-[40px]">
+                <IoMdArrowDropdown size={40} />
+              </div> */}
+          </div>
+
+
+
+          
 
 
 

@@ -24,7 +24,7 @@ export default function OurServices (){
   
    return (
 
-<div className="container mt-24 mb-10 px-6 mx-auto" id="ourservices">
+<div className="container mt-24 mb-10 px-6 mx-auto text-lg md:text-xl lg:text-xl" id="ourservices">
 <section className="mb-20 text-gray-800 dark:text-white text-center icons-container" ref={icons}>
   <h2 className="text-2xl font-montserrat leading-6 lg:text-3xl font-bold mb-12 gradient__text">Our Services </h2>
   <div className="grid md:grid-cols-3 lg:gap-x-12">
@@ -40,7 +40,7 @@ export default function OurServices (){
           </path>
         </svg>
       </motion.div>
-      <motion.h5 drag dragConstraints={{top:-50,left:-50,right:50,bottom:50}}  className="text-lg font-bold mb-4">Ticket Booking</motion.h5>
+      <motion.h5 drag dragConstraints={{top:-50,left:-50,right:50,bottom:50}}  className="text-lg md:text-xl font-bold mb-4">Ticket Booking</motion.h5>
       <p className="text-gray-500 dark:text-white">
         Laudantium totam quas cumque pariatur at doloremque hic quos quia eius. Reiciendis
         optio minus mollitia rerum labore facilis inventore voluptatem ad, quae quia sint.
@@ -56,7 +56,7 @@ export default function OurServices (){
           </path>
         </svg>
       </div>
-      <h5 className="text-lg font-bold mb-4">Travelling</h5>
+      <h5 className="text-lg md:text-xl font-bold mb-4">Travelling</h5>
       <p className="text-gray-500 dark:text-white">
         Eum nostrum fugit numquam, voluptates veniam neque quibusdam ullam aspernatur odio
         soluta, quisquam dolore animi mollitia a omnis praesentium, expedita nobis!
@@ -71,7 +71,7 @@ export default function OurServices (){
           </path>
         </svg>
       </div>
-      <h5 className="text-lg font-bold mb-4">Trip Councelling</h5>
+      <h5 className="text-lg md:text-xl font-bold mb-4">Trip Councelling</h5>
       <p className="text-gray-500 dark:text-white">
         Enim cupiditate, minus nulla dolor cumque iure eveniet facere ullam beatae hic
         voluptatibus dolores exercitationem? Facilis debitis aspernatur amet nisi?

@@ -107,7 +107,7 @@ const Footer = () => {
           <form action="">
             <div
               class="gird-cols-1 grid items-center justify-center gap-4 md:grid-cols-3">
-              <div class="md:mb-6 md:ml-auto">
+              {/* <div class="md:mb-6 md:ml-auto">
                 <p class="">
                   <strong>Sign up for our newsletter</strong>
                 </p>
@@ -124,17 +124,9 @@ const Footer = () => {
                   class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-200 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-neutral-200 peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-neutral-200"
                   >Email address
                 </label>
-              </div>
+              </div> */}
     
-              <div class="mb-6 md:mr-auto">
-                <button
-                  type="submit"
-                  class="inline-block rounded border-2 border-neutral-50 px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-neutral-50 transition duration-150 ease-in-out hover:border-neutral-100 hover:bg-neutral-500 hover:bg-opacity-10 hover:text-neutral-100 focus:border-neutral-100 focus:text-neutral-100 focus:outline-none focus:ring-0 active:border-neutral-200 active:text-neutral-200 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
-                  data-te-ripple-init
-                  data-te-ripple-color="light">
-                  Subscribe
-                </button>
-              </div>
+             
             </div>
           </form>
         </div>
@@ -148,93 +140,13 @@ const Footer = () => {
           </p>
         </div>
     
-        <div class="grid md:grid-cols-2 lg:grid-cols-4  justify-start md:justify-center">
-          <div class="mb-6">
-            <h5 class="mb-2.5 font-bold uppercase">Links</h5>
-    
-            <ul class="mb-0 list-none">
-              <li>
-                <a href="#!" class="text-white">Link 1</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 2</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 3</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 4</a>
-              </li>
-            </ul>
-          </div>
-    
-          <div class="mb-6">
-            <h5 class="mb-2.5 font-bold uppercase">Links</h5>
-    
-            <ul class="mb-0 list-none">
-              <li>
-                <a href="#!" class="text-white">Link 1</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 2</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 3</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 4</a>
-              </li>
-            </ul>
-          </div>
-    
-          <div class="mb-6">
-            <h5 class="mb-2.5 font-bold uppercase">Links</h5>
-    
-            <ul class="mb-0 list-none">
-              <li>
-                <a href="#!" class="text-white">Link 1</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 2</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 3</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 4</a>
-              </li>
-            </ul>
-          </div>
-    
-          <div class="mb-6">
-            <h5 class="mb-2.5 font-bold uppercase">Links</h5>
-    
-            <ul class="mb-0 list-none">
-              <li>
-                <a href="#!" class="text-white">Link 1</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 2</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 3</a>
-              </li>
-              <li>
-                <a href="#!" class="text-white">Link 4</a>
-              </li>
-            </ul>
-          </div>
-        </div>
       </div>
     
       <div
         class="p-4 text-center"
-        // style="background-color: rgba(0, 0, 0, 0.2)"
         >
-        © 2023 Copyright:
-        <a class="text-white" href="https://tailwind-elements.com/"
-          >Tailwind Elements</a
-        >
+        © 2023 Copyright: 
+        <a class="text-white" href="https://tailwind-elements.com/">{process.env.REACT_APP_APP_NAME}</a>
       </div>
     </footer>
   )

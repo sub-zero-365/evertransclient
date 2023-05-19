@@ -35,7 +35,9 @@ dispatch(setUserName(username))
       const { data: { fullname, token } } = res
       console.log(fullname, token);
       setuserName(fullname)
-      localStorage.token=token
+      localStorage.removeItem("token");
+      // localStorage.token=token
+      localStorage.setItem("token",res.data.token)
       navigate("/user")
 
     } catch (err) {
