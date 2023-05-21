@@ -20,12 +20,12 @@ const token = localStorage.getItem("token");
     if (!token) {
       setToggle(true)
       setTimeout(() => {
-          // navigate("/login")
       }, 4000);
   }
-    const url = `${process.env.REACT_APP_LOCAL_URL}/ticket/${id}`
+    const url =isAdmin? `${process.env.REACT_APP_LOCAL_URL}/ticket/${id}`:`${process.env.REACT_APP_LOCAL_URL}/admin/staticticket/${id}`
     async function getData() {
       try {
+      // alert(url)
         const res = await axios.get(url,{
           headers: {
             'Authorization': "makingmoney " + token
@@ -42,7 +42,6 @@ const token = localStorage.getItem("token");
       } catch (err) {
         setIsloading(false)
         setToggle(true)
-        alert("erro in thje cde ")
         console.log(err)
       }
     }
