@@ -118,10 +118,12 @@ const Booking = () => {
             <div className="w-1/2 bg-orange-400 text-center text-black flex items-center justify-center
           rounded-sm ">Round Trip</div>
           </div>
-          <div className="flex justify-center items-center mt-4"><DatePicker
+          <div className="flex justify-center items-center mt-4">
+          <DatePicker
             inline
             selected={startDate}
             onChange={(date) => setStartDate(date)}
+            minDate={new Date()}
             customInput={<ExampleCustomInput />
             }
           /> </div>
@@ -158,11 +160,6 @@ const Booking = () => {
 
 
 
-          
-
-
-
-
           <div className="hidden h-[50px] md:flex items-center justify-center mt-auto">
             <button
               type="submit"
@@ -174,7 +171,6 @@ const Booking = () => {
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-            // onClick={loadDemoData}
             >
               Find Bus
             </button>
