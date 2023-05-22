@@ -55,6 +55,11 @@ const Booking = () => {
     { value: "kumba", label: "kumba" },
     { value: "kribi", label: "kribi" },
     { value: "bamenda", label: "bamenda" },
+    { value: "Mamfe", label: "Mamfe" },
+    { value: "Bonaberi", label: "Bonaberi" },
+    { value: "Mankon", label: "Mankon" },
+    // { value: "", label: "bamenda" },
+    // { value: "bamenda", label: "bamenda" },
   ]
 
 
@@ -63,6 +68,7 @@ const Booking = () => {
   const [demoFetch, setDemoFetch] = useState(false)
   const loadDemoData = (evt) => {
     evt.preventDefault()
+    if(fromCities===toCities) return setErr(true)
     setDemoFetch(true)
     setTimeout(() => {
       setDemoFetch(false)
@@ -93,7 +99,7 @@ const Booking = () => {
 
 
 
-
+const [err,setErr]=useState(false)
   return (
     <motion.div
 
@@ -101,6 +107,8 @@ const Booking = () => {
       animate={{ opacity: 1 }}
 
       className="md:mt-5 pb-20 min-h-screen">
+        <Modal toggle={err} toggleModal={()=>setErr(false)} information={"Please both cities must not be thesame ,that is  "+fromCities+" must not be equal to "+toCities}  ></Modal>
+      
       <Alert toggle={toggle} message={"please login or signup to get started"}
         setToggle={setToggle} />
       <Loader toggle={demoFetch}></Loader>
@@ -132,7 +140,7 @@ const Booking = () => {
           <Select className="dark:bg-slate-900 text-black text-lg md:text-xl" required defaultValues={fromCities} onChange={evt => setFromCities(evt.value)}
             options={options} />
           <h1 className="text-xl mb-3 mt-5 font-manrope">Select Destination <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
-          <Select2 required className="dark:bg-slate-900 text-black text-lg md:text-xl " defaultValues={fromCities} onChange={evt => setToCities(evt.value)}
+          <Select2 required className="dark:bg-slate-900 text-black text-lg md:text-xl " defaultValues={toCities} onChange={evt => setToCities(evt.value)}
             options={options} />
           <h1 className="text-xl mb-3 mt-5 font-manrope">Select time <CiTimer size={25} className="inline-block ml-4" /></h1>
           {/* <TimePicker_1

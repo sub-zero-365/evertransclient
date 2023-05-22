@@ -152,7 +152,7 @@ const
               {
                 Array.from({ length: 16 }, (seat, i) => {
                   return (
-                    <div className="w-1/4 h-[80px] p-2 select-none" onClick={(e) => checkBusAvailabity(i, e)}>
+                    <div className="w-1/4 h-[80px] p-2 px-3 select-none" onClick={(e) => checkBusAvailabity(i, e)}>
                       <motion.div 
                       initial={false}
                       animate={{scale:selected==i?[0.8,1,0.9]:null}}

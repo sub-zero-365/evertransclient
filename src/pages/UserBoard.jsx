@@ -10,6 +10,17 @@ import { storeTicket, setLoading } from "../actions/userticket"
 import { AiOutlineWhatsApp } from 'react-icons/ai'
 import { BiSupport } from 'react-icons/bi'
 import { Footer } from "../components"
+import "swiper/css"
+import "swiper/css/navigation"
+import "swiper/css/pagination"
+import "swiper/css/autoplay"
+import "swiper/css/a11y"
+import "swiper/css/scrollbar"
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+// import "swiper/css/scrollbar"
 // import {useDispatch,useSelector} from 'reduc'
 import { useSelector, useDispatch } from 'react-redux'
 import { Loader } from "../components"
@@ -33,7 +44,6 @@ const UserBoard = () => {
     }
     const tickets_ = useSelector(state => state.userTicket.tickets);
     const loading = useSelector(state => state.userTicket.loading);
-    // console.log(tickets_)
     useEffect(() => {
         if (!token) {
             setToggle(true)
@@ -41,7 +51,6 @@ const UserBoard = () => {
                 navigate("/login")
             }, 4000);
         }
-        // userTicket([1, 1, 1, 1, 1, 1])
         async function getData() {
             const url = process.env.REACT_APP_LOCAL_URL + "/ticket";
             try {
@@ -50,9 +59,6 @@ const UserBoard = () => {
                         'Authorization': "makingmoney " + token
                     }
                 })
-                // console.log(res.data)
-                // const { data: { fullname, } } = res
-                // setTickets(res?.data?.tickets);
                 userTicket(res?.data?.tickets)
             } catch (err) {
                 console.log(err)
@@ -66,9 +72,7 @@ setLoading_(false)
     }, [])
 
     const [activeSlide, setctiveSlide] = useState(0);
-    // const [tickets, setTickets] = useState([])
     const isUserName = useSelector(state => state.username.username);
-    // const isToken=localStorage.token;
     return (
         <div className="max-w-5xl  mx-auto min-h-screen">
             {
@@ -80,7 +84,7 @@ setLoading_(false)
                     <h2 className="text-lg leading-5">welcome back</h2>
                     <h1 className="text-xl md:text-2xl lg:text-3xl font-medium">{isUserName}</h1>
                 </div>
-                <img src={useravatar} alt="user" className='shadow w-[2.5rem] h-[2.5rem] rounded-full border' />
+                <img src={useravatar} alt="user" className='shadow w-[2.5rem] h-[2.5rem] rounded-full ' />
             </div>
             <Swiper className='my-6 px-4'
                 slidesPerView={1.2}
@@ -100,12 +104,13 @@ setLoading_(false)
                 </SwiperSlide>))
                     : (
 
-                        <motion.div className={`min-h-[200px] grid place-items-center mx-2 ${activeSlide == 0 ? "bg-orange-500" : "bg-orange-200"}  rounded-lg `}
+                        <motion.div className={`min-h-[200px]  px-2 pt-4 mx-2 ${activeSlide == 0 ? "bg-orange-100" : "bg-orange-200"}  rounded-lg shadow `}
                             animate={{
                                 y: activeSlide == 0 ? [40, 0] : null, scale: activeSlide == 0 ? [1, 1.02, 1] : null,
                             }}
                         >
-                            <p className='text-center pt-4 text-3xl'>{1}</p>
+                        <p>pl</p>
+                        
                         </motion.div>
                     )
 
@@ -194,7 +199,7 @@ setLoading_(false)
                     ) : (
                         <div className="min-h-[300px]">
                             <h1 className="mb-6 text-2xl font-montserrat text-center leading-5 font-medium  dark:text-orange-100 px-4 mt-4">It appears that this users hasnot book a ticket</h1>
-                            <div className="border-4 ">
+                            <div className="">
                                 <button
                                     type="button"
                                     a data-te-ripple-init
@@ -213,7 +218,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                 >
                                     go booking page
                                 </button>
-                                <img src="https://media.tenor.com/Y3c23UQQ3MIAAAAC/empty-box.gif" alt="box" />
+                                <img src="https://media.tenor.com/Y3c23UQQ3MIAAAAC/empty-box.gif" alt="box" className="max-w-full mx-auto" />
 
                             </div>
                             <h1 className="mb-6 text-xl font-montserrat text-center leading-5 font-medium  dark:text-orange-100 px-4 mt-4">If you think something went wrong contact customer service </h1>
