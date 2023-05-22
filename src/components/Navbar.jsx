@@ -4,15 +4,31 @@ import { IoMdClose } from 'react-icons/io'
 import { BsMoonStars, BsSun } from 'react-icons/bs';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { useravatar } from '../Assets/images';
-import { useSelector } from 'react-redux'
+// import { useSelector,useD } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+
 import { motion, useScroll } from "framer-motion";
+import { storeTicket, setLoading } from "../actions/userticket"
 
 const Navbar = () => {
     const isUserName = useSelector(state => state.username.username);
-    // const isToken = localStorage.token;
-    const isToken =localStorage.getItem("token")
-    // console.log(isUserName)
-    // const [isLogin,setIslogin]=useState(true)
+    const dispatch = useDispatch()
+
+    const userTicket = (load) => {
+        return dispatch(storeTicket(load))
+
+    }
+    const setLoading_ = (bool) => {
+        return dispatch(setLoading(bool))
+    }
+    const handleLogout = () => {
+        setLoading_(true)
+        userTicket([])
+        
+        localStorage.removeItem("token")
+        navigate("/login")
+    }
+    // const isToken = localStorage.getItem("token")
     const isLogin = localStorage.getItem("token");
     const { scrollYProgress } = useScroll()
     const navigate = useNavigate()
@@ -168,10 +184,9 @@ active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,
 dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                                         onClick={() => {
                                             if (window.confirm("do you want to logout out")) {
-                                                // setIslogin(false)
-                                                // localStorage.token = ""
-                                                localStorage.removeItem("token")
-                                                navigate("/login")
+
+                                                handleLogout()
+
                                             }
                                         }}
                                     >
@@ -257,7 +272,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
   active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
   dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                                        onClick={gotoLoginPage}
+                                        onClick={handleLogout}
                                     >
                                         logout
                                     </button>

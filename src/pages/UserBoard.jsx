@@ -6,26 +6,33 @@ import { motion } from 'framer-motion'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert'
-import { storeTicket } from "../actions/userticket"
-import {AiOutlineWhatsApp} from 'react-icons/ai'
-import {BiSupport} from 'react-icons/bi'
-import { Footer} from "../components"
+import { storeTicket, setLoading } from "../actions/userticket"
+import { AiOutlineWhatsApp } from 'react-icons/ai'
+import { BiSupport } from 'react-icons/bi'
+import { Footer } from "../components"
 // import {useDispatch,useSelector} from 'reduc'
-
 import { useSelector, useDispatch } from 'react-redux'
-
+import { Loader } from "../components"
 const UserBoard = () => {
     const token = localStorage.token
     const [toggle, setToggle] = useState(false)
+    // const[loading,setLoading]=useState(true)
     const navigate = useNavigate()
     // const dispatch=useDispatch();
     const dispatch = useDispatch()
+
 
     const userTicket = (load) => {
         return dispatch(storeTicket(load))
 
     }
+    const setLoading_ = (state) => {
+
+        return dispatch(setLoading(state))
+
+    }
     const tickets_ = useSelector(state => state.userTicket.tickets);
+    const loading = useSelector(state => state.userTicket.loading);
     // console.log(tickets_)
     useEffect(() => {
         if (!token) {
@@ -50,18 +57,23 @@ const UserBoard = () => {
             } catch (err) {
                 console.log(err)
             }
-
+            if(loading){
+setLoading_(false)
+            }
         }
         getData()
 
     }, [])
 
     const [activeSlide, setctiveSlide] = useState(0);
-    const [tickets, setTickets] = useState([])
+    // const [tickets, setTickets] = useState([])
     const isUserName = useSelector(state => state.username.username);
     // const isToken=localStorage.token;
     return (
         <div className="max-w-5xl  mx-auto min-h-screen">
+            {
+                loading && <Loader dark toggle />
+            }
             <Alert toggle={toggle} setToggle={setToggle} message={"please login to continue "} />
             <div className="flex  justify-between px-4 my-2 py-2">
                 <div className="leading-2">
@@ -75,26 +87,28 @@ const UserBoard = () => {
                 onSlideChange={(e) => setctiveSlide(e.activeIndex)}
             >
 
-                {tickets_.length>0? tickets_.map((arr, index) => (<SwiperSlide >
-                    <motion.div className={`min-h-[200px] grid place-items-center mx-2 ${activeSlide == index ? "bg-orange-500" : "bg-orange-200"}  rounded-lg `}
+                {tickets_.length > 0 ? tickets_.map(({ _id }, index) => (<SwiperSlide >
+                    <motion.div className={`min-h-[200px] text-xs mx-2 ${activeSlide == index ? "bg-orange-500" : "bg-orange-200"}  rounded-lg `}
                         animate={{
                             y: activeSlide == index ? [40, 0] : null, scale: activeSlide == index ? [1, 1.02, 1] : null,
                         }}
                     >
-                        <p className='text-center pt-4 text-3xl'>{index + 1}</p>
+                        {/* <p className='text-center pt-4 text-3xl'>{index + 1}</p> */}
+                        <h5 className="text-xs font-black w-fit px-4 py-1 rounded">id: {_id}</h5>
+
                     </motion.div>
                 </SwiperSlide>))
-                :(
-                
-                    <motion.div className={`min-h-[200px] grid place-items-center mx-2 ${activeSlide == 0 ? "bg-orange-500" : "bg-orange-200"}  rounded-lg `}
-                    animate={{
-                        y: activeSlide == 0 ? [40, 0] : null, scale: activeSlide == 0 ? [1, 1.02, 1] : null,
-                    }}
-                >
-                    <p className='text-center pt-4 text-3xl'>{1}</p>
-                </motion.div>
-                )
-                
+                    : (
+
+                        <motion.div className={`min-h-[200px] grid place-items-center mx-2 ${activeSlide == 0 ? "bg-orange-500" : "bg-orange-200"}  rounded-lg `}
+                            animate={{
+                                y: activeSlide == 0 ? [40, 0] : null, scale: activeSlide == 0 ? [1, 1.02, 1] : null,
+                            }}
+                        >
+                            <p className='text-center pt-4 text-3xl'>{1}</p>
+                        </motion.div>
+                    )
+
                 }
 
             </Swiper>
@@ -142,7 +156,6 @@ const UserBoard = () => {
                                         tickets_.map(({ from, to, price, traveldate, _id }, index) => (<motion.tr
                                             whileInView={{ y: 0 }}
                                             initial={{ y: 10 }}
-                                            key={_id} className="bg-white text-xs hover:bg-slate-200 transition-colors duration-300 md:text-sm lg:text-lg dark:hover:bg-slate-400 border-b dark:bg-gray-900 dark:border-gray-700"
                                         >
                                             <td className="px-2 text-xs py-4  flex items-center justify-center">
                                                 {index + 1}
@@ -220,7 +233,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                     navigate("/contact-us")
                                 }}
                             >
-                                <span> Contact-Us</span> <BiSupport size={25}/>
+                                <span> Contact-Us</span> <BiSupport size={25} />
                             </button>
                             <button
                                 type="button"
@@ -238,9 +251,9 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                     // navigate("/contact-us")
                                 }}
                             >
-                               whatsapp-us <AiOutlineWhatsApp size={25} className="inline-block"/>
+                                whatsapp-us <AiOutlineWhatsApp size={25} className="inline-block" />
                             </button>
-                            <Footer/>
+                            <Footer />
                         </div>
 
                     )
