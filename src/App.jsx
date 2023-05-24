@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 
 import {setUserName} from "./actions/userName"
+import { storeCities} from "./actions/userCity"
 
 const ContactUs = lazy(() => import("./pages/Contact"));
 const Aboutus = lazy(() => import("./pages/Aboutus"));
@@ -21,6 +22,7 @@ const Booking =lazy(()=>import("./pages/Booking"));
 const BusSits =lazy(()=>import("./pages/BusSits"));
 const Cities =lazy(()=>import("./pages/Cities"));
 const Users =lazy(()=>import("./pages/Users"));
+const AdminContact =lazy(()=>import("./pages/AdminContact"));
 // const AdminLogin =lazy=(()=> import("./pages/AdminLogin"));
 // const Auth =lazy(()=>("./pages/AdminLogin"))
 
@@ -30,9 +32,28 @@ function App() {
 dispatch(setUserName(username))
 
   }
+  const setCity=(cities)=>dispatch(storeCities(cities))
   const token = localStorage.token;
 
   useEffect(() => {
+async function getCities(){
+
+  const url = process.env.REACT_APP_LOCAL_URL + "/allcities";
+  try {
+    const res = await axios.get(url,{
+    headers:{
+      'Authorization': "makingmoney " + token
+    }
+    })
+    setCity(res?.data?.cities)
+  } catch (err) {
+    console.log(err)
+  }
+
+
+
+}
+getCities()
 
     if (token) {
       async function getData() {
@@ -44,7 +65,7 @@ dispatch(setUserName(username))
             'Authorization': "makingmoney " + token
           }
           })
-          console.log(res)
+          // console.log(res)
           const { data: { fullname,  } } = res
           // console.log(fullname, token);
           setuserName(res?.data?.user?.fullname)
@@ -87,6 +108,7 @@ dispatch(setUserName(username))
                 {/* <Route path="user" element={<SingleTicket />} /> */}
                 <Route path="cities" element={<Cities />} />
                 <Route path="users" element={<Users />} />
+                <Route path="contacts" element={<AdminContact />} />
                 
               </Route>
               <Route path="*" element={<NotFound />} />

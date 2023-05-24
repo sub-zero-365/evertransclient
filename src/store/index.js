@@ -4,6 +4,7 @@ import toggleSideBar from '../actions/toggleSide'
 import toggleChatBox from '../actions/toggleChatBox'
 import setUserName from "../actions/userName"
 import userTicket from "../actions/userticket"
+import userCity from "../actions/userCity"
 import data from '../actions/applications'
 const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ const store = configureStore({
         chatbox: toggleChatBox.reducer,
         data: data.reducer,
         username:setUserName,
-        userTicket:userTicket.reducer
+        userTicket:userTicket.reducer,
+        userCity:userCity.reducer
     }
 
 })

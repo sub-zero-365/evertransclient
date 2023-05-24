@@ -59,6 +59,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                 <AiOutlineArrowUp size={30} />
             </div>
             <motion.div
+initial={{x:"-50%"}}
 
                 animate={{ scale: [0.7, 1.2, 0.8] }}
 

@@ -17,11 +17,21 @@ import React from 'react';
 import Alert from '../components/Alert'
 import { motion } from 'framer-motion'
 import { TimePicker } from 'react-ios-time-picker';
-import TimePicker_1 from 'react-gradient-timepicker'
+// import TimePicker_1 from 'react-gradient-timepicker'
+import { useSelector, useDispatch } from 'react-redux'
+import { storeCities} from "../actions/userCity"
+import axios from 'axios'
 const Booking = () => {
+  const dispatch = useDispatch();
+
   const [toggle, setToggle] = useState(false)
   const [value, setValue] = useState('10:00');
+  const setCity=(cities)=>dispatch(storeCities(cities))
+  
   useEffect(() => {
+  
+  
+  
     const token = localStorage.getItem("token");
     console.log("token :", token == "null")
     window.scrollTo({
@@ -35,6 +45,26 @@ const Booking = () => {
       }, 4000)
 
     }
+    
+    async function getCities(){
+
+      const url = process.env.REACT_APP_LOCAL_URL + "/allcities";
+      try {
+        const res = await axios.get(url,{
+        headers:{
+          'Authorization': "makingmoney " + token
+        }
+        })
+        setCity(res?.data?.cities)
+      } catch (err) {
+        console.log(err)
+      }
+    
+    
+    
+    }
+    getCities()
+    
   }, [])
   useEffect(() => {
   }, [toggle])
@@ -48,21 +78,9 @@ const Booking = () => {
 
   const [fromCities, setFromCities] = useState("choose starting point")
   const [toCities, setToCities] = useState("choose starting point")
-  const options = [
-    { value: "limbe", label: "limbe" },
-    { value: "douala", label: "douala" },
-    { value: "yaounde", label: "yaounde" },
-    { value: "kumba", label: "kumba" },
-    { value: "kribi", label: "kribi" },
-    { value: "bamenda", label: "bamenda" },
-    { value: "Mamfe", label: "Mamfe" },
-    { value: "Bonaberi", label: "Bonaberi" },
-    { value: "Mankon", label: "Mankon" },
-    // { value: "", label: "bamenda" },
-    // { value: "bamenda", label: "bamenda" },
-  ]
+  
 
-
+  const options=useSelector(state => state.userCity.cities);
   const navigate = useNavigate()
   const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${value}&date=${startDate}`)
   const [demoFetch, setDemoFetch] = useState(false)
@@ -83,7 +101,7 @@ const Booking = () => {
 
 
       onClick={onClick} ref={ref}>
-      <div className="flex-none rounded-lg h-[50px] w-[50px] flex items-center justify-center">
+      <div className="flex-none rounded-lg h-10 w-10 flex items-center justify-center">
         <CiTimer size={30} />
       </div>
       <div className="flex-1">
@@ -121,7 +139,7 @@ const [err,setErr]=useState(false)
         </div>
 
         <form onSubmit={loadDemoData} className="-mt-10 mx-4   md:mt-5  md:w-[25rem] md:max-w-[calc(100vw-2.5rem)]">
-          <div className="shadow-lg mx-4 h-[50px] -mt-[25px] bg-white dark:bg-slate-700 rounded-lg flex p-1 ">
+          <div className="shadow-lg mx-4 h-[3rem] -mt-[25px] bg-white dark:bg-slate-700 rounded-lg flex p-1 ">
             <div className="w-1/2 bg-blue-500 text-center text-white flex items-center justify-center rounded-sm ">One Way</div>
             <div className="w-1/2 bg-orange-400 text-center text-black flex items-center justify-center
           rounded-sm ">Round Trip</div>
@@ -132,6 +150,7 @@ const [err,setErr]=useState(false)
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             minDate={new Date()}
+            Date={new Date()}
             customInput={<ExampleCustomInput />
             }
           /> </div>
@@ -143,15 +162,7 @@ const [err,setErr]=useState(false)
           <Select2 required className="dark:bg-slate-900 text-black text-lg md:text-xl " defaultValues={toCities} onChange={evt => setToCities(evt.value)}
             options={options} />
           <h1 className="text-xl mb-3 mt-5 font-manrope">Select time <CiTimer size={25} className="inline-block ml-4" /></h1>
-          {/* <TimePicker_1
-          // time="00:00"
-          theme="Bourbon"
-    
-    placeholder="Star time"  
-    onSet={(val)=>{
-    alert("val :"+val.format12)
-    }}
-          /> */}
+         
           
           
           
@@ -168,7 +179,7 @@ const [err,setErr]=useState(false)
 
 
 
-          <div className="hidden h-[50px] md:flex items-center justify-center mt-auto">
+          <div className="hidden h-10 md:flex items-center justify-center mt-auto">
             <button
               type="submit"
               data-te-ripple-init
@@ -185,7 +196,7 @@ const [err,setErr]=useState(false)
 
           </div>
 
-          <div className="md:hidden h-[50px]
+          <div className="md:hidden h-10
            flex items-center justify-center mt-5 fixed left-0 bottom-8 w-full">
             <button
               // type="submit"

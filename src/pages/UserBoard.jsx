@@ -1,8 +1,9 @@
 import { useravatar } from '../Assets/images';
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay } from 'swiper'
 import { useState, useEffect } from 'react';
 import "swiper/css"
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert'
@@ -31,7 +32,7 @@ const UserBoard = () => {
     const navigate = useNavigate()
     // const dispatch=useDispatch();
     const dispatch = useDispatch()
-
+    const [tab, setTab] = useState(0);
 
     const userTicket = (load) => {
         return dispatch(storeTicket(load))
@@ -63,8 +64,8 @@ const UserBoard = () => {
             } catch (err) {
                 console.log(err)
             }
-            if(loading){
-setLoading_(false)
+            if (loading) {
+                setLoading_(false)
             }
         }
         getData()
@@ -87,44 +88,68 @@ setLoading_(false)
                 <img src={useravatar} alt="user" className='shadow w-[2.5rem] h-[2.5rem] rounded-full ' />
             </div>
             <Swiper className='my-6 px-4'
-                slidesPerView={1.2}
+                slidesPerView={1.1}
                 onSlideChange={(e) => setctiveSlide(e.activeIndex)}
+                modules={[Autoplay]}
+                autoplay={{
+                    delay: 2500,
+                    disableOnInteraction: false
+                }}
             >
 
-                {tickets_.length > 0 ? tickets_.map(({ _id }, index) => (<SwiperSlide >
-                    <motion.div className={`min-h-[200px] text-xs mx-2 ${activeSlide == index ? "bg-orange-500" : "bg-orange-200"}  rounded-lg `}
+                {["https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Ars%26Urbis_International_Workshop_-_Emiliano_Gandolfi_36.JPG/250px-Ars%26Urbis_International_Workshop_-_Emiliano_Gandolfi_36.JPG",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Gare_de_Bessengu%C3%A9_2.JPG/220px-Gare_de_Bessengu%C3%A9_2.JPG",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Bonamousadi_douala_Cameroon.jpg/220px-Bonamousadi_douala_Cameroon.jpg"
+
+                ].map((item, index) => (<SwiperSlide >
+                    <motion.div className={`h-[12.5rem] relative md:h-[15rem] lg:h-[18rem] text-xs mx-0 ${activeSlide == index ? "bg3-orange-500" : "bg-oran3ge-200"}  rounded-lg `}
                         animate={{
-                            y: activeSlide == index ? [40, 0] : null, scale: activeSlide == index ? [1, 1.02, 1] : null,
+                            y: activeSlide == index ? [40, 0] : null, scale: activeSlide == index ? [1, 1.06, 1] : null,
                         }}
                     >
-                        {/* <p className='text-center pt-4 text-3xl'>{index + 1}</p> */}
-                        <h5 className="text-xs font-black w-fit px-4 py-1 rounded">id: {_id}</h5>
-
+                        <img src={item} className='w-full h-full object-cover pointer-event-nki' alt="user " />
+                        <span className={`absolute top-0 ${ activeSlide == index ? "w-full" : "!w-0"} left-0 h-1 bg-orange-700 transition-all duration-[2.5s]`}></span>
+                        <span className={`absolute text-2xl text-center top-1/2 left-1/2 px-5 py-5 -translate-y-1/2 -translate-x-1/2 ${ activeSlide == index ? "opacity-1" : "opacity-50"}   bg-slate-700 w-fit bg-opacity-25 transition-all duration-[1.5s]`}>AfriCon</span>
                     </motion.div>
                 </SwiperSlide>))
-                    : (
 
-                        <motion.div className={`min-h-[200px]  px-2 pt-4 mx-2 ${activeSlide == 0 ? "bg-orange-100" : "bg-orange-200"}  rounded-lg shadow `}
-                            animate={{
-                                y: activeSlide == 0 ? [40, 0] : null, scale: activeSlide == 0 ? [1, 1.02, 1] : null,
-                            }}
-                        >
-                        <p>pl</p>
-                        
-                        </motion.div>
-                    )
 
                 }
 
             </Swiper>
 
-
-            <h2 className='text-xl px-2  '>recent travels</h2>
             {
 
                 tickets_.length > 0 ?
-                    (
-                        <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full ">
+                    <>
+
+                        <h2 className='text-xl px-2  '>recent travels</h2>
+                        <div className="flex items-center justify-between px-4 mb-4 ">
+                            <motion.div
+                                whileHover={{ scale: 1.2 }}
+                                className={`select-none capitalize relative before:content-[" "] before:absolute before:bottom-0
+                        before:left-0  before:h-[1px] min-h-[1.4rem] before:bg-gray-500
+                        
+                        hover:font-black ${0 == tab ? "font-medium before:w-full" : ""}`}
+                                onClick={() => setTab(0)}>Recent</motion.div>
+                            <motion.div
+                                whileHover={{ scale: 1.2 }}
+                                className={`select-none capitalize relative before:content-[" "] before:absolute before:bottom-0
+                        before:left-0  before:h-[1px] min-h-[1.4rem] before:bg-gray-500
+                        flex items-center
+                        hover:font-black ${1 == tab ? "font-medium before:w-full" : ""}`}
+                                onClick={() => setTab(1)}>Active <span className='text-xs w-4 h-4 rounded-full border bg-blue-400 grid place-items-center shadow'>{tickets_.map(i => i.active === true).length}</span> </motion.div>
+                            <motion.div
+                                whileHover={{ scale: 1.2 }}
+                                className={`select-none capitalize relative before:content-[" "] before:absolute before:bottom-0
+                        before:left-0  before:h-[1px] min-h-[1.4rem] before:bg-gray-500
+                        flex items-center
+                        
+                        hover:font-black ${2 == tab ? "font-medium before:w-full" : ""}`}
+                                onClick={() => setTab(2)}>Inactive <span className='text-xs w-4 h-4 rounded-full border bg-red-400 grid place-items-center shadow'>{tickets_.length - tickets_.map(i => i.active === true).length}</span> </motion.div>
+                        </div>
+
+                        {tab == 0 && <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full ">
                             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <motion.tr
@@ -196,7 +221,162 @@ setLoading_(false)
                                 </tbody>
                             </table>
                         </div>
-                    ) : (
+                        }
+                        {tab == 1 && <AnimatePresence> <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full ">
+                            <motion.table
+                                initial={{ opacity: 0, x: 100 }}
+                                whileInView={{ opacity: 1, x: [100, -10, 0] }}
+                                exit={{ opacity: 0 }}
+                                // transition={{duration:0.5}}
+
+                                className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <motion.tr
+
+                                    >
+                                        <th scope="col" className="px-2 py-3">
+                                            Index
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            from
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            to
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            fees
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Sit pos
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            travel date
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Action
+                                        </th>
+
+                                    </motion.tr>
+                                </thead>
+                                <tbody>
+
+                                    {
+
+                                        tickets_.map(({ from, to, price, traveldate, _id, isactive }, index) => (<motion.tr
+                                            whileInView={{ y: 0 }}
+                                            initial={{ y: 10 }}
+
+                                        >
+                                            <td className="px-2 text-xs py-4  flex items-center justify-center">
+                                                {index + 1}
+                                            </td>
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {from}
+                                            </th>
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {to}
+                                            </th>
+                                            <td className="px-6 py-4">
+                                                <span href={`https://wa.me/237672301714`} className="font-medium cursor:pointer ">{price}frs</span>
+
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span href={`mailto:bateemma14@gmail.com`} className="font-medium ">11:00am</span>
+
+
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {(new Date(traveldate).toLocaleDateString())}
+                                            </td>
+                                            <motion.td
+                                                whileInView={{ scale: 1, x: 0 }}
+                                                initial={{ scale: 0.5, x: -30 }}
+                                                className="px-6 py-4" onClick={() => navigate(`${_id}`)}>
+                                                <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Details</a>
+                                            </motion.td>
+                                        </motion.tr>
+                                        ))
+                                    }
+
+                                </tbody>
+                            </motion.table>
+                        </div>
+                        </AnimatePresence>
+                        }
+                        {tab == 2 && <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full ">
+                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <motion.tr
+
+                                    >
+                                        <th scope="col" className="px-2 py-3">
+                                            Index
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            from
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            to
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            fees
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Sit pos
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            travel date
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Action
+                                        </th>
+
+                                    </motion.tr>
+                                </thead>
+                                <tbody>
+
+                                    {
+
+                                        tickets_.map(({ from, to, price, traveldate, _id, isactive }, index) => (isactive && <motion.tr
+                                            whileInView={{ y: 0 }}
+                                            initial={{ y: 10 }}
+                                        >
+                                            <td className="px-2 text-xs py-4  flex items-center justify-center">
+                                                {index + 1}
+                                            </td>
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {from}
+                                            </th>
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {to}
+                                            </th>
+                                            <td className="px-6 py-4">
+                                                <span href={`https://wa.me/237672301714`} className="font-medium cursor:pointer ">{price}frs</span>
+
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span href={`mailto:bateemma14@gmail.com`} className="font-medium ">11:00am</span>
+
+
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {(new Date(traveldate).toLocaleDateString())}
+                                            </td>
+                                            <motion.td
+                                                whileInView={{ scale: 1, x: 0 }}
+                                                initial={{ scale: 0.5, x: -30 }}
+                                                className="px-6 py-4" onClick={() => navigate(`${_id}`)}>
+                                                <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Details</a>
+                                            </motion.td>
+                                        </motion.tr>
+                                        ))
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                        }
+                    </> : (
                         <div className="min-h-[300px]">
                             <h1 className="mb-6 text-2xl font-montserrat text-center leading-5 font-medium  dark:text-orange-100 px-4 mt-4">It appears that this users hasnot book a ticket</h1>
                             <div className="">
@@ -222,7 +402,9 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
                             </div>
                             <h1 className="mb-6 text-xl font-montserrat text-center leading-5 font-medium  dark:text-orange-100 px-4 mt-4">If you think something went wrong contact customer service </h1>
-                            <button
+                            <motion.button
+                                initial={{ y: 20, opacity: 0.2 }}
+                                whileInView={{ y: 0, opacity: 1 }}
                                 type="button"
                                 a data-te-ripple-init
                                 data-te-ripple-color="light"
@@ -239,8 +421,12 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                 }}
                             >
                                 <span> Contact-Us</span> <BiSupport size={25} />
-                            </button>
-                            <button
+                            </motion.button>
+                            <motion.button
+
+                                initial={{ y: 20, opacity: 0.2 }}
+                                whileInView={{ y: 0, opacity: 1 }}
+
                                 type="button"
                                 a data-te-ripple-init
                                 data-te-ripple-color="light"
@@ -257,7 +443,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                 }}
                             >
                                 whatsapp-us <AiOutlineWhatsApp size={25} className="inline-block" />
-                            </button>
+                            </motion.button>
                             <Footer />
                         </div>
 

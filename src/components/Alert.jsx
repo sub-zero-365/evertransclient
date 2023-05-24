@@ -18,7 +18,7 @@ import { motion ,AnimatePresence} from 'framer-motion'
 */
 
 
-const Alert = ({ message, toggle, setToggle, confirmFunc }) => {
+const Alert = ({ message, toggle, setToggle, confirmFunc,className ,city}) => {
     const interval = useRef(null)
     useEffect(() => {
         if (toggle) {
@@ -31,10 +31,11 @@ const Alert = ({ message, toggle, setToggle, confirmFunc }) => {
     return (
 <AnimatePresence>
         <motion.div
-            initial={{ x: "-50%" }}
+            initial={{ x: "-50%",y:-1000}}
+            
             animate={{ y: toggle ? 40 : -1000 }}
             transition={{ duration: 0.5 }}
-            class="fixed top-0 select-none left-1/2 -translate-x-[50%] w-[25rem] max-w-[calc(100vw-2.5rem)]   z-[30] overflow-hidden p-4 text-center bg-white rounded-sm shadow dark:bg-gray-800 sm:p-5">
+            class={`fixed top-0 ${className} select-none left-1/2 -translate-x-[50%] w-[25rem] max-w-[calc(100vw-2.5rem)]   z-[30] overflow-hidden p-4 text-center bg-white rounded-sm shadow dark:bg-gray-800 sm:p-5`}>
             <div className={`absolute ${toggle ? "w-full transition-[width] duration-[5s]" : "w-0"}    top-0 left-0 h-1  bg-slate-300 `}></div>
 
             <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="successModal" onClick={() => setToggle(false)}>
@@ -45,7 +46,7 @@ const Alert = ({ message, toggle, setToggle, confirmFunc }) => {
                 <svg aria-hidden="true" class="w-8 h-8 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                 <span class="sr-only">Success</span>
             </div>
-            <p class="mb-6 text-sm font-manrope capitalize font-semibold text-gray-900 dark:text-white">{message || "Successfully applied for service"}</p>
+            <p class="mb-6 text-sm font-manrope capitalize font-semibold text-gray-900 dark:text-white">{`${message} ${city?city:""}` || "Successfully applied for service"}</p>
             {confirmFunc && (
                 <button
                     type="button"
