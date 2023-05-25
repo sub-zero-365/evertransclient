@@ -2,8 +2,16 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 // import { actions } from '../actions/users'
+// import { setUsers } from '../actions/adminData';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { setUsers } from '../actions/adminData';
+import { Loader } from '../components';
 import Select from 'react-select';
 const Appointment = () => {
+    const users_ = useSelector(state => state.setAdminData.users);
+    const isLoading = useSelector(state => state.setAdminData.loading.users)
+    console.log(users_,isLoading)
     const navigate = useNavigate()
     const options = [
         { label: "phone", value: "phone" },
@@ -12,7 +20,10 @@ const Appointment = () => {
         { label: "ticket number", value: "ticket number" },
 
     ]
-    const [users, setUsers] = useState([]);
+    const dispatch = useDispatch();
+    const setUsers_ = (payload) => {
+        return dispatch(setUsers(payload))
+    }
     const token = localStorage.getItem("admin_token");
     const [text, setText] = useState("")
     const handleSubmit = async (e) => {
@@ -26,7 +37,7 @@ const Appointment = () => {
                 }
             })
             console.log(response?.data?.users);
-            setUsers([...response?.data?.users])
+            setUsers_([...response?.data?.users])
         }
 
         catch (err) {
@@ -49,7 +60,7 @@ const Appointment = () => {
                     }
                 })
                 console.log(response?.data?.users);
-                setUsers([...response?.data?.users])
+                setUsers_([...response?.data?.users])
             }
             fetchData()
 
@@ -78,6 +89,8 @@ const Appointment = () => {
 
     return (
         <div className="max-w-full overflow-auto" onClick={closeDropdown}>
+            {isLoading&&(<Loader toggle dark />)}
+        
             <h1 className='text-2xl text-center'>Users page</h1>
 
             <form className="px-4 md:px-6 my-5 " onSubmit={handleSubmit}>
@@ -127,7 +140,7 @@ const Appointment = () => {
                     </thead>
                     <tbody>
                         {
-                            users.map((user, index) => (<tr key={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
+                            users_.map((user, index) => (<tr key={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
                             >
                                 <td className="px-2 py-4 border flex items-center justify-center">
                                     {index + 1}
@@ -159,7 +172,7 @@ const Appointment = () => {
                                 </td>
                              
                          
-                                <td className="px-6 py-4 text-xs" onClick={() => navigate(`/dashboard/${user?._id || index}?admin=true`)}>
+                                <td className="px-6 py-4 text-xs" onClick={() => navigate(`/dashboard/details/${user?._id || index}?admin=true`)}>
                                     <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline">details</a>
                                 </td>
                             </tr>

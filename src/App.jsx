@@ -23,8 +23,8 @@ const BusSits =lazy(()=>import("./pages/BusSits"));
 const Cities =lazy(()=>import("./pages/Cities"));
 const Users =lazy(()=>import("./pages/Users"));
 const AdminContact =lazy(()=>import("./pages/AdminContact"));
-// const AdminLogin =lazy=(()=> import("./pages/AdminLogin"));
-// const Auth =lazy(()=>("./pages/AdminLogin"))
+const Details =lazy(()=>import("./pages/userDetails"));
+const DashRegister =lazy(()=>import("./pages/DashRegister"));
 
 function App() {
   const dispatch = useDispatch();
@@ -105,11 +105,11 @@ getCities()
               <Route path="/dashboard" element={<DashboardLayout />} >
                 <Route index element={<Appointment />} />
                 <Route path=":id" element={<SingleTicket />} />
-                {/* <Route path="user" element={<SingleTicket />} /> */}
                 <Route path="cities" element={<Cities />} />
                 <Route path="users" element={<Users />} />
+                <Route path="details/:id" element={<Details />} />
                 <Route path="contacts" element={<AdminContact />} />
-                
+                <Route path="register" element={<DashRegister />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
