@@ -3,21 +3,15 @@ import { Loader, Modal } from "../components"
 import { useState, forwardRef, useEffect } from "react"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { IoMdArrowDropdown, } from 'react-icons/io'
-// import Dropdown from 'rc-dropdown';
-
-// import Menu, { Item as MenuItem, Divider } from 'rc-menu';
 import { CiTimer } from 'react-icons/ci'
 import { BiCurrentLocation } from 'react-icons/bi'
 import 'rc-dropdown/assets/index.css';
 import Select from 'react-select'
 import Select2 from 'react-select'
+import SelectTime from 'react-select'
 import React from 'react';
-// import { Swiper, SwiperSlide } from 'swiper/react'
 import Alert from '../components/Alert'
 import { motion } from 'framer-motion'
-import { TimePicker } from 'react-ios-time-picker';
-// import TimePicker_1 from 'react-gradient-timepicker'
 import { useSelector, useDispatch } from 'react-redux'
 import { storeCities} from "../actions/userCity"
 import axios from 'axios'
@@ -25,7 +19,7 @@ const Booking = () => {
   const dispatch = useDispatch();
 
   const [toggle, setToggle] = useState(false)
-  const [value, setValue] = useState('10:00');
+  const [time, setTime] = useState('10:00');
   const setCity=(cities)=>dispatch(storeCities(cities))
   
   useEffect(() => {
@@ -41,7 +35,7 @@ const Booking = () => {
     if (!token) {
       setToggle(true);
       setTimeout(() => {
-        navigate("/login")
+        // navigate("/login")
       }, 4000)
 
     }
@@ -70,9 +64,8 @@ const Booking = () => {
   }, [toggle])
 
   const onChange = (timeValue) => {
-    setValue(timeValue);
+    setTime(timeValue.value);
     window.navigator.vibrate([40])
-
   }
 
 
@@ -82,7 +75,7 @@ const Booking = () => {
 
   const options=useSelector(state => state.userCity.cities);
   const navigate = useNavigate()
-  const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${value}&date=${startDate}`)
+  const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${time}&date=${startDate}`)
   const [demoFetch, setDemoFetch] = useState(false)
   const loadDemoData = (evt) => {
     evt.preventDefault()
@@ -91,7 +84,7 @@ const Booking = () => {
     setTimeout(() => {
       setDemoFetch(false)
       gotoBusSits()
-    }, 5000)
+    }, 10)
   }
   const [startDate, setStartDate] = useState(new Date());
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
@@ -154,32 +147,33 @@ const [err,setErr]=useState(false)
             customInput={<ExampleCustomInput />
             }
           /> </div>
-          <h1 className="text-xl mb-3 mt-5 font-manrope">Select starting point <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
-
-          <Select className="dark:bg-slate-900 text-black text-lg md:text-xl" required defaultValues={fromCities} onChange={evt => setFromCities(evt.value)}
+          <h1 className="text-lg md:text-xl mb-3 mt-5 font-manrope">Select starting point <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
+          <Select className="dark:bg-slate-900  min-h-8 text-black text-xs md:text-xl" required defaultValues={fromCities} onChange={evt => setFromCities(evt.value)}
             options={options} />
-          <h1 className="text-xl mb-3 mt-5 font-manrope">Select Destination <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
-          <Select2 required className="dark:bg-slate-900 text-black text-lg md:text-xl " defaultValues={toCities} onChange={evt => setToCities(evt.value)}
+          <h1 className="text-lg md:text-xl mb-3 mt-5 font-manrope">Select Destination <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
+          <Select2 required className="dark:bg-slate-900 text-black text-xs min-h-8 md:text-xl " defaultValues={toCities} onChange={evt => setToCities(evt.value)}
             options={options} />
           <h1 className="text-xl mb-3 mt-5 font-manrope">Select time <CiTimer size={25} className="inline-block ml-4" /></h1>
-         
+          <SelectTime required className="dark:bg-slate-900 text-black text-xs min-h-8 md:text-xl mb-6"
+          defaultValues={time} onChange={onChange}
+            options={[
+            {value:"7am",label:"7am"},
+            {value:"10am",label:"10am"},
+            {value:"12am",label:"12am"},
+            {value:"10pm",label:"10pm"},
+            ]} />
           
-          
-          
-          <div className="w-full border-2 mt-[20px]
+          {/* <div className="w-full border-2 mt-[20px]
             shadow-xl border-blue-500 gap-2   p-1 rounded-md my-1 flex items-center ">
             <div className="flex-none rounded-lg h-[2.5rem] flex items-center justify-center w-[2.5rem]">
               <CiTimer size={25} />
             </div>
             <TimePicker onChange={onChange} className="flex-1" cellHeight={40} pickerDefaultValue={""} value={value} required />
-            {/* <div className="flex-none h-full w-[40px]">
-                <IoMdArrowDropdown size={40} />
-              </div> */}
-          </div>
+          </div> */}
 
 
 
-          <div className="hidden h-10 md:flex items-center justify-center mt-auto">
+          <div className="hidden min-h-8 md:flex items-center justify-center mt-auto">
             <button
               type="submit"
               data-te-ripple-init
@@ -196,10 +190,9 @@ const [err,setErr]=useState(false)
 
           </div>
 
-          <div className="md:hidden h-10
+          <div className="md:hidden min-h-8
            flex items-center justify-center mt-5 fixed left-0 bottom-8 w-full">
             <button
-              // type="submit"
               data-te-ripple-init
               data-te-ripple-color="light"
               class="inline-block  rounded bg-blue-500 cal-width [--w:400px]  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
@@ -208,7 +201,6 @@ const [err,setErr]=useState(false)
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-            // onClick={loadDemoData}
 
             >
               Find Bus

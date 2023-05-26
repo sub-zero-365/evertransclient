@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion'
 import { AiOutlinePlus } from 'react-icons/ai'
-import { AddCities } from '../components'
+import { AddCities,AddCities as _AddCity } from '../components'
 import Alert from '../components/Alert'
 import { useEffect, useState } from 'react'
 const Cities = () => {
@@ -159,7 +159,9 @@ min-h-[2.5rem] rounded
 
         </motion.div>
       </div>
-      <AnimatePresence>
+      <div className="lg:flex">
+      
+      <div className='block flex-1'>
         {
           cities.map((item, index) => (
 
@@ -241,7 +243,12 @@ min-h-[2.5rem] rounded
             </motion.div>
           ))
         }
-      </AnimatePresence>
+      </div>
+      <_AddCity className="!static hidden lg:!block flex-none !w-[30rem]  !translate-x-0
+      "
+        setVal={setNewCity}
+        city={city} toggle edit={edit} setToggle={setOpen} addFunc={addFunc} editFunc={editFunc} edt />
+      </div>
 
     </div>
   )

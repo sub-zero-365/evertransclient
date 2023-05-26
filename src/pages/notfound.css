@@ -33,7 +33,7 @@
 }
 
 .home__notfound-wrapper .buttons {
-    margin: 40px 0;
+    margin: 2rem 0;
     display: flex;
     gap: 1rem;
     justify-content: center;
@@ -41,14 +41,7 @@
 }
 
 .home__notfound-wrapper button {
-    /* width: 48%; */
-    /* height: 50px; */
-    border: none;
-    border-radius: 50px;
-    font-size: 16.5px;
-    transition: 0.18s all linear;
-    cursor: pointer;
-    padding: 0.5rem 2rem;
+    @apply py-1 px-4 cursor-pointer text-sm transition-all duration-500 border-none rounded-lg
 }
 
 #home_btn {
@@ -63,7 +56,8 @@
 }
 
 button:hover {
-    transform: translateY(10%);
+    /* transform: translateY(10%); */
+    @apply translate-y-6
 }
 
 #home_btn:hover {

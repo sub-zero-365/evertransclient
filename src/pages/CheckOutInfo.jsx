@@ -28,7 +28,7 @@ const BusSits = () => {
         to: queryParameters.get("to"),
         traveldate: new Date(),
         traveltime: "12/02/22",
-        price: 2000,
+        price: Number(queryParameters.get("sitpos"))>20?10000:6500,
         sex:queryParameters.get("gender"),
         email:queryParameters.get("email"),
         age:queryParameters.get("age"),
@@ -130,7 +130,8 @@ const BusSits = () => {
             </div>
             <div className="flex mb-3 flex-wrap">
               <div className="w-1/2 text-sm">Date to Travel</div>
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("date")}</div>
+              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{new Date(queryParameters.get("date")).toLocaleDateString()
+              }</div>
             </div>
             <div className="flex mb-3 flex-wrap">
               <div className="w-1/2 text-sm">Travel Time</div>
@@ -138,7 +139,7 @@ const BusSits = () => {
             </div>
             <div className="flex mb-3 flex-wrap">
               <div className="w-1/2 text-sm">Travel Cost</div>
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">5100 frs</div>
+              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{Number(queryParameters.get("sitpos"))>20?10000+"frs":6500+"frs"}</div>
             </div>
 
           </div>

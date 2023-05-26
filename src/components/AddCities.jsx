@@ -2,14 +2,16 @@ import React, {useState} from 'react'
 import Loadingbtn from './Loadingbtn';
 import { motion } from 'framer-motion'
 
-const AddCities = ({edit,toggle,setToggle,addFunc ,editFunc,city,setVal}) => {
+const AddCities = ({edit,toggle,setToggle,addFunc ,editFunc,city,setVal,className}) => {
     const [isLoading, setIsLoading] = useState(false);
 
     return (
         <div
         onClick={()=>setToggle(false)}
         
-        className={`fixed h-full ${toggle?"visible active":"invisible"} z-[5] group transition-all duration-300 w-full container left-1/2 -translate-x-1/2 bg-slate-950 bg-opacity-50 flex flex-col items-center justify-center`}>
+        className={`fixed ${className} h-full ${toggle?"visible active":"invisible"} z-[5]
+        group transition-all duration-300
+        w-full container left-1/2 -translate-x-1/2 bg-slate-950 bg-opacity-50 flex flex-col items-center justify-center`}>
             <form onSubmit={edit?editFunc:addFunc} onClick={e=>e.stopPropagation()}
             className='bg-white relative scale-75 opacity-0 transition-all duration-300 group-[.visible]:opacity-100 group-[.visible]:scale-100 w-[min(calc(100vw-2.5rem),25rem)] min-h-[10rem] rounded-lg p-3 shadow shadow-slate-950'
             

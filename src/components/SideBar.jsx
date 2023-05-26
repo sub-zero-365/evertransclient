@@ -9,7 +9,6 @@ import { actions } from '../actions/toggleSide'
 import { motion } from 'framer-motion'
 const SideBar = () => {
   useEffect(() => {
-    // navigate("/dashboard")
   }, [])
   const dispatch = useDispatch()
   const toggleSideBar = () => dispatch(actions.toggleSideBar())
@@ -71,32 +70,35 @@ const SideBar = () => {
         <IoMdClose size={25} />
       </span>
       <h3 className="text-2xl text-center py-4 font-manrope md:hidden ">Dashboard</h3>
-      {
+      <div className="group">
 
-        navLinks.map(({ name, icon, to }, index) => (
-          <motion.div>
-            <NavLink to={to}
-              key={index}
-              onClick={() => {
-                if (window.innerWidth <= 600) {
+        {
 
-                  toggleSideBar()
+          navLinks.map(({ name, icon, to }, index) => (
+            <motion.div>
+              <NavLink to={to}
+                key={index}
+                onClick={() => {
+                  if (window.innerWidth <= 600) {
+
+                    toggleSideBar()
+
+                  }
+                  setActive(index)
+                }
+
+
 
                 }
-                setActive(index)
-              }
+                className={`flex text-medium 
+${active === index ? "bg-violet-500 text-white text-semibold" : "bg-white"}  hover:bg-violet-500 transition-colors 
+duration-300 py-2 px-3 mt-4 shadow-md ring-offset-slate-200 mb-2 rounded-lg`}>
+                {icon}
+                <h3 className="text-xs md:text-sm ml-5 group-[.active]:hidden">{name}</h3>
+              </NavLink></motion.div>))
 
-
-
-              }
-              className={`flex text-medium 
- ${active === index ? "bg-violet-500 text-white text-semibold" : "bg-white"}  hover:bg-violet-500 transition-colors 
- duration-300 py-2 px-3 mt-4 shadow-md ring-offset-slate-200 mb-2 rounded-lg`}>
-              {icon}
-              <h3 className="text-xs md:text-sm ml-5">{name}</h3>
-            </NavLink></motion.div>))
-
-      }
+        }
+      </div>
       {/*  */}
       <div
         onClick={() => navigate("/")}

@@ -4,16 +4,30 @@ import { useNavigate } from "react-router-dom"
 import { AiOutlineArrowRight } from 'react-icons/ai'
 import { NavLink, useSearchParams } from 'react-router-dom'
 // import Alert from '../components/Alert'
-import {motion} from "framer-motion"
-import { TbArmchair2, TbArchiveOff, TbArmchairOff } from 'react-icons/tb'
+import { motion } from "framer-motion"
+import { TbArmchair2, TbArmchairOff } from 'react-icons/tb'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Scrollbar, Pagination, Navigation } from 'swiper'
+
+import "swiper/css"
+import "swiper/css/navigation"
+import "swiper/css/pagination"
+import "swiper/css/autoplay"
+import "swiper/css/a11y"
+import "swiper/css/scrollbar"
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+
+
 const
   BusSits = () => {
-
     const [queryParameters] = useSearchParams();
     console.log(queryParameters.get("from"))
     const [userInfo, setUserInfo] = useState({
       name: null, age: null, phone: null, gender: "male", from: queryParameters.get("from"),
-      to: queryParameters.get("to"),email:null,date:queryParameters.get("date"),time:queryParameters.get("time")
+      to: queryParameters.get("to"), email: null, date: queryParameters.get("date"), time: queryParameters.get("time")
     })
     const weekDay = (index = 0) => {
       const _days = [
@@ -67,7 +81,7 @@ const
       gotoCheckOut()
     }
     const gotoCheckOut = () =>
-    navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}`)
+      navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}`)
     return (
       <div
         className="min-h-screen"
@@ -148,46 +162,103 @@ const
                 Not Available
               </h1>
             </div>
-            <div className="flex flex-wrap">
-              {
-                Array.from({ length: 16 }, (seat, i) => {
-                  return (
-                    <div className="w-1/4 h-[80px] p-2 px-3 select-none" onClick={(e) => checkBusAvailabity(i, e)}>
-                      <motion.div 
-                      initial={false}
-                      animate={{scale:selected==i?[0.8,1,0.9]:null}}
-                      transition={{
-                        duration: 1,
-                        ease: "easeInOut",
-                        // times: [0, 0.2, 0.5, 0.8, 1],
-                        repeat: Infinity,
-                        // repeatDelay: 1
-                        
-                        }
-                   
-                }
-                      
-                      className={`${i & 1 ? "bg-orange-400" : "bg-green-400"} peer
+            <Swiper
+              modules={[Pagination, Navigation, Scrollbar]}
+              pagination={{
+                clickable: true
+              }}
+              navigation={{
+
+              }}
+              scrollbar={true}
+            >
+
+              <SwiperSlide className="group">
+              <h1 className="text-xl leading-7 tracking-tight text-center mb-6 text-orange-300 font-semibold
+              font-montserrat">shit from 1-20 are Vip</h1>
+                <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
+                  {
+                    Array.from({ length: 20 }, (seat, i) => {
+                      return (
+                        <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none" onClick={(e) => checkBusAvailabity(i, e)}>
+                          <motion.div
+                            initial={false}
+                            animate={{ scale: selected == i ? [0.8, 1, 0.9] : null }}
+                            transition={{
+                              duration: 1,
+                              ease: "easeInOut",
+                              repeat: Infinity,
+                            }
+
+                            }
+
+                            className={`${i & 1 ? "bg-orange-400" : "bg-green-400"} peer
                 ${selected == i ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
                 rounded-lg flex items-center justify-center`}>
-                        <motion.div
-                        
-                        initial={false}
-                      animate={{y:selected==i?"35px":0}}
-                        
-                        className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
+                            <motion.div
+                              initial={false}
+                              animate={{ y: selected == i ? "1.3rem" : 0 }}
+                              className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
                 px-2 rounded-sm `}>{i + 1}</motion.div>
-                        {i & 1 ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
-                      </motion.div>
-                    </div>
-                  )
-                })
-              }
-            </div>
+                            {i & 1 ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
+                          </motion.div>
+                        </div>
+                      )
+                    })
+                  }
+                </motion.div>
+
+
+              </SwiperSlide>
+
+              <SwiperSlide className="group">
+              
+              <h1 className="text-lg leading-7 tracking-tight text-center mb-6 text-orange-300 font-semibold
+              font-montserrat">shit from 21-45 are Vip <sup className="text-blue-600">+</sup></h1>
+                <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
+                  {
+                    Array.from({ length: 25 }, (seat, i) => {
+                      return (
+                        <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none" 
+                        onClick={(e) => checkBusAvailabity(i + 20, e)}>
+                          <motion.div
+                            initial={false}
+                            animate={{ scale: selected == i+20 ? [0.8, 1, 0.9] : null }}
+                            transition={{
+                              duration: 1,
+                              ease: "easeInOut",
+                              repeat: Infinity,
+                            }
+
+                            }
+
+                            className={`${i + 20 & 1 ? "bg-orange-400" : "bg-green-400"} peer
+                ${selected == i + 20 ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
+                rounded-lg flex items-center justify-center`}>
+                            <motion.div
+
+                              initial={false}
+                              animate={{ y: selected == i + 20 ? "1.3rem" : 0 }}
+
+                              className={`absolute top-[-10px] rounded-sm bg-color_light text-[12px] dark:bg-color_dark shadow-lg
+                px-2 rounded-xs `}>{i + 20 + 1}</motion.div>
+                            {i + 20 & 1 ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
+                          </motion.div>
+                        </div>
+                      )
+                    })
+                  }
+                </motion.div>
+
+
+              </SwiperSlide>
+
+
+            </Swiper>
             <form onSubmit={proccedCheckout} className="md:px-3">
               <h1 className="text-lg text-center  mx-5 my-2">please  take your time to fill in the information</h1>
               <div className="relative mb-6" data-te-input-wrapper-init>
-                <input onChange={e=>setUserInfo({...userInfo,name:e.target.value})}
+                <input onChange={e => setUserInfo({ ...userInfo, name: e.target.value })}
                   type="text"
                   className="peer block min-h-[auto] w-full 
                 rounded 
@@ -243,7 +314,7 @@ const
                 </label>
               </div>
               <div className="relative mb-6" data-te-input-wrapper-init>
-                <input onChange={e=>setUserInfo({...userInfo,phone:e.target.value})}
+                <input onChange={e => setUserInfo({ ...userInfo, phone: e.target.value })}
                   type="tel"
                   className="peer block min-h-[auto] w-full 
                 rounded 
@@ -300,8 +371,8 @@ const
               </div>
 
               <div className="relative mb-6" data-te-input-wrapper-init>
-                <input onChange={e=>setUserInfo({...userInfo,email:e.target.value})}
-                  type="text"
+                <input onChange={e => setUserInfo({ ...userInfo, email: e.target.value })}
+                  type="number"
                   className="peer block min-h-[auto] w-full 
                 rounded 
                 border-2
@@ -318,7 +389,7 @@ const
                 focus:placeholder:opacity-100
                 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                   id="exampleFormControlInput3"
-                  placeholder="Email address" required />
+                  placeholder="Id Card N0" required />
                 <label
                   htmlFor="exampleFormControlInput3"
                   className="pointer-events-none 
@@ -351,7 +422,9 @@ const
                 dark:text-neutral-200
                 dark:peer-focus:text-primary"
 
-                >Email address
+                >
+
+                  Id Card N0
                 </label>
               </div>
               <div className="mb-6 flex items-center justify-between select-none ">
@@ -372,9 +445,9 @@ const
                         id="male"
                         name="gender"
                         checked
-                        onChange={e=>setUserInfo({
-                        ...userInfo,
-                      gender:e.target.value
+                        onChange={e => setUserInfo({
+                          ...userInfo,
+                          gender: e.target.value
                         })}
                       />
                       <label
@@ -391,11 +464,11 @@ const
                         id="female"
                         name="gender"
                         // onChange={e=>setUserInfo(e.target.value)}
-                        onChange={e=>setUserInfo({
+                        onChange={e => setUserInfo({
                           ...userInfo,
-                        gender:e.target.value
-                          })}
-                        
+                          gender: e.target.value
+                        })}
+
                       />
                       <label
                         className="inline-block  pl-[0.15rem] hover:cursor-pointer"
@@ -409,7 +482,7 @@ const
                 </div>
 
                 <div className="relative w-[80px] flex-none" data-te-input-wrapper-init>
-                  <input onChange={e=>setUserInfo({...userInfo,age:e.target.value})}
+                  <input onChange={e => setUserInfo({ ...userInfo, age: e.target.value })}
                     type="number"
                     className="peer block min-h-[auto] w-full 
                 rounded

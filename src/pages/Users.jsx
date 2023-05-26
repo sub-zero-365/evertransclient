@@ -8,10 +8,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUsers } from '../actions/adminData';
 import { Loader } from '../components';
 import Select from 'react-select';
+import { motion } from 'framer-motion'
 const Appointment = () => {
     const users_ = useSelector(state => state.setAdminData.users);
     const isLoading = useSelector(state => state.setAdminData.loading.users)
-    console.log(users_,isLoading)
+    console.log(users_, isLoading)
     const navigate = useNavigate()
     const options = [
         { label: "phone", value: "phone" },
@@ -27,7 +28,7 @@ const Appointment = () => {
     const token = localStorage.getItem("admin_token");
     const [text, setText] = useState("")
     const handleSubmit = async (e) => {
-    return
+        return
         const baseUrl = process.env.REACT_APP_LOCAL_URL + "/admin/allusers"
         e.preventDefault()
         try {
@@ -51,7 +52,7 @@ const Appointment = () => {
 
     useEffect(() => {
         const url = process.env.REACT_APP_LOCAL_URL + "/admin/allusers"
-    
+
         try {
             async function fetchData() {
                 const response = await axios.get(url, {
@@ -88,9 +89,14 @@ const Appointment = () => {
     ]
 
     return (
-        <div className="max-w-full overflow-auto" onClick={closeDropdown}>
-            {isLoading&&(<Loader toggle dark />)}
-        
+        <motion.div
+
+            initial={{ y: 40, opacity: 0.5 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{delay:0.3}}
+            className="max-w-full overflow-auto" onClick={closeDropdown}>
+            {isLoading && (<Loader toggle dark />)}
+
             <h1 className='text-2xl text-center'>Users page</h1>
 
             <form className="px-4 md:px-6 my-5 " onSubmit={handleSubmit}>
@@ -121,17 +127,17 @@ const Appointment = () => {
                             <th scope="col" className="px-6 py-3">
                                 phone
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            {/* <th scope="col" className="px-6 py-3">
                                 password
-                            </th>
+                            </th> */}
                             <th scope="col" className="px-6 py-3">
-                             createdAt
+                                createdAt
                             </th>
-                          
+
                             <th scope="col" className="px-6 py-3">
-                        user_id
+                                user_id
                             </th>
-                           
+
                             <th scope="col" className="px-6 py-3">
                                 Action
                             </th>
@@ -151,27 +157,27 @@ const Appointment = () => {
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {user?.phone || "n/a"}
                                 </th>
-                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {/* <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {user?.password || "n/a"}
                             
-                                </th>
-                        
-                                <td className="px-6 py-4">
-                                
-                                
-                                {user?.createdAt?
-                                    (new Date(user?.createdAt).toLocaleDateString()):"n/a"}
-                                {/* {user?.createdAt || "n/a"} */}
+                                </th> */}
 
-                                </td>
-                            
                                 <td className="px-6 py-4">
 
-                                {user?._id || "n/a"}
-                                    
+
+                                    {user?.createdAt ?
+                                        (new Date(user?.createdAt).toLocaleDateString()) : "n/a"}
+                                    {/* {user?.createdAt || "n/a"} */}
+
                                 </td>
-                             
-                         
+
+                                <td className="px-6 py-4">
+
+                                    {user?._id || "n/a"}
+
+                                </td>
+
+
                                 <td className="px-6 py-4 text-xs" onClick={() => navigate(`/dashboard/details/${user?._id || index}?admin=true`)}>
                                     <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline">details</a>
                                 </td>
@@ -183,7 +189,7 @@ const Appointment = () => {
                 </table>
             </div>
 
-        </div>
+        </motion.div>
     )
 
 }
