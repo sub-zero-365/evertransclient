@@ -16,5 +16,7 @@ export { default as DashboardLayout }
 from './DashboardLayout'
 export { default as Loadingbtn }
 from './Loadingbtn'
+export { default as DashItem }
+from './DashItem'
 export { default as AddCities }
 from './AddCities'

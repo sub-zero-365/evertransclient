@@ -2,8 +2,8 @@ import React, {useState} from 'react'
 import Loadingbtn from './Loadingbtn';
 import { motion } from 'framer-motion'
 
-const AddCities = ({edit,toggle,setToggle,addFunc ,editFunc,city,setVal,className}) => {
-    const [isLoading, setIsLoading] = useState(false);
+const AddCities = ({edit,toggle,setToggle,addFunc ,editFunc,city,setVal,className,
+  isLoading}) => {
 
     return (
         <div
@@ -84,8 +84,9 @@ const AddCities = ({edit,toggle,setToggle,addFunc ,editFunc,city,setVal,classNam
               <button 
                 type="submit"
                 className="block bg-blue-400
-                w-[min(calc(100vw-2.5rem),10rem)]
-            mx-auto mb-6
+                w-[min(calc(100vw-2.5rem),16rem)]
+                
+            mx-auto mb-2
             rounded bg-primary px-7
             pb-2.5 pt-3 text-sm font-medium
             uppercase leading-normal
@@ -106,6 +107,34 @@ const AddCities = ({edit,toggle,setToggle,addFunc ,editFunc,city,setVal,classNam
                 data-te-ripple-color="light">
                 {isLoading ? <Loadingbtn /> :edit?"Edit "+city: "Add New City"}
 
+              </button>
+              <button 
+                type="button"
+                className="block bg-gray-400
+                w-[min(calc(100vw-2.5rem),10rem)]
+            mx-auto mb-6
+            rounded  px-7
+            pb-2.5 pt-3 text-sm font-medium
+            uppercase leading-normal
+            text-white
+            shadow-[0_4px_9px_-4px_#3b71ca]
+            transition duration-150
+            ease-in-out hover:bg-gray-600
+            hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+            focus:bg-gray-600 
+            focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
+            focus:outline-none focus:ring-0 active:bg-gray-700 
+            active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+            dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
+            dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
+            dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
+            dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                data-te-ripple-init
+                data-te-ripple-color="light"
+                onClick={()=>setToggle(false)}
+                >
+                {/* {isLoading ? <Loadingbtn /> :edit?"Edit "+city: "Add New City"} */}
+CANCEL
               </button>
             </form>
         </div>

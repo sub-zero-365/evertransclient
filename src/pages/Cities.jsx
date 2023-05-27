@@ -1,8 +1,7 @@
-// const AddCities=()import safi
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion'
 import { AiOutlinePlus } from 'react-icons/ai'
-import { AddCities,AddCities as _AddCity } from '../components'
+import { AddCities,} from '../components'
 import Alert from '../components/Alert'
 import { useEffect, useState } from 'react'
 const Cities = () => {
@@ -13,6 +12,9 @@ const Cities = () => {
   const [newCity, setNewCity] = useState(false)
   const [id, setId] = useState(null)
   const [cities, setCities] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
+
+  
   async function getCities() {
 
     const url = process.env.REACT_APP_LOCAL_URL + "/allcities";
@@ -44,9 +46,9 @@ const Cities = () => {
   const editFunc = async(e) => {
     e.preventDefault()
 
-    // alert("edit me")
-  if(!id) return
     
+  if(!id) return
+  setIsLoading(true)
     const url = process.env.REACT_APP_LOCAL_URL + "/admin/city/"+id;
     try {
       await axios.put(url, {
@@ -57,24 +59,19 @@ const Cities = () => {
             'Authorization': "makingmoney " + token
           }
         })
-      // alert("success")
-      // setNewCity("")
       getCities();
-
-
+setOpen(!open)
     } catch (err) {
-      // alert("fail to delete")
       alert(err.response.data)
       
     }
-    // alert("add me")
-
-    
+    setIsLoading(false)
   }
   const addFunc = async (e) => {
     e.preventDefault()
-    // if (!id) return
     const url = process.env.REACT_APP_LOCAL_URL + "/admin/city";
+  setIsLoading(true)
+    
     try {
       await axios.post(url, {
         value: newCity
@@ -84,17 +81,14 @@ const Cities = () => {
             'Authorization': "makingmoney " + token
           }
         })
-      // alert("enter here")
-      // setNewCity("")
       getCities();
-
+      setOpen(!open)
 
     } catch (err) {
-      // alert("fail to delete")
       alert(err.response.data)
       
     }
-    // alert("add me")
+    setIsLoading(false)
 
   }
   const confirmFunc = async () => {
@@ -115,7 +109,6 @@ const Cities = () => {
   return (
     <div className="max-h-[calc(100vh-3rem)] overflow-y-auto w-full select-none">
       <Alert toggle={toggle} city={city}
-        className={`!top-[max(calc(100vh-25rem),4rem)] shadow-slate-700 !rounded-2xl `}
         setToggle={setToggle} confirmFunc={confirmFunc} message={"Do you want to delete this City"} />
       <motion.div onClick={() => setOpen(true)}
         initial={{ x: "-50%" }}
@@ -140,7 +133,10 @@ z-10 fixed md:hidden "
       </motion.div>
       <AddCities
         setVal={setNewCity}
-        city={city} toggle={open} edit={edit} setToggle={setOpen} addFunc={addFunc} editFunc={editFunc} edt />
+        city={city} toggle={open}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+        edit={edit} setToggle={setOpen} addFunc={addFunc} editFunc={editFunc} edt />
 
       <div className="flex items-center justify-between">
         <h1 className="text-center  md:text-start text-xl mx-auto w-full my-6 md:text-2xl">Cities </h1>
@@ -159,9 +155,7 @@ min-h-[2.5rem] rounded
 
         </motion.div>
       </div>
-      <div className="lg:flex">
       
-      <div className='block flex-1'>
         {
           cities.map((item, index) => (
 
@@ -243,12 +237,6 @@ min-h-[2.5rem] rounded
             </motion.div>
           ))
         }
-      </div>
-      <_AddCity className="!static hidden lg:!block flex-none !w-[30rem]  !translate-x-0
-      "
-        setVal={setNewCity}
-        city={city} toggle edit={edit} setToggle={setOpen} addFunc={addFunc} editFunc={editFunc} edt />
-      </div>
 
     </div>
   )

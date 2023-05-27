@@ -1,21 +1,7 @@
 import { useEffect, useRef } from "react"
 import { motion ,AnimatePresence} from 'framer-motion'
 
-/*
 
-<AnimatePresence>
-    {items.map(item => (
-      <motion.div
-        key={item.id}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      />
-    ))}
-  </AnimatePresence>
-
-
-*/
 
 
 const Alert = ({ message, toggle, setToggle, confirmFunc,className ,city}) => {
@@ -31,11 +17,7 @@ const Alert = ({ message, toggle, setToggle, confirmFunc,className ,city}) => {
     return (
 <AnimatePresence>
         <motion.div
-            initial={{ x: "-50%",y:-1000}}
-            
-            animate={{ y: toggle ? 40 : -1000 }}
-            transition={{ duration: 0.5 }}
-            class={`fixed top-0 ${className} select-none left-1/2 -translate-x-[50%] w-[25rem] max-w-[calc(100vw-2.5rem)]   z-[30] overflow-hidden p-4 text-center bg-white rounded-sm shadow dark:bg-gray-800 sm:p-5`}>
+            class={`fixed  ${className} select-none left-1/2 ${toggle?"top-0":"-top-full"}  -translate-x-[50%] w-[25rem] max-w-[calc(100vw-2.5rem)]   z-[30] overflow-hidden p-4 text-center bg-white rounded-sm shadow dark:bg-gray-800 sm:p-5`}>
             <div className={`absolute ${toggle ? "w-full transition-[width] duration-[5s]" : "w-0"}    top-0 left-0 h-1  bg-slate-300 `}></div>
 
             <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="successModal" onClick={() => setToggle(false)}>

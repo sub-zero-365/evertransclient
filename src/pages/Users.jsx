@@ -91,9 +91,9 @@ const Appointment = () => {
     return (
         <motion.div
 
-            initial={{ y: 40, opacity: 0.5 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{delay:0.3}}
+            // initial={{ y: 40, opacity: 0.5 }}
+            // animate={{ y: 0, opacity: 1 }}
+            // transition={{delay:0.3}}
             className="max-w-full overflow-auto" onClick={closeDropdown}>
             {isLoading && (<Loader toggle dark />)}
 
