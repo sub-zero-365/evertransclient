@@ -15,7 +15,7 @@ const navigate=useNavigate()
         navigate("/auth")
         
         }}/>
-            <div className="min-h-[3rem] border-5 justify-between flex items-center sticky top-0 bg-white shadow-sm shadow-slate-300 container mx-auto px-4" >
+            <div className="min-h-[3rem] z-[100] relative border-5 justify-between flex items-center   bg-white shadow-sm shadow-slate-300 container mx-auto px-4" >
                 <div className='hover:bg-slate-300 md:hidden w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={toggleSideBar}>
                     <AiOutlineMenu size={25} />
                 </div>

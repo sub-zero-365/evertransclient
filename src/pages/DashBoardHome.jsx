@@ -104,6 +104,9 @@ const DashboardHome = () => {
                                 time
                             </th>
                             <th scope="col" className="px-3 py-3">
+                                status
+                            </th>
+                            <th scope="col" className="px-3 py-3">
                                 age
                             </th>
                             <th scope="col" className="px-3 py-3">
@@ -117,9 +120,9 @@ const DashboardHome = () => {
                     </thead>
                     <tbody>
                         {
-                            tickets_.slice(0,10).map((ticket, index) => (<tr key={index} className="bg-white border-b text-xs dark:bg-gray-900 dark:border-gray-700"
+                            tickets_.slice(0,10).map((ticket, index) => (<tr key={index} className="bg-white hover:bg-slate-300  text-xs dark:bg-gray-900 dark:border-gray-700"
                             >
-                                <td className="px-2 py-4 border flex items-center justify-center">
+                                <td className="px-2 py-4  flex items-center justify-center">
                                     {index + 1}
                                 </td>
                                 <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -132,16 +135,14 @@ const DashboardHome = () => {
                                     {ticket?.price || " 5000frs"}
                                 </th>
                                 <td className="px-3 py-4">
-                                    <span href={`https://wa.me/237672301714`} className="font-medium cursor:pointer text-blue-500 dark:text-blue-500 hover:underline">{ticket?.from || " n/a"}</span>
+                                    <span  className="font-medium
+                                    ">{ticket?.from || " n/a"}</span>
 
                                 </td>
                                 <td className="px-3 py-4">
-                                    <span href={`mailto:bateemma14@gmail.com`} className="font-medium cursor:pointer text-blue-500 dark:text-blue-500 hover:underline">{ticket?.to || "n/a"}</span>
-
-
+                                    <span  className="font-medium ">{ticket?.to || "n/a"}</span>
                                 </td>
                                 <td className="px-3 py-4">
-
                                     {ticket?.traveldate ?
                                         (new Date(ticket.traveldate).toLocaleDateString()) : "n/a"}
 
@@ -151,6 +152,20 @@ const DashboardHome = () => {
                                         || "n/a"}
 
                                 </td>
+                                <td className="px-3 py-4">
+                                    {ticket?.active ?
+                                      <button type="button" class="text-white bg-gradient-to-r
+                                      from-blue-500 via-blue-600
+                                      to-blue-700 hover:bg-gradient-to-br text-xs
+                                      focus:ring-4 focus:outline-none focus:ring-blue-300
+                                      dark:focus:ring-blue-800  shadow-blue-500/50 
+                                       dark:shadow-blue-800/80 font-medium rounded-lg 
+                                       px-5 py-1 text-center  ">yes</button>
+                                      : <button type="button" class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Pink</button>
+                                    }
+
+                                </td>
+                                
                                 <td className="px-3 py-4">
                                     {ticket?.age || "n/a"}
 
@@ -172,12 +187,8 @@ const DashboardHome = () => {
             <h1 className="text-2xl mb-6 text-gray-700 pl-6 tracking-tight">Recent Employees  <GrStackOverflow className="inline-block pl-2 text-4xl"/></h1>
 
             <div class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-    {/* <div class="flex items-center justify-between mb-4">
-        <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Latest Register Employes</h5>
-        <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">
-            View all
-        </a>
-   </div> */}
+    
+    
    <div class="flow-root- w-full">
         <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
            {

@@ -5,6 +5,7 @@ const adminDataSlice = createSlice({
   initialState: {
     users: [],
     tickets: [],
+    cities: [],
     loading: {
       users: true,
       tickets: true,
@@ -28,7 +29,15 @@ const adminDataSlice = createSlice({
       }
       state.loading.tickets = false;
     },
+    setCities(state, { payload }) {
+      try {
+        state.cities = [...payload];
+      } catch (err) {
+        state.cities = [];
+      }
+      state.loading.cities = false;
+    },
   },
 });
-export const { setUsers, setTickets } = adminDataSlice.actions;
+export const { setUsers, setTickets,setCities } = adminDataSlice.actions;
 export default adminDataSlice.reducer;

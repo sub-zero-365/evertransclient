@@ -126,9 +126,9 @@ const Appointment = () => {
                     </thead>
                     <tbody>
                         {
-                            tickets_.map((ticket, index) => (<tr key={index} className="bg-white border-b text-xs dark:bg-gray-900 dark:border-gray-700"
+                            tickets_.map((ticket, index) => (<tr key={index} className="bg-white  text-xs dark:bg-gray-900 dark:border-gray-700"
                             >
-                                <td className="px-2 py-4 border flex items-center justify-center">
+                                <td className="px-2 py-4  flex items-center justify-center">
                                     {index + 1}
                                 </td>
                                 <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">

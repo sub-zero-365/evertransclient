@@ -90,11 +90,7 @@ const Appointment = () => {
 
     return (
         <motion.div
-
-            // initial={{ y: 40, opacity: 0.5 }}
-            // animate={{ y: 0, opacity: 1 }}
-            // transition={{delay:0.3}}
-            className="max-w-full overflow-auto" onClick={closeDropdown}>
+            className="max-w-full overflow-auto max-h-[calc(100vh-3rem)] " >
             {isLoading && (<Loader toggle dark />)}
 
             <h1 className='text-2xl text-center'>Users page</h1>
@@ -127,12 +123,10 @@ const Appointment = () => {
                             <th scope="col" className="px-6 py-3">
                                 phone
                             </th>
-                            {/* <th scope="col" className="px-6 py-3">
-                                password
-                            </th> */}
                             <th scope="col" className="px-6 py-3">
                                 createdAt
                             </th>
+                            
 
                             <th scope="col" className="px-6 py-3">
                                 user_id
@@ -146,9 +140,10 @@ const Appointment = () => {
                     </thead>
                     <tbody>
                         {
-                            users_.map((user, index) => (<tr key={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
+                            users_.map((user, index) => (<tr key={index} className="bg-white
+                            dark:bg-gray-900 dark:border-gray-700 hover:bg-slate-200"
                             >
-                                <td className="px-2 py-4 border flex items-center justify-center">
+                                <td className="px-2 py-4  flex items-center justify-center">
                                     {index + 1}
                                 </td>
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -178,8 +173,12 @@ const Appointment = () => {
                                 </td>
 
 
-                                <td className="px-6 py-4 text-xs" onClick={() => navigate(`/dashboard/details/${user?._id || index}?admin=true`)}>
-                                    <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline">details</a>
+                                <td className="px-6 py-0 text-xs" onClick={() => navigate(`/dashboard/details/${user?._id || index}?admin=true`)}>
+                                <button type="button" class="text-blue-700 hover:text-white
+                                border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
+                                focus:ring-blue-300 font-medium rounded-lg  px-5 py-1
+                                text-center text-xs
+                                dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">Details</button>
                                 </td>
                             </tr>
                             ))
