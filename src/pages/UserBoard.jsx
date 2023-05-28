@@ -21,16 +21,12 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-// import "swiper/css/scrollbar"
-// import {useDispatch,useSelector} from 'reduc'
 import { useSelector, useDispatch } from 'react-redux'
 import { Loader } from "../components"
 const UserBoard = () => {
     const token = localStorage.token
     const [toggle, setToggle] = useState(false)
-    // const[loading,setLoading]=useState(true)
     const navigate = useNavigate()
-    // const dispatch=useDispatch();
     const dispatch = useDispatch()
     const [tab, setTab] = useState(0);
 
