@@ -85,7 +85,8 @@ getCities()
     <div className="bg-color_light  dark:bg-color_dark dark:text-white"
     >
       <BrowserRouter>
-          <Suspense fallback={<div className="h-screen w-full bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
+          <Suspense fallback={<div className="h-screen w-full
+          bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
    </div>}>
             <Routes>

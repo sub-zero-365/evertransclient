@@ -1,6 +1,9 @@
 import { useravatar } from '../Assets/images';
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay } from 'swiper'
+// import { Autoplay } from 'swiper'
+import { Autoplay, Navigation, Pagination } from 'swiper'
+import { CircularProgressbar } from 'react-circular-progressbar';
+import "react-circular-progressbar/dist/styles.css";
 import { useState, useEffect } from 'react';
 import "swiper/css"
 import { motion, AnimatePresence } from 'framer-motion'
@@ -29,7 +32,6 @@ const UserBoard = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [tab, setTab] = useState(0);
-
     const userTicket = (load) => {
         return dispatch(storeTicket(load))
 
@@ -83,36 +85,61 @@ const UserBoard = () => {
                 </div>
                 <img src={useravatar} alt="user" className='shadow w-[2.5rem] h-[2.5rem] rounded-full ' />
             </div>
-            <Swiper className='my-6 px-4'
-                slidesPerView={1.1}
-                onSlideChange={(e) => setctiveSlide(e.activeIndex)}
-                modules={[Autoplay]}
-                autoplay={{
-                    delay: 2500,
-                    disableOnInteraction: false
-                }}
-            >
+            <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
+                <div>
+                    <Swiper
 
-                {["https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Ars%26Urbis_International_Workshop_-_Emiliano_Gandolfi_36.JPG/250px-Ars%26Urbis_International_Workshop_-_Emiliano_Gandolfi_36.JPG",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Gare_de_Bessengu%C3%A9_2.JPG/220px-Gare_de_Bessengu%C3%A9_2.JPG",
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Bonamousadi_douala_Cameroon.jpg/220px-Bonamousadi_douala_Cameroon.jpg"
-
-                ].map((item, index) => (<SwiperSlide >
-                    <motion.div className={`h-[12.5rem] relative md:h-[15rem] lg:h-[18rem] text-xs mx-0 ${activeSlide == index ? "bg3-orange-500" : "bg-oran3ge-200"}  rounded-lg `}
-                        animate={{
-                            y: activeSlide == index ? [40, 0] : null, scale: activeSlide == index ? [1, 1.06, 1] : null,
+                        className='my-6 px-4 max-w-sm lg:max-w-lg '
+                        slidesPerView={1}
+                        onSlideChange={(e) => setctiveSlide(e.activeIndex)}
+                        modules={[Autoplay, Pagination, Navigation]}
+                        navigation={true}
+                        pagination={{ clickable: true }}
+                        autoplay={{
+                            delay: 25000,
+                            disableOnInteraction: false
                         }}
                     >
-                        <img src={item} className='w-full h-full object-cover pointer-event-nki' alt="user " />
-                        <span className={`absolute top-0 ${ activeSlide == index ? "w-full" : "!w-0"} left-0 h-1 bg-orange-700 transition-all duration-[2.5s]`}></span>
-                        <span className={`absolute text-2xl text-center top-1/2 left-1/2 px-5 py-5 -translate-y-1/2 -translate-x-1/2 ${ activeSlide == index ? "opacity-1" : "opacity-50"}   bg-slate-700 w-fit bg-opacity-25 transition-all duration-[1.5s]`}>AfriCon</span>
-                    </motion.div>
-                </SwiperSlide>))
+                        {[1, 2, 3
+                        ].map((item, index) => (<SwiperSlide >
+                            <motion.div className={`min-h-[12.5rem]-- relative  text-xs mx-0 ${activeSlide == index ? "bg3-orange-500" : "bg-oran3ge-200"}  rounded-lg `}
+                                animate={{
+                                    y: activeSlide == index ? [40, 0] : null, scale: activeSlide == index ? [1, 1.06, 1] : null,
+                                }}
+                            >
+
+                                <h1 className="text-xl mb-4 text-montserrat font-medium text-center uppercase mt-2">total user {item}</h1>
+                                <CircularProgressbar
+                                    background
+                                    strokeWidth={8}
+                                    initialAnimation
+                                    circleRatio={0.6}
+                                    className='!w-[18.5rem] !max-w-[calc(100vw-3rem)] mx-auto'
+                                    styles={{
+
+                                        path: {
+                                            stroke: `rgba(62,154,199,${66 / 100})`
+
+                                        },
+                                        trail: {
+                                            stroke: "green"
+                                        },
+                                    }}
+
+                                    percentage={66} text={"66%"} />
 
 
-                }
+                            </motion.div>
+                        </SwiperSlide>))
 
-            </Swiper>
+
+                        }
+                    </Swiper>
+
+
+                </div>
+
+            </div>
 
             {
 

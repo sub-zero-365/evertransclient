@@ -1,6 +1,7 @@
 import { DashItem } from '../components'
 import { GrStackOverflow } from 'react-icons/gr'
 import { useravatar } from '../Assets/images';
+import {AiOutlineCheck,AiOutlineClose} from 'react-icons/ai'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setTickets } from '../actions/adminData';
@@ -100,7 +101,7 @@ const DashboardHome = () => {
             </div>
             <h1 className="text-2xl mb-6 text-gray-700 pl-6 tracking-tight">Recent Book tickets <GrStackOverflow className="inline-block pl-2 text-4xl" /></h1>
 
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full mb-6 ">
+            <div className="relative overflow-x-auto shadow-md bg-white sm:rounded-lg w-full mb-6 ">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
@@ -177,19 +178,15 @@ const DashboardHome = () => {
                                         || "n/a"}
 
                                 </td>
-                                <td className="px-3 py-4">
-                                    {ticket?.active ?
-                                        <button type="button" class="text-white bg-gradient-to-r
-                                      from-blue-500 via-blue-600
-                                      to-blue-700 hover:bg-gradient-to-br text-xs
-                                      focus:ring-4 focus:outline-none focus:ring-blue-300
-                                      dark:focus:ring-blue-800  shadow-blue-500/50 
-                                       dark:shadow-blue-800/80 font-medium rounded-lg 
-                                       px-5 py-1 text-center  ">yes</button>
-                                        : <button type="button" class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Pink</button>
-                                    }
+                                <td className="px-3 py-4  grid place-items-center">
+                {ticket?.active ?
+                <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck/></span>
+                  : 
+                <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose/></span>
+                  
+                  }
 
-                                </td>
+              </td>
 
                                 <td className="px-3 py-4">
                                     {ticket?.age || "n/a"}
