@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 // import { actions } from '../actions/users'
 // import { setUsers } from '../actions/adminData';
-
 import { useSelector, useDispatch } from 'react-redux';
+import { BarChart, LineChart } from '../components';
+
 import { setUsers } from '../actions/adminData';
 import { Loader } from '../components';
 import Select from 'react-select';
 import { motion } from 'framer-motion'
+import { UserData } from '../Assets/userdata';
 const Appointment = () => {
     const users_ = useSelector(state => state.setAdminData.users);
     const isLoading = useSelector(state => state.setAdminData.loading.users)
@@ -87,13 +89,33 @@ const Appointment = () => {
     const categoriesArray = [
         "fullname", "email", "phone", "service_type", "age"
     ]
-
+    const [userData, setUserData] = useState({
+        labels: UserData.map((v) => v.id),
+        labels: UserData.map((v) => v.year),
+        datasets: [
+          {
+            label: "users gain",
+            data:UserData.map((v)=>v.userGain),
+            
+    
+          },
+          {
+            label: "users lost",
+            data:UserData.map((v)=>v.userLost)
+    
+          },
+        ]
+    
+      })
     return (
         <motion.div
             className="max-w-full overflow-auto max-h-[calc(100vh-3rem)] " >
             {isLoading && (<Loader toggle dark />)}
-
             <h1 className='text-2xl text-center'>Users page</h1>
+            <div className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
+            >
+                <LineChart chartData={userData} />
+            </div>
 
             <form className="px-4 md:px-6 my-5 " onSubmit={handleSubmit}>
                 <div className="flex relative min-h-[40px]">
@@ -126,7 +148,7 @@ const Appointment = () => {
                             <th scope="col" className="px-6 py-3">
                                 createdAt
                             </th>
-                            
+
 
                             <th scope="col" className="px-6 py-3">
                                 user_id
@@ -152,17 +174,12 @@ const Appointment = () => {
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {user?.phone || "n/a"}
                                 </th>
-                                {/* <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {user?.password || "n/a"}
-                            
-                                </th> */}
 
                                 <td className="px-6 py-4">
 
 
                                     {user?.createdAt ?
                                         (new Date(user?.createdAt).toLocaleDateString()) : "n/a"}
-                                    {/* {user?.createdAt || "n/a"} */}
 
                                 </td>
 
@@ -174,7 +191,7 @@ const Appointment = () => {
 
 
                                 <td className="px-6 py-0 text-xs" onClick={() => navigate(`/dashboard/details/${user?._id || index}?admin=true`)}>
-                                <button type="button" class="text-blue-700 hover:text-white
+                                    <button type="button" class="text-blue-700 hover:text-white
                                 border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
                                 focus:ring-blue-300 font-medium rounded-lg  px-5 py-1
                                 text-center text-xs

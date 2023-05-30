@@ -2,7 +2,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import "react-circular-progressbar/dist/styles.css";
 import { BsFillPersonFill } from 'react-icons/bs';
 import { GrStackOverflow } from 'react-icons/gr';
-import {VscFolderActive} from 'react-icons/vsc'
+import { VscFolderActive } from 'react-icons/vsc'
 import Select from 'react-select';
 import Select2 from 'react-select';
 import { useState, useEffect } from 'react';
@@ -15,7 +15,7 @@ import { BsTicketPerforated, BsChevronRight, BsChevronLeft } from 'react-icons/b
 import axios from 'axios'
 import { BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import {MdOutlinePriceChange} from 'react-icons/md'
+import { MdOutlinePriceChange } from 'react-icons/md'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import "swiper/css"
 import "swiper/css/navigation"
@@ -27,8 +27,22 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import { AmountCount, BarChart, FormatTable, PieChart, Scrollable, TicketCounts } from '../components';
+import { UserData } from "../Assets/userdata";
 const Details = () => {
   const id = useParams().id
+  const [userData, setUserData] = useState({
+    labels: UserData.map((v) => v.year),
+    datasets: [
+      {
+        label: "users tickets print",
+        data:UserData.map((v)=>v.userGain),
+        
+
+      }
+    ]
+
+  })
   const [activeSlide, setctiveSlide] = useState(0);
 
   const token = localStorage.getItem("admin_token");
@@ -61,7 +75,7 @@ const Details = () => {
   const navigate = useNavigate();
   const [i, setI] = useState(0)
   const [j, setJ] = useState(skip)
-  const next_pre = (state) => {
+  const next_pre = (state,tickets) => {
     if (state === 1) {
       if (!(j > tickets.length - 1)) {
         setI(j)
@@ -76,96 +90,8 @@ const Details = () => {
     }
 
   }
-  const drawTab = () => {
+  
 
-    return (
-      <>
-        <motion.tbody
-          key={j}
-          initial={{ x: 100, opacity: 0.1 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-
-        >
-          {
-            tickets.slice(i, j).map((ticket, index) => (<tr key={index} className={` ${index % 2 == 0 ? "bg-slate-100" : "bg-white"} hover:bg-slate-300  text-xs dark:bg-gray-900 dark:border-gray-700`}
-            >
-              <td className="px-2 py-4  flex items-center justify-center">
-                {index + 1}
-              </td>
-              <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                {ticket?.fullname || "n/a"}
-              </th>
-              <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                {ticket?.phone || "n/a"}
-              </th>
-              <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                {ticket?.price || " 5000frs"}
-              </th>
-              <td className="px-3 py-4">
-                <span className="font-medium
-                                    ">{ticket?.from || " n/a"}</span>
-
-              </td>
-              <td className="px-3 py-2">
-                <span className="font-medium ">{ticket?.to || "n/a"}</span>
-              </td>
-              <td className="px-3 py-2">
-                {ticket?.traveldate ?
-                  (new Date(ticket.traveldate).toLocaleDateString()) : "n/a"}
-
-              </td>
-              <td className="px-3 py-2">
-                {ticket?.traveltime
-                  || "n/a"}
-
-              </td>
-              <td className="px-3 py-4  grid place-items-center">
-                {ticket?.active ?
-                  <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span>
-                  :
-                  <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>
-
-                }
-
-              </td>
-
-              <td className="px-3 py-4">
-                {ticket?.age || "n/a"}
-
-              </td>
-              <td className="px-3 py-4">
-                {ticket?.sex || "n/a"}
-
-              </td>
-              <td className="py-0 text-xs" onClick={() => navigate(`/dashboard/${ticket?._id || index}?admin=true`)}>
-                <span className="font-medium grid bg-green-400 pr-2 py-1 mx-1 rounded-lg text-white place-items-center  hover:underline">details</span>
-              </td>
-            </tr>
-            ))
-          }
-
-        </motion.tbody>
-      </>
-    )
-
-
-  }
-
-  const dashitemdata = [
-    {
-      Name: "Employees",
-      Counts: 15,
-      href: "users",
-
-    },
-    {
-      Name: "Tickets",
-      Counts: 15,
-      href: "tickets",
-      icon: <BsTicketPerforated className='text-3xl' />
-    }
-  ]
   const [toggle, setToggle] = useState(false)
   const options = [
     { label: "all", value: "all" },
@@ -204,7 +130,6 @@ const Details = () => {
           <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
             <div>
               <Swiper
-
                 className='my-6 px-4 max-w-sm lg:max-w-lg '
                 slidesPerView={1}
                 onSlideChange={(e) => setctiveSlide(e.activeIndex)}
@@ -225,49 +150,22 @@ const Details = () => {
                   >
 
                     <h1 className="text-xl mb-4 text-montserrat font-medium text-center uppercase mt-2">total user {item}</h1>
-                    <CircularProgressbar
-                      background
-                      strokeWidth={8}
-                      initialAnimation
-                      circleRatio={0.6}
-                      className='!w-[18.5rem] !max-w-[calc(100vw-3rem)] mx-auto'
-                      styles={{
-
-                        path: {
-                          stroke: `rgba(62,154,199,${66 / 100})`
-
-                        },
-                        trail: {
-                          stroke: "green"
-                        },
-                      }}
-
-                      percentage={66} text={"66%"} />
-
-
+                    <PieChart chartData={userData} />
                   </motion.div>
                 </SwiperSlide>))
 
 
                 }
               </Swiper>
-              {/* iohiohaiosdhfiohsad */}
-
               <Select2 options={options} className='!border-none !h-8 mt-4' />
-
-
             </div>
             {
               isLoading ? (
-
-
                 <div role="status" class="space-y-2.5 animate-pulse max-w-lg grid grid-cols-3 gap-2">
-
                   <div class="flex items-center w-full space-x-2 max-w-[480px]">
                     <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
                     <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
                   </div>
-
                   <div class="flex items-center w-full space-x-2 max-w-[480px]">
                     <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
                     <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
@@ -291,70 +189,27 @@ const Details = () => {
                 </div>
 
               ) : (
-                <div className='flex flex-nowrap overflow-x-auto lg:flex-nowrap  gap-x-4 md:gap-x-2 '>
-                  <div
-                    className="shadow-lg shadow-slate-300 flex-none  mt-4
-    flex relative group bg-white py-6 mb-6   overflow-hidden  px-8 rounded-xl">
-                    <div className="absolute top-0 h-1 w-0 left-0 transition-[width] bg-green-400 duration-700 group-hover:w-full"></div>
-                    <div className="w-10 h-10 rounded-full
-   grid place-content-center
-   bg-blue-300 hover:bg-blue-200  overflow-hidden">
-                      <AiOutlineSave />
-                    </div>
-                    <div className="ml-2">
-                      <h1 className="font-semibold  text-lg leading-none mb-1">{tickets.length}</h1>
-                      <p className='text-sm font-montserrat text-gray-500 font-medium '>Total Tickekts</p>
-                    </div>
-                  </div>
-                  <div
-                    className="shadow-lg shadow-slate-300 flex-none  mt-4
-    flex relative group bg-white py-6 mb-6   overflow-hidden  px-8 rounded-xl">
-                    <div className="absolute top-0 h-1 w-0 left-0 transition-[width] bg-green-400 duration-700 group-hover:w-full"></div>
-                    <div className="w-10 h-10 rounded-full
-   grid place-content-center
-   bg-green-300 hover:bg-green-200  overflow-hidden">
-                      <VscFolderActive />
-                    </div>
-                    <div className="ml-2">
-                      <h1 className="font-semibold  text-lg leading-none mb-1">{activeTicketCount}</h1>
-                      <p className='text-sm font-montserrat text-gray-500 font-medium '>Active Tickets</p>
-                    </div>
-                  </div>
-                  <div
-                    className="shadow-lg shadow-slate-300 flex-none  mt-4
-    flex relative group bg-white py-6 mb-6   overflow-hidden  px-8 rounded-xl">
-                    <div className="absolute top-0 h-1 w-0 left-0 transition-[width] bg-green-400 duration-700 group-hover:w-full"></div>
-                    <div className="w-10 h-10 rounded-full
-   grid place-content-center
-   bg-red-300 hover:bg-red-200  overflow-hidden">
-                      <BiCategory />
-                    </div>
-                    <div className="ml-2">
-                      <h1 className="font-semibold  text-lg leading-none mb-1">{tickets.length - activeTicketCount}</h1>
-                      <p className='text-sm font-montserrat text-gray-500 font-medium '>InActive Tickets</p>
-                    </div>
-                  </div>
-                </div>
-
+              <Scrollable>
+              <TicketCounts total counts={tickets.length} icon={<AiOutlineSave />}/>
+                  <TicketCounts active counts={activeTicketCount} icon={<VscFolderActive />}/>
+                  <TicketCounts 
+                  inactive
+                  counts={tickets.length-activeTicketCount} icon={<BiCategory />}/>
+              </Scrollable>
               )
 
             }
             {
               isLoading ? (
-
-
                 <div role="status" class="space-y-2.5 animate-pulse max-w-lg grid grid-cols-3 gap-2">
-
                   <div class="flex items-center w-full space-x-2 max-w-[480px]">
                     <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
                     <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
                   </div>
-
                   <div class="flex items-center w-full space-x-2 max-w-[480px]">
                     <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
                     <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
                   </div>
-
                   <div class="flex items-center w-full space-x-2 max-w-[480px]">
                     <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
                     <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
@@ -373,55 +228,11 @@ const Details = () => {
                 </div>
 
               ) : (
-                <div className='flex flex-nowrap overflow-x-auto lg:flex-nowrap  gap-x-4 md:gap-x-2 '>
-                  <div
-                    className="shadow-none shadow-slate-500 flex-none  mt-4
-    flex relative group bg-slate-800 text-white py-3 mb-6 flex-col gap-y-2
-    overflow-hidden  px-8 rounded-none">
-                    <div className="absolute top-0 h-1 w-0 left-0 transition-[width] bg-green-400 duration-700 group-hover:w-full"></div>
-                    <div className="w-12 h-12 rounded-full
-   grid place-content-center
-   bg-orange-300 hover:bg-orange-200  mx-auto  overflow-hidden">
-                      <MdOutlinePriceChange />
-                    </div>
-                    <div className="ml-2">
-                      <p className='text-sm font-montserrat text-white font-medium mb-2'>Total Cost of All Tickets</p>
-                      <h1 className="font-semibold  text-lg leading-none mb-1">{tickets.length * 6500} <sup className='text-blue-400'>frs</sup> </h1>
-                    </div>
-                  </div>
-                  <div
-                    className="shadow-none shadow-slate-500 flex-none  mt-4
-    flex relative group bg-blue-800 text-white py-3 mb-6 flex-col gap-y-2
-    overflow-hidden  px-8 rounded-none">
-                    <div className="absolute top-0 h-1 w-0 left-0 transition-[width] bg-green-400 duration-700 group-hover:w-full"></div>
-                    <div className="w-12 h-12 rounded-full
-   grid place-content-center
-   bg-purple-300 hover:bg-purple-200  mx-auto  overflow-hidden">
-                      <BiCategory />
-                    </div>
-                    <div className="ml-2">
-                      <p className='text-sm font-montserrat text-white font-medium mb-2'>Total Cost of Active Tickets</p>
-                      <h1 className="font-semibold  text-lg leading-none mb-1">{activeTicketCount * 6500} <sup className='text-blue-400'>frs</sup> </h1>
-                    </div>
-                  </div>
-                  <div
-                    className="shadow-none shadow-slate-500 flex-none  mt-4
-    flex relative group bg-orange-300 text-black py-3 mb-6 flex-col gap-y-2
-    overflow-hidden  px-8 rounded-none">
-                    <div className="absolute top-0 h-1 w-0 left-0 transition-[width] bg-green-400 duration-700 group-hover:w-full"></div>
-                    <div className="w-12 h-12 rounded-full
-   grid place-content-center
-   bg-green-300 hover:bg-green-200  mx-auto  overflow-hidden">
-                      <BiCategory />
-                    </div>
-                    <div className="ml-2">
-                      <p className='text-sm font-montserrat text-white- font-medium mb-2'>Total Cost of InActive Tickets</p>
-                      <h1 className="font-semibold  text-lg leading-none mb-1">{(tickets.length - activeTicketCount) * 6500} <sup className='text-blue-400'>frs</sup> </h1>
-                    </div>
-                  </div>
-
-                </div>
-
+                <Scrollable  >
+                  <AmountCount total icon={<MdOutlinePriceChange/>} amount={tickets.length*6500}/>
+                  <AmountCount active icon={    <BiCategory />} amount={activeTicketCount*6500}/>
+                  <AmountCount inactive icon={    <BiCategory />} amount={(tickets.length - activeTicketCount) * 6500}/>
+                </Scrollable>
               )
 
             }
@@ -540,7 +351,7 @@ const Details = () => {
           </thead>
           {
 
-            !isLoading && drawTab()
+            !isLoading && <FormatTable tickets={tickets} i={i} j={j}/>
           }
         </table>
       </div>
@@ -585,12 +396,12 @@ const Details = () => {
         )
       }
       <div className="flex mb-10 select-none gap-4">
-        <div className={`${i <= 0 ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => next_pre(-1)}>
+        <div className={`${i <= 0 ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => next_pre(-1,tickets)}>
           <BsChevronLeft className='text-black  font-black' />
 
         </div>
         <div className={`${j >= tickets.length ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => {
-          next_pre(1)
+          next_pre(1,tickets)
         }}>
           <BsChevronRight className='text-black  font-black' />
 

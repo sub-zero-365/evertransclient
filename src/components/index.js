@@ -20,3 +20,17 @@ export { default as DashItem }
 from './DashItem'
 export { default as AddCities }
 from './AddCities'
+export { default as BarChart }
+from './BarChart'
+export { default as Scrollable }
+from './Scrollable'
+export { default as AmountCount }
+from './AmountCount'
+export { default as FormatTable }
+from './FormatTable'
+export { default as PieChart }
+from './PieChart'
+export { default as LineChart }
+from './LineChart'
+export { default as TicketCounts }
+from './ticketCounts'

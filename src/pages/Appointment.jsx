@@ -4,11 +4,37 @@ import axios from 'axios';
 import Select from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTickets } from '../actions/adminData';
-import { Loader } from '../components';
+import { AmountCount, FormatTable, Loader, Scrollable, TicketCounts } from '../components';
+import { BsTicketPerforated, BsChevronRight, BsChevronLeft } from 'react-icons/bs'
+import { AiOutlineSave } from 'react-icons/ai';
+import { VscFolderActive } from 'react-icons/vsc';
+import { BiCategory } from 'react-icons/bi';
+import { MdOutlinePriceChange } from 'react-icons/md';
+
 const Appointment = () => {
+    const skip = 10;
+    const [activeTicketCount, setActiveTicketCount] = useState(0);
+
+    const [i, setI] = useState(0)
+    const [j, setJ] = useState(skip)
+    const next_pre = (state, tickets) => {
+        if (state === 1) {
+            if (!(j > tickets.length - 1)) {
+                setI(j)
+                setJ(j + skip);
+            }
+        }
+        if (state == -1) {
+            if (!((i - skip) < 0)) {
+                setI(i - skip);
+                setJ(j - skip)
+            }
+        }
+
+    }
     const tickets_ = useSelector(state => state.setAdminData.tickets);
     const isLoading = useSelector(state => state.setAdminData.loading.tickets)
-    console.log(tickets_,isLoading)
+    console.log(tickets_, isLoading)
 
     const dispatch = useDispatch();
     const setTickets_ = (payload) => {
@@ -53,8 +79,9 @@ const Appointment = () => {
                         'Authorization': "makingmoney " + token
                     }
                 })
-                // console.log(response?.data?.tickets);
                 setTickets_([...response?.data?.tickets])
+                const acttic = response?.data?.tickets.filter((arr) => arr.active).length
+                setActiveTicketCount(acttic)
             }
             fetchData()
 
@@ -66,8 +93,34 @@ const Appointment = () => {
 
     return (
         <div className="max-w-full h-[calc(100vh-3rem)] overflow-auto" >
-            {isLoading&&(<Loader toggle dark />)}
+
+            {isLoading && (<Loader toggle dark />)}
             <h1 className='text-2xl text-center'>Recent Book tickets</h1>
+
+            <Scrollable className={"!px-5"}>
+                <TicketCounts counts={tickets_.length}
+                    total
+
+                    icon={<AiOutlineSave />} />
+                <TicketCounts counts={activeTicketCount}
+                    active
+                    icon={<VscFolderActive />} />
+                <TicketCounts
+                    inactive
+                    counts={tickets_.length - activeTicketCount} icon={<BiCategory />} />
+            </Scrollable>
+            <Scrollable className={"!px-5"}>
+                <AmountCount
+                    total
+                    icon={<MdOutlinePriceChange />}
+                    amount={tickets_.length * 6500} />
+                <AmountCount
+                    active
+                    icon={<BiCategory />} amount={activeTicketCount * 6500} />
+                <AmountCount
+                    inactive
+                    icon={<BiCategory />} amount={(tickets_.length - activeTicketCount) * 6500} />
+            </Scrollable>
 
             <form className="px-4 md:px-3 my-5 " onSubmit={handleSubmit}>
                 <div className="flex relative min-h-[40px]">
@@ -124,59 +177,22 @@ const Appointment = () => {
 
                         </tr>
                     </thead>
-                    <tbody>
-                        {
-                            tickets_.map((ticket, index) => (<tr key={index} className="bg-white  text-xs dark:bg-gray-900 dark:border-gray-700"
-                            >
-                                <td className="px-2 py-4  flex items-center justify-center">
-                                    {index + 1}
-                                </td>
-                                <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {ticket?.fullname || "ako bate emmanuel"}
-                                </th>
-                                <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {ticket?.phone || "n/a"}
-                                </th>
-                                <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {ticket?.price || " 5000frs"}
-                                </th>
-                                <td className="px-3 py-4">
-                                    <span href={`https://wa.me/237672301714`} className="font-medium cursor:pointer text-blue-500 dark:text-blue-500 hover:underline">{ticket?.from || " n/a"}</span>
-
-                                </td>
-                                <td className="px-3 py-4">
-                                    <span href={`mailto:bateemma14@gmail.com`} className="font-medium cursor:pointer text-blue-500 dark:text-blue-500 hover:underline">{ticket?.to || "n/a"}</span>
-
-
-                                </td>
-                                <td className="px-3 py-4">
-
-                                    {ticket?.traveldate ?
-                                        (new Date(ticket.traveldate).toLocaleDateString()) : "n/a"}
-
-                                </td>
-                                <td className="px-3 py-4">
-                                    {ticket?.traveltime
-                                        || "n/a"}
-
-                                </td>
-                                <td className="px-3 py-4">
-                                    {ticket?.age || "n/a"}
-
-                                </td>
-                                <td className="px-3 py-4">
-                                    {ticket?.sex || "n/a"}
-
-                                </td>
-                                <td className="px-3 py-4 text-xs" onClick={() => navigate(`/dashboard/${ticket?._id || index}?admin=true`)}>
-                                    <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline">details</a>
-                                </td>
-                            </tr>
-                            ))
-                        }
-
-                    </tbody>
+                    <FormatTable tickets={tickets_} j={j} i={i} />
                 </table>
+            </div>
+            <div className="flex mb-10 select-none gap-4 mt-5 ml-4">
+                <div className={`${i <= 0 ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => next_pre(-1, tickets_)}>
+                    <BsChevronLeft className='text-black  font-black' />
+
+                </div>
+                <div className={`${j >= tickets_.length ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => {
+                    next_pre(1, tickets_)
+                }}>
+                    <BsChevronRight className='text-black  font-black' />
+
+                </div>
+
+
             </div>
 
         </div>
