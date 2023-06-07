@@ -1,0 +1,28 @@
+README.md[36m:[mIf you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will[1;31m remove[m the single build dependency from your project.
+package-lock.json[36m:[m    "node_modules/@svgr/babel-plugin[1;31m-remove[m-jsx-attribute": {
+package-lock.json[36m:[m      "resolved": "https://registry.npmjs.org/@svgr/babel-plugin[1;31m-remove[m-jsx-attribute/-/babel-plugin[1;31m-remove[m-jsx-attribute-5.4.0.tgz",
+package-lock.json[36m:[m    "node_modules/@svgr/babel-plugin[1;31m-remove[m-jsx-empty-expression": {
+package-lock.json[36m:[m      "resolved": "https://registry.npmjs.org/@svgr/babel-plugin[1;31m-remove[m-jsx-empty-expression/-/babel-plugin[1;31m-remove[m-jsx-empty-expression-5.0.1.tgz",
+package-lock.json[36m:[m        "@svgr/babel-plugin[1;31m-remove[m-jsx-attribute": "^5.4.0",
+package-lock.json[36m:[m        "@svgr/babel-plugin[1;31m-remove[m-jsx-empty-expression": "^5.0.1",
+package-lock.json[36m:[m    "node_modules/babel-plugin-transform-react[1;31m-remove[m-prop-types": {
+package-lock.json[36m:[m      "resolved": "https://registry.npmjs.org/babel-plugin-transform-react[1;31m-remove[m-prop-types/-/babel-plugin-transform-react[1;31m-remove[m-prop-types-0.4.24.tgz",
+package-lock.json[36m:[m        "babel-plugin-transform-react[1;31m-remove[m-prop-types": "^0.4.24"
+package-lock.json[36m:[m    "@svgr/babel-plugin[1;31m-remove[m-jsx-attribute": {
+package-lock.json[36m:[m      "resolved": "https://registry.npmjs.org/@svgr/babel-plugin[1;31m-remove[m-jsx-attribute/-/babel-plugin[1;31m-remove[m-jsx-attribute-5.4.0.tgz",
+package-lock.json[36m:[m    "@svgr/babel-plugin[1;31m-remove[m-jsx-empty-expression": {
+package-lock.json[36m:[m      "resolved": "https://registry.npmjs.org/@svgr/babel-plugin[1;31m-remove[m-jsx-empty-expression/-/babel-plugin[1;31m-remove[m-jsx-empty-expression-5.0.1.tgz",
+package-lock.json[36m:[m        "@svgr/babel-plugin[1;31m-remove[m-jsx-attribute": "^5.4.0",
+package-lock.json[36m:[m        "@svgr/babel-plugin[1;31m-remove[m-jsx-empty-expression": "^5.0.1",
+package-lock.json[36m:[m    "babel-plugin-transform-react[1;31m-remove[m-prop-types": {
+package-lock.json[36m:[m      "resolved": "https://registry.npmjs.org/babel-plugin-transform-react[1;31m-remove[m-prop-types/-/babel-plugin-transform-react[1;31m-remove[m-prop-types-0.4.24.tgz",
+package-lock.json[36m:[m        "babel-plugin-transform-react[1;31m-remove[m-prop-types": "^0.4.24"
+src/components/DashboardLayout.jsx[36m:[m                localStorage[1;31m.remove[mItem("admin_token")
+src/components/Modal.jsx[36m:[m    button.classList[1;31m.remove[m("scale-info")
+src/components/Modal.jsx[36m:[m    wrapper.classList[1;31m.remove[m("scale-info")
+src/components/Navbar.jsx[36m:[m        localStorage[1;31m.remove[mItem("token")
+src/components/Navbar.jsx[36m:[m        localStorage[1;31m.remove[mItem("token")
+src/components/OurServices.jsx[36m:[m              item.classList[1;31m.remove[m("active")
+src/pages/DashRegister.jsx[36m:[m      localStorage[1;31m.remove[mItem("token");
+src/pages/Home.jsx[36m:[m                        testimonial.classList[1;31m.remove[m("active")
+src/pages/Login.jsx[36m:[m      localStorage[1;31m.remove[mItem("token");

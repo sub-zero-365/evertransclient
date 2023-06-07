@@ -37,11 +37,9 @@ const Register = () => {
       }
       )
       const { data: { fullname, token } } = res
-      console.log(fullname, token);
       setuserName(fullname)
       localStorage.removeItem("token");
-      // localStorage.token=token
-      localStorage.setItem("token",res.data.token)
+      localStorage.setItem("token", res.data.token)
       navigate("/user")
       // return res
       setIsLoading(false)
@@ -50,7 +48,7 @@ const Register = () => {
       setIsLoading(false)
       // setError("registration fail");
       setError(err.response.data);
-      
+
       const timer = setTimeout(() => {
         clearTimeout(timer)
         setError("")

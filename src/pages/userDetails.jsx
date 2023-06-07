@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import { AiOutlineMenu, AiOutlineSave } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io"
 import { useNavigate, useParams, NavLink } from 'react-router-dom';
-import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
+// import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import { motion } from 'framer-motion';
 import { BsTicketPerforated, BsChevronRight, BsChevronLeft } from 'react-icons/bs'
 import axios from 'axios'
@@ -30,52 +30,109 @@ import "swiper/css/thumbs";
 import { AmountCount, BarChart, FormatTable, PieChart, Scrollable, TicketCounts } from '../components';
 import { UserData } from "../Assets/userdata";
 const Details = () => {
+  const [tickets, setTickets] = useState([])
+  const [activeTicketCount, setActiveTicketCount] = useState(0);
+
   const id = useParams().id
+  const [filter, setFilter] = useState("null")
+  const [data, setData] = useState([12, 26])
   const [userData, setUserData] = useState({
-    labels: UserData.map((v) => v.year),
+    labels: ["active tickets", "inactive tickets"],
     datasets: [
       {
-        label: "users tickets print",
-        data:UserData.map((v)=>v.userGain),
-        
-
+        label: "ticket data",
+        data: data,
+        backgroundColor: ["green", "orange"]
       }
-    ]
+    ],
+    datalabels: {
+      backgroundColor: function (context) {
+        return context.dataset.backgroundColor;
+      },
+      borderColor: 'white',
+      borderRadius: 25,
+      borderWidth: 3,
+      color: 'white',
+      font: {
+        weight: 'bold'
+      },
+      padding: 6,
 
-  })
+
+    }
+
+
+  }
+  )
   const [activeSlide, setctiveSlide] = useState(0);
 
   const token = localStorage.getItem("admin_token");
-  const [tickets, setTickets] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [activeTicketCount, setActiveTicketCount] = useState(0);
-  useEffect(() => {
+  const [isLoading, setIsLoading] = useState(false)
 
-    async function getData() {
-      const url = process.env.REACT_APP_LOCAL_URL + "/admin/alltickets/?" + `createdBy=${id}`;
-      try {
-        const res = await axios.get(url, {
-          headers: {
-            'Authorization': "makingmoney " + token
+  const [userInfo, setUserInfo] = useState({})
+  const config = {
+    headers: {
+      'Authorization': "makingmoney " + token
+    }
+  }
+
+  async function getData() {
+    setIsLoading(true)
+    const url = process.env.REACT_APP_LOCAL_URL + "/admin/alltickets/?" + `createdBy=${id}&createdAt=${filter}`;
+    try {
+      const res = await axios.get(url, config)
+      setTickets(res?.data?.tickets);
+      const acttic = res?.data?.tickets.filter((arr) => arr.active).length
+      setActiveTicketCount(acttic)
+      setData([77, 89])
+      setUserData({
+        labels: ["active tickets", "inactive tickets"],
+        datasets: [
+          {
+            label: "ticket data",
+            data: [acttic,res?.data?.tickets.length-acttic],
+            backgroundColor: ["skyblue", "orange"]
           }
-        })
-        setTickets(res?.data?.tickets);
-        const acttic = res?.data?.tickets.filter((arr) => arr.active).length
-        setActiveTicketCount(acttic)
-        // console.log(res?.data?.tickets)
+        ]})
+    } catch (err) {
+      console.log(err)
+    }
+    setIsLoading(false)
+  }
+  const handleOnChange = (evt) => {
+    setFilter(evt.value)
+  }
+  useEffect(() => {
+    getData()
+  }, [filter]);
+
+
+
+  useEffect(() => {
+    async function getUserInfo() {
+      const url = process.env.REACT_APP_LOCAL_URL + "/admin/staticuser/" + `${id}`;
+
+      try {
+        const { data } = await axios.get(url, config);
+        setUserInfo(data?.user)
+        console.log(data)
+
       } catch (err) {
         console.log(err)
       }
-      setIsLoading(false)
+
     }
+
+
     getData()
+    getUserInfo()
   }, [window.location.href])
   const skip = 10;
 
   const navigate = useNavigate();
   const [i, setI] = useState(0)
   const [j, setJ] = useState(skip)
-  const next_pre = (state,tickets) => {
+  const next_pre = (state, tickets) => {
     if (state === 1) {
       if (!(j > tickets.length - 1)) {
         setI(j)
@@ -90,14 +147,21 @@ const Details = () => {
     }
 
   }
-  
+
 
   const [toggle, setToggle] = useState(false)
   const options = [
-    { label: "all", value: "all" },
-    { label: "today", value: "today" },
-    { label: "yesterday", value: "last" },
-    { label: "last week", value: "la" },
+    { label: "all", value: "null" },
+    { label: "today", value: 1 },
+    { label: "yesterday", value: 2 },
+    { label: "last week", value: 7 },
+    { label: "last month", value: 31 },
+
+  ]
+  const sortOptions = [
+    { label: "Price", value: "price" },
+    { label: "fullname", value: "fullname" },
+    { label: "sex", value: "sex" },
 
   ]
   return (
@@ -157,7 +221,10 @@ const Details = () => {
 
                 }
               </Swiper>
-              <Select2 options={options} className='!border-none !h-8 mt-4' />
+              <Select2 options={options}
+                onChange={handleOnChange}
+
+                className='!border-none !h-8 mt-4' />
             </div>
             {
               isLoading ? (
@@ -189,13 +256,13 @@ const Details = () => {
                 </div>
 
               ) : (
-              <Scrollable>
-              <TicketCounts total counts={tickets.length} icon={<AiOutlineSave />}/>
-                  <TicketCounts active counts={activeTicketCount} icon={<VscFolderActive />}/>
-                  <TicketCounts 
-                  inactive
-                  counts={tickets.length-activeTicketCount} icon={<BiCategory />}/>
-              </Scrollable>
+                <Scrollable>
+                  <TicketCounts total counts={tickets.length} icon={<AiOutlineSave />} />
+                  <TicketCounts active counts={activeTicketCount} icon={<VscFolderActive />} />
+                  <TicketCounts
+                    inactive
+                    counts={tickets.length - activeTicketCount} icon={<BiCategory />} />
+                </Scrollable>
               )
 
             }
@@ -229,9 +296,19 @@ const Details = () => {
 
               ) : (
                 <Scrollable  >
-                  <AmountCount total icon={<MdOutlinePriceChange/>} amount={tickets.length*6500}/>
-                  <AmountCount active icon={    <BiCategory />} amount={activeTicketCount*6500}/>
-                  <AmountCount inactive icon={    <BiCategory />} amount={(tickets.length - activeTicketCount) * 6500}/>
+                  <AmountCount
+                    className="!bg-blue-400"
+
+                    total icon={<MdOutlinePriceChange />} amount={tickets.length * 6500} />
+                  <AmountCount
+                    className="!bg-green-400"
+
+                    active icon={<BiCategory />} amount={activeTicketCount * 6500} />
+                  <AmountCount
+
+                    className="!bg-red-400 !text-black"
+
+                    inactive icon={<BiCategory />} amount={(tickets.length - activeTicketCount) * 6500} />
                 </Scrollable>
               )
 
@@ -258,17 +335,17 @@ const Details = () => {
             className='pb-10 overflow-y-auto lg:max-h-screen'
           >
             <h1 className='text-lg  font-medium leading-6 mb-1'>Employee Name :</h1>
-            <h4 className='text-sm text-slate-500 font-medium '>Ako Bate Emmanuel</h4>
+            <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.fullname || "n/a"}</h4>
 
             <h1 className='text-lg  font-medium leading-6 mb-1'>Employee Id:</h1>
-            <h4 className='text-sm text-slate-500 font-medium '>2uy4yyt7873</h4>
+            <h4 className='text-sm text-slate-500 font-medium '>{userInfo?._id || "n/a"}</h4>
 
             <h1 className='text-lg  font-medium leading-6 mb-1'>Phone Number:<span className="px-2 text-white mb-4 rounded-xl text-xs bg-green-400 ml-1">call</span></h1>
-            <h4 className='text-sm text-slate-500 font-medium '>12345678</h4>
+            <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.phone || "n/a"}</h4>
             <h1 className='text-lg  font-medium leading-6 mb-1'>ID Card N-o: <span className="px-2 text-white mb-4 rounded-xl text-xs bg-green-400 hidden">new</span></h1>
             <h4 className='text-sm text-slate-500 font-medium '>1234567</h4>
             <h1 className='text-lg  font-medium leading-6 mb-1'>Account created At: <span className="px-2 text-white mb-4 rounded-xl text-xs bg-green-400">new</span></h1>
-            <h4 className='text-sm text-slate-500 font-medium '>12/12/29</h4>
+            <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.createdAt || "n/a"}</h4>
 
             <div className='grid place-items-center my-5'>
               <CircularProgressbar
@@ -303,7 +380,7 @@ const Details = () => {
 
       <div className="flex justify-between pr-5">
         <h1 className="text-2xl mt-4 mb-6 text-gray-700 pl-6  tracking-tight">All tickets <GrStackOverflow className="inline-block pl-2 text-4xl" /></h1>
-        <Select options={options} className='!border-none !h-8 mt-4' />
+        <Select options={sortOptions} className='!border-none !h-8 mt-4' />
 
       </div>
       <div className="relative max-w-full overflow-x-auto  shadow-md sm:rounded-lg w-full mb-6 ">
@@ -351,7 +428,7 @@ const Details = () => {
           </thead>
           {
 
-            !isLoading && <FormatTable tickets={tickets} i={i} j={j}/>
+            !isLoading && <FormatTable tickets={tickets} i={i} j={j} />
           }
         </table>
       </div>
@@ -396,12 +473,12 @@ const Details = () => {
         )
       }
       <div className="flex mb-10 select-none gap-4">
-        <div className={`${i <= 0 ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => next_pre(-1,tickets)}>
+        <div className={`${i <= 0 ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => next_pre(-1, tickets)}>
           <BsChevronLeft className='text-black  font-black' />
 
         </div>
         <div className={`${j >= tickets.length ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => {
-          next_pre(1,tickets)
+          next_pre(1, tickets)
         }}>
           <BsChevronRight className='text-black  font-black' />
 

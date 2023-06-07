@@ -1,8 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import axios from 'axios';
-// import { actions } from '../actions/users'
-// import { setUsers } from '../actions/adminData';
 import { useSelector, useDispatch } from 'react-redux';
 import { BarChart, LineChart } from '../components';
 
@@ -12,9 +10,10 @@ import Select from 'react-select';
 import { motion } from 'framer-motion'
 import { UserData } from '../Assets/userdata';
 const Appointment = () => {
+    const token = localStorage.getItem("admin_token");
+
     const users_ = useSelector(state => state.setAdminData.users);
     const isLoading = useSelector(state => state.setAdminData.loading.users)
-    console.log(users_, isLoading)
     const navigate = useNavigate()
     const options = [
         { label: "phone", value: "phone" },
@@ -27,49 +26,37 @@ const Appointment = () => {
     const setUsers_ = (payload) => {
         return dispatch(setUsers(payload))
     }
-    const token = localStorage.getItem("admin_token");
     const [text, setText] = useState("")
     const handleSubmit = async (e) => {
-        return
-        const baseUrl = process.env.REACT_APP_LOCAL_URL + "/admin/allusers"
         e.preventDefault()
-        try {
-            const response = await axios.get(`${baseUrl}?${categoriesArray[selected]}=${text}`, {
-                headers: {
-                    'Authorization': "mrjames " + token
-                }
-            })
-            console.log(response?.data?.users);
-            setUsers_([...response?.data?.users])
-        }
+        return
 
-        catch (err) {
-            console.log(err)
-        }
     }
 
 
 
-    // const url = "https://mrjamesserviceappbackend.vercel.app/user"
-
     useEffect(() => {
         const url = process.env.REACT_APP_LOCAL_URL + "/admin/allusers"
 
-        try {
-            async function fetchData() {
+        async function fetchData() {
+            try {
                 const response = await axios.get(url, {
                     headers: {
                         'Authorization': "makingmoney " + token
                     }
                 })
-                console.log(response?.data?.users);
                 setUsers_([...response?.data?.users])
+                // console.log(response?.data?.users, "enter here")
+            } catch (err) {
+                setUsers_([])
+                alert("fail to get users")
+                console.log(err)
             }
-            fetchData()
-
-        } catch (err) {
-            console.log(err)
         }
+        fetchData()
+
+
+
     }, [])
 
 
@@ -77,36 +64,26 @@ const Appointment = () => {
 
 
 
-    const [dropdown, setDropdown] = useState(false)
-    const closeDropdown = () => {
-        if (dropdown) {
-            setDropdown(false)
-        }
 
-    }
 
-    const [selected, setSelected] = useState(0)
-    const categoriesArray = [
-        "fullname", "email", "phone", "service_type", "age"
-    ]
     const [userData, setUserData] = useState({
         labels: UserData.map((v) => v.id),
         labels: UserData.map((v) => v.year),
         datasets: [
-          {
-            label: "users gain",
-            data:UserData.map((v)=>v.userGain),
-            
-    
-          },
-          {
-            label: "users lost",
-            data:UserData.map((v)=>v.userLost)
-    
-          },
+            {
+                label: "users gain",
+                data: UserData.map((v) => v.userGain),
+
+
+            },
+            {
+                label: "users lost",
+                data: UserData.map((v) => v.userLost)
+
+            },
         ]
-    
-      })
+
+    })
     return (
         <motion.div
             className="max-w-full overflow-auto max-h-[calc(100vh-3rem)] " >

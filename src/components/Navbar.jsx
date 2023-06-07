@@ -4,9 +4,7 @@ import { IoMdClose } from 'react-icons/io'
 import { BsMoonStars, BsSun } from 'react-icons/bs';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { useravatar } from '../Assets/images';
-// import { useSelector,useD } from 'react-redux'
 import { useSelector, useDispatch } from 'react-redux'
-
 import { motion, useScroll } from "framer-motion";
 import { storeTicket, setLoading } from "../actions/userticket"
 
@@ -24,21 +22,16 @@ const Navbar = () => {
     const handleLogout = () => {
         setLoading_(true)
         userTicket([])
-        
         localStorage.removeItem("token")
         navigate("/login")
     }
-    // const isToken = localStorage.getItem("token")
     const isLogin = localStorage.getItem("token");
     const { scrollYProgress } = useScroll()
     const navigate = useNavigate()
     const gotoLoginPage = () => {
-        // localStorage.token = ""
         localStorage.removeItem("token")
-        navigate("/login")
         setIsOpen(false)
-
-
+        navigate("/login")
     }
     const gotoRegisterPage = () => {
         navigate("/register")
@@ -264,9 +257,9 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                         data-te-ripple-init
                                         data-te-ripple-color="light"
                                         class="inline-block rounded bg-red-400 px-4 py-1 text-xs font-medium capitalize
+                                        hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150
   ease-in-out hover:bg-primary-600
-  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-primary-700
   active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
@@ -275,6 +268,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                         onClick={handleLogout}
                                     >
                                         logout
+                                    
                                     </button>
 
 

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios';
 import Select from 'react-select';
+import SelectSort from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTickets } from '../actions/adminData';
 import { AmountCount, FormatTable, Loader, Scrollable, TicketCounts } from '../components';
@@ -34,7 +35,7 @@ const Appointment = () => {
     }
     const tickets_ = useSelector(state => state.setAdminData.tickets);
     const isLoading = useSelector(state => state.setAdminData.loading.tickets)
-    console.log(tickets_, isLoading)
+    // console.log(tickets_, isLoading)
 
     const dispatch = useDispatch();
     const setTickets_ = (payload) => {
@@ -71,6 +72,11 @@ const Appointment = () => {
         }
     }
     const url = `${process.env.REACT_APP_LOCAL_URL}/admin/alltickets`
+    const sortOpions = [
+        { value: "name", label: "fullname" },
+        { value: "time", label: "timecreated" },
+
+    ]
     useEffect(() => {
         try {
             async function fetchData() {
@@ -95,7 +101,17 @@ const Appointment = () => {
         <div className="max-w-full h-[calc(100vh-3rem)] overflow-auto" >
 
             {isLoading && (<Loader toggle dark />)}
-            <h1 className='text-2xl text-center'>Recent Book tickets</h1>
+
+            <div className=" md:flex  justify-between items-start">
+                <h1 className='text-2xl text-center mt-6'>Book tickets</h1>
+                <div className="flex flex-col mx-auto justify-center  items-center">
+                    <h2 className='uppercase text-lg md:text-lg mb-4'>sort data</h2>
+                    <SelectSort className='!w-[20rem] !border-none !outline-none'
+                        options={sortOpions} />
+                </div>
+
+
+            </div>
 
             <Scrollable className={"!px-5"}>
                 <TicketCounts counts={tickets_.length}
@@ -111,13 +127,19 @@ const Appointment = () => {
             </Scrollable>
             <Scrollable className={"!px-5"}>
                 <AmountCount
+                    className="!bg-blue-400"
+
                     total
                     icon={<MdOutlinePriceChange />}
                     amount={tickets_.length * 6500} />
                 <AmountCount
+                    className="!bg-green-400"
+
                     active
                     icon={<BiCategory />} amount={activeTicketCount * 6500} />
                 <AmountCount
+                    className="!bg-red-400 !text-black"
+
                     inactive
                     icon={<BiCategory />} amount={(tickets_.length - activeTicketCount) * 6500} />
             </Scrollable>

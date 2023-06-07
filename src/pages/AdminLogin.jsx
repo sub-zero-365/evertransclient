@@ -17,19 +17,24 @@ const AdminLogin = () => {
     setIsLoading(true)
 
     try {
-      const data = await axios.post(url, { phone: number, password })
-      localStorage.setItem("admin_token", data?.data?.token)
+      const res = await axios.post(url, { phone: number, password },
+      {
+      withCredentials:"include"
+      }
+      )
+      console.log(res.data)
+      // var jsondata=JSON.stringify(res.data.token)
+      localStorage.setItem("admin_token", res?.data?.token);
       navigate("/dashboard")
     } catch (err) {
-      console.log(err.response.data);
-      setIsLoading(false)
+      console.log(err?.response);
       setError("logging fail");
       const timer = setTimeout(() => {
         clearTimeout(timer)
         setError("")
       }, 5000);
     }
-
+    setIsLoading(false)
 
   }
 

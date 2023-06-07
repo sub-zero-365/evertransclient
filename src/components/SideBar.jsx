@@ -2,6 +2,7 @@ import { IoMdClose } from "react-icons/io"
 import { RxDashboard } from "react-icons/rx"
 import { TiMessages } from "react-icons/ti"
 import { CiLogout } from "react-icons/ci"
+import { FcAssistant } from "react-icons/fc"
 import { GrServicePlay } from "react-icons/gr"
 import { NavLink, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
@@ -50,9 +51,9 @@ const SideBar = () => {
     },
     {
 
-      name: "Contacts",
-      icon: <GrServicePlay size={20} />
-      , to: "/dashboard/contacts"
+      name: "create new assistants",
+      icon: <FcAssistant size={20} />
+      , to: "/dashboard/assistant"
 
     },
     {
@@ -101,7 +102,7 @@ const SideBar = () => {
                 }
                 className={`flex text-medium 
 ${active === index ? "bg-violet-500 text-white text-semibold" : "bg-white"}  hover:bg-violet-500 transition-colors 
-duration-300 py-2 px-3 mt-4 shadow-md ring-offset-slate-200 mb-2 rounded-lg`}>
+duration-300 py-2 px-3 mt-4 shadow-md ring-offset-slate-200 mb-2 rounded-md`}>
                 {icon}
                 <h3 className="text-xs md:text-sm ml-5 group-[.active]:hidden">{name}</h3>
               </NavLink></motion.div>))

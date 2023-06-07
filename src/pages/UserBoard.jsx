@@ -51,7 +51,7 @@ const UserBoard = () => {
             }, 4000);
         }
         async function getData() {
-            const url = process.env.REACT_APP_LOCAL_URL + "/ticket";
+            const url = process.env.REACT_APP_LOCAL_URL + "/ticket?createdAt=31";
             try {
                 const res = await axios.get(url, {
                     headers: {

@@ -1,11 +1,268 @@
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import axios from 'axios'
+import { Loadingbtn } from "../components";
+import { motion } from "framer-motion"
+import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai"
+const AdminLogin = () => {
+  const [seePassword, toggleSeePassword] = useState(true)
+  const [isLoading, setIsLoading] = useState(false);
+  const url = process.env.REACT_APP_LOCAL_URL + "/auth/admin"
+  const [number, setNumber] = useState(null)
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState(false)
+  const navigate = useNavigate();
+  const handeSubmit = async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
 
-const AdminContact = () => {
+    try {
+      const data = await axios.post(url, { phone: number, password })
+      localStorage.setItem("admin_token", data?.data?.token)
+      navigate("/dashboard")
+    } catch (err) {
+      console.log(err.response.data);
+      setIsLoading(false)
+      setError("logging fail");
+      const timer = setTimeout(() => {
+        clearTimeout(timer)
+        setError("")
+      }, 5000);
+    }
+
+
+  }
+
   return (
-    <div className="max-h-[calc(100vh-3rem)] w-full">
-    <h1 className="text-center md:text-start text-xl mx-auto w-full my-6 md:text-2xl">Contacts  </h1>
-    
-    </div>
+    <section className="h-screen" >
+      <div className="container h-full px-6 md:py-24 ">
+        <div
+          className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
+          <div className="mb-12 md:mb-0 md:w-8/12 lg:w-6/12 hidden md:block">
+            <img
+              src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+              className="w-full"
+              alt="Phone image" />
+          </div>
+
+          <div className="md:w-8/12 lg:ml-6 lg:w-5/12">
+            <h1 className="text-2xl  text-center  mb-10 uppercase">Create new Assistant</h1>
+            <form onSubmit={handeSubmit}>
+              <div className="relative mb-6" data-te-input-wrapper-init>
+                <input onChange={e => setNumber(e.target.value)}
+                  type="number"
+                  className="peer block min-h-[auto] w-full 
+                rounded 
+                border-2
+                focus:border-2
+                focus:border-blue-400
+                valid:border-blue-400
+                bg-transparent
+                px-3 py-[0.32rem]
+                leading-[2.15] 
+                outline-none
+                transition-all 
+                duration-200
+                ease-linear
+                focus:placeholder:opacity-100
+                data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                  id="exampleFormControlInput3"
+                  value={number}
+                  placeholder="Email address" required />
+                <label
+                  htmlFor="exampleFormControlInput3"
+                  className="pointer-events-none 
+                absolute left-3
+                top-0 mb-0
+                max-w-[90%]
+                origin-[0_0]
+                truncate 
+                pt-[0.37rem] 
+                leading-[2.15]
+                text-neutral-500
+                transition-all duration-200  
+                ease-out 
+                peer-focus:-translate-y-[1.15rem]
+                peer-focus:scale-[0.8]
+                peer-valid:scale-[0.8]
+                peer-valid:text-blue-400
+                peer-valid:-translate-y-[1.15rem]
+                peer-focus:text-blue-400
+                peer-focus:bg-color_light
+                peer-valid:bg-color_light
+                dark:peer-focus:bg-color_dark
+                dark:peer-valid:bg-color_dark
+                px-0
+                bg-transparent
+                peer-data-[te-input-state-active]:-translate-y-[1.15rem]
+                 rounded-sm
+                 peer-data-[te-input-state-active]:scale-[0.8]
+                motion-reduce:transition-none
+                dark:text-neutral-200
+                dark:peer-focus:text-primary"
+
+                >
+
+
+                  Phone Number
+                </label>
+              </div>
+
+              <div className="relative mb-6" data-te-input-wrapper-init>
+                <input
+                  type="text" onChange={e => setPassword(e.target.value)}
+                  value={password}
+                  className="
+                peer block min-h-[auto] border-2 w-full rounded shadow-none
+                focus:border-2
+                focus:border-blue-400
+                valid:border-blue-400
+                bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none
+                transition-all duration-200 ease-linear
+                focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100
+                motion-reduce:transition-none
+                dark:text-neutral-200
+                dark:placeholder:text-neutral-200
+                [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                  id="exampleFormControlInput33"
+                  placeholder="assistant name" required />
+                <label
+                  htmlFor="exampleFormControlInput33"
+                  className="pointer-events-none 
+                absolute left-3
+                top-0 mb-0
+                max-w-[90%]
+                origin-[0_0]
+                truncate 
+                pt-[0.37rem] 
+                leading-[2.15]
+                text-neutral-500
+                transition-all duration-200  
+                ease-out 
+                peer-focus:-translate-y-[1.15rem]
+                peer-focus:scale-[0.8]
+                peer-valid:scale-[0.8]
+                peer-valid:text-blue-400
+                peer-valid:-translate-y-[1.15rem]
+                peer-focus:text-blue-400
+                peer-focus:bg-color_light
+                peer-valid:bg-color_light
+                dark:peer-focus:bg-color_dark
+                dark:peer-valid:bg-color_dark
+                px-0
+                bg-transparent
+                peer-data-[te-input-state-active]:-translate-y-[1.15rem]
+                 rounded-sm
+                 peer-data-[te-input-state-active]:scale-[0.8]
+                motion-reduce:transition-none
+                dark:text-neutral-200
+                dark:peer-focus:text-primary"
+                >
+                 assistant name
+                </label>
+              </div>
+
+              <div className="relative mb-4 items-center flex mt-4 " data-te-input-wrapper-init>
+                <input
+                  type={seePassword ? "password" : "text"} onChange={e => setPassword(e.target.value)} value={password}
+                  className=" flex-1
+                peer block min-h-[auto] border-2 w-full rounded shadow-none
+                focus:border-2
+                focus:border-blue-400
+                valid:border-blue-400
+                bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none
+                transition-all duration-200 ease-linear
+                focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100
+                motion-reduce:transition-none
+                dark:text-neutral-200
+                dark:placeholder:text-neutral-200
+                [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                  id="exampleFormControlInput33"
+                  placeholder="Password" required />
+                <span className="w-12 h-10 ml-1 border- grid place-items-center"
+                  onClick={() => toggleSeePassword(() => !seePassword)}>{
+                    seePassword ? <AiOutlineEyeInvisible size={25} /> :
+                      <AiOutlineEye size={25} />
+                  } </span>
+                <label
+                  htmlFor="exampleFormControlInput33"
+                  className="pointer-events-none 
+                absolute left-3
+                top-0 mb-0
+                max-w-[90%]
+                origin-[0_0]
+                truncate 
+                pt-[0.37rem] 
+                leading-[2.15]
+                text-neutral-500
+                transition-all duration-200  
+                ease-out 
+                peer-focus:-translate-y-[1.15rem]
+                peer-focus:scale-[0.8]
+                peer-valid:scale-[0.8]
+                peer-valid:text-blue-400
+                peer-valid:-translate-y-[1.15rem]
+                peer-focus:text-blue-400
+                peer-focus:bg-color_light
+                peer-valid:bg-color_light
+                dark:peer-focus:bg-color_dark
+                dark:peer-valid:bg-color_dark
+                px-0
+                bg-transparent
+                peer-data-[te-input-state-active]:-translate-y-[1.15rem]
+                 rounded-sm
+                 peer-data-[te-input-state-active]:scale-[0.8]
+                motion-reduce:transition-none
+                dark:text-neutral-200
+                dark:peer-focus:text-primary"
+                >Password
+                </label>
+              </div>
+
+              {/* <span className={`text-red-400 text-lg pl-4 ${error ? "block" : "hidden"}`}>{error}</span> */}
+              <div className="mb-6 flex items-center justify-between  text-lg font-medium md:text-xl text-orange-600">
+                <motion.h1
+                  animate={{
+                    opacity: error ? 1 : 0,
+                    x: error ? [-100, 100, 0, -100, 100, 0] : null
+
+                  }}
+                  transition={{ duration: 0.3 }}
+
+
+                  className=" w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
+              </div>
+              <button
+                type="submit"
+                className={`inline-block bg-blue-400 task-btn relative 
+              w-full rounded bg-primary px-7
+              pb-2.5 pt-3 text-sm font-medium
+              uppercase leading-normal
+              text-white
+              shadow-[0_4px_9px_-4px_#3b71ca]
+              transition duration-150
+              ease-in-out hover:bg-primary-600
+              hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+              focus:bg-primary-600 
+              focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
+              focus:outline-none focus:ring-0 active:bg-primary-700 
+              active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+              dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
+              dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
+              dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
+              dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]`}
+                data-te-ripple-init
+                data-te-ripple-color="light" >
+                {isLoading ? <Loadingbtn /> : "Create assistant"}
+              </button>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 
-export default AdminContact
+export default AdminLogin
