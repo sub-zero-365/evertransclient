@@ -12,7 +12,9 @@ const Cities = () => {
   const dispatch = useDispatch();
   const cities_ = useSelector(state => state.setAdminData.cities);
   const _isLoading = useSelector(state => state.setAdminData.loading.cities)
+  // const token = localStorage.getItem("admin_token");
   const token = localStorage.getItem("admin_token");
+
   const [toggle, setToggle] = useState(false)
   const [open, setOpen] = useState(false)
   const [city, setCity] = useState(false)
@@ -27,6 +29,9 @@ const Cities = () => {
   async function getCities() {
 
     const url = process.env.REACT_APP_LOCAL_URL + "/allcities";
+    if (token == null) {
+      alert("login to get accesstoken")
+    }
     try {
       const res = await axios.get(url, {
         headers: {
@@ -36,9 +41,8 @@ const Cities = () => {
       setCities_(res?.data?.cities)
     } catch (err) {
       console.log(err)
+      alert("some error occurs")
     }
-
-
 
   }
   useEffect(() => {
@@ -117,8 +121,8 @@ const Cities = () => {
   }
   return (
     <div className="max-h-[calc(100vh-3rem)] overflow-y-auto w-full select-none">
-            {_isLoading&&(<Loader toggle dark />)}
-    
+      {_isLoading && (<Loader toggle dark />)}
+
       <Alert toggle={toggle} city={city}
         setToggle={setToggle} confirmFunc={confirmFunc} message={"Do you want to delete this City"} />
       <motion.div onClick={() => setOpen(true)}

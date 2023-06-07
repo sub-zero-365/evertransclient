@@ -6,7 +6,7 @@ import SelectSort from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTickets } from '../actions/adminData';
 import { AmountCount, FormatTable, Loader, Scrollable, TicketCounts } from '../components';
-import { BsTicketPerforated, BsChevronRight, BsChevronLeft } from 'react-icons/bs'
+import {  BsChevronRight, BsChevronLeft } from 'react-icons/bs'
 import { AiOutlineSave } from 'react-icons/ai';
 import { VscFolderActive } from 'react-icons/vsc';
 import { BiCategory } from 'react-icons/bi';
@@ -41,7 +41,6 @@ const Appointment = () => {
     const setTickets_ = (payload) => {
         return dispatch(setTickets(payload))
     }
-    const navigate = useNavigate();
     const text = useRef(null)
     const options = [
         { label: "fullname", value: "fullname" },
@@ -51,9 +50,7 @@ const Appointment = () => {
 
     ]
     const [option, setOption] = useState("")
-    // const [tickets, setTickets] = useState([]);
     const token = localStorage.getItem("admin_token");
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const baseUrl = `${process.env.REACT_APP_LOCAL_URL}/admin/alltickets?${option}=${text.current.value.toLowerCase()}`
@@ -63,10 +60,8 @@ const Appointment = () => {
                     'Authorization': "makingmoney " + token
                 }
             })
-            // console.log(response?.data?.tickets);
             setTickets_([...response?.data?.tickets])
         }
-
         catch (err) {
             console.log(err)
         }
@@ -75,7 +70,6 @@ const Appointment = () => {
     const sortOpions = [
         { value: "name", label: "fullname" },
         { value: "time", label: "timecreated" },
-
     ]
     useEffect(() => {
         try {
@@ -90,7 +84,6 @@ const Appointment = () => {
                 setActiveTicketCount(acttic)
             }
             fetchData()
-
         } catch (err) {
             console.log(err)
         }
@@ -116,7 +109,6 @@ const Appointment = () => {
             <Scrollable className={"!px-5"}>
                 <TicketCounts counts={tickets_.length}
                     total
-
                     icon={<AiOutlineSave />} />
                 <TicketCounts counts={activeTicketCount}
                     active

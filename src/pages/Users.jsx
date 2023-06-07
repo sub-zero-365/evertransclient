@@ -10,6 +10,7 @@ import Select from 'react-select';
 import { motion } from 'framer-motion'
 import { UserData } from '../Assets/userdata';
 const Appointment = () => {
+    // const token = localStorage.getItem("admin_token");
     const token = localStorage.getItem("admin_token");
 
     const users_ = useSelector(state => state.setAdminData.users);
@@ -39,6 +40,9 @@ const Appointment = () => {
         const url = process.env.REACT_APP_LOCAL_URL + "/admin/allusers"
 
         async function fetchData() {
+            if (token == null) {
+                alert("please login to get token")
+            }
             try {
                 const response = await axios.get(url, {
                     headers: {
@@ -46,7 +50,6 @@ const Appointment = () => {
                     }
                 })
                 setUsers_([...response?.data?.users])
-                // console.log(response?.data?.users, "enter here")
             } catch (err) {
                 setUsers_([])
                 alert("fail to get users")
