@@ -68,9 +68,13 @@ const Appointment = () => {
     }
     const url = `${process.env.REACT_APP_LOCAL_URL}/admin/alltickets`
     const sortOpions = [
-        { value: "name", label: "fullname" },
-        { value: "time", label: "timecreated" },
-    ]
+        { label: "all", value: "null" },
+        { label: "today", value: 1 },
+        { label: "yesterday", value: 2 },
+        { label: "last week", value: 7 },
+        { label: "last month", value: 31 },
+    
+      ]
     useEffect(() => {
         try {
             async function fetchData() {
@@ -85,7 +89,7 @@ const Appointment = () => {
             }
             fetchData()
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     }, [])
 
@@ -98,7 +102,7 @@ const Appointment = () => {
             <div className=" md:flex  justify-between items-start">
                 <h1 className='text-2xl text-center mt-6'>Book tickets</h1>
                 <div className="flex flex-col mx-auto justify-center  items-center">
-                    <h2 className='uppercase text-lg md:text-lg mb-4'>sort data</h2>
+                    <h2 className='uppercase text-lg md:text-lg mb-4'>Filter Data By</h2>
                     <SelectSort className='!w-[20rem] !border-none !outline-none'
                         options={sortOpions} />
                 </div>

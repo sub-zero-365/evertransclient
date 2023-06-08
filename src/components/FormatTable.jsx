@@ -14,7 +14,8 @@ const FormatTable = ({ tickets, i, j }) => {
 
         >
             {
-                tickets.slice(i, j).map((ticket, index) => (<tr key={index} className={` ${index % 2 == 0 ? "bg-slate-100" : "bg-white"} hover:bg-slate-300  text-xs dark:bg-gray-900 dark:border-gray-700`}
+                tickets.slice(i, j).map((ticket, index) => (
+                <tr key={index} className={` ${index % 2 == 0 ? "bg-slate-100" : "bg-white"} hover:bg-slate-300  text-xs dark:bg-gray-900 dark:border-gray-700`}
                 >
                     <td className="px-2 py-4  flex items-center justify-center">
                         {index + 1}

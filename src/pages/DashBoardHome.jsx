@@ -37,6 +37,7 @@ function renderEmployees() {
 }
 const DashboardHome = () => {
     const navigate = useNavigate();
+    const [ticketsCount,setTicketsCount]=useState(0)
     const dashitemdata = [
         {
             Name: "Employees",
@@ -78,6 +79,7 @@ const DashboardHome = () => {
                     }
                 })
                 setTickets_([...response?.data?.tickets])
+                setTicketsCount([...response?.data?.tickets].length)
             }
             fetchData()
 
@@ -90,13 +92,18 @@ const DashboardHome = () => {
         <div className="w-full pt-6 max-h-[calc(100vh-3rem)] overflow-y-auto">
             <h1 className="text-3xl mb-6 text-gray-700 pl-6 tracking-tight">Overflow <GrStackOverflow className="inline-block pl-2 text-4xl" /></h1>
             <div className="lg:grid gap-4 lg:grid-cols-3 px-4">
-                {
-                   dashitemdata
-                        .map(({Name,href,Counts,icon}, index) => <DashItem Name={Name} 
-                        href={href} 
-                        Counts={Counts}
-                        icon={icon} />)
-                }
+                 <DashItem Name={"Employees"} 
+                        href={"users"} 
+                        Counts={23}
+                        icon={<BsTicketPerforated className='text-3xl' />} />
+                 <DashItem Name={"Tickets"} 
+                        href={"tickets"} 
+                        Counts={ticketsCount}
+                        icon={<BsTicketPerforated className='text-3xl' />} />
+                 <DashItem Name={"Buses"} 
+                        href={"buses/23"} 
+                        Counts={23}
+                        icon={<BiBus className='text-3xl' />} />
 
             </div>
             <h1 className="text-2xl mb-6 text-gray-700 pl-6 tracking-tight">Recent Book tickets <GrStackOverflow className="inline-block pl-2 text-4xl" /></h1>

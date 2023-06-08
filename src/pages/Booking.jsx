@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { CiTimer } from 'react-icons/ci'
 import { BiCurrentLocation } from 'react-icons/bi'
-import 'rc-dropdown/assets/index.css';
+// import 'rc-dropdown/assets/index.css';
 import Select from 'react-select'
 import Select2 from 'react-select'
 import SelectTime from 'react-select'

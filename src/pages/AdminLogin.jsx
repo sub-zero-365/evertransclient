@@ -170,14 +170,11 @@ const AdminLogin = () => {
                 <motion.h1
                   animate={{
                     opacity: error ? 1 : 0,
-                    //  y:error?0:-40,
                     x: error ? [-100, 100, 0, -100, 100, 0] : null
 
                   }}
                   transition={{ duration: 0.3 }}
-
-
-                  className="text-center w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
+                  className="w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
               </div>
               <button
                 type="submit"
