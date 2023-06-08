@@ -3,17 +3,19 @@ import { useState, useEffect, useRef } from 'react'
 import axios from 'axios';
 import Select from 'react-select';
 import SelectSort from 'react-select';
+import SkipSelect from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTickets } from '../actions/adminData';
 import { AmountCount, FormatTable, Loader, Scrollable, TicketCounts } from '../components';
-import {  BsChevronRight, BsChevronLeft } from 'react-icons/bs'
+import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
 import { AiOutlineSave } from 'react-icons/ai';
 import { VscFolderActive } from 'react-icons/vsc';
 import { BiCategory } from 'react-icons/bi';
 import { MdOutlinePriceChange } from 'react-icons/md';
 
 const Appointment = () => {
-    const skip = 10;
+
+    const [skip, setSkip] = useState(10)
     const [activeTicketCount, setActiveTicketCount] = useState(0);
 
     const [i, setI] = useState(0)
@@ -36,7 +38,12 @@ const Appointment = () => {
     const tickets_ = useSelector(state => state.setAdminData.tickets);
     const isLoading = useSelector(state => state.setAdminData.loading.tickets)
     // console.log(tickets_, isLoading)
-
+    const handleSkipChange = (evt) => {
+        setSkip(function () {
+            return (evt.value)
+        });
+        navigator.vibrate([100])
+    }
     const dispatch = useDispatch();
     const setTickets_ = (payload) => {
         return dispatch(setTickets(payload))
@@ -47,6 +54,13 @@ const Appointment = () => {
         { label: "phone", value: "phone" },
         { label: "sex", value: "sex" },
         { label: "email", value: "email" },
+
+    ]
+    const skipOptions = [
+        { label: 5, value: 5 },
+        { label: 10, value: 10 },
+        { label: 15, value: 15 },
+        { label: 25, value: 25 },
 
     ]
     const [option, setOption] = useState("")
@@ -73,8 +87,8 @@ const Appointment = () => {
         { label: "yesterday", value: 2 },
         { label: "last week", value: 7 },
         { label: "last month", value: 31 },
-    
-      ]
+
+    ]
     useEffect(() => {
         try {
             async function fetchData() {
@@ -152,6 +166,11 @@ const Appointment = () => {
                     </div>
                 </div>
             </form>
+            <div className='w-[min(calc(100%-2.5rem),20rem)] ml-auto'>
+            
+            <SkipSelect options={skipOptions} onChange={handleSkipChange} />
+            
+            </div>
 
 
 
@@ -199,7 +218,7 @@ const Appointment = () => {
                 </table>
             </div>
             <div className="flex mb-10 select-none gap-4 mt-5 ml-4">
-                <div className={`${i <= 0 ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => next_pre(-1, tickets_)}>
+                <div className={`${i <= 0 ? "opacity-10" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => next_pre(-1, tickets_)}>
                     <BsChevronLeft className='text-black  font-black' />
 
                 </div>

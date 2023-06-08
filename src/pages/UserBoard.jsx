@@ -1,8 +1,6 @@
 import { useravatar } from '../Assets/images';
 import { Swiper, SwiperSlide } from 'swiper/react'
-// import { Autoplay } from 'swiper'
 import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai';
-
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import { CircularProgressbar } from 'react-circular-progressbar';
 import "react-circular-progressbar/dist/styles.css";
@@ -34,6 +32,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
 import { Loadingbtn } from '../components'
 const UserBoard = () => {
+const [message,setMessage]=useState("please login to continue")
     const [showDatePicker, setShowDatePicker] = useState(false);
     const token = localStorage.token
     const [toggle, setToggle] = useState(false)
@@ -95,10 +94,11 @@ const UserBoard = () => {
     const isUserName = useSelector(state => state.username.username);
     return (
         <div className="max-w-5xl  mx-auto min-h-screen">
+        
             {
                 loading && <Loader dark toggle />
             }
-            <Alert toggle={toggle} setToggle={setToggle} message={"please login to continue "} />
+            <Alert toggle={toggle} setToggle={setToggle} message={message} />
             <div className="flex  justify-between px-4 my-2 py-2">
                 <div className="leading-2">
                     <h2 className="text-lg leading-5">welcome back</h2>

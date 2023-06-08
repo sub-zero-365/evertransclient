@@ -4,9 +4,11 @@ import Alert from '../components/Alert'
 import { Loader } from '../components'
 import axios from 'axios'
 import Marquee from 'react-fast-marquee'
-
+import { motion, AnimatePresence } from 'framer-motion'
 import { image1 } from "../Assets/images"
-import { motion } from "framer-motion"
+import { Loadingbtn } from '../components'
+
+// import { motion } from "framer-motion"
 import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import QRCode from "react-qr-code";
 
@@ -15,6 +17,8 @@ const User = () => {
   const [ticket, setTicket] = useState({})
   const [isAdmin, setAdmin] = useState(false)
   const [isLoading, setIsloading] = useState(true);
+  const [loadbtn, setLoadbtn] = useState(false)
+  const [message, setMessage] = useState("")
   useEffect(() => {
     setAdmin(queryParameters.get("admin"));
   }, [window.location.href])
@@ -25,21 +29,17 @@ const User = () => {
   async function getData() {
     if (isadminuser == null) {
       token = localStorage.getItem("token")
-      // alert("enter here")
       if (token == null) {
-        // alert("login user1")
       }
       url = `${process.env.REACT_APP_LOCAL_URL}/ticket/${id}`
     } else {
       token = localStorage.getItem("admin_token");
       url = `${process.env.REACT_APP_LOCAL_URL}/admin/staticticket/${id}`;
       if (token == null) {
-        // alert("login user")
       }
 
     }
     try {
-      // alert(token)
       const res = await axios.get(url, {
         headers: {
           'Authorization': "makingmoney " + token
@@ -51,47 +51,57 @@ const User = () => {
       if (!res.data.ticket) {
         setToggle(true)
       }
-      setIsloading(false)
+      setIsloading(false);
+      setLoadbtn(false)
     } catch (err) {
       setIsloading(false)
       setToggle(true)
       console.log(err)
+      setMessage("fail to get ticket with\n id " + id + "\n  please contact customer service")
     }
   }
 
   useEffect(() => {
-    
+
     getData()
   }
     , []
   )
-  const redeemTicket=async()=>{
+  const redeemTicket = async () => {
+    setLoadbtn(true)
     token = localStorage.getItem("admin_token")
     const url = `${process.env.REACT_APP_LOCAL_URL}/admin/edit/${id}`;
     try {
       await axios.get(url, {
-       headers: {
-         'Authorization': "makingmoney " + token
-       }
-     }
-     )
-     getData();
-     alert("ebry thing good")
-   } catch (err) {
-     setToggle(true)
-     console.log(err)
-     alert("fail ")
-   }
-   setIsloading(false)
-   
-   }
+        headers: {
+          'Authorization': "makingmoney " + token
+        }
+      }
+      )
+      getData();
+      setToggle(true)
+      setMessage("successfull edited ticket")
+    } catch (err) {
+      setToggle(true)
+      console.log(err)
+      setMessage("fail to edit ticket please try againlater")
+    setLoadbtn(false)
+      
+      alert("fail ")
+    }
+    // setIsloading(false)
+
+  }
 
 
   return (
     <div className="min-w-3xl md:px-5 mx-auto max-h-[calc(100vh-60px)] pb-64 overflow-y-auto">
 
       {isLoading && <Loader toggle />}
-      <Alert message={"fail to get ticket with\n id " + id + "\n  please contact customer service"} toggle={toggle} setToggle={setToggle} />
+      <Alert message={message}
+        toggle={toggle}
+        confirmFunc={() => setToggle(false)}
+        setToggle={setToggle} />
       {
         isAdmin ? (
           <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
@@ -212,34 +222,45 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
       </div>
       <h2 className="text-center  text-lg md:text-xl font-medium  "> price of the ticket</h2>
       <p className="text-center text-slate-500 mb-10 ">{ticket?.price + "frs" || "n/a"} </p>
-{
-ticket?.active?
-<div
-onClick={redeemTicket}
-className="w-[min(calc(100vw-2.5rem),300px)]
-fixed left-1/2 bottom-0 -translate-x-1/2
+      <AnimatePresence>
+        {
+          ticket?.active ?
+
+            <motion.div
+              // initial={{ opacity: 0, bottom: "-2rem" }}
+              animate={{ opacity: [0, 1], bottom: ["-2rem", "4rem", "2rem"] }}
+              exit={{ opacity: 0, bottom: "-2rem" }}
+
+              onClick={redeemTicket}
+              className="w-[min(calc(100vw-2.5rem),300px)]
+fixed left-1/2  -translate-x-1/2
 flex items-center justify-center pt-1.5
 rounded-sm font-medium
 pb-2.5
 shadow-lg
 md:static
 md:translate-x-0
-mx-auto bg-red-500 font-montserrat mb-10">Remove validatility</div>:<div className="text-slate-500 font-semibold text-center text-montserrat 
-capitalize">this ticket isnot valid cause it was redeem on the <br/>   
-<div className="text-center leading-8">
-<span className="text-lg text-center  text-red-300 font-medium tracking-wide">
-{new Date(ticket?.updatedAt).toLocaleDateString()}</span> &nbsp;&nbsp; at&nbsp; &nbsp; 
-<span className="text-lg text-center text-green-300  font-medium tracking-wide">
-{new Date(ticket?.updatedAt).toLocaleTimeString()}</span> 
+mx-auto bg-red-500 font-montserrat">{!loadbtn ? "Remove validatility" : <Loadingbtn toggle />}</motion.div>
 
 
-</div>
-</div>
+            : <div className="text-slate-500 font-semibold text-center text-montserrat 
+capitalize">this ticket isnot valid cause it was redeem on the <br />
+              <div className="text-center leading-8">
+                <span className="text-lg text-center  text-red-300 font-medium tracking-wide">
+                  {new Date(ticket?.updatedAt).toLocaleDateString()}</span> &nbsp;&nbsp; at&nbsp; &nbsp;
+                <span className="text-lg text-center text-green-300  font-medium tracking-wide">
+                  {new Date(ticket?.updatedAt).toLocaleTimeString()}</span>
 
-}
+
+              </div>
+            </div>
+
+
+        }
+      </AnimatePresence>
 
     </div>
-    
+
   )
 }
 
