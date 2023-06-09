@@ -167,9 +167,11 @@ const Appointment = () => {
                 </div>
             </form>
             <div className='w-[min(calc(100%-2.5rem),20rem)] ml-auto'>
-            
-            <SkipSelect options={skipOptions} onChange={handleSkipChange} />
-            
+
+                <SkipSelect options={skipOptions}
+                    defaultInputValue='15'
+                    onChange={handleSkipChange} />
+
             </div>
 
 

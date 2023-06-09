@@ -37,7 +37,7 @@ const Appointment = () => {
 
 
     useEffect(() => {
-        const url = process.env.REACT_APP_LOCAL_URL + "/admin/allusers"
+        const url = process.env.REACT_APP_LOCAL_URL + "/admin/userticketlength"
 
         async function fetchData() {
             if (token == null) {
@@ -49,7 +49,22 @@ const Appointment = () => {
                         'Authorization': "makingmoney " + token
                     }
                 })
-                setUsers_([...response?.data?.users])
+                setUsers_([...response?.data?.userdetails]);
+                setUserData({
+                ...{
+                    labels: [...response?.data?.userdetails].map((v) => v.user.fullname),
+                    datasets: [
+                        
+                        {
+                            label: "ticket vs user data",
+                            data: [...response?.data?.userdetails].map((v) => v.nHits)
+            
+                        },
+                    ]
+            
+                }
+                
+                })
             } catch (err) {
                 setUsers_([])
                 alert("fail to get users")
@@ -126,6 +141,9 @@ const Appointment = () => {
                                 phone
                             </th>
                             <th scope="col" className="px-6 py-3">
+                                N_print
+                            </th>
+                            <th scope="col" className="px-6 py-3">
                                 createdAt
                             </th>
 
@@ -142,7 +160,7 @@ const Appointment = () => {
                     </thead>
                     <tbody>
                         {
-                            users_.map((user, index) => (<tr key={index} className="bg-white
+                            users_.map(({ user, nHits }, index) => (<tr key={index} className="bg-white
                             dark:bg-gray-900 dark:border-gray-700 hover:bg-slate-200"
                             >
                                 <td className="px-2 py-4  flex items-center justify-center">
@@ -153,6 +171,10 @@ const Appointment = () => {
                                 </th>
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {user?.phone || "n/a"}
+                                </th>
+                                <th scope="row" className="px-6 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <span className={`flex items-center justify-center shadow h-7 w-7
+                                    shadow-green-200  rounded-full text-xs  ${nHits ? "bg-green-500" : "bg-red-500"}`}>{nHits || "0"}</span>
                                 </th>
 
                                 <td className="px-6 py-4">

@@ -124,7 +124,8 @@ const Cities = () => {
       {_isLoading && (<Loader toggle dark />)}
 
       <Alert toggle={toggle} city={city}
-        setToggle={setToggle} confirmFunc={confirmFunc} message={"Do you want to delete this City"} />
+        setToggle={setToggle} confirmFunc={confirmFunc} 
+        message={"Do you want to delete this City"} />
       <motion.div onClick={() => setOpen(true)}
         initial={{ x: "-50%" }}
         animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}

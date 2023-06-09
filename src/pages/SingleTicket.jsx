@@ -7,8 +7,7 @@ import Marquee from 'react-fast-marquee'
 import { motion, AnimatePresence } from 'framer-motion'
 import { image1 } from "../Assets/images"
 import { Loadingbtn } from '../components'
-
-// import { motion } from "framer-motion"
+import {MdOutlineReportOff} from 'react-icons/md'
 import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import QRCode from "react-qr-code";
 
@@ -238,9 +237,10 @@ flex items-center justify-center pt-1.5
 rounded-sm font-medium
 pb-2.5
 shadow-lg
+shadow-red-600/75
 md:static
 md:translate-x-0
-mx-auto bg-red-500 font-montserrat">{!loadbtn ? "Remove validatility" : <Loadingbtn toggle />}</motion.div>
+mx-auto bg-red-500 font-montserrat">{!loadbtn ?<> Remove validatility <MdOutlineReportOff className="text-2xl text-gray-900 ml-2"/> </>: <Loadingbtn toggle />}</motion.div>
 
 
             : <div className="text-slate-500 font-semibold text-center text-montserrat 

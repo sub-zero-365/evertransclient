@@ -1,6 +1,5 @@
 import { CircularProgressbar } from 'react-circular-progressbar';
 import "react-circular-progressbar/dist/styles.css";
-import { BsFillPersonFill } from 'react-icons/bs';
 import { GrStackOverflow } from 'react-icons/gr';
 import { VscFolderActive } from 'react-icons/vsc'
 import Select from 'react-select';
@@ -8,10 +7,10 @@ import Select2 from 'react-select';
 import { useState, useEffect } from 'react';
 import { AiOutlineMenu, AiOutlineSave } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io"
-import { useNavigate, useParams, NavLink } from 'react-router-dom';
+import {  useParams, NavLink } from 'react-router-dom';
 // import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import { motion } from 'framer-motion';
-import { BsTicketPerforated, BsChevronRight, BsChevronLeft } from 'react-icons/bs'
+import {  BsChevronRight, BsChevronLeft } from 'react-icons/bs'
 import axios from 'axios'
 import { BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -28,7 +27,7 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import { AmountCount, BarChart, FormatTable, PieChart, Scrollable, TicketCounts } from '../components';
-import { UserData } from "../Assets/userdata";
+// import { UserData } from "../Assets/userdata";
 const Details = () => {
   const [tickets, setTickets] = useState([])
   const [activeTicketCount, setActiveTicketCount] = useState(0);
@@ -129,7 +128,7 @@ const Details = () => {
   }, [window.location.href])
   const skip = 10;
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [i, setI] = useState(0)
   const [j, setJ] = useState(skip)
   const next_pre = (state, tickets) => {
