@@ -18,7 +18,9 @@ const DashBoardLayout = () => {
                 navigate("/auth");
 
             }} />
-            <div className="min-h-[3rem] z-[0] relative border-5 justify-between flex items-center   bg-white shadow-sm shadow-slate-300 container-- mx-auto px-4" >
+            <div className="min-h-[3rem] z-[0] 
+            relative border-5 justify-between flex items-center  
+            bg-white dark:bg-color_dark shadow-sm shadow-slate-300 container-- mx-auto px-4" >
                 <div className='hover:bg-slate-300 md:hidden w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={toggleSideBar}>
                     <AiOutlineMenu size={25} />
                 </div>
@@ -29,8 +31,10 @@ const DashBoardLayout = () => {
                     <button
                         data-te-ripple-init
                         data-te-ripple-color="light"
-                        className="hidden md:inline-block  rounded bg-blue-500   px-3 py-1 text-xs font-montserrat font-medium 
-  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
+                        className="hidden md:inline-block 
+                        rounded bg-blue-500   px-3 py-1 text-xs font-montserrat font-medium 
+  leading-normal text-white 
+  shadow-[0_4px_9px_-4px_#3b71ca] 
   transition duration-150 ease-in-out hover:bg-blue-600
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]

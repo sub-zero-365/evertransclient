@@ -69,8 +69,14 @@ const SideBar = () => {
 
   return (
 
-    <div className={`w-[15rem] overflow-auto   select-none max-w-[calc(100vw-2.5rem)] z-[100]
-    px-4 text-xs overflow-y--auto flex-none fixed md:static transition-[left] duration-700 ${isSideOpen ? "left-0" : "left-[-100%]"} top-0 h-full md:top-0 bg-color_light md:h-[calc(100svh-3.75rem)]
+    <div className={`w-[15rem] overflow-auto 
+    select-none max-w-[calc(100vw-2.5rem)] z-[100]
+    px-4 text-xs overflow-y--auto flex-none fixed
+    md:static transition-[left]
+    duration-700 ${isSideOpen ? "left-0" : "left-[-100%]"}
+    top-0 h-full md:top-0 bg-color_light
+    dark:bg-color_dark
+    md:h-[calc(100svh-3.75rem)]
     overflow-visible shadow-lg `}>
       <span className="absolute w-[3.125rem] h-[3.125rem] top-0
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all md:hidden duration-500 
@@ -101,8 +107,8 @@ const SideBar = () => {
 
                 }
                 className={`flex text-medium 
-${active === index ? "bg-violet-500 text-white text-semibold" : "bg-white"}  hover:bg-violet-500 transition-colors 
-duration-300 py-2 px-3 mt-4 shadow-md ring-offset-slate-200 mb-2 rounded-md`}>
+${active === index ? "bg-violet-500 dark:bg-violet-800 text-white text-semibold" : "bg-white dark:bg-slate-700"}  hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors 
+duration-300 py-2 px-3 mt-4 shadow-md dark:shadow-lg dark:shadow-slate-800 ring-offset-slate-200 mb-2 rounded-md`}>
                 {icon}
                 <h3 className="text-xs md:text-sm ml-5 group-[.active]:hidden">{name}</h3>
               </NavLink></motion.div>))

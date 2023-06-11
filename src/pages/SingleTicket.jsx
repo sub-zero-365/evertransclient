@@ -77,19 +77,16 @@ const User = () => {
         }
       }
       )
+      
       getData();
       setToggle(true)
       setMessage("successfull edited ticket")
     } catch (err) {
       setToggle(true)
       console.log(err)
-      setMessage("fail to edit ticket please try againlater")
+      setMessage("fail to update tickets, try aginalater !!")
     setLoadbtn(false)
-      
-      alert("fail ")
     }
-    // setIsloading(false)
-
   }
 
 
@@ -219,6 +216,8 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
           }</p>
         </div>
       </div>
+      <h2 className="text-center  text-lg md:text-xl font-medium  "> this ticket was created at </h2>
+      <p className="text-center text-slate-500 mb-10 ">{new Date(ticket?.createdAt).toLocaleDateString() + " at "+new Date(ticket?.createdAt).toLocaleTimeString() || "n/a"} </p>
       <h2 className="text-center  text-lg md:text-xl font-medium  "> price of the ticket</h2>
       <p className="text-center text-slate-500 mb-10 ">{ticket?.price + "frs" || "n/a"} </p>
       <AnimatePresence>
@@ -226,7 +225,6 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
           ticket?.active ?
 
             <motion.div
-              // initial={{ opacity: 0, bottom: "-2rem" }}
               animate={{ opacity: [0, 1], bottom: ["-2rem", "4rem", "2rem"] }}
               exit={{ opacity: 0, bottom: "-2rem" }}
 

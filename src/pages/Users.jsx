@@ -2,15 +2,19 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { BarChart, LineChart } from '../components';
+import { BarChart, LineChart} from '../components';
 
 import { setUsers } from '../actions/adminData';
-import { Loader } from '../components';
+import { Loader, Button } from '../components';
 import Select from 'react-select';
 import { motion } from 'framer-motion'
 import { UserData } from '../Assets/userdata';
 const Appointment = () => {
     // const token = localStorage.getItem("admin_token");
+    
+    
+    
+    
     const token = localStorage.getItem("admin_token");
 
     const users_ = useSelector(state => state.setAdminData.users);
@@ -51,19 +55,19 @@ const Appointment = () => {
                 })
                 setUsers_([...response?.data?.userdetails]);
                 setUserData({
-                ...{
-                    labels: [...response?.data?.userdetails].map((v) => v.user.fullname),
-                    datasets: [
-                        
-                        {
-                            label: "ticket vs user data",
-                            data: [...response?.data?.userdetails].map((v) => v.nHits)
-            
-                        },
-                    ]
-            
-                }
-                
+                    ...{
+                        labels: [...response?.data?.userdetails].map((v) => v.user.fullname),
+                        datasets: [
+
+                            {
+                                label: "ticket vs user data",
+                                data: [...response?.data?.userdetails].map((v) => v.nHits)
+
+                            },
+                        ]
+
+                    }
+
                 })
             } catch (err) {
                 setUsers_([])
@@ -192,12 +196,11 @@ const Appointment = () => {
                                 </td>
 
 
-                                <td className="px-6 py-0 text-xs" onClick={() => navigate(`/dashboard/details/${user?._id || index}?admin=true`)}>
-                                    <button type="button" class="text-blue-700 hover:text-white
-                                border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
-                                focus:ring-blue-300 font-medium rounded-lg  px-5 py-1
-                                text-center text-xs
-                                dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">Details</button>
+                                <td className="px-0 py-0 text-xs" onClick={() => navigate(`/dashboard/details/${user?._id || index}?admin=true`)}>
+                                    <Button
+                                    name="Check User"
+                                        href={`/dashboard/details/${user?._id || index}?admin=true`}
+                                    ></Button>
                                 </td>
                             </tr>
                             ))

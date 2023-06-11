@@ -1,16 +1,17 @@
-import { CircularProgressbar } from 'react-circular-progressbar';
+// import { CircularProgressbar } from 'react-circular-progressbar';
+
+import 'react-datepicker/dist/react-datepicker.css'
+import DatePicker from 'react-datepicker';
 import "react-circular-progressbar/dist/styles.css";
 import { GrStackOverflow } from 'react-icons/gr';
 import { VscFolderActive } from 'react-icons/vsc'
 import Select from 'react-select';
 import Select2 from 'react-select';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AiOutlineMenu, AiOutlineSave } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io"
-import {  useParams, NavLink } from 'react-router-dom';
-// import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
-import { motion } from 'framer-motion';
-import {  BsChevronRight, BsChevronLeft } from 'react-icons/bs'
+import { useParams, NavLink } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'
 import { BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -26,21 +27,40 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-import { AmountCount, BarChart, FormatTable, PieChart, Scrollable, TicketCounts } from '../components';
-// import { UserData } from "../Assets/userdata";
+import {
+  AmountCount, BarChart, ActiveStatusButton, FormatTable,
+  DeactiveStatusButton
+  , PanigationButton, PieChart, Scrollable, TicketCounts, Loadingbtn
+} from '../components';
 const Details = () => {
+
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(null);
+  const constraintsRef = useRef(null)
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
+  const [totalTickets, setTotalTickets] = useState()
   const [tickets, setTickets] = useState([])
   const [activeTicketCount, setActiveTicketCount] = useState(0);
 
-  const id = useParams().id
-  const [filter, setFilter] = useState("null")
-  const [data, setData] = useState([12, 26])
+  const id = useParams().id;
+  const [params, setParams] = useState({
+    page: 1,
+    limit: 5,
+    createdBy: id
+  })
+  const onChange = (dates) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+    console.log(dates)
+};
   const [userData, setUserData] = useState({
     labels: ["active tickets", "inactive tickets"],
     datasets: [
       {
         label: "ticket data",
-        data: data,
+        data: [12, 14],
         backgroundColor: ["green", "orange"]
       }
     ],
@@ -72,39 +92,57 @@ const Details = () => {
   const config = {
     headers: {
       'Authorization': "makingmoney " + token
-    }
+    },
+    params
   }
 
   async function getData() {
-    setIsLoading(true)
-    const url = process.env.REACT_APP_LOCAL_URL + "/admin/alltickets/?" + `createdBy=${id}&createdAt=${filter}`;
+    const url = process.env.REACT_APP_LOCAL_URL + "/admin/alltickets"
+    setIsActiveIndexLoading(true)
     try {
       const res = await axios.get(url, config)
       setTickets(res?.data?.tickets);
-      const acttic = res?.data?.tickets.filter((arr) => arr.active).length
-      setActiveTicketCount(acttic)
-      setData([77, 89])
+      // const acttic = res?.data?.tickets.filter((arr) => arr.active).length
+      // setActiveTicketCount(acttic)
+      setActiveTicketCount(res?.data?.totalActiveTickets);
+      setTotalTickets(res?.data?.totalTickets);
+      setNumberOfPages(res?.data?.numberOfPages)
+
       setUserData({
         labels: ["active tickets", "inactive tickets"],
         datasets: [
           {
             label: "ticket data",
-            data: [acttic,res?.data?.tickets.length-acttic],
+            data: [res?.data?.totalActiveTickets, res?.data?.tickets.length - res?.data?.totalActiveTickets],
             backgroundColor: ["skyblue", "orange"]
           }
-        ]})
+        ]
+      })
     } catch (err) {
       console.log(err)
     }
     setIsLoading(false)
+    setIsActiveIndexLoading(false)
+
   }
   const handleOnChange = (evt) => {
-    setFilter(evt.value)
+    return
   }
   useEffect(() => {
-    getData()
-  }, [filter]);
+    getData();
+  }, [params]);
+  const [numberOfPages, setNumberOfPages] = useState();
+  const checkPages = (index) => {
+    const temp = params;
+    if (temp.page === index) {
+      return
+    }
+    temp.page = index
+    setParams({
+      ...temp
+    })
 
+  }
 
 
   useEffect(() => {
@@ -114,6 +152,7 @@ const Details = () => {
       try {
         const { data } = await axios.get(url, config);
         setUserInfo(data?.user)
+
         console.log(data)
 
       } catch (err) {
@@ -126,27 +165,7 @@ const Details = () => {
     getData()
     getUserInfo()
   }, [window.location.href])
-  const skip = 10;
-
-  // const navigate = useNavigate();
-  const [i, setI] = useState(0)
-  const [j, setJ] = useState(skip)
-  const next_pre = (state, tickets) => {
-    if (state === 1) {
-      if (!(j > tickets.length - 1)) {
-        setI(j)
-        setJ(j + skip);
-      }
-    }
-    if (state == -1) {
-      if (!((i - skip) < 0)) {
-        setI(i - skip);
-        setJ(j - skip)
-      }
-    }
-
-  }
-
+  // const skip = 10;
 
   const [toggle, setToggle] = useState(false)
   const options = [
@@ -158,13 +177,22 @@ const Details = () => {
 
   ]
   const sortOptions = [
-    { label: "Price", value: "price" },
-    { label: "fullname", value: "fullname" },
-    { label: "sex", value: "sex" },
+    { value: "all", label: "All tickets" },
+    { value: "active", label: <span className="flex items-center justify-between">Active tickets <ActiveStatusButton className="" /> </span> },
+    { value: "inactive", label: <span className="flex items-center justify-between">InActive tickets <DeactiveStatusButton className="" /> </span> },
 
   ]
+  const handleChange = (evt) => {
+    const temp = params;
+    if (params.ticketStatus == evt.value) return
+    temp.ticketStatus = evt.value
+    temp.page = 1
+    setParams({ ...temp })
+  }
   return (
-    <div className='pt-4 px-2 max-w-full overflow-x-auto select-none max-h-[calc(100vh-4rem)] overflow-y-auto'>
+    <motion.div
+      className='pt-4 px-2 max-w-full overflow-x-auto select-none
+    max-h-[calc(100vh-4rem)] overflow-y-auto' ref={constraintsRef}>
       <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
@@ -183,11 +211,16 @@ const Details = () => {
 
         </ol>
       </nav>
-      <div className='hover:bg-slate-300 fixed right-0 md:right-[8rem]
-      top-12
+      <motion.div
+
+        drag
+        dragConstraints={constraintsRef}
+        className='hover:bg-slate-300 fixed right-0 md:right-[8rem]
+      top-12 bg-white dark:bg-slate-400
+      z-[10]
       lg:hidden w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={() => setToggle(true)}>
         <AiOutlineMenu size={25} />
-      </div>
+      </motion.div>
       <div className="lg:flex items-start justify-start gap-4">
         <div className="flex-1   mb-6">
           <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
@@ -204,26 +237,27 @@ const Details = () => {
                   disableOnInteraction: false
                 }}
               >
-                {[1, 2, 3
-                ].map((item, index) => (<SwiperSlide >
-                  <motion.div className={`min-h-[12.5rem]-- relative  text-xs mx-0 ${activeSlide == index ? "bg3-orange-500" : "bg-oran3ge-200"}  rounded-lg `}
-                    animate={{
-                      y: activeSlide == index ? [40, 0] : null, scale: activeSlide == index ? [1, 1.06, 1] : null,
-                    }}
+                <SwiperSlide >
+                  <motion.div 
+                  className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
                   >
 
-                    <h1 className="text-xl mb-4 text-montserrat font-medium text-center uppercase mt-2">total user {item}</h1>
+                    <h1 className="text-xl mb-4 text-montserrat font-medium text-center uppercase mt-2">Active to Inactive ticket ratio</h1>
                     <PieChart chartData={userData} />
                   </motion.div>
-                </SwiperSlide>))
+                </SwiperSlide>
+                <SwiperSlide >
+                  <motion.div 
+                  className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
+                  >
+
+                    <h1 className="text-xl mb-4 text-montserrat font-medium text-center uppercase mt-2">User Tickets to ALl tickets </h1>
+                    <PieChart chartData={userData} />
+                  </motion.div>
+                </SwiperSlide>
 
 
-                }
               </Swiper>
-              <Select2 options={options}
-                onChange={handleOnChange}
-
-                className='!border-none !h-8 mt-4' />
             </div>
             {
               isLoading ? (
@@ -255,12 +289,17 @@ const Details = () => {
                 </div>
 
               ) : (
-                <Scrollable>
-                  <TicketCounts total counts={tickets.length} icon={<AiOutlineSave />} />
-                  <TicketCounts active counts={activeTicketCount} icon={<VscFolderActive />} />
+
+                <Scrollable className={"!px-5"}>
+                  <TicketCounts counts={totalTickets}
+                    text={"Total Number Of Tickets"}
+                    icon={<AiOutlineSave />} />
+                  <TicketCounts counts={activeTicketCount}
+                    text={"Total Number Of active Tickets"}
+                    icon={<VscFolderActive />} />
                   <TicketCounts
-                    inactive
-                    counts={tickets.length - activeTicketCount} icon={<BiCategory />} />
+                    text={"Total Number Of Inactive Tickets"}
+                    counts={totalTickets - activeTicketCount} icon={<BiCategory />} />
                 </Scrollable>
               )
 
@@ -294,20 +333,24 @@ const Details = () => {
                 </div>
 
               ) : (
-                <Scrollable  >
+                <Scrollable className={"!px-5"}>
                   <AmountCount
                     className="!bg-blue-400"
-
-                    total icon={<MdOutlinePriceChange />} amount={tickets.length * 6500} />
+                    text="Total coset of all tickets"
+                    icon={<MdOutlinePriceChange />}
+                    amount={totalTickets * 6500} />
                   <AmountCount
                     className="!bg-green-400"
 
-                    active icon={<BiCategory />} amount={activeTicketCount * 6500} />
-                  <AmountCount
+                    text="Total coset of all active tickets"
 
+                    icon={<BiCategory />} amount={activeTicketCount * 6500} />
+                  <AmountCount
                     className="!bg-red-400 !text-black"
 
-                    inactive icon={<BiCategory />} amount={(tickets.length - activeTicketCount) * 6500} />
+                    text="Total coset of all inactive tickets"
+
+                    icon={<BiCategory />} amount={(totalTickets - activeTicketCount) * 6500} />
                 </Scrollable>
               )
 
@@ -316,13 +359,14 @@ const Details = () => {
 
 
         </div>
-        <div className={`flex-none py-5 sidebarr lg:rounded-lg shadow   ${toggle ? "right-0" : "!-right-full"}
+        <div className={`flex-none py-5 sidebarr m lg:rounded-lg shadow  overflow-y-auto--
+        ${toggle ? "right-0" : "!-right-full"}
         duration-500 transition-[right] shadow lg:shadow-none lg:max-w-sm lg:w-[20rem] 
         text-center bg-slate-200 rounded-sm right-0 top-12 h-fit
            w-[calc(100vw-3.5rem)] max-w-sm  z-[6] fixed   lg:static px-4 `}>
-          <div className='flex justify-between items-start'>
+          {/* <div className='flex justify-between items-start'>
             <span className='w-5 h-5 bg-white rounded-full'></span><span className='w-5 h-5 bg-white rounded-full'></span>
-          </div>
+          </div> */}
           <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 
        -left-[3.125rem] z-10 rounded-none flex items-center justify-center  font-black border-black"
@@ -331,14 +375,12 @@ const Details = () => {
             <IoMdClose size={25} />
           </span>
           <div
-            className='pb-10 overflow-y-auto lg:max-h-screen'
+            className=' overflow-y-auto max-h-[calc(100vh-5rem)] lg:max-h-fit overflow-x-hidden '
           >
             <h1 className='text-lg  font-medium leading-6 mb-1'>Employee Name :</h1>
             <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.fullname || "n/a"}</h4>
-
             <h1 className='text-lg  font-medium leading-6 mb-1'>Employee Id:</h1>
             <h4 className='text-sm text-slate-500 font-medium '>{userInfo?._id || "n/a"}</h4>
-
             <h1 className='text-lg  font-medium leading-6 mb-1'>Phone Number:<span className="px-2 text-white mb-4 rounded-xl text-xs bg-green-400 ml-1">call</span></h1>
             <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.phone || "n/a"}</h4>
             <h1 className='text-lg  font-medium leading-6 mb-1'>ID Card N-o: <span className="px-2 text-white mb-4 rounded-xl text-xs bg-green-400 hidden">new</span></h1>
@@ -346,29 +388,34 @@ const Details = () => {
             <h1 className='text-lg  font-medium leading-6 mb-1'>Account created At: <span className="px-2 text-white mb-4 rounded-xl text-xs bg-green-400">new</span></h1>
             <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.createdAt || "n/a"}</h4>
 
-            <div className='grid place-items-center my-5'>
-              <CircularProgressbar
-                background
-                strokeWidth={10}
-                initialAnimation
-                circleRatio={0.2}
-                className='!w-[8rem] '
-                styles={{
+            <AnimatePresence className="mt-10">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, duration: 2 }}
+                className="flex flex-col items-center w-full justify-center">
+                <DatePicker
+                  selected={startDate}
+                  onChange={onChange}
+                  startDate={startDate}
+                  endDate={endDate}
+                  selectsRange
+                  inline
+                  maxDate={new Date()}
+                />
+                <span className='max-w-[min(calc(100%-2.5rem),400px)]
+            flex items-center
+            justify-center
+             pb-2 px-8
+            text-medium
+            pt-1.5 font-medium rounded-sm
+            text-gray-200
+            shadow-2xl
+             mx-auto bg-blue-600 mt-4  rounded-4'
 
-                  path: {
-                    stroke: `rgba(62,154,199,${66 / 100})`
-
-                  },
-                  trail: {
-                    stroke: "green"
-                  },
-                }}
-
-                percentage={66} text={"66%"} />
-              {/* <Select2 options={options} className='!border-none !h-8 mt-4' /> */}
-
-
-            </div>
+                >  {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}</span>
+              </motion.div>
+            </AnimatePresence>
 
           </div>
           <div className='flex justify-between items-start'>
@@ -377,9 +424,17 @@ const Details = () => {
         </div>
       </div>
 
-      <div className="flex justify-between pr-5">
-        <h1 className="text-2xl mt-4 mb-6 text-gray-700 pl-6  tracking-tight">All tickets <GrStackOverflow className="inline-block pl-2 text-4xl" /></h1>
-        <Select options={sortOptions} className='!border-none !h-8 mt-4' />
+      <div className="flex justify-between pr-5 items-start mb-10">
+        <h1 className="text-2xl mt-4 
+        text-gray-700 pl-6
+        
+        flex tracking-tight">All tickets <span className="text-xs ring-2 ring-gray-700  grid place-items-center
+        ml-1 w-5 h-5 bg-gray-500 text-white
+        mb-4 rounded-full border">{totalTickets} </span> <GrStackOverflow className="inline-block- pl-2 text-4xl hidden md:inline-block" /></h1>
+        <Select options={sortOptions}
+          onChange={handleChange}
+
+          className='!border-none !h-8 mt-4' />
 
       </div>
       <div className="relative max-w-full overflow-x-auto  shadow-md sm:rounded-lg w-full mb-6 ">
@@ -427,7 +482,7 @@ const Details = () => {
           </thead>
           {
 
-            !isLoading && <FormatTable tickets={tickets} i={i} j={j} />
+            !isLoading && <FormatTable tickets={tickets} currentPage={params.page} />
           }
         </table>
       </div>
@@ -471,7 +526,7 @@ const Details = () => {
 
         )
       }
-      <div className="flex mb-10 select-none gap-4">
+      {/* <div className="flex mb-10 select-none gap-4">
         <div className={`${i <= 0 ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => next_pre(-1, tickets)}>
           <BsChevronLeft className='text-black  font-black' />
 
@@ -484,10 +539,24 @@ const Details = () => {
         </div>
 
 
-      </div>
+      </div> */}
+      <div className='mt-10 ' />
+      <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
+        {Array.from({
+          length: numberOfPages
+        }, (text, index) => {
+          return <PanigationButton
+            text={index + 1}
+            active={activeIndex}
+            loading={isActiveIndexLoading}
+            index={index} onClick={() => {
+              setActiveIndex(index)
+              checkPages(index + 1)
+            }} />
+        })}
+      </Scrollable>
 
-
-    </div>
+    </motion.div>
   )
 }
 
