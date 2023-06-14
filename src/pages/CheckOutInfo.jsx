@@ -26,8 +26,8 @@ const BusSits = () => {
       const res = await axios.post(url, {
         from: queryParameters.get("from"),
         to: queryParameters.get("to"),
-        traveldate: new Date(),
-        traveltime: "12/02/22",
+        traveldate: new Date(queryParameters.get("date")),
+        traveltime: queryParameters.get("time") || "n/a",
         price: Number(queryParameters.get("sitpos"))>20?10000:6500,
         sex:queryParameters.get("gender"),
         email:queryParameters.get("email"),

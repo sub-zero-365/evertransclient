@@ -1,4 +1,4 @@
-// import { CircularProgressbar } from 'react-circular-progressbar';
+import { CircularProgressbar } from 'react-circular-progressbar';
 
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker from 'react-datepicker';
@@ -6,7 +6,7 @@ import "react-circular-progressbar/dist/styles.css";
 import { GrStackOverflow } from 'react-icons/gr';
 import { VscFolderActive } from 'react-icons/vsc'
 import Select from 'react-select';
-import Select2 from 'react-select';
+import SelectSortDate from 'react-select';
 import { useState, useEffect, useRef } from 'react';
 import { AiOutlineMenu, AiOutlineSave } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io"
@@ -30,10 +30,10 @@ import "swiper/css/thumbs";
 import {
   AmountCount, BarChart, ActiveStatusButton, FormatTable,
   DeactiveStatusButton
-  , PanigationButton, PieChart, Scrollable, TicketCounts, Loadingbtn
+  , PanigationButton, PieChart, Scrollable, TicketCounts, Loadingbtn, AnimatePercent, BoxModel
 } from '../components';
 const Details = () => {
-
+  // const ActiveValue=useM
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
   const constraintsRef = useRef(null)
@@ -42,11 +42,22 @@ const Details = () => {
   const [totalTickets, setTotalTickets] = useState()
   const [tickets, setTickets] = useState([])
   const [activeTicketCount, setActiveTicketCount] = useState(0);
-
+  const [totalPrice, setTotalPrice] = useState(0);
   const id = useParams().id;
+  const style = {
+    control: base => ({
+      ...base,
+      border: 0,
+      boxShadow: "none",
+      background: "transparent",
+      color: "red"
+    }
+    )
+
+  }
   const [params, setParams] = useState({
     page: 1,
-    limit: 5,
+    limit: 50,
     createdBy: id
   })
   const onChange = (dates) => {
@@ -54,7 +65,10 @@ const Details = () => {
     setStartDate(start);
     setEndDate(end);
     console.log(dates)
-};
+  };
+  useEffect(() => {
+    setIsLoading(true)
+  }, [])
   const [userData, setUserData] = useState({
     labels: ["active tickets", "inactive tickets"],
     datasets: [
@@ -84,7 +98,9 @@ const Details = () => {
   }
   )
   const [activeSlide, setctiveSlide] = useState(0);
-
+  const [sum, setSum] = useState(0)
+  const [activeSum, setAcitveSum] = useState(0)
+  const [inActiveSum, setInAcitveSum] = useState(0)
   const token = localStorage.getItem("admin_token");
   const [isLoading, setIsLoading] = useState(false)
 
@@ -95,19 +111,29 @@ const Details = () => {
     },
     params
   }
+  const handleChangeText = (e) => {
+    const temp = params;
+    temp.search = e.target.value;
+    setParams({
+      ...temp
+    })
 
+  }
   async function getData() {
     const url = process.env.REACT_APP_LOCAL_URL + "/admin/alltickets"
     setIsActiveIndexLoading(true)
+
     try {
       const res = await axios.get(url, config)
       setTickets(res?.data?.tickets);
-      // const acttic = res?.data?.tickets.filter((arr) => arr.active).length
-      // setActiveTicketCount(acttic)
+
       setActiveTicketCount(res?.data?.totalActiveTickets);
       setTotalTickets(res?.data?.totalTickets);
       setNumberOfPages(res?.data?.numberOfPages)
+      setAcitveSum(res?.data?.totalActivePrice)
 
+      setSum(res?.data?.totalPrice)
+      setInAcitveSum(res?.data?.totalInActivePrice)
       setUserData({
         labels: ["active tickets", "inactive tickets"],
         datasets: [
@@ -125,9 +151,10 @@ const Details = () => {
     setIsActiveIndexLoading(false)
 
   }
-  const handleOnChange = (evt) => {
-    return
-  }
+  // const handleOnChange = (evt) => {
+  //   return
+  // }
+
   useEffect(() => {
     getData();
   }, [params]);
@@ -165,16 +192,46 @@ const Details = () => {
     getData()
     getUserInfo()
   }, [window.location.href])
-  // const skip = 10;
 
   const [toggle, setToggle] = useState(false)
-  const options = [
-    { label: "all", value: "null" },
-    { label: "today", value: 1 },
-    { label: "yesterday", value: 2 },
-    { label: "last week", value: 7 },
-    { label: "last month", value: 31 },
+  // const options = [
+  //   { label: "all", value: "null" },
+  //   { label: "today", value: 1 },
+  //   { label: "yesterday", value: 2 },
+  //   { label: "last week", value: 7 },
+  //   { label: "last month", value: 31 },
 
+  // ]
+  const handleFilterSearch = () => {
+    const temp = params;
+    temp.page = 1
+    temp.daterange = `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`
+    setParams({ ...temp });
+    setToggle(false)
+
+  }
+  const sortedOptions = [
+
+    {
+      label: "CreatedAt-",
+      value: "newest"
+
+    },
+    {
+      label: "CreatedAt+",
+      value: "oldest"
+
+    },
+    {
+      label: "traveldate-",
+      value: "new_traveldate"
+
+    },
+    {
+      label: "traveldate+",
+      value: "old_traveldate"
+
+    },
   ]
   const sortOptions = [
     { value: "all", label: "All tickets" },
@@ -189,10 +246,33 @@ const Details = () => {
     temp.page = 1
     setParams({ ...temp })
   }
+  const handleSortTime = (evt) => {
+
+    const temp = params;
+    if (params.sort == evt.value) return
+    temp.sort = evt.value
+    temp.page = 1
+    setParams({ ...temp })
+
+
+
+  }
+  const movex = {
+
+
+    animate: {
+      width: ["0%", (activeTicketCount / (totalTickets)) * 100 + "%"],
+      transition: {
+        duration: 1,
+        delay: 0.2
+      }
+    }
+
+  }
   return (
     <motion.div
       className='pt-4 px-2 max-w-full overflow-x-auto select-none
-    max-h-[calc(100vh-4rem)] overflow-y-auto' ref={constraintsRef}>
+    max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light' ref={constraintsRef}>
       <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
@@ -238,8 +318,8 @@ const Details = () => {
                 }}
               >
                 <SwiperSlide >
-                  <motion.div 
-                  className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
+                  <motion.div
+                    className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
                   >
 
                     <h1 className="text-xl mb-4 text-montserrat font-medium text-center uppercase mt-2">Active to Inactive ticket ratio</h1>
@@ -247,12 +327,48 @@ const Details = () => {
                   </motion.div>
                 </SwiperSlide>
                 <SwiperSlide >
-                  <motion.div 
-                  className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
+                  <motion.div
+                    className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
                   >
+                    <div className="mb-10 md:mb-5">
 
-                    <h1 className="text-xl mb-4 text-montserrat font-medium text-center uppercase mt-2">User Tickets to ALl tickets </h1>
-                    <PieChart chartData={userData} />
+                      <h2 className="text-start 
+                        text-color_dark  mt-2 ml-1
+                         tracking-tight text-lg
+                        font-medium">User Book Vs System Book </h2>
+                      <span className="mb-5 w-14 ml-2 h-1 bg-blue-700 block rounded-lg"></span>
+                      <CircularProgressbar
+                        background
+                        strokeWidth={8}
+                        initialAnimation
+                        circleRatio={0.6}
+                        className='!w-[10rem] md:!w-[10rem]
+                        !max-w-[calc(100%-3rem)] mx-auto'
+                        styles={{
+                          path: {
+                            stroke: `rgba(62,154,199,60%)`
+                          },
+                          trail: {
+                            stroke: "green"
+                          },
+                        }}
+                        percentage={66.5 + "%"}
+                        text="66%"
+                      />
+                      <BoxModel activeCount={7476}
+                        className="!bg-white"
+                        inActiveCount={62549}
+                        text1="User"
+                        text2="System"
+                        text={""}
+                      />
+
+                      {/* <AnimatePercent
+                        variants={movex}
+                        percent={Math.floor((activeTicketCount / (totalTickets)) * 100)}
+                      /> */}
+
+                    </div>
                   </motion.div>
                 </SwiperSlide>
 
@@ -338,19 +454,19 @@ const Details = () => {
                     className="!bg-blue-400"
                     text="Total coset of all tickets"
                     icon={<MdOutlinePriceChange />}
-                    amount={totalTickets * 6500} />
+                    amount={sum} />
                   <AmountCount
                     className="!bg-green-400"
 
                     text="Total coset of all active tickets"
 
-                    icon={<BiCategory />} amount={activeTicketCount * 6500} />
+                    icon={<BiCategory />} amount={activeSum} />
                   <AmountCount
                     className="!bg-red-400 !text-black"
 
                     text="Total coset of all inactive tickets"
 
-                    icon={<BiCategory />} amount={(totalTickets - activeTicketCount) * 6500} />
+                    icon={<BiCategory />} amount={inActiveSum} />
                 </Scrollable>
               )
 
@@ -359,14 +475,14 @@ const Details = () => {
 
 
         </div>
-        <div className={`flex-none py-5 sidebarr m lg:rounded-lg shadow  overflow-y-auto--
+        <div className={`flex-none py-5
+        
+        sidebarr m lg:rounded-lg shadow rounded-lg  overflow-y-auto--
         ${toggle ? "right-0" : "!-right-full"}
         duration-500 transition-[right] shadow lg:shadow-none lg:max-w-sm lg:w-[20rem] 
-        text-center bg-slate-200 rounded-sm right-0 top-12 h-fit
+        text-center bg-white rounded-sm right-0 top-12 h-fit
            w-[calc(100vw-3.5rem)] max-w-sm  z-[6] fixed   lg:static px-4 `}>
-          {/* <div className='flex justify-between items-start'>
-            <span className='w-5 h-5 bg-white rounded-full'></span><span className='w-5 h-5 bg-white rounded-full'></span>
-          </div> */}
+
           <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 
        -left-[3.125rem] z-10 rounded-none flex items-center justify-center  font-black border-black"
@@ -403,7 +519,11 @@ const Details = () => {
                   inline
                   maxDate={new Date()}
                 />
-                <span className='max-w-[min(calc(100%-2.5rem),400px)]
+                <span
+
+                  onClick={handleFilterSearch}
+
+                  className='max-w-[min(calc(100%-2.5rem),400px)]
             flex items-center
             justify-center
              pb-2 px-8
@@ -414,32 +534,129 @@ const Details = () => {
              mx-auto bg-blue-600 mt-4  rounded-4'
 
                 >  {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}</span>
+                {
+                  params.daterange && <span
+                    onClick={() => {
+                      const temp = params;
+                      if (temp.daterange) delete temp.daterange;
+                      setParams({ ...temp })
+
+                    }}
+                    className='max-w-[min(calc(100%-2.5rem),400px)]
+          flex items-center
+          justify-center
+           pb-2 px-8
+          text-medium
+          pt-1.5 font-medium rounded-sm
+          text-gray-200
+          shadow-2xl
+           mx-auto bg-orange-600 mt-4  rounded-4'
+
+                  > Clear filter</span>
+                }
               </motion.div>
             </AnimatePresence>
+            <div className="mt-10 mb-10 md:mb-5">
+
+              <h2 className="text-start 
+                                    text-color_dark  mt-2 ml-1
+                                     tracking-tight 
+                                    font-medium">Booking OverView </h2>
+              <span className="mb-5 w-14 ml-2 h-1 bg-blue-700 block rounded-lg"></span>
+              <CircularProgressbar
+                // background
+                strokeWidth={10}
+                initialAnimation
+                circleRatio={(activeTicketCount / (totalTickets))}
+                className='!w-[10rem] md:!w-[10rem]
+                                    !max-w-[calc(100%-3rem)] mx-auto '
+                styles={{
+                  path: {
+                    stroke: `rgba(62,154,199,60%)`
+                  },
+                  trail: {
+                    stroke: "green"
+                  },
+                }}
+                percentage={(activeTicketCount / (totalTickets)) * 100 + "%"}
+                text={Math.floor((activeTicketCount / (totalTickets)) * 100) + "%"}
+              />
+              {/* <AnimatePercent
+                variants={movex}
+                percent={Math.floor((activeTicketCount / (totalTickets)) * 100)}
+              /> */}
+
+              <BoxModel activeCount={activeTicketCount} inActiveCount={totalTickets - activeTicketCount} />
+
+            </div>
 
           </div>
-          <div className='flex justify-between items-start'>
+          {/* <div className='flex justify-between items-start'>
             <span className='w-5 h-5 bg-white rounded-full'></span><span className='w-5 h-5 bg-white rounded-full'></span>
-          </div>
+          </div> */}
         </div>
       </div>
 
-      <div className="flex justify-between pr-5 items-start mb-10">
+      <div className="flex justify-between
+      flex-wrap pr-5 items-start mb-10">
         <h1 className="text-2xl mt-4 
         text-gray-700 pl-6
         
         flex tracking-tight">All tickets <span className="text-xs ring-2 ring-gray-700  grid place-items-center
         ml-1 w-5 h-5 bg-gray-500 text-white
         mb-4 rounded-full border">{totalTickets} </span> <GrStackOverflow className="inline-block- pl-2 text-4xl hidden md:inline-block" /></h1>
-        <Select options={sortOptions}
-          onChange={handleChange}
 
-          className='!border-none !h-8 mt-4' />
+        <div className='mt-0'>
+          <div className="text-[0.8rem] text-slate-300 uppercase text-center font-semibold mb-1 font-montserrat"> ticket status</div>
+          <Select
+            styles={style}
+            options={sortOptions}
+            defaultValue={{
+              label: "All tickets",
+              value: "all"
+            }}
+            isSearchable={false}
+            onChange={handleChange}
+            className='!border-none !h-8 mt-0' />
+        </div>
+
+        <div className='mt-0'>
+          <div className="text-[0.8rem]
+          text-slate-300 uppercase
+          text-center font-semibold mb-1 font-montserrat"> sorted date </div>
+          <SelectSortDate
+            options={sortedOptions}
+            styles={style}
+            defaultValue={{
+              label: "createdAt -",
+              value: "newest"
+            }}
+
+            isSearchable={false}
+            onChange={handleSortTime}
+            className='!border-none !h-8 mt-0' />
+        </div>
+
 
       </div>
-      <div className="relative max-w-full overflow-x-auto  shadow-md sm:rounded-lg w-full mb-6 ">
+      <form className="px-4 md:px-6 my-5 " onSubmit={(e) => e.preventDefault()}>
+        <div className="flex relative min-h-[40px]">
+          <div className="relative w-full">
+            <input type="search" value={params.search || ""}
+              onChange={e => handleChangeText(e)} id="search-dropdown" className="block outline-none focus:outline-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg
+                        border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Search Email address,names etc " required />
+            <button type="submit" className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg
+                        border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              <span className="sr-only">Search</span>
+            </button>
+          </div>
+        </div>
+      </form>
+      <div className="relative max-w-full overflow-x-auto
+      shadow-md sm:rounded-lg w-full mb-6 ">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
             <tr>
               <th scope="col" className="px-2 py-3">
                 Index
@@ -463,6 +680,9 @@ const Details = () => {
                 date
               </th>
               <th scope="col" className="px-3 py-3">
+                createdAt
+              </th>
+              <th scope="col" className="px-3 py-3">
                 time
               </th>
               <th scope="col" className="px-3 py-3">
@@ -482,7 +702,8 @@ const Details = () => {
           </thead>
           {
 
-            !isLoading && <FormatTable tickets={tickets} currentPage={params.page} />
+            !isLoading && <FormatTable tickets={tickets} admin
+              currentPage={params.page} />
           }
         </table>
       </div>

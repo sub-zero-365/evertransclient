@@ -42,3 +42,9 @@ export { default as ActiveStatusButton }
 from './ActiveStatusButton'
 export { default as PanigationButton }
 from './PanigationButton'
+export { default as Number }
+from './Number'
+export { default as AnimatePercent }
+from './AnimatePercent'
+export { default as BoxModel }
+from './BoxModel'

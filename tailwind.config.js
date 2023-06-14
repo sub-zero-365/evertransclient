@@ -45,7 +45,7 @@ module.exports = {
             },
             backgroundColor: {
                 color_dark: "#181818",
-                color_light: "#f8f8f8"
+                color_light: "#edeeeb"
 
             },
             colors: {

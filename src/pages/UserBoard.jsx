@@ -217,7 +217,8 @@ const UserBoard = () => {
                                             stroke: "green"
                                         },
                                     }}
-                                    percentage={tickets_.filter(({ active }) => active == true).length / tickets_.length} text={Math.floor((tickets_.filter(({ active }) => active == true).length / tickets_.length) * 100) + "%"} />
+                                    percentage={tickets_.filter(({ active }) => active == true).length / tickets_.length} 
+                                    text={Math.floor((tickets_.filter(({ active }) => active == true).length / tickets_.length) * 100) + "%"} />
                             </motion.div>
                         </SwiperSlide>
                         {/* <SwiperSlide>
