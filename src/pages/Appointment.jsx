@@ -4,7 +4,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import DatePicker from 'react-datepicker';
 import { AnimatePresence, motion } from 'framer-motion'
-import SelectSort from 'react-select';
 import SkipSelect from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTickets } from '../actions/adminData';
@@ -13,7 +12,7 @@ import {
     Loader, Scrollable,
     TicketCounts,
     PanigationButton,
-    Loadingbtn
+    Loadingbtn, Form
 } from '../components';
 import { AiOutlineSave } from 'react-icons/ai';
 import { VscFolderActive } from 'react-icons/vsc';
@@ -27,9 +26,10 @@ const Appointment = () => {
     const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
     const [totalTickets, setTotalTickets] = useState()
     const [activeTicketCount, setActiveTicketCount] = useState(0);
+    const [loading, setLoading] = useState(false)
     const [params, setParams] = useState({
         page: 1,
-        limit: 2
+        limit: 100
     })
 
     const tickets_ = useSelector(state => state.setAdminData.tickets);
@@ -44,6 +44,24 @@ const Appointment = () => {
             ...temp
         })
         navigator.vibrate([100])
+    }
+    const handleChangeText = (e) => {
+        const temp = params;
+        temp.search = e.target.value;
+        setParams({
+            ...temp
+        })
+
+    }
+    const handleFilterSearch = () => {
+        const temp = params;
+        temp.page = 1
+        temp.daterange = `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`
+        setParams({ ...temp });
+        // setToggle(true)
+        setLoading(true)
+        
+
     }
     const onChange = (dates) => {
         const [start, end] = dates;
@@ -70,17 +88,11 @@ const Appointment = () => {
     const token = localStorage.getItem("admin_token");
 
     const url = `${process.env.REACT_APP_LOCAL_URL}/admin/alltickets`
-    const sortOpions = [
-        { label: "all", value: "null" },
-        { label: "today", value: 1 },
-        { label: "yesterday", value: 2 },
-        { label: "last week", value: 7 },
-        { label: "last month", value: 31 },
-
-    ]
+    
     useEffect(() => {
         fetchData()
     }, [params])
+
     const [numberOfPages, setNumberOfPages] = useState()
     const checkPages = (index) => {
         const temp = params;
@@ -96,6 +108,7 @@ const Appointment = () => {
 
     async function fetchData() {
         setIsActiveIndexLoading(true);
+
         try {
 
             const response = await axios.get(url, {
@@ -112,21 +125,23 @@ const Appointment = () => {
             console.log(err);
         }
         setIsActiveIndexLoading(false)
+        if (loading) {
+            setLoading(false)
+        }
+        
 
     }
 
 
     return (
         <div className="max-w-full h-[calc(100vh-3rem)] overflow-auto" >
-
             {isLoading && (<Loader toggle dark />)}
-
             <div className=" md:flex  justify-between items-start">
                 <h1 className='text-2xl text-center mt-6'>Book tickets</h1>
                 <div className="flex flex-col mx-auto justify-center  items-center">
                     <h2 className='uppercase text-lg md:text-lg mb-4'>Filter Data By</h2>
 
-                    <AnimatePresence>
+                    <AnimatePresence className="mt-10">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -141,17 +156,42 @@ const Appointment = () => {
                                 inline
                                 maxDate={new Date()}
                             />
-                            <span className='max-w-[min(calc(100%-2.5rem),400px)]
+                            <span
+
+                                onClick={handleFilterSearch}
+
+                                className='max-w-[min(calc(100%-2.5rem),400px)]
             flex items-center
             justify-center
-            mb-10 pb-2 px-8
+             pb-2 px-8
             text-medium
             pt-1.5 font-medium rounded-sm
             text-gray-200
             shadow-2xl
              mx-auto bg-blue-600 mt-4  rounded-4'
 
-                            >  {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}</span>
+                            >  {loading ? <Loadingbtn toggle /> : "Filter Tickets"}</span>
+                            {
+                                params.daterange && <span
+                                    onClick={() => {
+                                        const temp = params;
+                                        if (temp.daterange) delete temp.daterange;
+                                        setParams({ ...temp })
+                                        setLoading(true)
+
+                                    }}
+                                    className='max-w-[min(calc(100%-2.5rem),400px)]
+          flex items-center
+          justify-center
+           pb-2 px-8
+          text-medium
+          pt-1.5 font-medium rounded-sm
+          text-gray-200
+          shadow-2xl
+           mx-auto bg-orange-600 mt-4  rounded-4'
+
+                                > Clear filter</span>
+                            }
                         </motion.div>
                     </AnimatePresence>
                 </div>
@@ -205,11 +245,13 @@ const Appointment = () => {
 
             </div>
 
+            <Form handleChangeText={handleChangeText} params={params} />
 
-
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full ">
-                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-transparent ">
+                <table className="w-full text-sm text-left text-gray-500 
+                dark:text-gray-400 ">
+                    <thead className="text-xs text-gray-700 uppercase 
+                    bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" className="px-2 py-3">
                                 Index
@@ -233,6 +275,9 @@ const Appointment = () => {
                                 date
                             </th>
                             <th scope="col" className="px-3 py-3">
+                                createdAt
+                            </th>
+                            <th scope="col" className="px-3 py-3">
                                 time
                             </th>
                             <th scope="col" className="px-3 py-3">
@@ -250,7 +295,7 @@ const Appointment = () => {
 
                         </tr>
                     </thead>
-                    <FormatTable tickets={tickets_}
+                    <FormatTable tickets={tickets_} admin
                         skip={params.limit}
                         currentPage={params.page} />
                 </table>

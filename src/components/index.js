@@ -48,3 +48,5 @@ export { default as AnimatePercent }
 from './AnimatePercent'
 export { default as BoxModel }
 from './BoxModel'
+export { default as Form }
+from './Form'

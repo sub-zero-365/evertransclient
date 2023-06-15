@@ -1,3 +1,6 @@
+import { MdOutlinePriceChange } from 'react-icons/md'
+import { BiCategory } from 'react-icons/bi'
+
 import { useravatar } from '../Assets/images';
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation, Pagination } from 'swiper'
@@ -13,7 +16,7 @@ import Alert from '../components/Alert'
 import { storeTicket, setLoading } from "../actions/userticket"
 import { AiOutlineWhatsApp } from 'react-icons/ai'
 import { BiSupport } from 'react-icons/bi'
-import { Footer, FormatTable, PanigationButton, Scrollable } from "../components"
+import { AmountCount, BoxModel, Footer, FormatTable, PanigationButton, Scrollable, Form, Number } from "../components"
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -33,7 +36,7 @@ const UserBoard = () => {
 
     const [params, setParams] = useState({
         page: 1,
-        limit: 5
+        limit: 100
     })
     const [activeIndex, setActiveIndex] = useState(0);
     const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false);
@@ -112,11 +115,15 @@ const UserBoard = () => {
     const tickets_ = useSelector(state => state.userTicket.tickets);
     const loading = useSelector(state => state.userTicket.loading);
     const ref = useRef(null);
-    const isInView = useInView(ref)
-    useEffect(() => {
+    // const isInView = useInView(ref)
+    const handleChangeText = (e) => {
+        const temp = params;
+        temp.search = e.target.value;
+        setParams({
+            ...temp
+        })
 
-
-    }, [isInView])
+    }
     useEffect(() => {
         if (!token) {
             setToggle(true)
@@ -126,8 +133,8 @@ const UserBoard = () => {
         }
         async function getData() {
             setIsActiveIndexLoading(true)
-
             const url = process.env.REACT_APP_LOCAL_URL + "/ticket";
+            // alert(url)
             try {
                 const res = await axios.get(url, {
                     headers: {
@@ -136,6 +143,7 @@ const UserBoard = () => {
                     params
                 })
                 userTicket(res?.data?.tickets)
+                // alert(res?.data?.tickets.length)
                 setNumberOfPages(res?.data?.numberOfPages);
                 setActiveTicketCount(res?.data?.totalTickets);
                 setTotalTickets(res?.data?.alltickets);
@@ -152,6 +160,14 @@ const UserBoard = () => {
         getData()
 
     }, [params])
+    const handleFilterSearch = () => {
+        const temp = params;
+        temp.page = 1
+        temp.daterange = `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`
+        setParams({ ...temp });
+        setToggle(false)
+
+    }
     const checkPages = (index) => {
         const temp = params;
         // if (temp.page === index) {
@@ -166,7 +182,7 @@ const UserBoard = () => {
     const [activeSlide, setctiveSlide] = useState(0);
     const isUserName = useSelector(state => state.username.username);
     return (
-        <div className="max-w-5xl  mx-auto min-h-screen">
+        <div className="max-w-7xl mx-auto min-h-screen">
 
             {
                 loading && <Loader dark toggle />
@@ -175,9 +191,13 @@ const UserBoard = () => {
             <div className="flex  justify-between px-4 my-2 py-2">
                 <div className="leading-2">
                     <h2 className="text-lg leading-5">welcome back</h2>
-                    <h1 className="text-xl md:text-2xl lg:text-3xl font-medium">{isUserName}</h1>
+                    <h1 className="text-xl md:text-2xl lg:text-3xl ml-1 font-semibold font-montserrat">{isUserName}</h1>
+                    <h1 className="text-lg md:text-xl lg:text-2xl font-medium  font-montserrats ml-1 ">672301714</h1>
                 </div>
-                <img src={useravatar} alt="user" className='shadow w-[2.5rem] h-[2.5rem] rounded-full ' />
+
+                <div>
+                    <img src={useravatar} alt="user" className='shadow w-[2.5rem] h-[2.5rem] rounded-full ' />
+                </div>
             </div>
             <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
                 <div>
@@ -217,7 +237,7 @@ const UserBoard = () => {
                                             stroke: "green"
                                         },
                                     }}
-                                    percentage={tickets_.filter(({ active }) => active == true).length / tickets_.length} 
+                                    percentage={tickets_.filter(({ active }) => active == true).length / tickets_.length}
                                     text={Math.floor((tickets_.filter(({ active }) => active == true).length / tickets_.length) * 100) + "%"} />
                             </motion.div>
                         </SwiperSlide>
@@ -235,13 +255,14 @@ const UserBoard = () => {
              shadow-blue-500
              rounded-4' onClick={() => setShowDatePicker(!showDatePicker)}>filter Ticket data
                 <BsChevronDown className="text-2xl ml-5" /></span>
-
             <AnimatePresence>
-                {showDatePicker &&
-                    <motion.div
+
+                {
+                    showDatePicker && <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, duration: 2 }}
+                        exit={{ opacity: 0,
+                        duration: 2 }}
                         className="flex flex-col items-center w-full justify-center">
                         <DatePicker
                             selected={startDate}
@@ -252,22 +273,83 @@ const UserBoard = () => {
                             inline
                             maxDate={new Date()}
                         />
-                        <span className='max-w-[min(calc(100%-2.5rem),400px)]
-            flex items-center justify-center mb-10 pb-2 px-8
-            text-black pt-1.5 font-medium rounded-sm
-            shadow-2xl
-             mx-auto bg-blue-300 mt-4  rounded-4'
-                            onClick={handleFilterDate}
+                        <span
 
-                        >  {isLoading ? <Loadingbtn toggle /> : "filter tickets"}</span>
+                            onClick={handleFilterSearch}
+
+                            className='max-w-[min(calc(100%-2.5rem),400px)]
+           flex items-center
+           justify-center
+            pb-2 px-8
+           text-medium
+           pt-1.5 font-medium rounded-sm
+           text-gray-200
+           shadow-2xl
+            mx-auto bg-blue-600 mt-4  rounded-4'
+
+                        >  {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}</span>
+                        {
+                            params.daterange && <span
+                                onClick={() => {
+                                    const temp = params;
+                                    if (temp.daterange) delete temp.daterange;
+                                    setParams({ ...temp })
+
+                                }}
+                                className='max-w-[min(calc(100%-2.5rem),400px)]
+         flex items-center
+         justify-center
+          pb-2 px-8
+         text-medium
+         pt-1.5 font-medium rounded-sm
+         text-gray-200
+         shadow-2xl
+          mx-auto bg-orange-600 mt-4  rounded-4'
+
+                            > Clear filter</span>
+                        }
                     </motion.div>
                 }
+
             </AnimatePresence>
+<div className='max-w-3xl mx-auto'>
+<BoxModel activeCount={32}
+                className="!bg-white"
+                inActiveCount={45}
+                // text1="User"
+                // text2="System"
+                text={"total 78972"}
+            />
+    
+     </div>
+            
+            <Scrollable className={"!px-5"}>
+                <AmountCount
+                    className="!bg-blue-400"
+                    text="Total coset of all tickets"
+                    icon={<MdOutlinePriceChange />}
+                    amount={87897} />
+                <AmountCount
+                    className="!bg-green-400"
+
+                    text="Total coset of all active tickets"
+
+                    icon={<BiCategory />} amount={7897} />
+                <AmountCount
+                    className="!bg-red-400 !text-black"
+
+                    text="Total coset of all inactive tickets"
+
+                    icon={<BiCategory />} amount={763} />
+            </Scrollable>
+            <Form handleChangeText={handleChangeText} params={params} />
+
+
             {
                 tickets_.length > 0 ?
                     <>
                         <h2 className='text-xl px-2  mb-4 text-center md:text-start'>Recent Book Tickets</h2>
-                        <div className="flex items-center justify-between px-4 mb-4 "
+                        <div className="flex items-center justify-between px-4 mb-4 max-w-5xl mx-auto "
                             ref={ref}>
                             <motion.div
                                 whileHover={{ scale: 1.2 }}
@@ -275,8 +357,9 @@ const UserBoard = () => {
                         before:left-0  before:h-[1px] min-h-[1.4rem] before:bg-gray-500 flex items-center
                         
                         hover:font-black ${0 == tab ? "font-medium before:w-full" : ""}`}
-                                onClick={() => handleChangeTab(0)}>All  <span className='text-xs ml-0.5 w-4 h-4 rounded-full border
-                                bg-green-400 grid place-items-center shadow'>{totalTickets || 1}</span>
+                                onClick={() => handleChangeTab(0)}>All  <Number
+                                    className={"!w-5 !h-5"}
+                                    number={25} />
                             </motion.div>
                             <motion.div
                                 whileHover={{ scale: 1.2 }}
@@ -284,8 +367,12 @@ const UserBoard = () => {
                         before:left-0  before:h-[1px] min-h-[1.4rem] before:bg-gray-500
                         flex items-center
                         hover:font-black ${1 == tab ? "font-medium before:w-full" : ""}`}
-                                onClick={() => handleChangeTab(1)}>Active <span className='text-xs w-4 h-4 rounded-full 
-                                border bg-blue-400 grid place-items-center shadow'></span> </motion.div>
+                                onClick={() => handleChangeTab(1)}>Active
+
+                                <Number
+                                    className={"!w-5 !h-5 !bg-blue-400"}
+                                    number={25} />
+                            </motion.div>
                             <motion.div
                                 whileHover={{ scale: 1.2 }}
                                 className={`select-none capitalize relative before:content-[" "] before:absolute before:bottom-0
@@ -294,8 +381,9 @@ const UserBoard = () => {
                         
                         hover:font-black ${2 == tab ? "font-medium before:w-full" : ""}`}
                                 onClick={() => handleChangeTab(2)}>Inactive
-                                <span className='text-xs w-4 h-4 rounded-full border
-                                bg-red-400 grid place-items-center shadow'></span>
+                                <Number
+                                    className={"!w-5 !h-5 !bg-red-300"}
+                                    number={25} />
                             </motion.div>
                         </div>
                         <div className="relative max-w-full overflow-x-auto  shadow-md sm:rounded-lg w-full mb-6 ">
@@ -322,6 +410,9 @@ const UserBoard = () => {
                                         </th>
                                         <th scope="col" className="px-3 py-3">
                                             date
+                                        </th>
+                                        <th scope="col" className="px-3 py-3">
+                                            createdAt
                                         </th>
                                         <th scope="col" className="px-3 py-3">
                                             time
