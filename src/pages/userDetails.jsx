@@ -31,19 +31,18 @@ import {
   AmountCount, BarChart, ActiveStatusButton, FormatTable,
   DeactiveStatusButton
   , PanigationButton, PieChart, Scrollable, TicketCounts, Loadingbtn, AnimatePercent, BoxModel
-,Form} from '../components';
+  , Form,
+  PlaceHolderLoader
+} from '../components';
 const Details = () => {
-  // const ActiveValue=useM
-  
+
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
   const constraintsRef = useRef(null)
   const [activeIndex, setActiveIndex] = useState(0);
   const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
   const [totalTickets, setTotalTickets] = useState()
-  const [tickets, setTickets] = useState([])
   const [activeTicketCount, setActiveTicketCount] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
   const id = useParams().id;
   const style = {
     control: base => ({
@@ -70,7 +69,7 @@ const Details = () => {
   useEffect(() => {
     setIsLoading(true)
   }, [])
-  const [userData, setUserData] = useState({
+  const [_userData, _setUserData] = useState({
     labels: ["active tickets", "inactive tickets"],
     datasets: [
       {
@@ -99,13 +98,11 @@ const Details = () => {
   }
   )
   const [activeSlide, setctiveSlide] = useState(0);
-  const [sum, setSum] = useState(0)
-  const [activeSum, setAcitveSum] = useState(0)
-  const [inActiveSum, setInAcitveSum] = useState(0)
   const token = localStorage.getItem("admin_token");
   const [isLoading, setIsLoading] = useState(false)
 
-  const [userInfo, setUserInfo] = useState({})
+  const [userInfo, setUserInfo] = useState({});
+  const [userData, setUserData] = useState({ test: 1 })
   const config = {
     headers: {
       'Authorization': "makingmoney " + token
@@ -126,16 +123,8 @@ const Details = () => {
 
     try {
       const res = await axios.get(url, config)
-      setTickets(res?.data?.tickets);
-
-      setActiveTicketCount(res?.data?.totalActiveTickets);
-      setTotalTickets(res?.data?.totalTickets);
-      setNumberOfPages(res?.data?.numberOfPages)
-      setAcitveSum(res?.data?.totalActivePrice)
-
-      setSum(res?.data?.totalPrice)
-      setInAcitveSum(res?.data?.totalInActivePrice)
-      setUserData({
+      setUserData(res?.data || {})
+      _setUserData({
         labels: ["active tickets", "inactive tickets"],
         datasets: [
           {
@@ -152,14 +141,10 @@ const Details = () => {
     setIsActiveIndexLoading(false)
 
   }
-  // const handleOnChange = (evt) => {
-  //   return
-  // }
 
   useEffect(() => {
     getData();
   }, [params]);
-  const [numberOfPages, setNumberOfPages] = useState();
   const checkPages = (index) => {
     const temp = params;
     if (temp.page === index) {
@@ -181,7 +166,6 @@ const Details = () => {
         const { data } = await axios.get(url, config);
         setUserInfo(data?.user)
 
-        console.log(data)
 
       } catch (err) {
         console.log(err)
@@ -194,15 +178,8 @@ const Details = () => {
     getUserInfo()
   }, [window.location.href])
 
-  const [toggle, setToggle] = useState(false)
-  // const options = [
-  //   { label: "all", value: "null" },
-  //   { label: "today", value: 1 },
-  //   { label: "yesterday", value: 2 },
-  //   { label: "last week", value: 7 },
-  //   { label: "last month", value: 31 },
+  const [toggle, setToggle] = useState(false);
 
-  // ]
   const handleFilterSearch = () => {
     const temp = params;
     temp.page = 1
@@ -240,6 +217,7 @@ const Details = () => {
     { value: "inactive", label: <span className="flex items-center justify-between">InActive tickets <DeactiveStatusButton className="" /> </span> },
 
   ]
+  const [viewAll, setViewAll] = useState(false)
   const handleChange = (evt) => {
     const temp = params;
     if (params.ticketStatus == evt.value) return
@@ -258,22 +236,11 @@ const Details = () => {
 
 
   }
-  const movex = {
-
-
-    animate: {
-      width: ["0%", (activeTicketCount / (totalTickets)) * 100 + "%"],
-      transition: {
-        duration: 1,
-        delay: 0.2
-      }
-    }
-
-  }
+  const selectRef = useRef(null)
   return (
     <motion.div
       className='pt-4 px-2 max-w-full overflow-x-auto select-none
-    max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light' ref={constraintsRef}>
+    max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark' ref={constraintsRef}>
       <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
@@ -324,7 +291,7 @@ const Details = () => {
                   >
 
                     <h1 className="text-xl mb-4 text-montserrat font-medium text-center uppercase mt-2">Active to Inactive ticket ratio</h1>
-                    <PieChart chartData={userData} />
+                    <PieChart chartData={_userData} />
                   </motion.div>
                 </SwiperSlide>
                 <SwiperSlide >
@@ -364,10 +331,7 @@ const Details = () => {
                         text={""}
                       />
 
-                      {/* <AnimatePercent
-                        variants={movex}
-                        percent={Math.floor((activeTicketCount / (totalTickets)) * 100)}
-                      /> */}
+
 
                     </div>
                   </motion.div>
@@ -377,101 +341,46 @@ const Details = () => {
               </Swiper>
             </div>
             {
-              isLoading ? (
-                <div role="status" class="space-y-2.5 animate-pulse max-w-lg grid grid-cols-3 gap-2">
-                  <div class="flex items-center w-full space-x-2 max-w-[480px]">
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-                  </div>
-                  <div class="flex items-center w-full space-x-2 max-w-[480px]">
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-                  </div>
+              isLoading ?
+                <PlaceHolderLoader />
 
-                  <div class="flex items-center w-full space-x-2 max-w-[480px]">
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-                  </div>
-                  <div class="flex items-center w-full space-x-2 max-w-[400px]">
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                    <div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-80"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                  </div>
-                  <div class="flex items-center w-full space-x-2 max-w-[480px]">
-                    <div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-full"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-                  </div>
-                  <span class="sr-only">Loading...</span>
-                </div>
+                :
+                <>
+                  <div className='underline  mb-2 underline-offset-8 w-[400px] mx-auto text-center max-w-3xl md:hidden- font-medium text-slate-700 capitalize' onClick={() => setViewAll(!viewAll)} >{viewAll ? "view less" : "view all"}</div>
+                  <Scrollable className={`!px-5 ${viewAll && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
+                    <TicketCounts counts={userData?.totalTickets}
+                      text={"Total Number Of Tickets"}
+                      icon={<AiOutlineSave />} />
+                    <TicketCounts counts={userData?.totalActiveTickets}
+                      text={"Total Number Of active Tickets"}
+                      icon={<VscFolderActive />} />
+                    <TicketCounts
+                      text={"Total Number Of Inactive Tickets"}
+                      counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
+                  </Scrollable>
+                  <Scrollable className={`!px-5 ${viewAll && "!grid md:!grid-cols-2"}`}>
+                    <AmountCount
+                      className="!bg-blue-400"
+                      text="Total coset of all tickets"
+                      icon={<MdOutlinePriceChange />}
+                      amount={userData?.totalPrice} />
+                    <AmountCount
+                      className="!bg-green-400"
 
-              ) : (
+                      text="Total coset of all active tickets"
 
-                <Scrollable className={"!px-5"}>
-                  <TicketCounts counts={totalTickets}
-                    text={"Total Number Of Tickets"}
-                    icon={<AiOutlineSave />} />
-                  <TicketCounts counts={activeTicketCount}
-                    text={"Total Number Of active Tickets"}
-                    icon={<VscFolderActive />} />
-                  <TicketCounts
-                    text={"Total Number Of Inactive Tickets"}
-                    counts={totalTickets - activeTicketCount} icon={<BiCategory />} />
-                </Scrollable>
-              )
+                      icon={<BiCategory />} amount={userData?.totalActivePrice} />
+                    <AmountCount
+                      className="!bg-red-400 !text-black"
 
+                      text="Total coset of all inactive tickets"
+
+                      icon={<BiCategory />} amount={userData?.totalInActivePrice} />
+                  </Scrollable>
+                </>
             }
-            {
-              isLoading ? (
-                <div role="status" class="space-y-2.5 animate-pulse max-w-lg grid grid-cols-3 gap-2">
-                  <div class="flex items-center w-full space-x-2 max-w-[480px]">
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-                  </div>
-                  <div class="flex items-center w-full space-x-2 max-w-[480px]">
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-                  </div>
-                  <div class="flex items-center w-full space-x-2 max-w-[480px]">
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-                  </div>
-                  <div class="flex items-center w-full space-x-2 max-w-[400px]">
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                    <div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-80"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                  </div>
-                  <div class="flex items-center w-full space-x-2 max-w-[480px]">
-                    <div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-full"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-                    <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-                  </div>
-                  <span class="sr-only">Loading...</span>
-                </div>
 
-              ) : (
-                <Scrollable className={"!px-5"}>
-                  <AmountCount
-                    className="!bg-blue-400"
-                    text="Total coset of all tickets"
-                    icon={<MdOutlinePriceChange />}
-                    amount={sum} />
-                  <AmountCount
-                    className="!bg-green-400"
 
-                    text="Total coset of all active tickets"
-
-                    icon={<BiCategory />} amount={activeSum} />
-                  <AmountCount
-                    className="!bg-red-400 !text-black"
-
-                    text="Total coset of all inactive tickets"
-
-                    icon={<BiCategory />} amount={inActiveSum} />
-                </Scrollable>
-              )
-
-            }
           </div>
 
 
@@ -565,10 +474,10 @@ const Details = () => {
                                     font-medium">Booking OverView </h2>
               <span className="mb-5 w-14 ml-2 h-1 bg-blue-700 block rounded-lg"></span>
               <CircularProgressbar
-                // background
+                background
                 strokeWidth={10}
                 initialAnimation
-                circleRatio={(activeTicketCount / (totalTickets))}
+                circleRatio={userData?.percentageActive ? (userData?.percentageActive / 100) : 0}
                 className='!w-[10rem] md:!w-[10rem]
                                     !max-w-[calc(100%-3rem)] mx-auto '
                 styles={{
@@ -579,22 +488,17 @@ const Details = () => {
                     stroke: "green"
                   },
                 }}
-                percentage={(activeTicketCount / (totalTickets)) * 100 + "%"}
-                text={Math.floor((activeTicketCount / (totalTickets)) * 100) + "%"}
+                text={Math.floor((userData?.percentageActive || 0)) + "%"}
               />
-              {/* <AnimatePercent
-                variants={movex}
-                percent={Math.floor((activeTicketCount / (totalTickets)) * 100)}
-              /> */}
 
-              <BoxModel activeCount={activeTicketCount} inActiveCount={totalTickets - activeTicketCount} />
+
+              <BoxModel activeCount={userData?.totalActiveTickets}
+                inActiveCount={userData?.totalInActiveTickets} />
 
             </div>
 
           </div>
-          {/* <div className='flex justify-between items-start'>
-            <span className='w-5 h-5 bg-white rounded-full'></span><span className='w-5 h-5 bg-white rounded-full'></span>
-          </div> */}
+
         </div>
       </div>
 
@@ -605,7 +509,7 @@ const Details = () => {
         
         flex tracking-tight">All tickets <span className="text-xs ring-2 ring-gray-700  grid place-items-center
         ml-1 w-5 h-5 bg-gray-500 text-white
-        mb-4 rounded-full border">{totalTickets} </span> <GrStackOverflow className="inline-block- pl-2 text-4xl hidden md:inline-block" /></h1>
+        mb-4 rounded-full border">{userData?.totalTickets || 0} </span> <GrStackOverflow className="inline-block- pl-2 text-4xl hidden md:inline-block" /></h1>
 
         <div className='mt-0'>
           <div className="text-[0.8rem] text-slate-300 uppercase text-center font-semibold mb-1 font-montserrat"> ticket status</div>
@@ -616,7 +520,9 @@ const Details = () => {
               label: "All tickets",
               value: "all"
             }}
+            ref={selectRef}
             isSearchable={false}
+            // key={params.ticketStatus}
             onChange={handleChange}
             className='!border-none !h-8 mt-0' />
         </div>
@@ -640,8 +546,75 @@ const Details = () => {
 
 
       </div>
-      <Form handleChangeText={handleChangeText} params={params}  />
-      
+      <AnimatePresence >
+
+        {
+          params?.daterange && <motion.div
+
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -40, opacity: 0 }}
+
+            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
+        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
+
+            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
+              onClick={() => {
+                const temp = params;
+                if (temp.daterange) delete temp.daterange;
+                setParams({ ...temp })
+
+              }}
+
+            >Clear Filter</span>
+            Date filter is on  </motion.div>
+        }
+        {
+          params?.search && <motion.div
+
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -40, opacity: 0 }}
+
+            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
+        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
+
+            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
+              onClick={() => {
+                const temp = params;
+                if (temp.search) delete temp.search;
+                setParams({ ...temp })
+
+              }}
+
+            >Clear Filter</span>
+            Text Filter is On  </motion.div>
+        }
+        {
+          params?.ticketStatus && params.ticketStatus !== "all" && <motion.div
+
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -40, opacity: 0 }}
+
+            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
+        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
+
+            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
+              onClick={() => {
+                const temp = params;
+                if (temp.ticketStatus) delete temp.ticketStatus;
+                setParams({ ...temp });
+                selectRef?.current?.select?.clearValue()
+              }}
+
+            >Clear Filter</span>
+            Ticket are set to <span className='px-2 bg-red-300 text-black text-xs rounded-lg mx-4 ring-1 ring-red-900'>{params.ticketStatus}</span> Filter is On  </motion.div>
+        }
+      </AnimatePresence>
+
+      <Form handleChangeText={handleChangeText} params={params} />
+
       <div className="relative max-w-full overflow-x-auto
       shadow-md sm:rounded-lg w-full mb-6 ">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
@@ -691,7 +664,7 @@ const Details = () => {
           </thead>
           {
 
-            !isLoading && <FormatTable tickets={tickets} admin
+            !isLoading && <FormatTable tickets={userData?.tickets} admin
               currentPage={params.page} />
           }
         </table>
@@ -700,60 +673,14 @@ const Details = () => {
 
         isLoading && (
 
-          <div role="status" class="space-y-2.5 animate-pulse max-w-lg">
-            <div class="flex items-center w-full space-x-2">
-              <div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-32"></div>
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-            </div>
-            <div class="flex items-center w-full space-x-2 max-w-[480px]">
-              <div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-full"></div>
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-            </div>
-            <div class="flex items-center w-full space-x-2 max-w-[400px]">
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-              <div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-80"></div>
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-            </div>
-            <div class="flex items-center w-full space-x-2 max-w-[480px]">
-              <div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-full"></div>
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-            </div>
-            <div class="flex items-center w-full space-x-2 max-w-[440px]">
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-32"></div>
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
-              <div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-full"></div>
-            </div>
-            <div class="flex items-center w-full space-x-2 max-w-[360px]">
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-              <div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-80"></div>
-              <div class="h-4 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
-            </div>
-            <span class="sr-only">Loading...</span>
-          </div>
+          <PlaceHolderLoader />
 
         )
       }
-      {/* <div className="flex mb-10 select-none gap-4">
-        <div className={`${i <= 0 ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => next_pre(-1, tickets)}>
-          <BsChevronLeft className='text-black  font-black' />
-
-        </div>
-        <div className={`${j >= tickets.length ? "opacity-40" : "opacity-100"} w-10 text-lg rounded-lg  h-10 shadow bg-lime-50 hover:bg-slate-300 duration-300 transition-all grid place-items-center `} onClick={() => {
-          next_pre(1, tickets)
-        }}>
-          <BsChevronRight className='text-black  font-black' />
-
-        </div>
-
-
-      </div> */}
       <div className='mt-10 ' />
       <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
         {Array.from({
-          length: numberOfPages
+          length: userData?.numberOfPages
         }, (text, index) => {
           return <PanigationButton
             text={index + 1}

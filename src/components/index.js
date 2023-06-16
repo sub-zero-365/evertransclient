@@ -50,3 +50,5 @@ export { default as BoxModel }
 from './BoxModel'
 export { default as Form }
 from './Form'
+export { default as PlaceHolderLoader }
+from './PlaceHolderLoader'

@@ -27,6 +27,9 @@ const Appointment = () => {
     const [totalTickets, setTotalTickets] = useState()
     const [activeTicketCount, setActiveTicketCount] = useState(0);
     const [loading, setLoading] = useState(false)
+    const [totalActivePrice,setTotalActivePrice]=useState(0)
+    const [totalInActivePrice,setTotalInActivePrice]=useState(0)
+    const [userData,setUserData]=useState({})
     const [params, setParams] = useState({
         page: 1,
         limit: 100
@@ -93,7 +96,7 @@ const Appointment = () => {
         fetchData()
     }, [params])
 
-    const [numberOfPages, setNumberOfPages] = useState()
+    // const [numberOfPages, setNumberOfPages] = useState()
     const checkPages = (index) => {
         const temp = params;
         if (temp.page === index) {
@@ -118,9 +121,12 @@ const Appointment = () => {
                 params
             })
             setTickets_([...response?.data?.tickets])
-            setActiveTicketCount(response?.data?.totalActiveTickets);
-            setTotalTickets(response?.data?.totalTickets);
-            setNumberOfPages(response?.data?.numberOfPages)
+            // setActiveTicketCount(response?.data?.totalActiveTickets);
+            // setTotalActivePrice(response?.data?.totalActivePrice);
+            // setTotalInActivePrice(response?.data?.totalInActivePrice);
+            // setTotalTickets(response?.data?.totalTickets);
+            // setNumberOfPages(response?.data?.numberOfPages)
+            setUserData(response?.data)
         } catch (err) {
             console.log(err);
         }
@@ -200,35 +206,37 @@ const Appointment = () => {
             </div>
 
             <Scrollable className={"!px-5"}>
-                <TicketCounts counts={totalTickets}
+                <TicketCounts counts={userData?.totalTickets ||userData?.totalTickets===0&&"0" || <span className='text-xs font-black '>loading ...</span> }
                     text={"Total Number Of Tickets"}
                     icon={<AiOutlineSave />} />
-                <TicketCounts counts={activeTicketCount}
+                <TicketCounts counts={userData?.totalActivePrice ||userData?.totalActivePrice===0&&"0" || <span className='text-xs font-black '>loading ...</span>}
                     text={"Total Number Of active Tickets"}
 
                     icon={<VscFolderActive />} />
                 <TicketCounts
                     text={"Total Number Of Inactive Tickets"}
-                    counts={totalTickets - activeTicketCount} icon={<BiCategory />} />
+                    counts={userData?.totalInActivePrice ||totalInActivePrice===0&&"0" || <span className='text-xs font-black '>loading ...</span> } icon={<BiCategory />} />
             </Scrollable>
             <Scrollable className={"!px-5"}>
                 <AmountCount
                     className="!bg-blue-400"
                     text="Total coset of all tickets"
                     icon={<MdOutlinePriceChange />}
-                    amount={totalTickets * 6500} />
+                    amount={userData?.totalPrice} />
                 <AmountCount
                     className="!bg-green-400"
 
                     text="Total coset of all active tickets"
 
-                    icon={<BiCategory />} amount={activeTicketCount * 6500} />
+                    icon={<BiCategory />} 
+                    amount={userData?.totalActivePrice} />
                 <AmountCount
                     className="!bg-red-400 !text-black"
 
                     text="Total coset of all inactive tickets"
 
-                    icon={<BiCategory />} amount={(totalTickets - activeTicketCount) * 6500} />
+                    icon={<BiCategory />} 
+                    amount={userData?.totalInActivePrice} />
             </Scrollable>
             <div className="my-10" />
 
@@ -303,7 +311,7 @@ const Appointment = () => {
             <div className='mt-10 ' />
             <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
                 {Array.from({
-                    length: numberOfPages
+                    length: userData?.numberOfPages
                 }, (text, index) => {
                     return <PanigationButton
                         text={index + 1}

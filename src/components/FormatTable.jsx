@@ -11,7 +11,7 @@ const FormatTable = ({ tickets,currentPage,admin,skip=10}) => {
 
         >
             {
-                tickets.map((ticket, index) => (
+                tickets?.map((ticket, index) => (
                     <tr key={index}
                     className={` ${index % 2 == 0
                         ? "bg-slate-100" : "bg-white"} hover:bg-slate-300

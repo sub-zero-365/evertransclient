@@ -66,7 +66,8 @@ const SideBar = () => {
 
 
   ]
-
+  const activeStyles = "!bg-violet-500 !dark:bg-violet-800 !text-white !text-semibold";
+  const defaultClasses = "flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md dark:shadow-lg dark:shadow-slate-800 ring-offset-slate-200 mb-2 rounded-md"
   return (
 
     <div className={`w-[15rem] overflow-auto 
@@ -93,22 +94,15 @@ const SideBar = () => {
           navLinks.map(({ name, icon, to }, index) => (
             <motion.div>
               <NavLink to={to}
+                end
                 key={index}
-                onClick={() => {
-                  if (window.innerWidth <= 600) {
-
-                    toggleSideBar()
-
-                  }
-                  setActive(index)
-                }
+                onClick={toggleSideBar}
 
 
+                className={({ isActive }) => (isActive ? "!bg-violet-500 !dark:bg-violet-800 !text-white !text-semibold flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md dark:shadow-lg dark:shadow-slate-800 ring-offset-slate-200 mb-2 rounded-md" : defaultClasses)}
 
-                }
-                className={`flex text-medium 
-${active === index ? "bg-violet-500 dark:bg-violet-800 text-white text-semibold" : "bg-white dark:bg-slate-700"}  hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors 
-duration-300 py-2 px-3 mt-4 shadow-md dark:shadow-lg dark:shadow-slate-800 ring-offset-slate-200 mb-2 rounded-md`}>
+              >
+
                 {icon}
                 <h3 className="text-xs md:text-sm ml-5 group-[.active]:hidden">{name}</h3>
               </NavLink></motion.div>))
