@@ -6,16 +6,13 @@ import { FcAssistant } from "react-icons/fc"
 import { GrServicePlay } from "react-icons/gr"
 import { NavLink, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { useState, useEffect } from 'react'
 import { actions } from '../actions/toggleSide'
 import { motion } from 'framer-motion'
 const SideBar = () => {
-  useEffect(() => {
-  }, [])
+
   const dispatch = useDispatch()
   const toggleSideBar = () => dispatch(actions.toggleSideBar())
   const isSideOpen = useSelector((state) => state.sidebar.isOpen)
-  const [active, setActive] = useState(0);
   const navigate = useNavigate()
   const navLinks = [
 

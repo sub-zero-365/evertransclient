@@ -31,8 +31,8 @@ import {
   AmountCount, BarChart, ActiveStatusButton, FormatTable,
   DeactiveStatusButton
   , PanigationButton, PieChart, Scrollable, TicketCounts, Loadingbtn, AnimatePercent, BoxModel
-  , Form,
-  PlaceHolderLoader
+  , Form, NextButton,
+  PlaceHolderLoader, PrevButton
 } from '../components';
 const Details = () => {
 
@@ -41,8 +41,6 @@ const Details = () => {
   const constraintsRef = useRef(null)
   const [activeIndex, setActiveIndex] = useState(0);
   const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
-  const [totalTickets, setTotalTickets] = useState()
-  const [activeTicketCount, setActiveTicketCount] = useState(0);
   const id = useParams().id;
   const style = {
     control: base => ({
@@ -274,17 +272,23 @@ const Details = () => {
           <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
             <div>
               <Swiper
-                className='my-6 px-4 max-w-sm lg:max-w-lg '
+                className='my-6 px-4 max-w-sm lg:max-w-lg relative'
                 slidesPerView={1}
                 onSlideChange={(e) => setctiveSlide(e.activeIndex)}
                 modules={[Autoplay, Pagination, Navigation]}
-                navigation={true}
+                navigation={{
+                  prevEl: ".arrow__left",
+                  nextEl: ".arrow__right",
+                }}
                 pagination={{ clickable: true }}
                 autoplay={{
                   delay: 25000,
                   disableOnInteraction: false
                 }}
               >
+                <PrevButton className="!left-1.5" />
+                <NextButton className="!right-1.5" />
+
                 <SwiperSlide >
                   <motion.div
                     className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
@@ -306,18 +310,18 @@ const Details = () => {
                         font-medium">User Book Vs System Book </h2>
                       <span className="mb-5 w-14 ml-2 h-1 bg-blue-700 block rounded-lg"></span>
                       <CircularProgressbar
-                        background
+                        // background
                         strokeWidth={8}
                         initialAnimation
                         circleRatio={0.6}
                         className='!w-[10rem] md:!w-[10rem]
-                        !max-w-[calc(100%-3rem)] mx-auto'
+                        !max-w-[calc(100%-3rem)] mx-auto !font-black !tracking-tight '
                         styles={{
                           path: {
-                            stroke: `rgba(62,154,199,60%)`
+                            stroke: `transparent`
                           },
                           trail: {
-                            stroke: "green"
+                            stroke: "blue"
                           },
                         }}
                         percentage={66.5 + "%"}
@@ -473,23 +477,73 @@ const Details = () => {
                                      tracking-tight 
                                     font-medium">Booking OverView </h2>
               <span className="mb-5 w-14 ml-2 h-1 bg-blue-700 block rounded-lg"></span>
-              <CircularProgressbar
-                background
-                strokeWidth={10}
-                initialAnimation
-                circleRatio={userData?.percentageActive ? (userData?.percentageActive / 100) : 0}
-                className='!w-[10rem] md:!w-[10rem]
-                                    !max-w-[calc(100%-3rem)] mx-auto '
-                styles={{
-                  path: {
-                    stroke: `rgba(62,154,199,60%)`
-                  },
-                  trail: {
-                    stroke: "green"
-                  },
+              <Swiper
+
+                className='my-6 px-4 max-w-sm lg:max-w-lg relative'
+                slidesPerView={1}
+                // onSlideChange={(e) => setctiveSlide(e.activeIndex)}
+                modules={[Autoplay, Pagination, Navigation]}
+                navigation={{
+
+                  prevEl: ".arrow__left",
+                  nextEl: ".arrow__right",
+
+
                 }}
-                text={Math.floor((userData?.percentageActive || 0)) + "%"}
-              />
+                pagination={{ clickable: true }}
+                autoplay={{
+                  delay: 2500,
+                  disableOnInteraction: false
+                }}
+              >
+                <NextButton className="!right-1.5 !h-8"/>
+                <PrevButton className="!h-8 !left-1.5" />
+                <SwiperSlide>
+                  <h1 className='font-semibold mb-2 text-slate-500'>Active  percentage </h1>
+
+                  <CircularProgressbar
+                    strokeWidth={10}
+                    initialAnimation
+                    circleRatio={userData?.percentageActive ? (userData?.percentageActive / 100) : 0}
+                    className='!w-[10rem] md:!w-[10rem]
+                                    !max-w-[calc(100%-3rem)] mx-auto !font-black '
+                    styles={{
+                      path: {
+                        stroke: `transparent`
+
+                      },
+                      trail: {
+                        stroke: "blue"
+                      },
+                    }}
+                    text={Math.floor((userData?.percentageActive || 0)) + "%"}
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <h1 className='font-semibold mb-2 text-slate-500'>Inactive ratio percentage </h1>
+                  <CircularProgressbar
+                    // background
+                    strokeWidth={10}
+                    initialAnimation
+                    circleRatio={userData?.percentageInActive ? (userData?.percentageInActive / 100) : 0}
+                    className='!w-[10rem] md:!w-[10rem]
+                                    !max-w-[calc(100%-3rem)] mx-auto !font-black  '
+                    styles={{
+                      path: {
+                        stroke: `transparent`
+                        // stroke: `${userData?.percentageInActive?"red":"transparent"}`
+
+                      },
+                      trail: {
+                        stroke: "red"
+                      },
+                    }}
+                    text={Math.floor((userData?.percentageInActive || 0)) + "%"}
+                  />
+                </SwiperSlide>
+
+              </Swiper>
+
 
 
               <BoxModel activeCount={userData?.totalActiveTickets}
@@ -583,6 +637,27 @@ const Details = () => {
               onClick={() => {
                 const temp = params;
                 if (temp.search) delete temp.search;
+                setParams({ ...temp })
+
+              }}
+
+            >Clear Filter</span>
+            Text Filter is On  </motion.div>
+        }
+        {
+          params?.sort && params.sort !== "newest" && <motion.div
+
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -40, opacity: 0 }}
+
+            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
+        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
+
+            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
+              onClick={() => {
+                const temp = params;
+                if (temp.sort) delete temp.sort;
                 setParams({ ...temp })
 
               }}
