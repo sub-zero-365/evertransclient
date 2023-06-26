@@ -256,8 +256,8 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
         <QRCode
           size={400}
           style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-          // value={`https://ntaribotaken.vercel.app/dashboard/${id}?admin=true`}
-          value={`http://192.168.43.68:3000/dashboard/${id}?admin=true&sound=true`}
+          value={`https://ntaribotaken.vercel.app/dashboard/${id}?admin=true`}
+          // value={`http://192.168.43.68:3000/dashboard/${id}?admin=true&sound=true`}
           viewBox={`0 0 256 256`}
         />
       </div>
