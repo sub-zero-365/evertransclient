@@ -1,17 +1,18 @@
-import { CircularProgressbar } from 'react-circular-progressbar';
 
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker from 'react-datepicker';
-import "react-circular-progressbar/dist/styles.css";
 import { GrStackOverflow } from 'react-icons/gr';
 import { VscFolderActive } from 'react-icons/vsc'
 import Select from 'react-select';
+import SelectTrip from 'react-select';
 import SelectSortDate from 'react-select';
 import { useState, useEffect, useRef } from 'react';
-import { AiOutlineMenu, AiOutlineSave } from 'react-icons/ai';
+import { AiOutlineSave } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io"
-import { useParams, NavLink } from 'react-router-dom';
+import { useParams, NavLink, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AiOutlineSetting } from 'react-icons/ai';
+
 import axios from 'axios'
 import { BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -28,20 +29,22 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import {
-  AmountCount, BarChart, ActiveStatusButton, FormatTable,
+  AmountCount, BarChart, ActiveStatusButton, FormatTable, Heading,
   DeactiveStatusButton
   , PanigationButton, PieChart, Scrollable, TicketCounts, Loadingbtn, AnimatePercent, BoxModel
   , Form, NextButton,
-  PlaceHolderLoader, PrevButton
+  PlaceHolderLoader, PrevButton, PercentageBar
 } from '../components';
+import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
 const Details = () => {
-
+  const [querySearch, setQuerySearch] = useSearchParams()
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
   const constraintsRef = useRef(null)
   const [activeIndex, setActiveIndex] = useState(0);
   const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
   const id = useParams().id;
+
   const style = {
     control: base => ({
       ...base,
@@ -186,39 +189,34 @@ const Details = () => {
     setToggle(false)
 
   }
-  const sortedOptions = [
 
-    {
-      label: "CreatedAt-",
-      value: "newest"
+  const viewAll = querySearch.get("viewAll");
+  const setViewAll = () => {
+    const temp = querySearch;
+    if (temp.get("viewAll") && temp.get("viewAll") === "all") {
+      setQuerySearch({ "viewAll": "one" })
 
-    },
-    {
-      label: "CreatedAt+",
-      value: "oldest"
+    } else {
+      setQuerySearch({ "viewAll": "all" })
 
-    },
-    {
-      label: "traveldate-",
-      value: "new_traveldate"
+    }
 
-    },
-    {
-      label: "traveldate+",
-      value: "old_traveldate"
+  }
+  const handleChangeSearchParams = (key, value) => {
+    setQuerySearch(prevState => {
+      if (value == null) {
+        prevState.delete(key)
+      } else {
+        prevState.set(key, value)
+      }
+      return prevState
+    })
 
-    },
-  ]
-  const sortOptions = [
-    { value: "all", label: "All tickets" },
-    { value: "active", label: <span className="flex items-center justify-between">Active tickets <ActiveStatusButton className="" /> </span> },
-    { value: "inactive", label: <span className="flex items-center justify-between">InActive tickets <DeactiveStatusButton className="" /> </span> },
-
-  ]
-  const [viewAll, setViewAll] = useState(false)
+  }
   const handleChange = (evt) => {
     const temp = params;
     if (params.ticketStatus == evt.value) return
+
     temp.ticketStatus = evt.value
     temp.page = 1
     setParams({ ...temp })
@@ -239,6 +237,37 @@ const Details = () => {
     <motion.div
       className='pt-4 px-2 max-w-full overflow-x-auto select-none
     max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark' ref={constraintsRef}>
+      <motion.div
+        onClick={() => setToggle(true)}
+        // initial={{ x: "-50%" }}
+        animate={{
+          scale: [0.7, 1.2, 0.8],
+        }}
+        transition={{
+          duration: 2,
+          ease: "easeInOut",
+          times: [0, 0.2, 0.5, 0.8, 1],
+          repeat: Infinity,
+          repeatDelay: 1
+        }
+
+        }
+        className="bottom-1/2
+                        -translate-y-1/2 fixed 
+                        
+                        flex-none 
+                        shadow-2xl button-add  top-auto bg-blue-400 
+w-[2.5rem]
+h-[2.5rem] 
+-rounded-full 
+overflow-hidden 
+right-0
+z-10  "
+      >
+        <div className="flex h-full w-full items-center -scale-animation justify-center ">
+          <AiOutlineSetting size={20} color="#fff" className="" />
+        </div>
+      </motion.div>
       <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
@@ -257,16 +286,6 @@ const Details = () => {
 
         </ol>
       </nav>
-      <motion.div
-
-        drag
-        dragConstraints={constraintsRef}
-        className='hover:bg-slate-300 fixed right-0 md:right-[8rem]
-      top-12 bg-white dark:bg-slate-400
-      z-[10]
-      lg:hidden w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={() => setToggle(true)}>
-        <AiOutlineMenu size={25} />
-      </motion.div>
       <div className="lg:flex items-start justify-start gap-4">
         <div className="flex-1   mb-6">
           <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
@@ -309,24 +328,12 @@ const Details = () => {
                          tracking-tight text-lg
                         font-medium">User Book Vs System Book </h2>
                       <span className="mb-5 w-14 ml-2 h-1 bg-blue-700 block rounded-lg"></span>
-                      <CircularProgressbar
-                        // background
-                        strokeWidth={8}
-                        initialAnimation
-                        circleRatio={0.6}
-                        className='!w-[10rem] md:!w-[10rem]
-                        !max-w-[calc(100%-3rem)] mx-auto !font-black !tracking-tight '
-                        styles={{
-                          path: {
-                            stroke: `transparent`
-                          },
-                          trail: {
-                            stroke: "blue"
-                          },
-                        }}
-                        percentage={66.5 + "%"}
-                        text="66%"
+
+                      <PercentageBar className="!min-w-[8rem]"
+                        percent={39}
+                        text="percentage print by user"
                       />
+
                       <BoxModel activeCount={7476}
                         className="!bg-white"
                         inActiveCount={62549}
@@ -350,8 +357,8 @@ const Details = () => {
 
                 :
                 <>
-                  <div className='underline  mb-2 underline-offset-8 w-[400px] mx-auto text-center max-w-3xl md:hidden- font-medium text-slate-700 capitalize' onClick={() => setViewAll(!viewAll)} >{viewAll ? "view less" : "view all"}</div>
-                  <Scrollable className={`!px-5 ${viewAll && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
+                  <div className='underline  mb-2 underline-offset-8 w-[400px] mx-auto text-center max-w-3xl md:hidden- font-medium text-slate-700 capitalize' onClick={() => setViewAll()} >{viewAll == "all" ? "view less" : "view all"}</div>
+                  <Scrollable className={`!px-5 ${viewAll === "one" && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
                     <TicketCounts counts={userData?.totalTickets}
                       text={"Total Number Of Tickets"}
                       icon={<AiOutlineSave />} />
@@ -362,7 +369,7 @@ const Details = () => {
                       text={"Total Number Of Inactive Tickets"}
                       counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
                   </Scrollable>
-                  <Scrollable className={`!px-5 ${viewAll && "!grid md:!grid-cols-2"}`}>
+                  <Scrollable className={`!px-5 ${viewAll === "one" && "!grid md:!grid-cols-2"}`}>
                     <AmountCount
                       className="!bg-blue-400"
                       text="Total coset of all tickets"
@@ -395,7 +402,7 @@ const Details = () => {
         ${toggle ? "right-0" : "!-right-full"}
         duration-500 transition-[right] shadow lg:shadow-none lg:max-w-sm lg:w-[20rem] 
         text-center bg-white rounded-sm right-0 top-12 h-fit
-           w-[calc(100vw-3.5rem)] max-w-sm  z-[6] fixed   lg:static px-4 `}>
+           w-[calc(100vw-3.5rem)] max-w-sm  z-20 fixed   lg:static px-4 `}>
 
           <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 
@@ -433,40 +440,43 @@ const Details = () => {
                   inline
                   maxDate={new Date()}
                 />
-                <span
+                <button
+                  data-te-ripple-init
+                  data-te-ripple-color="light"
+                  className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
+  transition duration-150 ease-in-out hover:bg-blue-600
+  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+  focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+  focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
                   onClick={handleFilterSearch}
 
-                  className='max-w-[min(calc(100%-2.5rem),400px)]
-            flex items-center
-            justify-center
-             pb-2 px-8
-            text-medium
-            pt-1.5 font-medium rounded-sm
-            text-gray-200
-            shadow-2xl
-             mx-auto bg-blue-600 mt-4  rounded-4'
+                >
+                  {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                </button>
 
-                >  {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}</span>
                 {
-                  params.daterange && <span
+                  params.daterange && <button
+                    data-te-ripple-init
+                    data-te-ripple-color="light"
+                    className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
+leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
+transition duration-150 ease-in-out hover:bg-red-600
+hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+
                     onClick={() => {
                       const temp = params;
                       if (temp.daterange) delete temp.daterange;
                       setParams({ ...temp })
 
                     }}
-                    className='max-w-[min(calc(100%-2.5rem),400px)]
-          flex items-center
-          justify-center
-           pb-2 px-8
-          text-medium
-          pt-1.5 font-medium rounded-sm
-          text-gray-200
-          shadow-2xl
-           mx-auto bg-orange-600 mt-4  rounded-4'
 
-                  > Clear filter</span>
+                  >
+                    Clear Filter Query
+                  </button>
                 }
               </motion.div>
             </AnimatePresence>
@@ -496,49 +506,21 @@ const Details = () => {
                   disableOnInteraction: false
                 }}
               >
-                <NextButton className="!right-1.5 !h-8"/>
+                <NextButton className="!right-1.5 !h-8" />
                 <PrevButton className="!h-8 !left-1.5" />
                 <SwiperSlide>
-                  <h1 className='font-semibold mb-2 text-slate-500'>Active  percentage </h1>
+                  <Heading text="Active ratio percentage" ></Heading>
+                  <PercentageBar
+                    percent={userData?.percentageActive}
 
-                  <CircularProgressbar
-                    strokeWidth={10}
-                    initialAnimation
-                    circleRatio={userData?.percentageActive ? (userData?.percentageActive / 100) : 0}
-                    className='!w-[10rem] md:!w-[10rem]
-                                    !max-w-[calc(100%-3rem)] mx-auto !font-black '
-                    styles={{
-                      path: {
-                        stroke: `transparent`
-
-                      },
-                      trail: {
-                        stroke: "blue"
-                      },
-                    }}
-                    text={Math.floor((userData?.percentageActive || 0)) + "%"}
                   />
                 </SwiperSlide>
                 <SwiperSlide>
-                  <h1 className='font-semibold mb-2 text-slate-500'>Inactive ratio percentage </h1>
-                  <CircularProgressbar
-                    // background
-                    strokeWidth={10}
-                    initialAnimation
-                    circleRatio={userData?.percentageInActive ? (userData?.percentageInActive / 100) : 0}
-                    className='!w-[10rem] md:!w-[10rem]
-                                    !max-w-[calc(100%-3rem)] mx-auto !font-black  '
-                    styles={{
-                      path: {
-                        stroke: `transparent`
-                        // stroke: `${userData?.percentageInActive?"red":"transparent"}`
+                  <Heading text="Inactive ratio percentage" ></Heading>
+                  <PercentageBar
+                    stroke="red"
+                    percent={userData?.percentageInActive}
 
-                      },
-                      trail: {
-                        stroke: "red"
-                      },
-                    }}
-                    text={Math.floor((userData?.percentageInActive || 0)) + "%"}
                   />
                 </SwiperSlide>
 
@@ -556,27 +538,26 @@ const Details = () => {
         </div>
       </div>
 
-      <div className="flex justify-between
+      <div className="flex justify-between gap-4 ppl-4
       flex-wrap pr-5 items-start mb-10">
         <h1 className="text-2xl mt-4 
         text-gray-700 pl-6
         
         flex tracking-tight">All tickets <span className="text-xs ring-2 ring-gray-700  grid place-items-center
         ml-1 w-5 h-5 bg-gray-500 text-white
-        mb-4 rounded-full border">{userData?.totalTickets || 0} </span> <GrStackOverflow className="inline-block- pl-2 text-4xl hidden md:inline-block" /></h1>
+        mb-4 rounded-full border">{userData?.totalTickets || 0} </span> </h1>
 
         <div className='mt-0'>
           <div className="text-[0.8rem] text-slate-300 uppercase text-center font-semibold mb-1 font-montserrat"> ticket status</div>
           <Select
             styles={style}
-            options={sortOptions}
+            options={sortTicketStatusOptions}
             defaultValue={{
               label: "All tickets",
               value: "all"
             }}
             ref={selectRef}
             isSearchable={false}
-            // key={params.ticketStatus}
             onChange={handleChange}
             className='!border-none !h-8 mt-0' />
         </div>
@@ -584,9 +565,56 @@ const Details = () => {
         <div className='mt-0'>
           <div className="text-[0.8rem]
           text-slate-300 uppercase
+          text-center font-semibold mb-1 font-montserrat"> trip type </div>
+          <SelectTrip
+            onChange={
+              evt => {
+                if (params.evt == evt.value) return
+                
+                setParams(pre => {
+                  return {
+                    ...pre,
+                    triptype: evt.value,
+                    page:1
+                  }
+                })
+
+
+              }
+            }
+            options={
+
+
+              [
+                {
+                  label: "all trip",
+                  value: "all"
+                }, {
+                  label: "singletrip",
+                  value: "singletrip"
+                }, {
+                  label: "roundtrip",
+                  value: "roundtrip"
+                }
+
+
+              ]}
+            styles={style}
+            defaultValue={{
+              label: "all trip",
+              value: "all"
+            }}
+
+            isSearchable={false}
+            // onChange={handleSortTime}
+            className='!border-none !h-8 mt-0' />
+        </div>
+        <div className='mt-0'>
+          <div className="text-[0.8rem]
+          text-slate-300 uppercase
           text-center font-semibold mb-1 font-montserrat"> sorted date </div>
           <SelectSortDate
-            options={sortedOptions}
+            options={sortedDateOptions}
             styles={style}
             defaultValue={{
               label: "createdAt -",
@@ -609,7 +637,8 @@ const Details = () => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -40, opacity: 0 }}
 
-            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
+            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-xs
+            tracking-tighter
         font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
 
             <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
@@ -621,7 +650,8 @@ const Details = () => {
               }}
 
             >Clear Filter</span>
-            Date filter is on  </motion.div>
+            Date filter is on and query is from <span> {new Date(startDate).toLocaleDateString()}</span>
+            <span> {endDate !== null ? "to " + new Date(endDate).toLocaleDateString() : null}</span> </motion.div>
         }
         {
           params?.search && <motion.div

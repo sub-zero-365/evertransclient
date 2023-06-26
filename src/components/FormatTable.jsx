@@ -1,6 +1,27 @@
 import { motion } from "framer-motion";
-import { Button,DeactiveStatusButton,ActiveStatusButton } from './'
-const FormatTable = ({ tickets,currentPage,admin,skip=10}) => {
+import { Button, DeactiveStatusButton, ActiveStatusButton } from './'
+const FormatTable = ({ tickets, currentPage, admin, skip = 10 }) => {
+    // const getActiveStatus = (obj, value = "roundtrip") => {
+    //     return obj?.type === value && obj?.doubletripdetails?.some(x => x.active == true)
+    // }
+    const FormatTd = ({ ticket }) => {
+        if (ticket?.active) {
+            return (
+                <td className="px-3 py-4  grid place-items-center">
+                    <ActiveStatusButton />
+                </td>
+            )
+        }
+        return (
+            <td className="px-3 py-4  grid place-items-center">
+            {
+            ticket.active?<ActiveStatusButton/>:<DeactiveStatusButton/>
+            }
+        </td>
+        )
+     
+
+    }
     return (
         <motion.tbody
             className="pt-4 pb-12 text-xs md:text-sm"
@@ -13,8 +34,8 @@ const FormatTable = ({ tickets,currentPage,admin,skip=10}) => {
             {
                 tickets?.map((ticket, index) => (
                     <tr key={index}
-                    className={` ${index % 2 == 0
-                        ? "bg-slate-100" : "bg-white"} hover:bg-slate-300
+                        className={` ${index % 2 == 0
+                            ? "bg-slate-100" : "bg-white"} hover:bg-slate-300
                         dark:hover:bg-slate-500
                 border-slate-100  text-xs
                 border-b-2
@@ -22,7 +43,7 @@ const FormatTable = ({ tickets,currentPage,admin,skip=10}) => {
                 dark:border-white`}
                     >
                         <td className="px-2 py-4  flex items-center justify-center">
-                            {(index + 1) +skip*(currentPage-1)}
+                            {(index + 1) + skip * (currentPage - 1)}
                         </td>
                         <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {ticket?.fullname || "n/a"}
@@ -41,6 +62,9 @@ const FormatTable = ({ tickets,currentPage,admin,skip=10}) => {
                             <span className="font-medium ">{ticket?.to || "n/a"}</span>
                         </td>
                         <td className="px-3 py-2">
+                            <span className="font-medium ">{ticket?.type || "singletrip"}</span>
+                        </td>
+                        <td className="px-3 py-2">
                             {ticket?.traveldate ?
                                 (new Date(ticket.traveldate).toLocaleDateString()) : "n/a"}
 
@@ -54,14 +78,8 @@ const FormatTable = ({ tickets,currentPage,admin,skip=10}) => {
                             {ticket?.traveltime
                                 || "n/a"}
                         </td>
-                        <td className="px-3 py-4  grid place-items-center">
-                            {ticket?.active ?
-                            <ActiveStatusButton/>
-                                :
-                                <DeactiveStatusButton/>
-                            }
-
-                        </td>
+                        
+                        <FormatTd ticket={ticket}/>
 
                         <td className="px-3 py-4">
                             {ticket?.age || "n/a"}
@@ -74,7 +92,7 @@ const FormatTable = ({ tickets,currentPage,admin,skip=10}) => {
                         <td className="py-0 text-xs"
                         >
                             <Button admin
-                                href={`/${admin?"dashboard":"user"}/${ticket?._id || index}${admin?"?admin=true":""}`}
+                                href={`/${admin ? "dashboard" : "user"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
                             />
                         </td>
                     </tr>

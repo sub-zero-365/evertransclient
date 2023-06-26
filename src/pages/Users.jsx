@@ -2,25 +2,22 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { BarChart, LineChart, Number } from '../components';
+import { BarChart, LineChart, Number, AmountCount, Scrollable } from '../components';
+import { BiCategory } from 'react-icons/bi';
 
 import { setUsers } from '../actions/adminData';
-import { Loader, Button } from '../components';
-import Select from 'react-select';
+import { Loader, Button,Heading } from '../components';
+import {AiOutlinePlus} from 'react-icons/ai'
 import { motion } from 'framer-motion'
 import { UserData } from '../Assets/userdata';
 const Appointment = () => {
-    // const token = localStorage.getItem("admin_token");
-
-
-
 
     const token = localStorage.getItem("admin_token");
 
     const users_ = useSelector(state => state.setAdminData.users);
     const isLoading = useSelector(state => state.setAdminData.loading.users)
     const navigate = useNavigate()
-    
+
     const dispatch = useDispatch();
     const setUsers_ = (payload) => {
         return dispatch(setUsers(payload))
@@ -105,19 +102,66 @@ const Appointment = () => {
     })
     return (
         <motion.div
-            className="max-w-full overflow-auto max-h-[calc(100vh-3rem)] " >
+            className="max-w-full overflow-auto max-h-[calc(100vh-3rem)] pt-10 " >
             {isLoading && (<Loader toggle dark />)}
-            <h1 className='text-2xl text-center'>Users page</h1>
+            {/* <h1 className='text-2xl text-center'>Users page</h1> */}
+            
+            <Heading text="Employees OverView"/>
             <div className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
             >
+                <div className="flex items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow bg-white mx-4">
+                    <div className="flex-1">
+                        <Heading text="Add A New Employee" className="!mb-2 !font-black mt-0"/>
+                        <p className="mb-3 text-sm  px-6">Employees added help to book ticket and give more data</p>
+                    </div>
+                    <motion.div  onClick={() => navigate("/dashboard/register")}
+                        initial={{ x: "-50%" }}
+                        animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
+                        transition={{
+                            duration: 2,
+                            ease: "easeInOut",
+                            times: [0, 0.2, 0.5, 0.8, 1],
+                            repeat: Infinity,
+                            repeatDelay: 1
+                        }
+
+                        }
+                        className="bottom-6 flex-none ml-2 shadow-2xl button-add  top-auto bg-blue-400 
+w-[2rem] h-[2rem] rounded-full left-1/2 overflow-hidden 
+-translate-x-1/2
+z-10  "
+                    >
+                        <div className="flex h-full w-full items-center scale-animation justify-center ">
+                            <AiOutlinePlus size={30} color="#fff" className="" />
+                        </div>
+                    </motion.div>
+
+                </div>
+
                 <LineChart chartData={userData} />
             </div>
-
+            <Scrollable className="mb-10 mt-5">
+                <AmountCount
+                    className="!bg-blue-400"
+                    text="All employees"
+                    icon={<BiCategory />}
+                    amount={67} />
+                <AmountCount
+                    className="!bg-blue-400"
+                    text="All employees"
+                    icon={<BiCategory />}
+                    amount={67} />
+                <AmountCount
+                    className="!bg-blue-400"
+                    text="All employees"
+                    icon={<BiCategory />}
+                    amount={67} />
+            </Scrollable>
             <form className="px-4 md:px-6 my-5 " onSubmit={handleSubmit}>
                 <div className="flex relative min-h-[40px]">
                     <div className="relative w-full">
-                        <input type="search" value={text} 
-                        onChange={e => setText(e.target.value)} id="search-dropdown" className="block outline-none focus:outline-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg
+                        <input type="search" value={text}
+                            onChange={e => setText(e.target.value)} id="search-dropdown" className="block outline-none focus:outline-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg
                         border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Search Email address,names etc " required />
                         <button type="submit" className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg
                         border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">

@@ -48,6 +48,13 @@ const SideBar = () => {
     },
     {
 
+      name: "Buses",
+      icon: <GrServicePlay size={20} />
+      , to: "/dashboard/buses/3"
+
+    },
+    {
+
       name: "create new assistants",
       icon: <FcAssistant size={20} />
       , to: "/dashboard/assistant"

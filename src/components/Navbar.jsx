@@ -7,8 +7,9 @@ import { useravatar } from '../Assets/images';
 import { useSelector, useDispatch } from 'react-redux'
 import { motion, useScroll } from "framer-motion";
 import { storeTicket, setLoading } from "../actions/userticket"
-
+import Alert from '../components/Alert'
 const Navbar = () => {
+    const [toggle, setToggle] = useState(false)
     const isUserName = useSelector(state => state.username.username);
     const dispatch = useDispatch()
 
@@ -21,9 +22,10 @@ const Navbar = () => {
     }
     const handleLogout = () => {
         setLoading_(true)
+        setToggle(false)
         userTicket([])
         localStorage.removeItem("token")
-        navigate("/login")
+        navigate("/login");
     }
     const isLogin = localStorage.getItem("token");
     const { scrollYProgress } = useScroll()
@@ -36,7 +38,6 @@ const Navbar = () => {
     const gotoRegisterPage = () => {
         navigate("/register")
         setIsOpen(false)
-
     }
     const gotoUserPage = () => navigate("/user")
     const [isOpen, setIsOpen] = useState(false)
@@ -74,7 +75,16 @@ const Navbar = () => {
 
     return (
         <div className="sticky top-0 left-0 shadow-lg dark:shadow-black select-none bg-color_light  dark:bg-color_dark dark:text-white z-20">
+            <Alert toggle={toggle} setToggle={setToggle}
 
+                duration="30000"
+
+                confirmFunc={handleLogout}
+                message={"DO YOU WANT TO LOGOUT?"}
+                className={`border !border-red-400
+${toggle && "!top-1/2 -translate-y-1/2"}
+`}
+            />
             <div className="container mx-auto  h-[60px] items-center  px-4 flex justify-between relative  ">
                 <motion.div
 
@@ -106,6 +116,10 @@ const Navbar = () => {
                         to="/contact-us"
                         className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                     >Contact Us</NavLink></li>
+                    <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                        to="/dashboard"
+                        className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                    >Dashboard</NavLink></li>
                 </ul>
                 <motion.ul
                     onClick={() => isOpen && setIsOpen(false)}
@@ -151,6 +165,16 @@ const Navbar = () => {
                             to="/contact-us"
                             className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                         >Contact Us</NavLink></motion.li>
+                    <motion.li
+
+                        initial={false}
+                        animate={{ x: isOpen ? 0 : -1000 }}
+                        transition={{ delay: 0.2 }}
+
+                        className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                            to="/dashboard"
+                            className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                        >Dashboard</NavLink></motion.li>
                     {
                         isLogin ? (
                             <>
@@ -175,13 +199,7 @@ focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18p
 focus:outline-none focus:ring-0 active:bg-primary-700
 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
 dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                                        onClick={() => {
-                                            if (window.confirm("do you want to logout out")) {
-
-                                                handleLogout()
-
-                                            }
-                                        }}
+                                        onClick={() => setToggle(true)}
                                     >
                                         LogOut
                                     </button>
@@ -268,7 +286,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                         onClick={handleLogout}
                                     >
                                         logout
-                                    
+
                                     </button>
 
 

@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { useEffect } from 'react'
 import axios from "axios"
-import { UserLayout, DashboardLayout } from "./components";
+import { UserLayout, DashboardLayout,ProtectedRoute } from "./components";
 import { Home, Auth, SingleTicket } from "./pages";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
@@ -58,7 +58,6 @@ function App() {
 
     if (token) {
       async function getData() {
-
         const url = process.env.REACT_APP_LOCAL_URL + "/auth/userinfo";
         try {
           const res = await axios.get(url, {
@@ -66,15 +65,11 @@ function App() {
               'Authorization': "makingmoney " + token
             }
           })
-          // console.log(res)
           const { data: { fullname, } } = res
-          // console.log(fullname, token);
           setuserName(res?.data?.user?.fullname)
-
         } catch (err) {
           console.log(err)
         }
-
       }
       getData()
 
@@ -94,21 +89,26 @@ function App() {
               <Route index element={<Home />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
+              <Route path="/" element={<ProtectedRoute/>}>
+              
               <Route path="booking" element={<Booking />} />
               <Route path="bussits/:id" element={<BusSits />} />
-              <Route path="contact-us" element={<ContactUs />} />
-              <Route path="about-us" element={<Aboutus />} />
               <Route path="information" element={<CheckOutInfo />} />
-              <Route path="auth" element={<Auth />} />
               <Route path="user" element={<UserBoard />} />
               <Route path="user/:id" element={<SingleTicket />} />
+              
+              </Route>
+              <Route path="contact-us" element={<ContactUs />} />
+              <Route path="about-us" element={<Aboutus />} />
+              <Route path="auth" element={<Auth />} />
             </Route>
-            {/* dashboardlayout here  */}
             <Route path="/dashboard"
 
 
               element={<DashboardLayout />} >
               <Route index element={<DashboardHome />} />
+              
+              
               <Route path="tickets" element={<Appointment />} />
               <Route path=":id" element={<SingleTicket />} />
               <Route path="cities" element={<Cities />} />

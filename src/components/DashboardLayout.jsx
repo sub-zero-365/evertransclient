@@ -1,15 +1,22 @@
-import { Outlet, useNavigate } from "react-router-dom"
+import { Outlet, useNavigate, Navigate } from "react-router-dom"
 import { SideBar } from './'
 import { useDispatch, useSelector } from "react-redux"
 import { actions } from '../actions/toggleSide'
 import { AiOutlineMenu } from 'react-icons/ai'
 import Alert from "./Alert"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 const DashBoardLayout = () => {
     const navigate = useNavigate()
+
+    const token = localStorage.getItem("admin_token");
+    
+    
     const [toggle, setToggle] = useState(false);
     const dispatch = useDispatch();
     const toggleSideBar = () => dispatch(actions.toggleSideBar())
+    if (!token) {
+        return <Navigate to="/auth?message=you must logging to continue as admin" replace/>
+    }
     return (
         <><Alert toggle={toggle}
             setToggle={setToggle} message={"Do you want to log out ?"}
@@ -60,7 +67,7 @@ const DashBoardLayout = () => {
                     </button>
                 </div>
             </div>
-            <div className="flex container-- mx-auto">
+            <div className="flex">
                 <SideBar />
                 <Outlet />
             </div>

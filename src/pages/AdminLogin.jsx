@@ -1,45 +1,51 @@
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Loadingbtn } from "../components";
+import { Loadingbtn, Alert } from "../components";
 import { motion } from "framer-motion"
-
-// import {}
 const AdminLogin = () => {
+
   const [isLoading, setIsLoading] = useState(false);
   const url = process.env.REACT_APP_LOCAL_URL + "/auth/admin"
   const [number, setNumber] = useState(null)
   const [password, setPassword] = useState("")
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
+  const [qs] = useSearchParams();
+ 
+  const message = qs.get("message")
   const navigate = useNavigate();
   const handeSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      const res = await axios.post(url, { phone: number, password },
-      {
-      withCredentials:"include"
-      }
+      const res = await axios.post(url,
+        { phone: number, password },
+        {
+          withCredentials: "include"
+        }
       )
-      console.log(res.data)
-      // var jsondata=JSON.stringify(res.data.token)
       localStorage.setItem("admin_token", res?.data?.token);
-      navigate("/dashboard")
+      navigate("/dashboard", { replace: true })
     } catch (err) {
       console.log(err?.response);
-      setError("logging fail");
+      setError(err?.response.data);
       const timer = setTimeout(() => {
         clearTimeout(timer)
         setError("")
       }, 5000);
     }
-    setIsLoading(false)
+    finally {
+
+      setIsLoading(false)
+
+    }
 
   }
 
   return (
     <section className="h-screen" >
+
       <div className="container h-full px-6 md:py-24 ">
         <div
           className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
@@ -51,6 +57,19 @@ const AdminLogin = () => {
           </div>
 
           <div className="md:w-8/12 lg:ml-6 lg:w-5/12">
+            {
+              message && <div className="mb-6 flex items-center justify-between  text-lg font-medium md:text-xl text-orange-600">
+                <motion.h1
+                  animate={{
+                    opacity: message ? 1 : 0,
+                    x: message ? [-100, 100, 0, -100, 100, 0] : null
+
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> {message}</motion.h1>
+              </div>
+
+            }
             <h1 className="text-2xl  text-center  mb-10 uppercase">Login as Admin</h1>
             <form onSubmit={handeSubmit}>
               <div className="relative mb-6" data-te-input-wrapper-init>
@@ -196,7 +215,9 @@ const AdminLogin = () => {
               dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
               dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]`}
                 data-te-ripple-init
-                data-te-ripple-color="light" >
+                data-te-ripple-color="light"
+                disable={isLoading}
+              >
                 {isLoading ? <Loadingbtn /> : "Sign In"}
               </button>
 

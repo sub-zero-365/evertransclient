@@ -125,6 +125,7 @@ const Cities = () => {
 
       <Alert toggle={toggle} city={city}
         setToggle={setToggle} confirmFunc={confirmFunc} 
+        
         message={"Do you want to delete this City"} />
       <motion.div onClick={() => setOpen(true)}
         initial={{ x: "-50%" }}

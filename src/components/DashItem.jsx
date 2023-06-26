@@ -1,7 +1,6 @@
 
-// import { AiOutlineSetting } from 'react-icons/ai'
 import { BsFillPersonFill } from 'react-icons/bs'
-import {Button} from "./"
+import {Button,Heading} from "./"
 import { useNavigate } from 'react-router-dom'
 const DashItem = ({ icon, Counts, href, Name }) => {
     const navigate = useNavigate();
@@ -11,19 +10,18 @@ const DashItem = ({ icon, Counts, href, Name }) => {
             <div className="absolute top-0 h-1 w-0 left-0 transition-[width] bg-green-400 duration-700 group-hover:w-full"></div>
             <div className="absolute top-auto bottom-0 h-1 w-0 right-0 transition-[width] bg-green-400 duration-700 group-hover:w-full"></div>
             <div className="absolute top-0 h-0 bg-opacity-25 w-full  right-0 transition-[height] -z-1 bg-green-400 duration-700 group-hover:h-full"></div>
-            <div className="flex justify-between mb-2 items-end">
+            <div className="flex justify-between mb-2 items-start">
                 <button type="button"
                     class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg
                  text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">12.3%</button>
-              <Button name="view" className={"!bg-purple-300 !z-10"} href={href}/>
+              <Button name="view" className={"!bg-blue-300 !px-5 !text-black !z-10"} href={href}/>
             </div>
             <div className="absolut top-auto bottom-0 h-1 mb-6 w-full right-0 transition-[width] bg-green-400 duration-700 group-hover:w-0"></div>
             
             <div className="flex items-end justify-between">
                 <div className="">
-                    <h1 className="text-xl font-semibold font-montserrat">
-                        {Name || "n/a"}
-                    </h1>
+                   
+                    <Heading text={Name || "n/a"} className="!pl-0 first-letter:!text-4xl !font-black !uppercase "/>
                     <h3 className="text-xl tracking-loose font-medium font-montserrat">
                         {Counts || "n/a"}
                     </h3>

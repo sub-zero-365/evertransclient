@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react"
-import { Modal } from "../components"
+import { Modal, DisplayUi, DateUi,PrevButton,NextButton } from "../components"
 import { useNavigate } from "react-router-dom"
-import { AiOutlineArrowRight } from 'react-icons/ai'
 import { NavLink, useSearchParams } from 'react-router-dom'
-// import Alert from '../components/Alert'
 import { motion } from "framer-motion"
 import { TbArmchair2, TbArmchairOff } from 'react-icons/tb'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Scrollbar, Pagination, Navigation } from 'swiper'
+import Marquee from 'react-fast-marquee'
 
 import "swiper/css"
 import "swiper/css/navigation"
@@ -26,44 +25,36 @@ const
     const [queryParameters] = useSearchParams();
     console.log(queryParameters.get("from"))
     const [userInfo, setUserInfo] = useState({
-      name: null, age: null, phone: null, gender: "male", from: queryParameters.get("from"),
-      to: queryParameters.get("to"), email: null, date: queryParameters.get("date"), time: queryParameters.get("time")
+      name: queryParameters.get("name"),
+      age: queryParameters.get("age"),
+      phone: queryParameters.get("phone"),
+      gender: queryParameters.get("gender"),
+      from: queryParameters.get("from"),
+      to: queryParameters.get("to"),
+      email: queryParameters.get("email"),
+      date: queryParameters.get("date"),
+      time: queryParameters.get("time"),
+      tripType: queryParameters.get("triptype")
     })
-    const weekDay = (index = 0) => {
-      const _days = [
-
-        "Mon", "Tues", "Weds", "Thurs", "Fri", "Sat", "Sun"
-      ]
-      if (index < 0 || index > 6) {
-        index = 0
-      }
-      return _days[index]
-
-
-
-    }
-    useEffect(() => {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        // behavior: "smooth"
-      })
-
-    }, [])
+    const Header = ({ name }) => <h1 className="dark:text-white  font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
 
     const navigate = useNavigate()
-    const [selected, setSelected] = useState(null)
+    const [selected, setSelected] = useState(queryParameters.get("sitpos"))
     const [error, setError] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
-    // const [toggle,setToggle]=useState(false)
 
     const toggleModal = () => {
       setError(!error)
     }
     const checkBusAvailabity = (id, e = null) => {
-      if (id & 1) {
+      if (id == 0) {
+        window.navigator.vibrate([50])
+        setSelected(id)
+        return
+      }
+      if ((id) & 1) {
         setError(true)
-        setErrorMessage("Sheet has already beeen taken ; choose another sheet thanks")
+        setErrorMessage("Shit has already beeen taken ; choose another sheet thanks")
         window.navigator.vibrate([50, 100, 60])
       } else {
         window.navigator.vibrate([50])
@@ -71,7 +62,6 @@ const
       }
     }
     const proccedCheckout = (e) => {
-
       e.preventDefault()
       if (!selected) {
         setError(true)
@@ -81,19 +71,15 @@ const
       gotoCheckOut()
     }
     const gotoCheckOut = () =>
-      navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}`)
+      navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}&triptype=${userInfo.tripType}`)
     return (
       <div
         className="min-h-screen"
       >
         <Modal toggle={error} toggleModal={toggleModal} information={errorMessage}  ></Modal>
-        {/* <Alert toggle={toggle} setToggle={setToggle} message={"successfully!! thanks for using our service"}/> */}
         <div className="flex container mx-auto">
-
           <div className="flex-1 hidden lg:block"></div>
-
           <div className="flex-none cal-width  mx-auto  shadow-lg mt-6 py-6 pt-0 pb-20"
-
             style={{ "--w": "500px" }}>
             <nav className="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
               <ol className="inline-flex items-center space-x-1 md:space-x-3">
@@ -104,7 +90,7 @@ const
                 </li>
                 <li className="inline-flex items-center">
                   <svg aria-hidden="true" className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                  <NavLink to={"/"} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                  <NavLink to={"/booking?"+queryParameters?.toString()} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     Booking
                   </NavLink>
                 </li>
@@ -119,37 +105,31 @@ const
 
               </ol>
             </nav>
-            <div className="mb-6 flex   text-xs mt-[2rem] items-center">
-              <div className="flex-1 mx-1 relative min-h-[40px] 
-                                border-2 flex items-center rounded-lg px-4">
-                <span className="absolute left-[15px] px-2
-                                    rounded-sm h-[30px] bg-color_light
-                                dark:bg-color_dark top-[-10px]">
-                  From
-                </span>
-                <div className="relative uppercase">
-                  {queryParameters.get("from") || !"invalid location"}
-                </div>
+            {userInfo?.tripType === "round" && <>
+              <Header name="First trip " />
+            </>
+            }
+            <DisplayUi from={queryParameters.get("from")} to={queryParameters.get("to")} />
+            <DateUi dayOfeek={new Date().getDay()}
+              date={queryParameters.get("date")}
+              time={queryParameters.get("time")} />
+            {userInfo?.tripType === "round" && <>
+              <Header name="Return trip " />
+              <DisplayUi from={queryParameters.get("to")} to={queryParameters.get("from")} />
+            </>
 
-              </div>
-              <AiOutlineArrowRight size={20} className='text-slate-400 dark:text-white flex-none' />
-              <div className="flex-1 mx-1 relative min-h-[40px]
-                                text-xs border-2 flex items-center rounded-lg px-4">
-                <span className="absolute left-[10px] px-2 rounded-sm h-[30px] bg-color_light
-                                dark:bg-color_dark top-[-10px] ">
-                  To
-                </span>
-                <div className="relative uppercase">
-                  {queryParameters.get("to") || !"invalid location"}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-between px-2 items-center">
-              <h1 className="text-lg">{weekDay(new Date().getDay())}</h1>
-              <h1 className="text-lg pb-4">On {new Date(queryParameters.get("date")).toLocaleDateString()}  at </h1>
-              <h2 className="text-lg">{queryParameters.get("time")}</h2>
-            </div>
-            <p className="text-lg text-center capitalize pb-2 ">please
+            }
+            {
+              userInfo?.tripType === "round" && (<>
+                <DateUi dayOfeek={new Date().getDay()}
+                  date={queryParameters.get("date")}
+                  time={queryParameters.get("time")} />
+              </>
+
+              )
+
+            }
+            <p className="text-lg text-center capitalize pb-2 ">please select
               your bus shit </p>
             <div className="flex justify-between px-2 pb-2">
               <h1 className="text-xs lg:text- shadom-lg lg flex-1">
@@ -163,18 +143,22 @@ const
               </h1>
             </div>
             <Swiper
+            className="relative"
               modules={[Pagination, Navigation, Scrollbar]}
               pagination={{
                 clickable: true
               }}
               navigation={{
-
+                prevEl: ".arrow__left",
+                nextEl: ".arrow__right",
               }}
               scrollbar={true}
             >
+                <PrevButton className="!left-1.5" />
+                <NextButton className="!right-1.5" />
 
               <SwiperSlide className="group">
-              <h1 className="text-xl leading-7 tracking-tight text-center mb-6 text-orange-300 font-semibold
+                <h1 className="text-xl leading-7 tracking-tight text-center mb-6 text-orange-300 font-semibold
               font-montserrat">shit from 1-20 are Vip</h1>
                 <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                   {
@@ -212,18 +196,18 @@ const
               </SwiperSlide>
 
               <SwiperSlide className="group">
-              
-              <h1 className="text-lg leading-7 tracking-tight text-center mb-6 text-orange-300 font-semibold
+
+                <h1 className="text-lg leading-7 tracking-tight text-center mb-6 text-orange-300 font-semibold
               font-montserrat">shit from 21-45 are Vip <sup className="text-blue-600">+</sup></h1>
                 <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                   {
                     Array.from({ length: 25 }, (seat, i) => {
                       return (
-                        <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none" 
-                        onClick={(e) => checkBusAvailabity(i + 20, e)}>
+                        <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
+                          onClick={(e) => checkBusAvailabity(i + 20, e)}>
                           <motion.div
                             initial={false}
-                            animate={{ scale: selected == i+20 ? [0.8, 1, 0.9] : null }}
+                            animate={{ scale: selected == i + 20 ? [0.8, 1, 0.9] : null }}
                             transition={{
                               duration: 1,
                               ease: "easeInOut",
@@ -256,9 +240,16 @@ const
 
             </Swiper>
             <form onSubmit={proccedCheckout} className="md:px-3">
-              <h1 className="text-lg text-center  mx-5 my-2">please  take your time to fill in the information</h1>
+              <Marquee play pauseOnClick pauseOnHover
+                className="capitalize text-red-500 dark:text-red-500 py-2  mb-4 text-sm
+                  font-extrabold leading-none  px-5 text-gray-900- md:text-lg lg:text-xl dark:text-white- max-w-5xl">
+                please  take your time to fill in the information
+              </Marquee>
               <div className="relative mb-6" data-te-input-wrapper-init>
-                <input onChange={e => setUserInfo({ ...userInfo, name: e.target.value })}
+                <input
+                
+                value={userInfo.name}
+                onChange={e => setUserInfo({ ...userInfo, name: e.target.value })}
                   type="text"
                   className="peer block min-h-[auto] w-full 
                 rounded 
@@ -314,7 +305,12 @@ const
                 </label>
               </div>
               <div className="relative mb-6" data-te-input-wrapper-init>
-                <input onChange={e => setUserInfo({ ...userInfo, phone: e.target.value })}
+                <input
+                
+                
+                value={userInfo.phone}
+                
+                onChange={e => setUserInfo({ ...userInfo, phone: e.target.value })}
                   type="tel"
                   className="peer block min-h-[auto] w-full 
                 rounded 
@@ -371,7 +367,10 @@ const
               </div>
 
               <div className="relative mb-6" data-te-input-wrapper-init>
-                <input onChange={e => setUserInfo({ ...userInfo, email: e.target.value })}
+                <input 
+                
+                value={userInfo.email}
+                onChange={e => setUserInfo({ ...userInfo, email: e.target.value })}
                   type="number"
                   className="peer block min-h-[auto] w-full 
                 rounded 
@@ -482,7 +481,9 @@ const
                 </div>
 
                 <div className="relative w-[80px] flex-none" data-te-input-wrapper-init>
-                  <input onChange={e => setUserInfo({ ...userInfo, age: e.target.value })}
+                  <input
+                  value={userInfo.age}
+                  onChange={e => setUserInfo({ ...userInfo, age: e.target.value })}
                     type="number"
                     className="peer block min-h-[auto] w-full 
                 rounded

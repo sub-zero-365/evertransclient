@@ -1,14 +1,24 @@
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import axios from 'axios'
 import { useDispatch } from 'react-redux';
 import { setUserName } from "../actions/userName"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { Loadingbtn } from "../components";
 import { motion } from "framer-motion"
+import Alert from '../components/Alert'
 const Login = () => {
+  const [qs] = useSearchParams()
+  const message = qs.get("message")
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("")
+  const [toggle, setToggle] = useState(false)
+  useEffect(() => {
+    if (message) {
 
+      setToggle(true)
+    }
+
+  }, [])
   const navigate = useNavigate();
   const password = useRef(null)
   const phone = useRef(null)
@@ -58,6 +68,15 @@ const Login = () => {
 
   return (
     <section className="h-screen">
+      <Alert toggle={toggle} setToggle={setToggle}
+
+        duration="30000"
+        confirmFunc={() => setToggle(false)}
+        message={message}
+        className={`
+      ${toggle && "!top-1/2 -translate-y-1/2"}
+      `}
+      />
       <div className="container h-full px-6 py-24">
         <div
           className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
@@ -224,7 +243,7 @@ const Login = () => {
                   dont have an account continue
                 </p>
               </div> */}
-{/* 
+              {/* 
               <a onClick={() => navigate("/register")}
                 className="mb-3 flex w-full items-center bg-orange-300 justify-center rounded bg-primary px-7 pb-2.5 pt-3 text-center text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                 href="#!"

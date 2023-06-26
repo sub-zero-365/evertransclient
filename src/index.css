@@ -107,18 +107,19 @@ body {
   transform: translateY(-50%);
   z-index: 23;
   font-size: 4rem;
-  height: 3.5rem;
-  width: 2.5rem;
+  height: 2.5rem;
+  width: 2rem;
   background: rgb(26, 25, 25, 0.67);
   display: flex;
   align-items: center;
   justify-content: center;
-  @apply ring-2 ring-blue-300 shadow-lg z-10 rounded-xl text-white cursor-pointer;
+  @apply shadow-lg z-10 rounded-xl text-white cursor-pointer;
 }
-
+.datePicker {
+  width: 100%;
+}
 .arrow:is(:hover, :focus) {
-  @apply bg-slate-400/25
-  
+  @apply bg-slate-400/25;
 }
 
 .arrow.arrow__left {

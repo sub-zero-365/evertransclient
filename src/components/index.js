@@ -56,3 +56,15 @@ export { default as NextButton }
 from './NextButton'
 export { default as PrevButton }
 from './PrevButton'
+export { default as DisplayUi }
+from './DisplayUi'
+export { default as DateUi }
+from './DateUi'
+export { default as Heading }
+from './Headings'
+export { default as UserRanking }
+from './UserRanking'
+export { default as PercentageBar }
+from './PercentageBar'
+export { default as ProtectedRoute }
+from './ProtectedRoute'

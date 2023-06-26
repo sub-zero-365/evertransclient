@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-const Button = ({ className, href, name }) => {
+const 
+Button = ({ className, href, name }) => {
     const navigate = useNavigate();
     const navigateTo = (path = "/") => {
         return navigate(path)
@@ -21,17 +22,12 @@ const Button = ({ className, href, name }) => {
             bg-green-400
             dark:bg-gray-700
             pt-1
-            md:pt-1.5
             mr-1
-            md:mr-1
             rounded-sm
-            md:rounded-lg
             text-white
             dark:font-semibold
             px-3
-            md:px-4
             pb-1.5
-            md:pb-2
             place-items-center  
             hover:bg-green-700
             ease 
