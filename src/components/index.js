@@ -72,3 +72,5 @@ export { default as DataDay }
 from './DataDay'
 export { default as ToggleSwitch }
 from './ToggleSwitch'
+export { default as AnimateError }
+from './AnimateError'

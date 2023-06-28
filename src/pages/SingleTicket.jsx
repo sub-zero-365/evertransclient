@@ -597,9 +597,10 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
           }
 
           <a
-            href={image1}
-            download={"ticket" + id}
-
+            href={`${process.env.REACT_APP_LOCAL_URL}/downloadticket/${id}`}
+            // href={`https://localhost:/downloadticket/${id}`}
+            // download={"ticket" + id}
+target="_blank"
             className="inline---block 
                                     w-[min(300px,calc(100%-2.5rem))]
                                      bottom-0

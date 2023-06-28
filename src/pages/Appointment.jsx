@@ -474,7 +474,8 @@ font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-au
                         <div
                             onClick={e => e.stopPropagation()}
                             className="
-                        absolute top-0
+                        absolute
+                        top-0
                         md:static
                         group-[.visible]:right-0
                         group-[.invisible]:-right-full
@@ -486,7 +487,8 @@ font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-au
                              h-[calc(100%-0px)]
                              lg:h-full 
                              bg-white
-                             shadow md:shadow-none
+                             shadow
+                             md:shadow-none
                              w-[min(25rem,calc(100vw-4rem))]
                              md:w-full
                              ">
@@ -518,12 +520,18 @@ font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-au
                                             exit={{ opacity: 0, duration: 2 }}
                                             className="flex flex-col items-center w-full justify-center">
                                             <DatePicker
+                                            wrapperClassName="!w-full !bg-orange !border-none !outline-none "
+                                            className="!w-full !bg-orange-500 !border-none !outline-none "
+                                                containerClassName="!w-full !border-none !outline-none !shadow-none"
                                                 selected={startDate}
                                                 onChange={onChange}
                                                 startDate={startDate}
                                                 endDate={endDate}
                                                 selectsRange
                                                 inline
+                                                containerStyle={{
+                                                    width: "100%"
+                                                }}
                                             // maxDate={new Date()}
                                             />
                                             <button

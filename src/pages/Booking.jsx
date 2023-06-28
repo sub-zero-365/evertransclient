@@ -1,5 +1,7 @@
 import { useNavigate, useSearchParams, Link } from "react-router-dom"
-import { Loader, Modal, PrevButton, NextButton, Heading } from "../components"
+import { Loader, Modal, PrevButton, NextButton, Heading,
+  AnimateError
+} from "../components"
 import { useState, forwardRef, useEffect } from "react"
 import DatePicker from 'react-datepicker'
 import DatePicker2 from 'react-datepicker'
@@ -7,7 +9,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { CiTimer } from 'react-icons/ci'
 import { BiCurrentLocation } from 'react-icons/bi'
 import Marquee from 'react-fast-marquee'
-
 import Select from 'react-select'
 import Select2 from 'react-select'
 import Select3 from 'react-select'
@@ -228,6 +229,7 @@ const Booking = () => {
             // }}
             onChange={evt => setFromCities(evt.value)}
             options={options} />
+            
           <Heading text="Destination" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl"} />
           <Select2
             styles={style}
@@ -240,6 +242,9 @@ const Booking = () => {
             // }}
             onChange={evt => setToCities(evt.value)}
             options={options} />
+            <AnimateError 
+            error={fromCities!=null&&fromCities===toCities}
+            errorMessage={"cities should not be thesame"}/>
           <Heading text="Time" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl"} />
           <SelectTime
             styles={style}

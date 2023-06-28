@@ -106,17 +106,17 @@ body {
   top: 50%;
   transform: translateY(-50%);
   z-index: 23;
-  font-size: 4rem;
-  height: 2.5rem;
+  font-size: 2rem;
+  height: 2rem;
   width: 2rem;
   background: rgb(26, 25, 25, 0.67);
   display: flex;
   align-items: center;
   justify-content: center;
-  @apply shadow-lg z-10 rounded-xl text-white cursor-pointer;
+  @apply shadow-lg z-10 rounded-full text-white cursor-pointer;
 }
 .datePicker {
-  width: 100%;
+  width: 100% !important;
 }
 .arrow:is(:hover, :focus) {
   @apply bg-slate-400/25;
@@ -175,6 +175,28 @@ body {
   perspective: 100px;
 }
 
+.myclassName,
+.react-datepicker__day--selected {
+  background: red !important;
+  @apply !rounded-full !shadow-lg !bg-green-900/25;
+}
+.myclassName,
+.react-datepicker__day--range {
+  background: red !important;
+  @apply !rounded-full !shadow-lg !bg-green-900/25;
+}
+.custom-calendar.rmdp-wrapper,
+.rmdp-container .custom-calendar.ep-arrow::after {
+  @apply !bg-blue-400;
+}
+.myclassName,
+.react-datepicker__day--today {
+  background: red !important;
+  @apply !rounded-full;
+}
+.react-datepicker-wrapper {
+  @apply !border-none !outline-none;
+}
 .icons-container .icon {
   @apply scale-0 rotate-90;
 }
