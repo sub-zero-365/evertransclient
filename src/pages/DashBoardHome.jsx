@@ -1,10 +1,10 @@
 import { DashItem, Button, Heading, FormatTable } from '../components'
-import { GrStackOverflow } from 'react-icons/gr'
+// import { GrStackOverflow } from 'react-icons/gr'
 // import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
-import { storeCities } from "../actions/userCity"
+// import { storeCities } from "../actions/userCity"
 import { motion } from 'framer-motion'
 import { useSelector, useDispatch } from 'react-redux';
-import { setTickets } from '../actions/adminData';
+import { setTicketData } from '../actions/adminData';
 import { BsTicketPerforated } from 'react-icons/bs'
 import { BiBus } from 'react-icons/bi'
 import { useState, useEffect, useRef } from 'react'
@@ -25,30 +25,30 @@ const DashboardHome = () => {
     const cities = useSelector(state => state.userCity.cities);
     const dispatch = useDispatch();
     const setTickets_ = (payload) => {
-        return dispatch(setTickets(payload))
+        // return dispatch(setTickets(payload))
     }
     useEffect(() => {
         const url = `${process.env.REACT_APP_LOCAL_URL}/admin/alltickets`
+        
+        // try {
+        //     async function fetchData() {
+        //         const response = await axios.get(url, {
+        //             headers: {
+        //                 'Authorization': "makingmoney " + token
+        //             }, params: {
+        //                 limit: 10
+        //             }
+        //         })
 
-        try {
-            async function fetchData() {
-                const response = await axios.get(url, {
-                    headers: {
-                        'Authorization': "makingmoney " + token
-                    }, params: {
-                        limit: 10
-                    }
-                })
 
+        //         setTickets_([...response?.data?.tickets])
+        //         setTicketsCount(response?.data?.totalTickets);
+        //     }
+        //     fetchData()
 
-                setTickets_([...response?.data?.tickets])
-                setTicketsCount(response?.data?.totalTickets);
-            }
-            fetchData()
-
-        } catch (err) {
-            console.log(err)
-        }
+        // } catch (err) {
+        //     console.log(err)
+        // }
     }, [])
 
     return (

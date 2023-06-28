@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { BarChart, LineChart, Number, AmountCount, Scrollable } from '../components';
+import {  LineChart, Number, AmountCount, Scrollable } from '../components';
 import { BiCategory } from 'react-icons/bi';
 
 import { setUsers } from '../actions/adminData';
@@ -52,7 +52,6 @@ const Appointment = () => {
                     ...{
                         labels: [...response?.data?.userdetails].map((v) => v.user.fullname),
                         datasets: [
-
                             {
                                 label: "ticket vs user data",
                                 data: [...response?.data?.userdetails].map((v) => v.nHits)
@@ -104,7 +103,6 @@ const Appointment = () => {
         <motion.div
             className="max-w-full overflow-auto max-h-[calc(100vh-3rem)] pt-10 " >
             {isLoading && (<Loader toggle dark />)}
-            {/* <h1 className='text-2xl text-center'>Users page</h1> */}
             
             <Heading text="Employees OverView"/>
             <div className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
@@ -194,7 +192,6 @@ z-10  "
                                 createdAt
                             </th>
 
-
                             <th scope="col" className="px-6 py-3">
                                 user_id
                             </th>
@@ -238,10 +235,10 @@ z-10  "
                                 </td>
 
 
-                                <td className="px-0 py-0 text-xs" onClick={() => navigate(`/dashboard/details/${user?._id || index}?admin=true`)}>
+                                <td className="px-0 py-0 text-xs" >
                                     <Button
                                         name="Check User"
-                                        href={`/dashboard/details/${user?._id || index}?admin=true`}
+                                        href={`/dashboard/details/${user?._id || index}?admin=true&createdBy=${user?._id}`}
                                     ></Button>
                                 </td>
                             </tr>

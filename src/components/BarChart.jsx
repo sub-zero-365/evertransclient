@@ -1,6 +1,6 @@
 
 import React, { useEffect } from "react"
-import { Bar,Pie, } from "react-chartjs-2"
+import { Bar,Pie,Line } from "react-chartjs-2"
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -20,17 +20,8 @@ ChartJS.register(
 
 )
 const BarChart = ({ chartData }) => {
-    
-    useEffect(() => {
-
-
-        return () => {
-        }
-    }, [])
-
     return (
         <Bar data={chartData} />
-
     )
 }
 

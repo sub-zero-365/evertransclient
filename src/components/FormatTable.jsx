@@ -1,9 +1,7 @@
 import { motion } from "framer-motion";
 import { Button, DeactiveStatusButton, ActiveStatusButton } from './'
 const FormatTable = ({ tickets, currentPage, admin, skip = 10 }) => {
-    // const getActiveStatus = (obj, value = "roundtrip") => {
-    //     return obj?.type === value && obj?.doubletripdetails?.some(x => x.active == true)
-    // }
+
     const FormatTd = ({ ticket }) => {
         if (ticket?.active) {
             return (
@@ -14,12 +12,12 @@ const FormatTable = ({ tickets, currentPage, admin, skip = 10 }) => {
         }
         return (
             <td className="px-3 py-4  grid place-items-center">
-            {
-            ticket.active?<ActiveStatusButton/>:<DeactiveStatusButton/>
-            }
-        </td>
+                {
+                    ticket.active ? <ActiveStatusButton /> : <DeactiveStatusButton />
+                }
+            </td>
         )
-     
+
 
     }
     return (
@@ -48,12 +46,10 @@ const FormatTable = ({ tickets, currentPage, admin, skip = 10 }) => {
                         <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {ticket?.fullname || "n/a"}
                         </th>
-                        <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {/* <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {ticket?.phone || "n/a"}
-                        </th>
-                        <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {ticket?.price || " 5000frs"}
-                        </th>
+                        </th> */}
+
                         <td className="px-3 py-4">
                             <span className="font-medium
                               ">{ticket?.from || " n/a"}</span>
@@ -61,9 +57,8 @@ const FormatTable = ({ tickets, currentPage, admin, skip = 10 }) => {
                         <td className="px-3 py-2">
                             <span className="font-medium ">{ticket?.to || "n/a"}</span>
                         </td>
-                        <td className="px-3 py-2">
-                            <span className="font-medium ">{ticket?.type || "singletrip"}</span>
-                        </td>
+                 
+                      
                         <td className="px-3 py-2">
                             {ticket?.traveldate ?
                                 (new Date(ticket.traveldate).toLocaleDateString()) : "n/a"}
@@ -74,21 +69,26 @@ const FormatTable = ({ tickets, currentPage, admin, skip = 10 }) => {
                                 (new Date(ticket.createdAt).toLocaleDateString()) : "n/a"}
 
                         </td>
-                        <td className="px-3 py-2">
+                        {/* <td className="px-3 py-2">
                             {ticket?.traveltime
                                 || "n/a"}
-                        </td>
-                        
-                        <FormatTd ticket={ticket}/>
+                        </td> */}
 
-                        <td className="px-3 py-4">
+                        <FormatTd ticket={ticket} />
+                        <td className="px-3 py-2">
+                            <span className="font-medium ">{ticket?.type || "singletrip"}</span>
+                        </td>
+                        <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {ticket?.price || " 5000frs"}
+                        </th>
+                        {/* <td className="px-3 py-4">
                             {ticket?.age || "n/a"}
 
-                        </td>
-                        <td className="px-3 py-4">
+                        </td> */}
+                        {/* <td className="px-3 py-4">
                             {ticket?.sex || "n/a"}
 
-                        </td>
+                        </td> */}
                         <td className="py-0 text-xs"
                         >
                             <Button admin

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Modal, DisplayUi, DateUi,PrevButton,NextButton } from "../components"
+import { Modal, DisplayUi, DateUi,PrevButton,NextButton,Heading } from "../components"
 import { useNavigate } from "react-router-dom"
 import { NavLink, useSearchParams } from 'react-router-dom'
 import { motion } from "framer-motion"
@@ -36,7 +36,7 @@ const
       time: queryParameters.get("time"),
       tripType: queryParameters.get("triptype")
     })
-    const Header = ({ name }) => <h1 className="dark:text-white  font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
+    // const Header = ({ name }) => <h1 className="dark:text-white  font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
 
     const navigate = useNavigate()
     const [selected, setSelected] = useState(queryParameters.get("sitpos"))
@@ -54,7 +54,7 @@ const
       }
       if ((id) & 1) {
         setError(true)
-        setErrorMessage("Shit has already beeen taken ; choose another sheet thanks")
+        setErrorMessage("Seat has already beeen taken ; choose another sheet thanks")
         window.navigator.vibrate([50, 100, 60])
       } else {
         window.navigator.vibrate([50])
@@ -105,32 +105,13 @@ const
 
               </ol>
             </nav>
-            {userInfo?.tripType === "round" && <>
-              <Header name="First trip " />
-            </>
-            }
             <DisplayUi from={queryParameters.get("from")} to={queryParameters.get("to")} />
             <DateUi dayOfeek={new Date().getDay()}
               date={queryParameters.get("date")}
               time={queryParameters.get("time")} />
-            {userInfo?.tripType === "round" && <>
-              <Header name="Return trip " />
-              <DisplayUi from={queryParameters.get("to")} to={queryParameters.get("from")} />
-            </>
-
-            }
-            {
-              userInfo?.tripType === "round" && (<>
-                <DateUi dayOfeek={new Date().getDay()}
-                  date={queryParameters.get("date")}
-                  time={queryParameters.get("time")} />
-              </>
-
-              )
-
-            }
-            <p className="text-lg text-center capitalize pb-2 ">please select
-              your bus shit </p>
+           
+            
+              <Heading text={"Please select your bus seat"} className="!mb-2 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl"/>
             <div className="flex justify-between px-2 pb-2">
               <h1 className="text-xs lg:text- shadom-lg lg flex-1">
                 <span className="w-[10px] mr-1 h-[10px] inline-block bg-green-400 rounded-full "></span>Available</h1>
@@ -144,7 +125,7 @@ const
             </div>
             <Swiper
             className="relative"
-              modules={[Pagination, Navigation, Scrollbar]}
+              modules={[Pagination, Navigation]}
               pagination={{
                 clickable: true
               }}
@@ -152,14 +133,13 @@ const
                 prevEl: ".arrow__left",
                 nextEl: ".arrow__right",
               }}
-              scrollbar={true}
             >
                 <PrevButton className="!left-1.5" />
                 <NextButton className="!right-1.5" />
 
               <SwiperSlide className="group">
-                <h1 className="text-xl leading-7 tracking-tight text-center mb-6 text-orange-300 font-semibold
-              font-montserrat">shit from 1-20 are Vip</h1>
+              <Heading text={"Seat from 1-20 are Vip"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl"/>
+              
                 <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                   {
                     Array.from({ length: 20 }, (seat, i) => {
@@ -197,8 +177,8 @@ const
 
               <SwiperSlide className="group">
 
-                <h1 className="text-lg leading-7 tracking-tight text-center mb-6 text-orange-300 font-semibold
-              font-montserrat">shit from 21-45 are Vip <sup className="text-blue-600">+</sup></h1>
+              <Heading text={"Seat from 1-20 are Vip+"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl"/>
+              
                 <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                   {
                     Array.from({ length: 25 }, (seat, i) => {

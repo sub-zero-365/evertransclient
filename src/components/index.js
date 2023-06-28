@@ -68,3 +68,7 @@ export { default as PercentageBar }
 from './PercentageBar'
 export { default as ProtectedRoute }
 from './ProtectedRoute'
+export { default as DataDay }
+from './DataDay'
+export { default as ToggleSwitch }
+from './ToggleSwitch'

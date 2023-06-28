@@ -11,6 +11,7 @@ import { setUserName } from "./actions/userName"
 import { storeCities } from "./actions/userCity"
 
 const ContactUs = lazy(() => import("./pages/Contact"));
+const Bus = lazy(() => import("./pages/Bus"));
 const Aboutus = lazy(() => import("./pages/Aboutus"));
 const Appointment = lazy(() => import("./pages/Appointment"));
 const CheckOutInfo = lazy(() => import("./pages/CheckOutInfo"));
@@ -113,6 +114,7 @@ function App() {
               <Route path=":id" element={<SingleTicket />} />
               <Route path="cities" element={<Cities />} />
               <Route path="users" element={<Users />} />
+              <Route path="bus" element={<Bus />} />
               <Route path="details/:id" element={<Details />} />
               <Route path="assistant" element={<AdminAssistant />} />
               <Route path="register" element={<DashRegister />} />

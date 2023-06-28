@@ -10,8 +10,6 @@ Button = ({ className, href, name }) => {
             onClick={() => {
                 navigateTo(href);
                 window.navigator.vibrate([10])
-
-
             }}
             className={`${className} 
             font-medium

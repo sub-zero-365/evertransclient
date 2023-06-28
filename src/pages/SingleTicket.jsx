@@ -104,7 +104,8 @@ const User = () => {
       setIsloading(false)
       setToggle(true)
       console.log(err)
-      setMessage("fail to get ticket with\n id " + id + "\n  please contact customer service")
+      setMessage(err.response.data)
+      // setMessage("fail to get ticket with\n id " + id + "\n  please contact customer service")
     }
   }
 
@@ -128,17 +129,19 @@ const User = () => {
         params
       }
       )
-      getData()
-      setToggle(true)
+      
+      setTicket(res.data?.updateTicket)
+      setTicketData(res.data?.updateTicket)
       setMessage("successfull edited ticket")
     } catch (err) {
-      setToggle(true)
       console.log(err)
       setMessage(err.response.data)
       setLoadbtn(false)
     }
     finally {
       setIsloading(false)
+      setToggle(true)
+      
     }
   }
   const handleChangeParams = (index) => {
@@ -181,7 +184,9 @@ const User = () => {
       `}
         toggle={toggle}
         confirmFunc={() => setToggle(false)}
-        setToggle={setToggle} />
+        setToggle={setToggle} 
+        
+        />
       {
         isadminuser ? (
           <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">

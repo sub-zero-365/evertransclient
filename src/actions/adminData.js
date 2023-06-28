@@ -4,7 +4,7 @@ const adminDataSlice = createSlice({
   name: "admindata",
   initialState: {
     users: [],
-    tickets: [],
+    ticketdata: {},
     cities: [],
     loading: {
       users: true,
@@ -19,13 +19,15 @@ const adminDataSlice = createSlice({
       } catch (err) {
         state.users = [];
       }
-      state.loading.users = false;
+      finally{
+        state.loading.users = false;
+      }
     },
-    setTickets(state, { payload }) {
+    setTicketData(state, { payload }) {
       try {
-        state.tickets = [...payload];
+        state.ticketdata = {...payload};
       } catch (err) {
-        state.tickets = [];
+        state.ticketdata = {};
       }
       state.loading.tickets = false;
     },
@@ -39,5 +41,5 @@ const adminDataSlice = createSlice({
     },
   },
 });
-export const { setUsers, setTickets,setCities } = adminDataSlice.actions;
+export const { setUsers, setTicketData,setCities } = adminDataSlice.actions;
 export default adminDataSlice.reducer;

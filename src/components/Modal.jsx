@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-
+import {Heading} from './'
 
 const Modal = ({ information, toggle, toggleModal }) => {
     const _ref = useRef(null)
@@ -31,8 +31,9 @@ _ref.current.onclick=function(){
             <div
             onClick={stopPropagation}
             className=" shadow-2xl wrapper cal-width bg-white dark:bg-slate-800 text-black dark:text-white mx-auto my-2 rounded-md px-4 py-5 " style={{ "--w": "400px" }}>
-                <h2 className="text-red-400 text-2xl text-center font-semibold font-montserrat">Information</h2>
-                <p className="pl-2 py-4 text-center text-lg leading-7">{information || "this is an empt modal tat needs information"}</p>
+                <h2 className="text-red-600 text-2xl text-center font-semibold font-montserrat !mb-5">Information</h2>
+                <Heading text={information || "this is an empt modal tat needs information"} className="!font-semibold !text-sm "/>
+                
                 <div className="ml-auto w-fit">
                     <button
                         type="button"

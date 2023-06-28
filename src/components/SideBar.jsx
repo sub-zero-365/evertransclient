@@ -50,7 +50,7 @@ const SideBar = () => {
 
       name: "Buses",
       icon: <GrServicePlay size={20} />
-      , to: "/dashboard/buses/3"
+      , to: "/dashboard/bus"
 
     },
     {

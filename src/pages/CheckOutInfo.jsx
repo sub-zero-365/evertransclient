@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { NavLink, useSearchParams, useNavigate, Link } from "react-router-dom"
 import Alert from '../components/Alert'
+import AlertBox from '../components/Alert'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import { Loadingbtn } from "../components"
@@ -20,14 +21,14 @@ const BusSits = () => {
 
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
-
+  const [error, setError] = useState(false)
   const [queryParameters] = useSearchParams()
   const [toggle, setToggle] = useState(false)
   useEffect(() => { window.scrollTo(0, 0) }, [])
   const proccedCheckout = () => {
     setToggle(true)
   }
+  const [message, setMessage] = useState("")
   const Header = ({ name }) => <h1 className="dark:text-white  font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
 
 
@@ -48,7 +49,7 @@ const BusSits = () => {
       fullname: queryParameters.get("name"),
 
     }
-    if (queryParameters.get("triptype")!=="null") {
+    if (queryParameters.get("triptype") !== "null") {
       submitdata = {
         ...submitdata,
         type: queryParameters.get("triptype") + "trip",
@@ -74,7 +75,9 @@ const BusSits = () => {
       proccedCheckout()
     } catch (err) {
       console.log(err)
-      alert(err.response.data)
+      // alert(err.response.data)
+      setMessage(err.response.data)
+      setError(true)
     }
     setIsLoading(false)
 
@@ -85,7 +88,22 @@ const BusSits = () => {
       animate={{ x: 0, y: 0 }}
       className="min-h-screen"
     >
-      <Alert toggle={toggle} setToggle={setToggle} message={"successfully!! thanks for using our service"} />
+      <AlertBox
+        duration="30000"
+        className={`
+     ${error && "!top-1/2 -translate-y-1/2"}
+     `}
+        error={error}
+        confirmFunc={() => setError(false)}
+        seterror={setError}
+        message={message}
+
+      />
+      <Alert
+        toggle={toggle}
+        setToggle={setToggle}
+        confirmFunc={() => navigate("/user")}
+        message={"successfully book the ticket"} />
       <div className="md:hidden z-10 h-[50px] flex items-center justify-center mt-5 fixed bottom-8 w-full">
         {
 
@@ -125,17 +143,17 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
           <nav className="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
             <ol className="inline-flex items-center space-x-1 md:space-x-3">
               <li className="inline-flex items-center">
-                <NavLink to={"/booking?"+queryParameters?.toString()} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                <NavLink to={"/booking?" + queryParameters?.toString()} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                   Booking
                 </NavLink>
               </li>
-             
+
               <li className="inline-flex items-center">
-                  <svg aria-hidden="true" className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                  <NavLink to={"/bussits/7847/?"+queryParameters?.toString()} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                    BusSeat
-                  </NavLink>
-                </li>
+                <svg aria-hidden="true" className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                <NavLink to={"/bussits/7847/?" + queryParameters?.toString()} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                  BusSeat
+                </NavLink>
+              </li>
               <li>
                 <div className="flex items-center">
                   <svg aria-hidden="true" className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
@@ -153,7 +171,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             <span className="absolute left-1/2 -translate-x-1/2 border px-10 rounded-lg shadow  min-h-[30px]  bg-color_light
                       dark:bg-color_dark top-[-15px] text-montserrat  font-semibold">
               {
-                (queryParameters.get("triptype") === "single" || queryParameters.get("triptype"))=="null" ? "Single Trip" : "Round Trip"
+                (queryParameters.get("triptype") === "single" || queryParameters.get("triptype")) == "null" ? "Single Trip" : "Round Trip"
               }
             </span>
             <div className="flex mb-3 flex-wrap">
@@ -197,7 +215,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
               <div className="w-1/2 text-sm">Travel Cost</div>
               <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{Number(queryParameters.get("sitpos")) > 20 ? 10000 + "frs" : 6500 + "frs"}</div>
             </div>
-            <Swiper
+            {/* <Swiper
               onSwiper={setThumbsSwiper}
               spaceBetween={10}
               slidesPerView={2}
@@ -306,7 +324,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
 
 
 
-            </Swiper>
+            </Swiper> */}
           </div>
 
           <div className="hidden h-[80px] md:flex items-center justify-center mt-auto">

@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams, Link } from "react-router-dom"
-import { Loader, Modal, PrevButton, NextButton } from "../components"
+import { Loader, Modal, PrevButton, NextButton, Heading } from "../components"
 import { useState, forwardRef, useEffect } from "react"
 import DatePicker from 'react-datepicker'
 import DatePicker2 from 'react-datepicker'
@@ -19,7 +19,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { storeCities } from "../actions/userCity"
 import axios from 'axios'
 import { Swiper, SwiperSlide } from 'swiper/react'
-// import { MdOutlinePriceChange } from 'react-icons/md'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import "swiper/css"
 import "swiper/css/navigation"
@@ -38,7 +37,20 @@ const Booking = () => {
   const [time, setTime] = useState("7am");
   const [endTime, setEndTime] = useState("7am");
   const setCity = (cities) => dispatch(storeCities(cities));
+  const style = {
+    control: base => ({
+      ...base,
+      border: 0,
+      borderBottom: "1px solid black",
+      boxShadow: "none",
+      background: "transparent",
+      color: "red",
+      borderRadius: 0,
+      fontSize: 1 + "rem"
+    }
+    )
 
+  }
   useEffect(() => {
     const token = localStorage.getItem("token");
     window.scrollTo({
@@ -86,7 +98,7 @@ const Booking = () => {
   const [fromCities, setFromCities] = useState(queryParams.get("from"))
   const [toCities, setToCities] = useState(queryParams.get("to"))
 
-
+  const [isLine, setIsline] = useState(false)
   const options = useSelector(state => state.userCity.cities);
   const navigate = useNavigate()
   const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${time}&date=${startDate}&endTime=${endTime}&triptype=${tripType}`)
@@ -110,16 +122,26 @@ const Booking = () => {
   const [endDate, setEndDate] = useState(new Date());
   const Header = ({ name }) => <h1 className="font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
-    <div style={{ "--w": "200px" }}
-      className="w-full border-2 mt-[20px] shadow-xl border-blue-500 gap-2  flex p-1 rounded-md my-1  "
-
+    <div 
+    // style={{ "--w": "200px" }}
+      className="w-full
+      border-b
+      mt-[20px]
+      mx-4
+      shadow-sm border-black 
+      gap-2
+      p-1 
+      rounded-0
+      bg-transparent my-1  "
       onClick={onClick} ref={ref}>
-      <div className="flex-none rounded-lg h-10 w-10 flex items-center justify-center">
+      {/* <div className="flex-none rounded-lg h-10 w-10 flex items-center justify-center">
         <CiTimer size={30} />
-      </div>
+      </div> */}
+          <Heading text="Date" className={"!pl-0 !mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+      
       <div className="flex-1">
         <h4 className="text-lg leading-6 capitalize"> {value}</h4>
-        <p className="text-sm md:text-lg text-slate-500 font-[500]">{new Date(value).toDateString()}</p>
+        <p className="text-sm md:text-lg text-slate-500 font-[500]">{value&&(new Date(value).toDateString())}</p>
       </div>
     </div>
   ));
@@ -131,7 +153,6 @@ const Booking = () => {
   const [msg, setMsg] = useState("time must not be thesame !")
   return (
     <motion.div
-
       initial={{ opacity: 0.4 }}
       animate={{ opacity: 1 }}
 
@@ -160,114 +181,71 @@ const Booking = () => {
           </div>
 
 
-          {
 
-            (tripType == "single" || !tripType) && (
-              <div className="flex flex-col justify-center items-center mt-4">
-                <Header name="SingleTrip" />
-                <DatePicker wrapperClassName="datePicker" className="datePicker"
-                  inline
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  minDate={new Date()}
-                  Date={new Date()}
-                  customInput={<ExampleCustomInput />
-                  }
-                /> </div>
-            )
+          <div className="flex flex-col justify-center items-center mt-4">
+            <div className="flex gap-2 justify-center items-center">
 
-          }
+              {tripType == "round" ? <Header name="RoundTrip" /> : <Header name="SingleTrip" />}
 
-          {
+              <span className="!w-5 !h-5 bg-orange-400" onClick={() => setIsline(!isLine)} >
 
-            (tripType && tripType == "round") && (
-              <>
-                <Header name="Round Trip" />
+              </span>
+            </div>
+            <DatePicker 
+            wrapperClassName="datePicker" className="datePicker"
+              inline={isLine}
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              minDate={new Date()}
+              Date={new Date()}
+              // isClearable
+              required
+              customInput={<ExampleCustomInput />
+              }
+            /> </div>
 
-                <Marquee play pauseOnClick pauseOnHover
-                  className="capitalize text-red-500 dark:text-red-500 py-2  mb-4 text-xs font-extrabold leading-none  px-5 text-gray-900- md:text-lg lg:text-xl dark:text-white- max-w-5xl">
-                  the travel date is equal to the return date
-                </Marquee>
-                <Swiper
-                  modules={[Autoplay, Pagination, Navigation]}
-                  navigation={{
-                    prevEl: ".arrow__left",
-                    nextEl: ".arrow__right",
-                  }}
-                  pagination={{ clickable: true }}
-
-                >
-
-                  <PrevButton className="!left-1.5" />
-                  <NextButton className="!right-1.5" />
-                  <SwiperSlide>
-                    <div className="flex flex-col justify-center items-center mt-4">
-                      <Header name="Start Date" />
-
-                      <DatePicker
-                        inline
-                        selected={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        minDate={new Date()}
-                        Date={new Date()}
-                        customInput={<ExampleCustomInput />
-                        }
-                      /> </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <div className="flex justify-center flex-col items-center mt-4">
-                      <Header name="End Date" />
-
-                      <DatePicker2
-                        inline
-                        selected={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        minDate={new Date()}
-
-                        Date={new Date()}
-                        customInput={<ExampleCustomInput />
-                        }
-                      /> </div>
-                  </SwiperSlide>
-
-                </Swiper>
-              </>
-            )
-
-          }
-
-          <h1 className="text-lg md:text-xl mb-3 mt-5 font-manrope">Select Bus <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
-          <Select3 className="dark:bg-slate-900 mx-2  min-h-8 text-black text-xs md:text-xl"
+          <Heading text="Bus" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+          <Select3
+            styles={style}
+            components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+            className="dark:bg-slate-900 mx-2  min-h-8 text-black text-xs md:text-xl"
             required
-            defaultValue={{
-              label: queryParams.get("from") || "All tickets",
-              value: "all"
-            }}
+            // defaultValue={{
+            //   label: queryParams.get("from") || "All tickets",
+            //   value: "all"
+            // }}
             onChange={evt => setFromCities(evt.value)}
             options={options} />
-          <h1 className="text-lg md:text-xl mb-3 mt-5 font-manrope">Select starting point <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
-          <Select className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl" required
+          <Heading text="From" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl"} />
+          <Select
+            styles={style}
+            components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
-
-
-            defaultValue={{
-              label: queryParams.get("from") || "select startingpoint",
-              value: "all"
-            }}
+            className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl" required
+            // defaultValue={{
+            //   label: queryParams.get("from") || "select startingpoint",
+            //   value: "all"
+            // }}
             onChange={evt => setFromCities(evt.value)}
             options={options} />
+          <Heading text="Destination" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl"} />
+          <Select2
+            styles={style}
+            components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
-          <h1 className="text-lg md:text-xl mb-3 mt-5 font-manrope">Select Destination <BiCurrentLocation size={25} className="inline-block ml-4" /></h1>
-          <Select2 required className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl "
-          
-          defaultValue={{
-            label: queryParams.get("to") || "select ending",
-            value: "all"
-          }}
-          onChange={evt => setToCities(evt.value)}
+            required className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl "
+            // defaultValue={{
+            //   label: queryParams.get("to") || "select ending",
+            //   value: "all"
+            // }}
+            onChange={evt => setToCities(evt.value)}
             options={options} />
-          <h1 className="text-xl mb-3 mt-5 font-manrope">{(!tripType || tripType === "single") ? "Select time" : "Select start time"}  <CiTimer size={25} className="inline-block ml-4" /></h1>
-          <SelectTime required className="dark:bg-slate-900 text-black text-xs min-h-8 md:text-xl mb-6"
+          <Heading text="Time" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl"} />
+          <SelectTime
+            styles={style}
+            components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+
+            required className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl mb-6"
 
             defaultValue={{
               label: "7am",
@@ -281,32 +259,6 @@ const Booking = () => {
               { value: "12am", label: "12am" },
               { value: "10pm", label: "10pm" },
             ]} />
-          {
-            tripType == "round" && (
-              <>
-                <h1 className="text-xl mb-3 mt-5 font-manrope">Return Time <CiTimer size={25} className="inline-block ml-4" /></h1>
-                <SelectTime required className="dark:bg-slate-900 text-black text-xs min-h-8 md:text-xl mb-6"
-                  defaultValue={{
-                    label: "7am",
-                    value: "7am"
-                  }}
-
-                  onChange={(evt) => onChange(evt, true)}
-                  options={[
-                    { value: "7am", label: "7am" },
-                    { value: "10am", label: "10am" },
-                    { value: "12am", label: "12am" },
-                    { value: "10pm", label: "10pm" },
-                  ]} />
-
-              </>
-
-            )
-
-          }
-
-
-
 
           <div className="hidden min-h-8 md:flex items-center justify-center mt-auto">
             <button

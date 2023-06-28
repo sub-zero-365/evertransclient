@@ -18,7 +18,7 @@ const DashBoardLayout = () => {
         return <Navigate to="/auth?message=you must logging to continue as admin" replace/>
     }
     return (
-        <><Alert toggle={toggle}
+        <div className="overflow-x-hidden"><Alert toggle={toggle}
             setToggle={setToggle} message={"Do you want to log out ?"}
             confirmFunc={() => {
                 localStorage.removeItem("admin_token")
@@ -71,7 +71,7 @@ const DashBoardLayout = () => {
                 <SideBar />
                 <Outlet />
             </div>
-        </>
+        </div>
     )
 
 }

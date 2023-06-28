@@ -136,6 +136,7 @@ const Details = () => {
       })
     } catch (err) {
       console.log(err)
+      alert(err.response.data)
     }
     setIsLoading(false)
     setIsActiveIndexLoading(false)
