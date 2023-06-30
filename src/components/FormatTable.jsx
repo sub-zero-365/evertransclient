@@ -43,6 +43,9 @@ const FormatTable = ({ tickets, currentPage, admin, skip = 10 }) => {
                         <td className="px-2 py-4  flex items-center justify-center">
                             {(index + 1) + skip * (currentPage - 1)}
                         </td>
+                        {/* <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {ticket?.createdBy || "n/a"}
+                        </th> */}
                         <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {ticket?.fullname || "n/a"}
                         </th>

@@ -129,7 +129,7 @@ const User = () => {
         params
       }
       )
-      
+
       setTicket(res.data?.updateTicket)
       setTicketData(res.data?.updateTicket)
       setMessage("successfull edited ticket")
@@ -141,7 +141,7 @@ const User = () => {
     finally {
       setIsloading(false)
       setToggle(true)
-      
+
     }
   }
   const handleChangeParams = (index) => {
@@ -184,9 +184,9 @@ const User = () => {
       `}
         toggle={toggle}
         confirmFunc={() => setToggle(false)}
-        setToggle={setToggle} 
-        
-        />
+        setToggle={setToggle}
+
+      />
       {
         isadminuser ? (
           <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
@@ -228,29 +228,7 @@ const User = () => {
                   </a>
                 </div>
               </li>
-              {/* <li className="">
-                <div class="flex items-center">
-                  <a href={image1} download={"ticket"} class="ml-1 text-xs font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
-                    <motion.button
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      type="button"
-                      a data-te-ripple-init
-                      data-te-ripple-color="light"
-                      className="inline-block  rounded-none  bg-blue-400 px-6 pb-2 pt-2.5 ml-5 my-4 text-xs font-medium uppercase
-leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150
-ease-in-out hover:bg-primary-600
-hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:outline-none focus:ring-0 active:bg-primary-700
-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                    >
-                      Download ticket
-                    </motion.button>
-                  </a>
-                </div>
-              </li> */}
+
 
             </ol>
           </nav>
@@ -386,10 +364,18 @@ shadow-xl
 `}
 
         >
-          <Heading text="Created By" className="text-center !font-black !mb-0" />
-          <Heading text="Ramatou Yoland " className="text-center !font-manrope !mb-5
+
+          <div className="flex justify-center gap-x-2 flex-wrap">
+
+            <Heading text="Created By :" className="text-center !text-lg underline  underline-offset-8 !font-black !mb-0" />
+            
+            
+            <Heading text="Ramatou Yoland " className="text-center !text-lg !font-manrope !mb-5
                                 !font-medium
                                 !text-slate-600"/>
+          </div>
+
+
           {
             ticketData?.type === "roundtrip" ? (
               <div className="grid grid-cols-1 md:grid-cols-1 justify-center md:justify-between px-4">
@@ -424,7 +410,6 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                       </> : <button
                         onClick={() => {
                           handleChangeParams(1)
-
                         }}
                         data-te-ripple-init
                         data-te-ripple-color="light"
@@ -598,9 +583,8 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
           <a
             href={`${process.env.REACT_APP_LOCAL_URL}/downloadticket/${id}`}
-            // href={`https://localhost:/downloadticket/${id}`}
-            // download={"ticket" + id}
-target="_blank"
+
+            target="_blank"
             className="inline---block 
                                     w-[min(300px,calc(100%-2.5rem))]
                                      bottom-0

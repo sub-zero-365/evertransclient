@@ -28,8 +28,7 @@ const SideBar = () => {
 
       name: "Tickets",
       icon: <TiMessages size={20} />
-
-      , to: "/dashboard/tickets"
+      , to: "/dashboard/tickets?view=all"
     },
     {
 

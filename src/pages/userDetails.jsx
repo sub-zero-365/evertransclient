@@ -78,7 +78,7 @@ const Details = () => {
       const res = await axios.delete(url)
       handleFilterChange("account_block")
     } catch (err) {
-    alert(err.response.data)
+      alert(err.response.data)
     }
   }
 
@@ -89,7 +89,7 @@ const Details = () => {
         const res = await axios.get(url)
         handleFilterChange("account_block", true)
       } catch (err) {
-      
+
         // alert("something went wrong")
         handleFilterChange("account_block")
       }
@@ -115,7 +115,7 @@ const Details = () => {
     } catch (err) {
       // alert(err.response.data)
       // alert("something went wrong")
-      handleFilterChange("account_block",true)
+      handleFilterChange("account_block", true)
     }
   }
   const handleRestrictUserget = (user_id, url = process.env.REACT_APP_LOCAL_URL + "/restricted") => {
@@ -242,14 +242,6 @@ const Details = () => {
     },
     params: formatQuery(querySearch.toString())
   }
-  // const handleChangeText = (e) => {
-  //   const temp = params;
-  //   temp.search = e.target.value;
-  //   setParams({
-  //     ...temp
-  //   })
-
-  // }
   async function getData() {
     const url = process.env.REACT_APP_LOCAL_URL + "/admin/alltickets"
     setIsActiveIndexLoading(true)
@@ -278,17 +270,7 @@ const Details = () => {
   useEffect(() => {
     getData();
   }, [querySearch]);
-  // const checkPages = (index) => {
-  //   const temp = params;
-  //   if (temp.page === index) {
-  //     return
-  //   }
-  //   temp.page = index
-  //   setParams({
-  //     ...temp
-  //   })
 
-  // }
 
 
   useEffect(() => {
@@ -298,7 +280,6 @@ const Details = () => {
       try {
         const { data } = await axios.get(url, config);
         setUserInfo(data?.user)
-
 
       } catch (err) {
         console.log(err)
@@ -313,36 +294,6 @@ const Details = () => {
 
   const [toggle, setToggle] = useState(false);
 
-  // const handleFilterSearch = () => {
-  //   const temp = params;
-  //   temp.page = 1
-  //   temp.daterange = `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`
-  //   setParams({ ...temp });
-  //   setToggle(false)
-
-  // }
-
-
-
-  // const handleChange = (evt) => {
-  //   const temp = params;
-  //   if (params.ticketStatus == evt.value) return
-
-  //   temp.ticketStatus = evt.value
-  //   temp.page = 1
-  //   setParams({ ...temp })
-  // }
-  // const handleSortTime = (evt) => {
-
-  //   const temp = params;
-  //   if (params.sort == evt.value) return
-  //   temp.sort = evt.value
-  //   temp.page = 1
-  //   setParams({ ...temp })
-
-
-
-  // }
   const selectRef = useRef(null)
   return (
     <motion.div
@@ -350,7 +301,6 @@ const Details = () => {
     max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark' ref={constraintsRef}>
       <motion.div
         onClick={() => setToggle(true)}
-        // initial={{ x: "-50%" }}
         animate={{
           scale: [0.7, 1.2, 0.8],
         }}
@@ -361,11 +311,9 @@ const Details = () => {
           repeat: Infinity,
           repeatDelay: 1
         }
-
         }
         className="bottom-1/2
                         -translate-y-1/2 fixed 
-                        
                         flex-none 
                         shadow-2xl button-add  top-auto bg-blue-400 
 w-[2.5rem]
@@ -397,9 +345,6 @@ z-10  "
 
         </ol>
       </nav>
-      <button
-
-        onClick={() => handleRestrictUserAdd(querySearch.get("createdBy"))}>click me</button>
       <div className="lg:flex items-start justify-start gap-4">
         <div className="flex-1   mb-6">
           <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
@@ -528,13 +473,11 @@ z-10  "
 
         </div>
         <div className={`flex-none py-5
-        
         sidebarr m lg:rounded-lg shadow rounded-lg  overflow-y-auto--
         ${toggle ? "right-0" : "!-right-full"}
         duration-500 transition-[right] shadow lg:shadow-none lg:max-w-sm lg:w-[22rem] 
         text-center bg-white rounded-sm right-0 top-12 h-fit
            w-[calc(100vw-3.5rem)] max-w-sm  z-20 fixed   lg:static px-4 `}>
-
           <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 
        -left-[3.125rem] z-10 rounded-none flex items-center justify-center  font-black border-black"
@@ -556,9 +499,9 @@ z-10  "
             <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.phone || "n/a"}</h4>
             <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.createdAt && (dateFormater().date) || "n/a"}</h4>
-
             <ToggleSwitch
               onChange={handleBlockChange}
+              message={"User is block from printing tickets"}
               state={querySearch.get("account_block") ? true : false}
             />
             <Swiper
@@ -593,7 +536,6 @@ z-10  "
                       endDate={endDate}
                       selectsRange
                       inline
-                    // maxDate={new Date()}
                     />
                     <button
                       data-te-ripple-init

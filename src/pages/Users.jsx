@@ -155,6 +155,9 @@ z-10  "
                     icon={<BiCategory />}
                     amount={67} />
             </Scrollable>
+            
+  
+            
             <form className="px-4 md:px-6 my-5 " onSubmit={handleSubmit}>
                 <div className="flex relative min-h-[40px]">
                     <div className="relative w-full">

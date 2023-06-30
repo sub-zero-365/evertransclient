@@ -28,7 +28,8 @@ import "swiper/css/thumbs";
 
 import {
     AmountCount, FormatTable,
-    Loader, Scrollable,
+    Loader,
+    Scrollable,
     TicketCounts,
     PanigationButton,
     Loadingbtn,
@@ -56,17 +57,7 @@ const Appointment = () => {
 
     const [querySearch, setQuerySearch] = useSearchParams();
 
-    // const style = {
-    //     control: base => ({
-    //         ...base,
-    //         border: 0,
-    //         boxShadow: "none",
-    //         background: "transparent",
-    //         color: "red"
-    //     }
-    //     )
 
-    // }
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -75,10 +66,8 @@ const Appointment = () => {
     const [userData, setUserData] = useState({})
 
     const ticketData = useSelector(state => state.setAdminData.ticketdata);
-    // const tickets_ = useSelector(state => state.setAdminData.tickets);
 
     const isLoading = useSelector(state => state.setAdminData.loading.tickets)
-    // const isLoading=false
     const viewAll = querySearch.get("view");
 
     const handleSkipChange = (evt) => {
@@ -89,7 +78,6 @@ const Appointment = () => {
         window.navigator.vibrate([100])
     }
     const handleChangeText = (e) => {
-
         handleFilterChange("search", e.target.value)
     }
 
@@ -206,7 +194,56 @@ z-10  "
                     <AiOutlineSetting size={20} color="#fff" className="" />
                 </div>
             </motion.div>
+            {/* <div class="md:grid grid-col-2 lg:grid-cols-3 justify-center 
+            bg-gray-100 py-10 space-y-3">
+                <div class="container mx-auto pr-4">
+                    <div class="w-72 bg-white max-w-xs mx-auto rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 transform hover:scale-100 cursor-pointer">
+                        <div class="h-20 bg-red-400 flex items-center justify-between">
+                            <p class="mr-0 text-white text-lg pl-5">BT SUBSCRIBERS</p>
+                        </div>
+                        <div class="flex justify-between px-5 pt-6 mb-2 text-sm text-gray-600">
+                            <p>TOTAL</p>
+                        </div>
+                        <p class="py-4 text-3xl ml-5">20,456</p>
+                    </div>
+                </div>
 
+                <div class="container mx-auto pr-4">
+                    <div class="w-72 bg-white max-w-xs mx-auto rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 transform hover:scale-100 cursor-pointer">
+                        <div class="h-20 bg-blue-500 flex items-center justify-between">
+                            <p class="mr-0 text-white text-lg pl-5">BT ACTIVE SUBSCRIBERS</p>
+                        </div>
+                        <div class="flex justify-between px-5 pt-6 mb-2 text-sm text-gray-600">
+                            <p>TOTAL</p>
+                        </div>
+                        <p class="py-4 text-3xl ml-5">19,694</p>
+                    </div>
+                </div>
+
+                <div class="container mx-auto pr-4">
+                    <div class="w-72 bg-white max-w-xs mx-auto rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 transform hover:scale-100 cursor-pointer">
+                        <div class="h-20 bg-purple-400 flex items-center justify-between">
+                            <p class="mr-0 text-white text-lg pl-5">BT OPT OUTS</p>
+                        </div>
+                        <div class="flex justify-between pt-6 px-5 mb-2 text-sm text-gray-600">
+                            <p>TOTAL</p>
+                        </div>
+                        <p class="py-4 text-3xl ml-5">711</p>
+                    </div>
+                </div>
+
+                <div class="container mx-auto">
+                    <div class="w-72 bg-white max-w-xs mx-auto rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 transform hover:scale-100 cursor-pointer">
+                        <div class="h-20 bg-purple-900 flex items-center justify-between">
+                            <p class="mr-0 text-white text-lg pl-5">BT TODAY'S SUBSCRIPTION</p>
+                        </div>
+                        <div class="flex justify-between pt-6 px-5 mb-2 text-sm text-gray-600">
+                            <p>TOTAL</p>
+                        </div>
+                        <p class="py-4 text-3xl ml-5">0</p>
+                    </div>
+                </div>
+            </div> */}
             <div>
                 <div className="lg:flex items-start justify-start gap-4"
                 >
@@ -520,8 +557,8 @@ font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-au
                                             exit={{ opacity: 0, duration: 2 }}
                                             className="flex flex-col items-center w-full justify-center">
                                             <DatePicker
-                                            wrapperClassName="!w-full !bg-orange !border-none !outline-none "
-                                            className="!w-full !bg-orange-500 !border-none !outline-none "
+                                                wrapperClassName="!w-full !bg-orange !border-none !outline-none "
+                                                className="!w-full !bg-orange-500 !border-none !outline-none "
                                                 containerClassName="!w-full !border-none !outline-none !shadow-none"
                                                 selected={startDate}
                                                 onChange={onChange}
