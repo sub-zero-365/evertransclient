@@ -17,6 +17,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import busimage from '../Assets/images/busimage.jpg'
 const BusSits = () => {
 
   const navigate = useNavigate()
@@ -76,17 +77,17 @@ const BusSits = () => {
     } catch (err) {
       console.log(err)
       // alert(err.response.data)
+      setIsLoading(false)
       setMessage(err.response.data)
       setError(true)
     }
-    setIsLoading(false)
 
   }
   return (
     <motion.div
       initial={{ x: -10, y: 40 }}
       animate={{ x: 0, y: 0 }}
-      className="min-h-screen"
+      className="h-[calc(100vh-50px)]"
     >
       <AlertBox
         duration="30000"
@@ -137,8 +138,14 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
         }
       </div>
       <div className="flex container mx-auto">
-        <div className="flex-1 hidden lg:block"></div>
-        <div className="flex-none cal-width  mx-auto  lg:shadow-lg mt-6 py-6 pt-0"
+        <div className="flex-1 hidden lg:block">
+          <img
+            src={busimage}
+            className="w-full h-[calc(100vh-50px)] object-cover" alt="booking " />
+
+
+        </div>
+        <div className="flex-none pb-10 cal-width  mx-auto max-h-[calc(100vh-50px)] overflow-y-auto lg:shadow-lg mt-6 py-6 pt-0"
           style={{ "--w": "500px" }}>
           <nav className="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
             <ol className="inline-flex items-center space-x-1 md:space-x-3">

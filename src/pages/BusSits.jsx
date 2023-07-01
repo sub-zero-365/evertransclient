@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Modal, DisplayUi, DateUi,PrevButton,NextButton,Heading } from "../components"
+import { Modal, DisplayUi, DateUi, PrevButton, NextButton, Heading } from "../components"
 import { useNavigate } from "react-router-dom"
 import { NavLink, useSearchParams } from 'react-router-dom'
 import { motion } from "framer-motion"
@@ -78,8 +78,11 @@ const
       >
         <Modal toggle={error} toggleModal={toggleModal} information={errorMessage}  ></Modal>
         <div className="flex container mx-auto">
-          <div className="flex-1 hidden lg:block"></div>
-          <div className="flex-none cal-width  mx-auto  shadow-lg mt-6 py-6 pt-0 pb-20"
+          <div className="flex-1 hidden lg:block">
+            <img src="https://www.redbus.in/" className="h-full w-full object-cover" alt="bus "/>
+
+          </div>
+          <div className="flex-none cal-width mx-auto shadow-lg mt-6 py-6 pt-0 pb-20"
             style={{ "--w": "500px" }}>
             <nav className="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
               <ol className="inline-flex items-center space-x-1 md:space-x-3">
@@ -90,7 +93,7 @@ const
                 </li>
                 <li className="inline-flex items-center">
                   <svg aria-hidden="true" className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                  <NavLink to={"/booking?"+queryParameters?.toString()} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                  <NavLink to={"/booking?" + queryParameters?.toString()} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     Booking
                   </NavLink>
                 </li>
@@ -109,9 +112,9 @@ const
             <DateUi dayOfeek={new Date().getDay()}
               date={queryParameters.get("date")}
               time={queryParameters.get("time")} />
-           
-            
-              <Heading text={"Please select your bus seat"} className="!mb-2 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl"/>
+
+
+            <Heading text={"Please select your bus seat"} className="!mb-2 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
             <div className="flex justify-between px-2 pb-2">
               <h1 className="text-xs lg:text- shadom-lg lg flex-1">
                 <span className="w-[10px] mr-1 h-[10px] inline-block bg-green-400 rounded-full "></span>Available</h1>
@@ -124,7 +127,7 @@ const
               </h1>
             </div>
             <Swiper
-            className="relative"
+              className="relative"
               modules={[Pagination, Navigation]}
               pagination={{
                 clickable: true
@@ -134,12 +137,12 @@ const
                 nextEl: ".arrow__right",
               }}
             >
-                <PrevButton className="!left-1.5" />
-                <NextButton className="!right-1.5" />
+              <PrevButton className="!left-1.5" />
+              <NextButton className="!right-1.5" />
 
               <SwiperSlide className="group">
-              <Heading text={"Seat from 1-20 are Vip"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl"/>
-              
+                <Heading text={"Seat from 1-20 are Vip"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
+
                 <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                   {
                     Array.from({ length: 20 }, (seat, i) => {
@@ -177,8 +180,8 @@ const
 
               <SwiperSlide className="group">
 
-              <Heading text={"Seat from 1-20 are Vip+"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl"/>
-              
+                <Heading text={"Seat from 1-20 are Vip+"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
+
                 <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                   {
                     Array.from({ length: 25 }, (seat, i) => {
@@ -227,9 +230,9 @@ const
               </Marquee>
               <div className="relative mb-6" data-te-input-wrapper-init>
                 <input
-                
-                value={userInfo.name}
-                onChange={e => setUserInfo({ ...userInfo, name: e.target.value })}
+
+                  value={userInfo.name}
+                  onChange={e => setUserInfo({ ...userInfo, name: e.target.value })}
                   type="text"
                   className="peer block min-h-[auto] w-full 
                 rounded 
@@ -286,11 +289,11 @@ const
               </div>
               <div className="relative mb-6" data-te-input-wrapper-init>
                 <input
-                
-                
-                value={userInfo.phone}
-                
-                onChange={e => setUserInfo({ ...userInfo, phone: e.target.value })}
+
+
+                  value={userInfo.phone}
+
+                  onChange={e => setUserInfo({ ...userInfo, phone: e.target.value })}
                   type="tel"
                   className="peer block min-h-[auto] w-full 
                 rounded 
@@ -347,10 +350,10 @@ const
               </div>
 
               <div className="relative mb-6" data-te-input-wrapper-init>
-                <input 
-                
-                value={userInfo.email}
-                onChange={e => setUserInfo({ ...userInfo, email: e.target.value })}
+                <input
+
+                  value={userInfo.email}
+                  onChange={e => setUserInfo({ ...userInfo, email: e.target.value })}
                   type="number"
                   className="peer block min-h-[auto] w-full 
                 rounded 
@@ -462,8 +465,8 @@ const
 
                 <div className="relative w-[80px] flex-none" data-te-input-wrapper-init>
                   <input
-                  value={userInfo.age}
-                  onChange={e => setUserInfo({ ...userInfo, age: e.target.value })}
+                    value={userInfo.age}
+                    onChange={e => setUserInfo({ ...userInfo, age: e.target.value })}
                     type="number"
                     className="peer block min-h-[auto] w-full 
                 rounded

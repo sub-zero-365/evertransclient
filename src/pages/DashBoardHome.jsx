@@ -163,18 +163,16 @@ const DashboardHome = () => {
 
                 </table>
             </div>
-            <div className="md:grid grid-cols-2 items-start space-y-5 container mx-auto px-5 md:px-14">
+            <div className="md:grid grid-cols-12 items-start space-y-5 gap-x-6 container mx-auto px-5 md:px-14">
 
-                <div class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                <div class="w-full  p-4 col-span-6 lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                     <Heading text="Recent Employees" className="!font-black first-letter:!text-4xl !text-xl underline underline-offset-8 uppercase" />
 
                     
 <section class="flex flex-col justify-center antialiased bg-gray-100 text-gray-600 ">
     <div class="h-">
         <div class="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm ">
-            {/* <header class="px-5 py-4 border-b border-gray-100">
-                <h2 class="font-semibold text-gray-800">Customers</h2>
-            </header> */}
+         
             <div class="p-0">
                 <div class="overflow-x-auto">
                     <table class="table-auto w-full">
@@ -300,7 +298,7 @@ const DashboardHome = () => {
     </div>
 </div>
                 </div>
-                <div class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                <div class="w-full col-span-6 lg:col-span-4  p-4 pt-0 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                     <Heading text="Recent  Cities" className="!font-black !text-xl first-letter:!text-4xl underline underline-offset-8 uppercase" />
 
                     {
