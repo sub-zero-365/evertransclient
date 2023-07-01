@@ -69,7 +69,6 @@ const SideBar = () => {
 
 
   ]
-  const activeStyles = "!bg-violet-500 !dark:bg-violet-800 !text-white !text-semibold";
   const defaultClasses = "flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md dark:shadow-lg dark:shadow-slate-800 ring-offset-slate-200 mb-2 rounded-md"
   return (
 

@@ -2,12 +2,12 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import {  LineChart, Number, AmountCount, Scrollable } from '../components';
+import { LineChart, Number, AmountCount, Scrollable } from '../components';
 import { BiCategory } from 'react-icons/bi';
 
 import { setUsers } from '../actions/adminData';
-import { Loader, Button,Heading } from '../components';
-import {AiOutlinePlus} from 'react-icons/ai'
+import { Loader, Button, Heading } from '../components';
+import { AiOutlinePlus } from 'react-icons/ai'
 import { motion } from 'framer-motion'
 import { UserData } from '../Assets/userdata';
 const Appointment = () => {
@@ -103,40 +103,49 @@ const Appointment = () => {
         <motion.div
             className="max-w-full overflow-auto max-h-[calc(100vh-3rem)] pt-10 " >
             {isLoading && (<Loader toggle dark />)}
-            
-            <Heading text="Employees OverView"/>
-            <div className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
-            >
-                <div className="flex items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow bg-white mx-4">
-                    <div className="flex-1">
-                        <Heading text="Add A New Employee" className="!mb-2 !font-black mt-0"/>
-                        <p className="mb-3 text-sm  px-6">Employees added help to book ticket and give more data</p>
-                    </div>
-                    <motion.div  onClick={() => navigate("/dashboard/register")}
-                        initial={{ x: "-50%" }}
-                        animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
-                        transition={{
-                            duration: 2,
-                            ease: "easeInOut",
-                            times: [0, 0.2, 0.5, 0.8, 1],
-                            repeat: Infinity,
-                            repeatDelay: 1
-                        }
 
-                        }
-                        className="bottom-6 flex-none ml-2 shadow-2xl button-add  top-auto bg-blue-400 
+            <Heading text="Employees OverView" />
+            <div className="md:flex lg:mb-14 w-full">
+                <div className={` flex-1 relative  text-xs mx-0   rounded-lg `}
+                >
+                    <div className="flex  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow bg-white mx-4">
+                        <div className="flex-1">
+                            <Heading text="Add A New Employee" className="!mb-2 !font-black mt-0" />
+                            <p className="mb-3 text-sm  px-6">Employees added help to book ticket and give more data</p>
+                        </div>
+                        <motion.div onClick={() => navigate("/dashboard/register")}
+                            initial={{ x: "-50%" }}
+                            animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
+                            transition={{
+                                duration: 2,
+                                ease: "easeInOut",
+                                times: [0, 0.2, 0.5, 0.8, 1],
+                                repeat: Infinity,
+                                repeatDelay: 1
+                            }
+
+                            }
+                            className="bottom-6 flex-none ml-2 shadow-2xl button-add  top-auto bg-blue-400 
 w-[2rem] h-[2rem] rounded-full left-1/2 overflow-hidden 
 -translate-x-1/2
 z-10  "
-                    >
-                        <div className="flex h-full w-full items-center scale-animation justify-center ">
-                            <AiOutlinePlus size={30} color="#fff" className="" />
-                        </div>
-                    </motion.div>
+                        >
+                            <div className="flex h-full w-full items-center scale-animation justify-center ">
+                                <AiOutlinePlus size={30} color="#fff" className="" />
+                            </div>
+                        </motion.div>
 
+                    </div>
+
+                    <LineChart chartData={userData} />
                 </div>
 
-                <LineChart chartData={userData} />
+                <div className="flex-none w-[25rem]">
+
+                    side bar here
+                </div>
+
+
             </div>
             <Scrollable className="mb-10 mt-5">
                 <AmountCount
@@ -155,9 +164,9 @@ z-10  "
                     icon={<BiCategory />}
                     amount={67} />
             </Scrollable>
-            
-  
-            
+
+
+
             <form className="px-4 md:px-6 my-5 " onSubmit={handleSubmit}>
                 <div className="flex relative min-h-[40px]">
                     <div className="relative w-full">

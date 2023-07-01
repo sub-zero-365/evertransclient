@@ -247,10 +247,10 @@ z-10  "
             <div>
                 <div className="lg:flex items-start justify-start gap-4"
                 >
-                    <div className="flex-1 w-full pt-10 container mx-auto">
+                    <div className="flex-1 w-full pt-10 lg:pt-0 container mx-auto">
                         <div className="flex justify-between px-4"
                         >
-                            <Heading text="OverView" />
+                            <Heading text="OverView" className="!text-black first-letter:!text-3xl" />
                             <span onClick={() => {
                                 if (querySearch.get("view")) {
                                     handleFilterChange("view")
@@ -271,14 +271,14 @@ z-10  "
                         </Scrollable>
                         <Scrollable className={`!px-5 !mb-10 ${viewAll && "!grid md:!grid-cols-2"} !transition-all !duration-[1s]`}>
                             <TicketCounts counts={ticketData?.totalTickets || ticketData?.totalTickets === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
-                                text={"Total Number Of Tickets"}
+                                text={"Total Number"}
                                 icon={<AiOutlineSave />} />
                             <TicketCounts counts={ticketData?.totalActiveTickets || ticketData?.totalActiveTickets === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
-                                text={"Total Number Of active Tickets"}
+                                text={"Active Tickets"}
 
                                 icon={<VscFolderActive />} />
                             <TicketCounts
-                                text={"Total Number Of Inactive Tickets"}
+                                text={"Inactive Tickets"}
                                 counts={ticketData?.totalInActiveTickets || ticketData?.totalInActiveTickets === 0 && "0" || <span className='text-xs font-black '>loading ...</span>} icon={<BiCategory />} />
                         </Scrollable>
                         <Scrollable className={`!px-5 ${viewAll && "!grid md:!grid-cols-2"} !transition-all !duration-[1s]`}>
@@ -506,6 +506,9 @@ font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-au
                 lg:bg-white shadow 
                 lg:ml-2
                 lg:py-10
+                lg:mr-10
+                lg:rounded-xl
+                lg:shadow-xl
                 `}>
 
                         <div
@@ -684,7 +687,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                                     </div>
                                 )
                             }
-                            <UserRanking />
+                            {/* <UserRanking /> */}
 
 
                         </div>

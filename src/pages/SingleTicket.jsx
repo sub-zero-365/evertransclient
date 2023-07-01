@@ -368,11 +368,10 @@ shadow-xl
           <div className="flex justify-center gap-x-2 flex-wrap">
 
             <Heading text="Created By :" className="text-center !text-lg underline  underline-offset-8 !font-black !mb-0" />
-            
-            
-            <Heading text="Ramatou Yoland " className="text-center !text-lg !font-manrope !mb-5
-                                !font-medium
-                                !text-slate-600"/>
+
+
+            <Heading text={(ticketData?.username || "n/a")}
+            className="text-center capitalize !text-lg !font-manrope !mb-5 !font-medium !text-slate-600"/>
           </div>
 
 

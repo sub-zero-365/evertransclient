@@ -1,14 +1,18 @@
 import { useNavigate, useSearchParams, Link } from "react-router-dom"
-import { Loader, Modal, PrevButton, NextButton, Heading,
+import {
+  Loader, Modal, PrevButton, NextButton, Heading,
   AnimateError
 } from "../components"
+
+import { BiChevronDown } from 'react-icons/bi'
 import { useState, forwardRef, useEffect } from "react"
 import DatePicker from 'react-datepicker'
-import DatePicker2 from 'react-datepicker'
+// import DatePicker2 from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { CiTimer } from 'react-icons/ci'
-import { BiCurrentLocation } from 'react-icons/bi'
-import Marquee from 'react-fast-marquee'
+// import { CiTimer } from 'react-icons/ci'
+// import { BiCurrentLocation } from 'react-icons/bi'
+// import Marquee from 'react-fast-marquee'
+import { AiOutlineArrowRight } from 'react-icons/ai'
 import Select from 'react-select'
 import Select2 from 'react-select'
 import Select3 from 'react-select'
@@ -123,8 +127,8 @@ const Booking = () => {
   const [endDate, setEndDate] = useState(new Date());
   const Header = ({ name }) => <h1 className="font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
-    <div 
-    // style={{ "--w": "200px" }}
+    <div
+      // style={{ "--w": "200px" }}
       className="w-full
       border-b
       mt-[20px]
@@ -138,11 +142,11 @@ const Booking = () => {
       {/* <div className="flex-none rounded-lg h-10 w-10 flex items-center justify-center">
         <CiTimer size={30} />
       </div> */}
-          <Heading text="Date" className={"!pl-0 !mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-      
+      <Heading text="Date" className={"!pl-0 !mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+
       <div className="flex-1">
         <h4 className="text-lg leading-6 capitalize"> {value}</h4>
-        <p className="text-sm md:text-lg text-slate-500 font-[500]">{value&&(new Date(value).toDateString())}</p>
+        <p className="text-sm md:text-lg text-slate-500 font-[500]">{value && (new Date(value).toDateString())}</p>
       </div>
     </div>
   ));
@@ -188,12 +192,12 @@ const Booking = () => {
 
               {tripType == "round" ? <Header name="RoundTrip" /> : <Header name="SingleTrip" />}
 
-              <span className="!w-5 !h-5 bg-orange-400" onClick={() => setIsline(!isLine)} >
-
+              <span className="!w-5 !h-5 grid items-center rounded-sm justify-center mb-0.5" onClick={() => setIsline(!isLine)} >
+                <BiChevronDown className="text-sm" />
               </span>
             </div>
-            <DatePicker 
-            wrapperClassName="datePicker" className="datePicker"
+            <DatePicker
+              wrapperClassName="datePicker" className="datePicker"
               inline={isLine}
               selected={startDate}
               onChange={(date) => setStartDate(date)}
@@ -211,41 +215,32 @@ const Booking = () => {
             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
             className="dark:bg-slate-900 mx-2  min-h-8 text-black text-xs md:text-xl"
             required
-            // defaultValue={{
-            //   label: queryParams.get("from") || "All tickets",
-            //   value: "all"
-            // }}
+
             onChange={evt => setFromCities(evt.value)}
             options={options} />
-          <Heading text="From" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl"} />
+          <Heading text="From" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
           <Select
             styles={style}
             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
             className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl" required
-            // defaultValue={{
-            //   label: queryParams.get("from") || "select startingpoint",
-            //   value: "all"
-            // }}
+
             onChange={evt => setFromCities(evt.value)}
             options={options} />
-            
-          <Heading text="Destination" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl"} />
+
+          <Heading text="Destination" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
           <Select2
             styles={style}
             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
             required className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl "
-            // defaultValue={{
-            //   label: queryParams.get("to") || "select ending",
-            //   value: "all"
-            // }}
+
             onChange={evt => setToCities(evt.value)}
             options={options} />
-            <AnimateError 
-            error={fromCities!=null&&fromCities===toCities}
-            errorMessage={"cities should not be thesame"}/>
-          <Heading text="Time" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl"} />
+          <AnimateError
+            error={fromCities != null && fromCities === toCities}
+            errorMessage={"cities should not be thesame"} />
+          <Heading text="Time" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
           <SelectTime
             styles={style}
             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
@@ -277,11 +272,9 @@ const Booking = () => {
   focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
             >
-              Find Bus
+              Next <AiOutlineArrowRight className="!inline-block " />
             </button>
-
           </div>
-
           <div className="md:hidden min-h-8
            flex items-center justify-center mt-5 fixed left-0 bottom-8 w-full">
             <button
@@ -295,7 +288,7 @@ const Booking = () => {
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
             >
-              Find Bus
+              Next <AiOutlineArrowRight className="!inline-block " />
             </button>
 
           </div>

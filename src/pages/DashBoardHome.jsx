@@ -9,17 +9,8 @@ import { BsTicketPerforated } from 'react-icons/bs'
 import { BiBus } from 'react-icons/bi'
 import { useState, useEffect, useRef } from 'react'
 import axios from "axios"
-function renderEmployees() {
 
-    return (
-        <div className=''>
-            coding this user section for later dates
-
-        </div>
-    )
-}
 const DashboardHome = () => {
-
     const token = localStorage.getItem("admin_token");
     const ticketData = useSelector(state => state.setAdminData.ticketdata);
     const cities = useSelector(state => state.userCity.cities);

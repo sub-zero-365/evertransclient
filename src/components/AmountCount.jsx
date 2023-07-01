@@ -29,7 +29,7 @@ const AmountCount = ({ amount, icon, text, className }) => {
                 <span className="text-xl font-bold">{amount} frs</span>
                 <div className="flex items-center justify-between">
                     <span className="text-gray-500">{text}</span>
-                    <span className="text-green-500 text-sm font-semibold ml-2">+12.6%</span>
+                    {/* <span className="text-green-500 text-sm font-semibold ml-2">+12.6%</span> */}
                 </div>
             </div>
         </div>
