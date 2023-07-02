@@ -101,11 +101,11 @@ const Appointment = () => {
     })
     return (
         <motion.div
-            className="max-w-full overflow-auto max-h-[calc(100vh-3rem)] pt-10 " >
+            className="max-w-full !flex-1 w-full   overflow-auto max-h-[calc(100vh-3rem)] pt-10 " >
             {isLoading && (<Loader toggle dark />)}
-
+            <div> </div>
             <Heading text="Employees OverView" />
-            <div className="md:flex lg:mb-14 w-full">
+            <div className="lg:flex lg:mb-14 w-full  lg:px-10">
                 <div className={` flex-1 relative  text-xs mx-0   rounded-lg `}
                 >
                     <div className="flex  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow bg-white mx-4">
@@ -136,18 +136,16 @@ z-10  "
                         </motion.div>
 
                     </div>
-
                     <LineChart chartData={userData} />
                 </div>
 
-                <div className="flex-none w-[25rem]">
-
+                <div className="flex-none lg:w-[25rem]   shadow-xl lg:rounded-lg bg-white shadow-slate-400 shadow-offset-4">
                     side bar here
                 </div>
 
 
             </div>
-            <Scrollable className="mb-10 mt-5">
+            {/* <Scrollable className="mb-10 mt-5">
                 <AmountCount
                     className="!bg-blue-400"
                     text="All employees"
@@ -163,11 +161,12 @@ z-10  "
                     text="All employees"
                     icon={<BiCategory />}
                     amount={67} />
-            </Scrollable>
+            </Scrollable> */}
 
 
 
-            <form className="px-4 md:px-6 my-5 " onSubmit={handleSubmit}>
+            <form className="px-4 md:px-6 my-5 max-w-2xl mx-auto"
+                onSubmit={handleSubmit}>
                 <div className="flex relative min-h-[40px]">
                     <div className="relative w-full">
                         <input type="search" value={text}
@@ -184,8 +183,8 @@ z-10  "
 
 
 
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full ">
-                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+            <div className="relative max-w-full w-full  mx-auto overflow-x-auto shadow-md sm:rounded-lg ">
+                <table className="max-w-full w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" className="px-2 py-3">
@@ -204,9 +203,9 @@ z-10  "
                                 createdAt
                             </th>
 
-                            <th scope="col" className="px-6 py-3">
+                            {/* <th scope="col" className="px-6 py-3">
                                 user_id
-                            </th>
+                            </th> */}
 
                             <th scope="col" className="px-6 py-3">
                                 Action
@@ -216,8 +215,9 @@ z-10  "
                     </thead>
                     <tbody>
                         {
-                            users_.map(({ user, nHits }, index) => (<tr key={index} className="bg-white
-                            dark:bg-gray-900 dark:border-gray-700 hover:bg-slate-200"
+                            users_.map(({ user, nHits }, index) => (<tr key={index}
+                            className={`${index&1?"bg-transparent":"bg-slate-200"}
+                            dark:bg-gray-900 dark:border-gray-700 hover:bg-slate-200`}
                             >
                                 <td className="px-2 py-4  flex items-center justify-center">
                                     {index + 1}
@@ -233,19 +233,12 @@ z-10  "
                                 </th>
 
                                 <td className="px-6 py-4">
-
-
                                     {user?.createdAt ?
                                         (new Date(user?.createdAt).toLocaleDateString()) : "n/a"}
 
                                 </td>
 
-                                <td className="px-6 py-4">
-
-                                    {user?._id || "n/a"}
-
-                                </td>
-
+                               
 
                                 <td className="px-0 py-0 text-xs" >
                                     <Button

@@ -1,5 +1,5 @@
 
-const Scrollable = ({ children, className }) => {
+const Scrollable = ({ children, className}) => {
     return (
         <div
             className={`flex flex-nowrap overflow-x-auto  gap-x-4 md:gap-x-2  ${className}`}

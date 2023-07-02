@@ -174,7 +174,7 @@ const User = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="min-w-3xl md:px-5 mx-auto max-h-[calc(100vh-60px)] pb-64 overflow-y-auto">
+    <div className="min-w-3xl flex-none lg:px-24 !w-full md:px-5 mx-auto  max-h-[calc(100vh-60px)] pb-64 overflow-y-auto">
 
       {isLoading && <Loader toggle />}
       <Alert message={message}
@@ -235,6 +235,8 @@ const User = () => {
 
         )
       }
+      <div className="lg:flex items-start"> 
+      <div className="flex-1">
       <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
         <QRCode
           size={400}
@@ -245,7 +247,7 @@ const User = () => {
         />
       </div>
 
-      <Marquee play pauseOnClick pauseOnHover className="capitalize text-red-500 dark:text-red-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5 text-gray-900- md:text-lg lg:text-xl dark:text-white- max-w-5xl">
+      <Marquee play pauseOnClick pauseOnHover className="capitalize text-red-500 dark:text-red-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5 text-gray-900- md:text-lg lg:text-xl dark:text-white- w-full !max-w-2xl">
         this ticket is valid for a period of 1month
       </Marquee>
       <h1 className="text-center font-semibold  font-montserrat text-xl mt-4 md:text-2xl tracking-tighter leading-10 oblique text-blue-900">Ticket Details</h1>
@@ -293,8 +295,12 @@ const User = () => {
       <h2 className="text-center  text-lg md:text-xl font-medium  "> price of the ticket</h2>
       <p className="text-center text-slate-500 mb-10 " >{ticket?.price + "frs" || "n/a"} </p>
 
+      
       <div ref={ref} className="mt-56" />
-      <div className="
+      </div>
+      {/*  */}
+      
+      <div className="lg:static lg:flex-none lg:py-10
                                      bottom-0
                                      fixed
                                      w-full
@@ -341,7 +347,7 @@ const User = () => {
                                      pt-1
                                      pb-1.5
                                      !font-black
-                                     h-fit 
+                                     h-fit lg:hidden
                                      -translate-x-1/2
                                      
           ${isOpen ? "rotate-180" : " "}
@@ -354,6 +360,7 @@ const User = () => {
           className={`mx-auto
           ${isOpen ? "max-h-screen py-5" : "max-h-0 "}
           overflow-hidden
+          lg:max-h-screen
           transition-[max-height]
            duration-300
 w-[min(25rem,calc(100%-1rem))]
@@ -361,6 +368,7 @@ bg-white
 mb-5
 rounded-lg
 shadow-xl
+lg:py-10
 `}
 
         >
@@ -608,6 +616,9 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
         </motion.div>
       </div>
+      </div>
+
+     
 
 
     </div>

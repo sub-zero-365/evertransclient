@@ -5,8 +5,7 @@ import AlertBox from '../components/Alert'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import { Loadingbtn } from "../components"
-import { FreeMode, Navigation, Pagination, Scrollbar, A11y, Autoplay, Thumbs } from "swiper";
-import { Swiper, SwiperSlide } from 'swiper/react'
+import {Heading} from  "../components"
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -137,16 +136,16 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
 
         }
       </div>
-      <div className="flex container mx-auto">
+      <div className="lg:flex md:container mx-auto">
         <div className="flex-1 hidden lg:block">
           <img
             src={busimage}
             className="w-full h-[calc(100vh-50px)] object-cover" alt="booking " />
 
-
         </div>
-        <div className="flex-none pb-10 cal-width  mx-auto max-h-[calc(100vh-50px)] overflow-y-auto lg:shadow-lg mt-6 py-6 pt-0"
-          style={{ "--w": "500px" }}>
+        <div className="flex-none px-2 w-full pb-10 lg:w-[35rem] lg:px-4  mx-auto max-h-[calc(100vh-50px)] overflow-y-auto lg:shadow-lg mt-6 py-6 pt-0"
+          
+          >
           <nav className="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
             <ol className="inline-flex items-center space-x-1 md:space-x-3">
               <li className="inline-flex items-center">
@@ -173,7 +172,9 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
           </nav>
           <h1 className="text-2xl text-center font-bold
           font-montserrat">Display Information </h1>
-          <div className="border-2 px-2  border-orange-300 border-dotted rounded-sm py-5 pt-8 shadow mt-5 relative">
+          <div className="border-2 pr-4  bg-white shadow-xl 
+          
+          py-5 pt-8 rounded-lg mt-5 relative">
 
             <span className="absolute left-1/2 -translate-x-1/2 border px-10 rounded-lg shadow  min-h-[30px]  bg-color_light
                       dark:bg-color_dark top-[-15px] text-montserrat  font-semibold">
@@ -181,157 +182,68 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
                 (queryParameters.get("triptype") === "single" || queryParameters.get("triptype")) == "null" ? "Single Trip" : "Round Trip"
               }
             </span>
-            <div className="flex mb-3 flex-wrap">
-              <div className="w-1/2 text-sm">Full Names</div>
+            <div className="flex mb-1 items-center flex-wrap">
+              {/* <div className="w-1/2 text-sm">Full Names</div> */}
+          <Heading text="Fullname" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+
               <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2"> {queryParameters.get("name") || "fail"}</div>
             </div>
-            <div className="flex mb-3 flex-wrap">
-              <div className="w-1/2 text-sm">Email Address</div>
+            <div className="flex mb-1 items-center flex-wrap">
+              {/* <div className="w-1/2 text-sm">Email Address</div> */}
+          <Heading text="ID number" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+
               <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2"> {queryParameters.get("email")}</div>
             </div>
-            <div className="flex mb-3 flex-wrap">
-              <div className="w-1/2 text-sm">from</div>
+            <div className="flex mb-1 items-center flex-wrap">
+              {/* <div className="w-1/2 text-sm">from</div> */}
+          <Heading text="From" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              
               <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("from")}</div>
             </div>
-            <div className="flex mb-3 flex-wrap">
-              <div className="w-1/2 text-sm">To</div>
+            <div className="flex mb-1 items-center flex-wrap">
+              {/* <div className="w-1/2 text-sm">To</div> */}
+          <Heading text="To" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              
               <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2"> {queryParameters.get("to")}</div>
             </div>
-            <div className="flex mb-3 flex-wrap">
-              <div className="w-1/2 text-sm">Age</div>
+            <div className="flex mb-1 items-center flex-wrap">
+              {/* <div className="w-1/2 text-sm">Age</div> */}
+          <Heading text="Age" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              
               <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("age")} years</div>
             </div>
-            <div className="flex mb-3 flex-wrap">
-              <div className="w-1/2 text-sm">Gender</div>
+            <div className="flex mb-1 items-center flex-wrap">
+              {/* <div className="w-1/2 text-sm">Gender</div> */}
+          <Heading text="Gender" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              
               <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("gender")}</div>
             </div>
-            <div className="flex mb-3 flex-wrap">
-              <div className="w-1/2 text-sm">Sit position</div>
+            <div className="flex mb-1 items-center flex-wrap">
+              {/* <div className="w-1/2 text-sm">Sit position</div> */}
+          <Heading text="Seat" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              
               <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("sitpos")}</div>
             </div>
-            <div className="flex mb-3 flex-wrap">
-              <div className="w-1/2 text-sm">Date to Travel</div>
+            <div className="flex mb-1 items-center flex-wrap">
+              {/* <div className="w-1/2 text-sm">Date to Travel</div> */}
+          <Heading text="Travel Date" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              
               <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{new Date(queryParameters.get("date")).toLocaleDateString()
               }</div>
             </div>
-            <div className="flex mb-3 flex-wrap">
-              <div className="w-1/2 text-sm">Travel Time</div>
+            <div className="flex mb-1 items-center flex-wrap">
+              {/* <div className="w-1/2 text-sm">Travel Time</div> */}
+          <Heading text="Travel Time" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              
               <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("time")}</div>
             </div>
-            <div className="flex mb-3 flex-wrap">
-              <div className="w-1/2 text-sm">Travel Cost</div>
+            <div className="flex mb-1 items-center flex-wrap">
+              {/* <div className="w-1/2 text-sm">Travel Cost</div> */}
+          <Heading text="Travel Cost" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              
               <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{Number(queryParameters.get("sitpos")) > 20 ? 10000 + "frs" : 6500 + "frs"}</div>
             </div>
-            {/* <Swiper
-              onSwiper={setThumbsSwiper}
-              spaceBetween={10}
-              slidesPerView={2}
-              freeMode={true}
-              watchSlidesProgress={true}
-              scrollbar={{ draggable: true }}
-
-              modules={[FreeMode, Navigation, Thumbs, Scrollbar]}
-              className="mySwiper mt-10"
-              breakpoints={{
-                640: {
-                  slidesPerView: 2,
-                }
-
-
-              }}
-            >
-              {["From Details",
-                "Return Details"]?.
-                map((item, index) => (<SwiperSlide key={index}>
-                  <h2
-                    className={`
-                font-bold
-                uppercase 
-                text-xs 
-                md:text-sm 
-                pb-2
-                links-item
-                cursor-pointer
-                text-center
-                fw-semibold
-                font-montserrat 
-                `}>
-                    {item}
-                  </h2>
-                </SwiperSlide>))}
-
-
-            </Swiper>
-            <Swiper
-              style={{
-                "--swiper-navigation-color": "#fff",
-                "--swiper-pagination-color": "#fff",
-              }}
-              modules={
-                [Navigation,
-                  Pagination,
-                  Scrollbar,
-                  A11y,
-                  Autoplay,
-                  FreeMode,
-                  Thumbs]
-              }
-              spaceBetween={10}
-              thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
-              // scrollbar={true}
-              className="mySwiper2"
-            >
-
-              <SwiperSlide
-                className="px-4 pb-4"
-              >
-                <Header name="From information " />
-                <div className="flex mb-3 flex-wrap">
-                  <div className="w-1/2 text-sm ">from</div>
-                  <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("from")}</div>
-                </div>
-                <div className="flex mb-3 flex-wrap">
-                  <div className="w-1/2 text-sm ">to</div>
-                  <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("from")}</div>
-                </div>
-                <div className="flex mb-3 flex-wrap">
-                  <div className="w-1/2 text-sm">Date to Travel</div>
-                  <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{new Date(queryParameters.get("date")).toLocaleDateString()
-                  }</div>
-                </div>
-                <div className="flex mb-3 flex-wrap">
-                  <div className="w-1/2 text-sm">Travel Time</div>
-                  <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("time")}</div>
-                </div>
-
-              </SwiperSlide>
-              <SwiperSlide
-                className="px-4 pb-4"
-              >
-                <Header name="Return Information" />
-                <div className="flex mb-3 flex-wrap">
-                  <div className="w-1/2 text-sm ">from</div>
-                  <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("from")}</div>
-                </div>
-                <div className="flex mb-3 flex-wrap">
-                  <div className="w-1/2 text-sm ">to</div>
-                  <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("from")}</div>
-                </div>
-                <div className="flex mb-3 flex-wrap">
-                  <div className="w-1/2 text-sm">Date to Travel</div>
-                  <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{new Date(queryParameters.get("date")).toLocaleDateString()
-                  }</div>
-                </div>
-                <div className="flex mb-3 flex-wrap">
-                  <div className="w-1/2 text-sm">Travel Time</div>
-                  <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("time")}</div>
-                </div>
-
-              </SwiperSlide>
-
-
-
-            </Swiper> */}
+           
           </div>
 
           <div className="hidden h-[80px] md:flex items-center justify-center mt-auto">

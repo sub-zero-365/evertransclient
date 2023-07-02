@@ -54,7 +54,7 @@ const SideBar = () => {
     },
     {
 
-      name: "create new assistants",
+      name: "new assistant",
       icon: <FcAssistant size={20} />
       , to: "/dashboard/assistant"
 

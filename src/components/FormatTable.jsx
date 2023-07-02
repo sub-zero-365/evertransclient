@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button, DeactiveStatusButton, ActiveStatusButton } from './'
-const FormatTable = ({ tickets, currentPage, admin, skip = 10 }) => {
+const FormatTable = ({ tickets, currentPage, admin, skip }) => {
 
     const FormatTd = ({ ticket }) => {
         if (ticket?.active) {

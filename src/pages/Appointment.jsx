@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css'
 import { useSearchParams } from 'react-router-dom'
@@ -47,10 +47,22 @@ import { MdOutlinePriceChange } from 'react-icons/md';
 import { sortedDateOptions, sortTicketStatusOptions, skipOptions } from "../utils/sortedOptions"
 
 const Appointment = () => {
+    const ref = useRef(null);
+   
     useEffect(() => {
-        handleFilterChange("limit", 100)
+        if (!querySearch.get("limit")) {
+            handleFilterChange("limit", 100)
+        }
+        if (!querySearch.get("page")) {
+            handleFilterChange("page", 1)
+
+        }
+
         if (!querySearch.get("view")) {
             handleFilterChange("view", "all")
+        }
+        if (ref&&ref.current) {
+            ref.current.scrollLeft = querySearch.get("page") * 30
         }
     }, [])
 
@@ -60,7 +72,7 @@ const Appointment = () => {
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
-    const [activeIndex, setActiveIndex] = useState(0);
+    const [activeIndex, setActiveIndex] = useState((querySearch.get("page") - 1));
     const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
     const [loading, setLoading] = useState(false)
     const [userData, setUserData] = useState({})
@@ -74,6 +86,7 @@ const Appointment = () => {
         if (querySearch.get("limit") === evt.value) {
             return
         }
+
         handleFilterChange("limit", evt.value)
         window.navigator.vibrate([100])
     }
@@ -362,7 +375,7 @@ z-10  "
                                         [
                                             {
                                                 value: "alltrip",
-                                                label: "all trip"
+                                                label: "all"
                                             },
                                             {
                                                 value: "singletrip",
@@ -756,8 +769,11 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
             }
 
 
-            <div className='mt-10 ' />
-            <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
+            <div className='mt-10 '  />
+            <div ref={ref}
+            className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto flex  md:gap-x-2"
+                
+            >
                 {Array.from({
                     length: ticketData?.numberOfPages
                 }, (text, index) => {
@@ -765,12 +781,14 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                         text={index + 1}
                         active={activeIndex}
                         loading={isActiveIndexLoading}
-                        index={index} onClick={() => {
+                        index={index}
+
+                        onClick={() => {
                             setActiveIndex(index)
                             checkPages(index + 1)
                         }} />
                 })}
-            </Scrollable>
+            </div>
         </div>
     )
 
