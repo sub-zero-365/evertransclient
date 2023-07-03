@@ -6,8 +6,9 @@ import { motion } from "framer-motion"
 import { TbArmchair2, TbArmchairOff } from 'react-icons/tb'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Scrollbar, Pagination, Navigation } from 'swiper'
+import axios from 'axios'
 import Marquee from 'react-fast-marquee'
-
+import AnimateText from '../components/AnimateText'
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -22,7 +23,40 @@ import "swiper/css/thumbs";
 
 const
   BusSits = () => {
+  
+  
+  
     const [queryParameters] = useSearchParams();
+    
+    const [currentBus,setCurrentBus]=useState(null)
+    useEffect(()=>{
+      (async function () {
+      const id=queryParameters.get("bus");
+      if(!id){
+      alert("fail to get id")
+      }
+        try {
+            const res = await axios.get("/bus/"+id,{}
+                
+            )
+           
+            console.log(res.data)
+            setCurrentBus(res.data.bus);
+  
+        } catch (err) {
+        console.log(id)
+            console.log(err)
+  
+        }
+        finally {
+     
+        }
+    }())
+    
+    
+    
+    },[])
+    
     console.log(queryParameters.get("from"))
     const [userInfo, setUserInfo] = useState({
       name: queryParameters.get("name"),
@@ -46,13 +80,9 @@ const
     const toggleModal = () => {
       setError(!error)
     }
-    const checkBusAvailabity = (id, e = null) => {
-      if (id == 0) {
-        window.navigator.vibrate([50])
-        setSelected(id)
-        return
-      }
-      if ((id) & 1) {
+    const checkBusAvailabity = (isTaken,id) => {
+
+      if (isTaken) {
         setError(true)
         setErrorMessage("Seat has already beeen taken ; choose another sheet thanks")
         window.navigator.vibrate([50, 100, 60])
@@ -71,7 +101,7 @@ const
       gotoCheckOut()
     }
     const gotoCheckOut = () =>
-      navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}&triptype=${userInfo.tripType}`)
+      navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}&triptype=${userInfo.tripType}&bus=${queryParameters.get("bus")}`)
     return (
       <div
         className="min-h-screen"
@@ -112,9 +142,9 @@ const
             <DateUi dayOfeek={new Date().getDay()}
               date={queryParameters.get("date")}
               time={queryParameters.get("time")} />
-
-
-            <Heading text={"Please select your bus seat"} className="!mb-2 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
+  <AnimateText text="Please Select Seat" 
+                            className={"!text-sm md:!text-lg lg:!text-2xl !text-center"}/>
+            {/* <Heading text={"Please select your bus seat"} className="!mb-2 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" /> */}
             <div className="flex justify-between px-2 pb-2">
               <h1 className="text-xs lg:text- shadom-lg lg flex-1">
                 <span className="w-[10px] mr-1 h-[10px] inline-block bg-green-400 rounded-full "></span>Available</h1>
@@ -145,9 +175,12 @@ const
 
                 <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                   {
-                    Array.from({ length: 20 }, (seat, i) => {
+                    currentBus?.seat_details?.seat_positions?.slice(0,20)?.map(({isTaken,_id}, i) => {
+                    // console.log(isTaken)
                       return (
-                        <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none" onClick={(e) => checkBusAvailabity(i, e)}>
+                        <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
+                        key={_id}
+                        onClick={() => checkBusAvailabity(isTaken, _id)}>
                           <motion.div
                             initial={false}
                             animate={{ scale: selected == i ? [0.8, 1, 0.9] : null }}
@@ -159,15 +192,55 @@ const
 
                             }
 
-                            className={`${i & 1 ? "bg-orange-400" : "bg-green-400"} peer
-                ${selected == i ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
+                            className={`${(isTaken)? "bg-orange-400" : "bg-green-400"} peer
+                ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
                 rounded-lg flex items-center justify-center`}>
                             <motion.div
                               initial={false}
-                              animate={{ y: selected == i ? "1.3rem" : 0 }}
+                              animate={{ y: selected == _id ? "1.3rem" : 0 }}
                               className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
-                px-2 rounded-sm `}>{i + 1}</motion.div>
-                            {i & 1 ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
+                px-2 rounded-sm `}>{_id + 1}</motion.div>
+                            {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
+                          </motion.div>
+                        </div>
+                      )
+                    })
+                  }
+                </motion.div>
+
+
+              </SwiperSlide>
+              <SwiperSlide className="group">
+                <Heading text={"Seat from 1-20 are Vip"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
+
+                <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
+                  {
+                    currentBus?.seat_details?.seat_positions?.slice(20)?.map(({isTaken,_id}, i) => {
+                    // console.log(isTaken)
+                      return (
+                        <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
+                        key={_id}
+                        onClick={() => checkBusAvailabity(isTaken, _id)}>
+                          <motion.div
+                            initial={false}
+                            animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
+                            transition={{
+                              duration: 1,
+                              ease: "easeInOut",
+                              repeat: Infinity,
+                            }
+
+                            }
+
+                            className={`${(isTaken)? "bg-orange-400" : "bg-green-400"} peer
+                ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
+                rounded-lg flex items-center justify-center`}>
+                            <motion.div
+                              initial={false}
+                              animate={{ y: selected == _id ? "1.3rem" : 0 }}
+                              className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
+                px-2 rounded-sm `}>{_id + 1}</motion.div>
+                            {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
                           </motion.div>
                         </div>
                       )
@@ -178,7 +251,7 @@ const
 
               </SwiperSlide>
 
-              <SwiperSlide className="group">
+              {/* <SwiperSlide className="group">
 
                 <Heading text={"Seat from 1-20 are Vip+"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
 
@@ -218,7 +291,7 @@ const
                 </motion.div>
 
 
-              </SwiperSlide>
+              </SwiperSlide> */}
 
 
             </Swiper>

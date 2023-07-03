@@ -133,9 +133,7 @@ initial={{x:"-50%"}}
                                 >Mission</h2>
                                 <p className="text-slate-500 text-[14px]">
                                     At  {site_name} our mission is to give people the power to build community and bring the world closer together.
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed accusantium suscipit sapiente laudantium iusto quos maiores temporibus minima blanditiis eos, laborum corporis culpa mollitia, expedita neque commodi soluta optio rem natus veniam asperiores enim deleniti explicabo ea. Quam dolor quasi maxime labore nisi, quos nulla fuga molestias
-                                    corrupti magnam cupiditate a repellendus ipsum totam error libero harum voluptatem? Corporis, itaque.
-
+                                   
                                 </p>
                             </div>
                         </div>
@@ -149,9 +147,7 @@ initial={{x:"-50%"}}
                                 >Benefits</h2>
                                 <p className="text-slate-500 text-[14px]">
                                     We invest in training and development in a big way, so you can build your future along with ours, creating an impactful career unique to you.
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed accusantium suscipit sapiente laudantium iusto quos maiores temporibus minima blanditiis eos, laborum corporis culpa mollitia, expedita neque commodi soluta optio rem natus veniam asperiores enim deleniti explicabo ea. Quam dolor quasi maxime labore nisi, quos nulla fuga molestias
-                                    corrupti magnam cupiditate a repellendus ipsum totam error libero harum voluptatem? Corporis, itaque.
-
+                                   
                                 </p>
                             </div>
                         </div>
@@ -159,16 +155,13 @@ initial={{x:"-50%"}}
                             <img src={image3 ||
                                 "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
                                 alt="excellent" className="h-[60px] w-[60px] sticky top-[60px] rounded-full " />
-
                             <div className="flex-1">
                                 <h2 className="text-lg mb-2 font-[500] leading-5"
                                 >Our Desire</h2>
                                 <p className="text-slate-500 text-[14px]">
                                     SAP started in 1972 as a team of five colleagues with a desire to do something new. Together, they changed enterprise software and reinvented how business was done. Today, as a market leader in enterprise application software, we remain true to our roots.
                                     We invest in training and development in a big way, so you can build your future along with ours, creating an impactful career unique to you.
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed accusantium suscipit sapiente laudantium iusto quos maiores temporibus minima blanditiis eos, laborum corporis culpa mollitia, expedita neque commodi soluta optio rem natus veniam asperiores enim deleniti explicabo ea. Quam dolor quasi maxime labore nisi, quos nulla fuga molestias
-                                    corrupti magnam cupiditate a repellendus ipsum totam error libero harum voluptatem? Corporis, itaque.
-
+                                   
                                 </p>
                             </div>
                         </div>

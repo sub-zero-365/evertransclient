@@ -111,12 +111,16 @@ const Appointment = () => {
             handleFilterChange("daterange", null)
         }
         handleFilterChange("boardingRange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
+        handleFilterChange("page",1)
+    
     }
     const handleFilterSearch = () => {
         if (querySearch.get("boardingRange")) {
             handleFilterChange("boardingRange", null)
         }
         handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
+        handleFilterChange("page",1)
+    
     }
     const onChange = (dates) => {
         const [start, end] = dates;
@@ -144,10 +148,12 @@ const Appointment = () => {
     }
     const handleSortTime = (evt) => {
         if (querySearch.get("sort") == evt.value) return
+        handleFilterChange("page",1)
         handleFilterChange("sort", evt.value)
     }
     const handleChange = (evt) => {
         if (querySearch.get("ticketStatus") == evt.value) return
+        handleFilterChange("page",1)
         handleFilterChange("ticketStatus", evt.value)
     }
     const [isOpen, setIsOpen] = useState(false);
@@ -207,56 +213,7 @@ z-10  "
                     <AiOutlineSetting size={20} color="#fff" className="" />
                 </div>
             </motion.div>
-            {/* <div class="md:grid grid-col-2 lg:grid-cols-3 justify-center 
-            bg-gray-100 py-10 space-y-3">
-                <div class="container mx-auto pr-4">
-                    <div class="w-72 bg-white max-w-xs mx-auto rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 transform hover:scale-100 cursor-pointer">
-                        <div class="h-20 bg-red-400 flex items-center justify-between">
-                            <p class="mr-0 text-white text-lg pl-5">BT SUBSCRIBERS</p>
-                        </div>
-                        <div class="flex justify-between px-5 pt-6 mb-2 text-sm text-gray-600">
-                            <p>TOTAL</p>
-                        </div>
-                        <p class="py-4 text-3xl ml-5">20,456</p>
-                    </div>
-                </div>
-
-                <div class="container mx-auto pr-4">
-                    <div class="w-72 bg-white max-w-xs mx-auto rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 transform hover:scale-100 cursor-pointer">
-                        <div class="h-20 bg-blue-500 flex items-center justify-between">
-                            <p class="mr-0 text-white text-lg pl-5">BT ACTIVE SUBSCRIBERS</p>
-                        </div>
-                        <div class="flex justify-between px-5 pt-6 mb-2 text-sm text-gray-600">
-                            <p>TOTAL</p>
-                        </div>
-                        <p class="py-4 text-3xl ml-5">19,694</p>
-                    </div>
-                </div>
-
-                <div class="container mx-auto pr-4">
-                    <div class="w-72 bg-white max-w-xs mx-auto rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 transform hover:scale-100 cursor-pointer">
-                        <div class="h-20 bg-purple-400 flex items-center justify-between">
-                            <p class="mr-0 text-white text-lg pl-5">BT OPT OUTS</p>
-                        </div>
-                        <div class="flex justify-between pt-6 px-5 mb-2 text-sm text-gray-600">
-                            <p>TOTAL</p>
-                        </div>
-                        <p class="py-4 text-3xl ml-5">711</p>
-                    </div>
-                </div>
-
-                <div class="container mx-auto">
-                    <div class="w-72 bg-white max-w-xs mx-auto rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 transform hover:scale-100 cursor-pointer">
-                        <div class="h-20 bg-purple-900 flex items-center justify-between">
-                            <p class="mr-0 text-white text-lg pl-5">BT TODAY'S SUBSCRIPTION</p>
-                        </div>
-                        <div class="flex justify-between pt-6 px-5 mb-2 text-sm text-gray-600">
-                            <p>TOTAL</p>
-                        </div>
-                        <p class="py-4 text-3xl ml-5">0</p>
-                    </div>
-                </div>
-            </div> */}
+            
             <div>
                 <div className="lg:flex items-start justify-start gap-4"
                 >
@@ -374,8 +331,8 @@ z-10  "
                                     options={
                                         [
                                             {
-                                                value: "alltrip",
-                                                label: "all"
+                                                value: "all",
+                                                label: "All Trip"
                                             },
                                             {
                                                 value: "singletrip",
@@ -435,6 +392,7 @@ font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-au
                                     <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
                                         onClick={() => {
                                             handleFilterChange("daterange")
+                                            
                                         }}
 
                                     >Clear Filter</span>

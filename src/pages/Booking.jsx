@@ -7,11 +7,7 @@ import {
 import { BiChevronDown } from 'react-icons/bi'
 import { useState, forwardRef, useEffect } from "react"
 import DatePicker from 'react-datepicker'
-// import DatePicker2 from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-// import { CiTimer } from 'react-icons/ci'
-// import { BiCurrentLocation } from 'react-icons/bi'
-// import Marquee from 'react-fast-marquee'
 import { AiOutlineArrowRight } from 'react-icons/ai'
 import Select from 'react-select'
 import Select2 from 'react-select'
@@ -23,8 +19,6 @@ import { motion } from 'framer-motion'
 import { useSelector, useDispatch } from 'react-redux'
 import { storeCities } from "../actions/userCity"
 import axios from 'axios'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay, Navigation, Pagination } from 'swiper'
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -36,6 +30,7 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 const Booking = () => {
+
   const dispatch = useDispatch();
   const [queryParams, setQueryParams] = useSearchParams()
   const [toggle, setToggle] = useState(false)
@@ -56,8 +51,34 @@ const Booking = () => {
     )
 
   }
+  const [buses,setBuses]=useState([])
   useEffect(() => {
     const token = localStorage.getItem("token");
+    
+       (async function () {
+      try {
+          const res = await axios.get("/bus",
+              {
+                  headers: {
+                      'Authorization': "makingmoney " + token
+                  }
+              }
+          )
+          // setIsOpen(false);
+          setBuses(res.data?.buses?.map((bus)=>({label:bus.name,value:bus._id})))
+          console.log(res.data)
+
+      } catch (err) {
+          // setErr(err.response.data)
+          console.log(err)
+
+      }
+      finally {
+   
+      }
+  }())
+    
+    
     window.scrollTo({
       top: 0,
       left: 0,
@@ -88,6 +109,10 @@ const Booking = () => {
 
     }
     getCities()
+    
+    
+ 
+
 
   }, [])
   const tripType = queryParams.get("triptype");
@@ -102,11 +127,11 @@ const Booking = () => {
 
   const [fromCities, setFromCities] = useState(queryParams.get("from"))
   const [toCities, setToCities] = useState(queryParams.get("to"))
-
+const [selectedbus,setSelectedBus]=useState(null)
   const [isLine, setIsline] = useState(false)
   const options = useSelector(state => state.userCity.cities);
   const navigate = useNavigate()
-  const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${time}&date=${startDate}&endTime=${endTime}&triptype=${tripType}`)
+  const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${time}&date=${startDate}&endTime=${endTime}&triptype=${tripType}&bus=${selectedbus}`)
   const [demoFetch, setDemoFetch] = useState(false);
   const loadDemoData = (evt) => {
     evt.preventDefault()
@@ -139,9 +164,7 @@ const Booking = () => {
       rounded-0
       bg-transparent my-1  "
       onClick={onClick} ref={ref}>
-      {/* <div className="flex-none rounded-lg h-10 w-10 flex items-center justify-center">
-        <CiTimer size={30} />
-      </div> */}
+   
       <Heading text="Date" className={"!pl-0 !mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
       <div className="flex-1">
@@ -209,15 +232,15 @@ const Booking = () => {
               }
             /> </div>
 
-          <Heading text="Bus" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+          <Heading text="Bus " className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
           <Select3
             styles={style}
             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
             className="dark:bg-slate-900 mx-2  min-h-8 text-black text-xs md:text-xl"
             required
 
-            onChange={evt => setFromCities(evt.value)}
-            options={options} />
+            onChange={evt => setSelectedBus(evt.value)}
+            options={buses} />
           <Heading text="From" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
           <Select
             styles={style}

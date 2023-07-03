@@ -1,4 +1,4 @@
-import { useSearchParams, useParams, NavLink, Link, useNavigate } from "react-router-dom"
+import { useSearchParams, useParams, NavLink, Link, useNavigate,useLocation } from "react-router-dom"
 import { useEffect, useState, useRef } from "react"
 import Alert from '../components/Alert'
 import {
@@ -9,7 +9,7 @@ import dateFormater from '../utils/DateFormater'
 import axios from 'axios'
 import Marquee from 'react-fast-marquee'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { image1 } from "../Assets/images"
+// import { image1 } from "../Assets/images"
 import { Loadingbtn } from '../components'
 import { MdOutlineReportOff } from 'react-icons/md'
 import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
@@ -18,9 +18,12 @@ import { BsChevronCompactUp } from 'react-icons/bs'
 import succcesssound from '../utils/successsound.mp3'
 const User = () => {
   const ref = useRef(null);
+
+  const location=useLocation();
+  console.log(location)
+  const loadState=location?.state?._id
   const isInView = useInView(ref)
   useEffect(() => {
-    // alert("im in view")
     if (isInView) {
       setIsOpen(true)
     } else {
@@ -33,25 +36,16 @@ const User = () => {
   const getStatus = (obj, value = "roundtrip") => {
     return obj?.type === value && obj?.doubletripdetails?.some(x => x.active == true)
   }
-  // const isActiveFormater = ticket => {
-  //   if (getStatus(ticket)) {
-  //     return true
-  //   }
-  //   return ticket?.active && ticket.type !== "roundtrip"
-  // }
+  
   const navigate = useNavigate();
   const previousPage = () => navigate(-1)
   const [active, setActive] = useState(null);
   const [queryParameters] = useSearchParams()
-  const [ticket, setTicket] = useState({})
-  // const [isAdmin, setAdmin] = useState(false)
-  const [isLoading, setIsloading] = useState(true);
+  const [ticket, setTicket] = useState(location.state)
+  const [isLoading, setIsloading] = useState(loadState?false:true);
   const [loadbtn, setLoadbtn] = useState(false)
   const [message, setMessage] = useState("")
-  const [ticketData, setTicketData] = useState({})
-  // useEffect(() => {
-  //   setAdmin(queryParameters.get("admin"));
-  // }, [window.location.href])
+  const [ticketData, setTicketData] = useState(location.state)
   const id = useParams().id
   const [params, setParams] = useState({
   })
@@ -64,14 +58,10 @@ const User = () => {
   async function getData() {
     if (isadminuser == null) {
       token = localStorage.getItem("token")
-      if (token == null) {
-      }
       url = `${process.env.REACT_APP_LOCAL_URL}/ticket/${id}`
     } else {
       token = localStorage.getItem("admin_token");
       url = `${process.env.REACT_APP_LOCAL_URL}/admin/staticticket/${id}`;
-
-
     }
     try {
       const res = await axios.get(url, {
@@ -81,9 +71,8 @@ const User = () => {
       }
 
       )
-      setTicket(res.data.ticket)
-      setTicketData(res.data.ticket)
-
+        setTicket(res.data.ticket)
+        setTicketData(res.data.ticket)
 
       if (res.data?.ticket.active === true) {
         try {
@@ -98,14 +87,15 @@ const User = () => {
       if (!res.data.ticket) {
         setToggle(true)
       }
-      setIsloading(false);
+      if(isLoading){
+        setIsloading(false);
+      }
       setLoadbtn(false)
     } catch (err) {
       setIsloading(false)
       setToggle(true)
       console.log(err)
       setMessage(err.response.data)
-      // setMessage("fail to get ticket with\n id " + id + "\n  please contact customer service")
     }
   }
 
@@ -134,13 +124,12 @@ const User = () => {
       setTicketData(res.data?.updateTicket)
       setMessage("successfull edited ticket")
     } catch (err) {
-      console.log(err)
-      setMessage(err.response.data)
+      setMessage(err.response.data);
       setLoadbtn(false)
     }
     finally {
-      setIsloading(false)
       setToggle(true)
+      setIsloading(false)
 
     }
   }
@@ -241,8 +230,8 @@ const User = () => {
         <QRCode
           size={400}
           style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-          value={`https://ntaribotaken.vercel.app/dashboard/${id}?admin=true`}
-          // value={`http://192.168.43.68:3000/dashboard/${id}?admin=true&sound=true`}
+          // value={`https://ntaribotaken.vercel.app/dashboard/${id}?admin=true`}
+          value={`http://192.168.43.68:3000/dashboard/${id}?admin=true&sound=true`}
           viewBox={`0 0 256 256`}
         />
       </div>

@@ -27,7 +27,8 @@ const DashboardHome = lazy(() => import("./pages/DashBoardHome"));
 const AdminAssistant = lazy(() => import("./pages/AdminContact"));
 const Details = lazy(() => import("./pages/userDetails"));
 const DashRegister = lazy(() => import("./pages/DashRegister"));
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL=process.env.REACT_APP_LOCAL_URL
 function App() {
   const dispatch = useDispatch();
   const setuserName = (username) => {

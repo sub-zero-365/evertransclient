@@ -1,17 +1,18 @@
-import { useNavigate } from 'react-router-dom'
-const 
-Button = ({ className, href, name }) => {
-    const navigate = useNavigate();
-    const navigateTo = (path = "/") => {
-        return navigate(path)
-    }
-    return (
-        <div
-            onClick={() => {
-                navigateTo(href);
-                window.navigator.vibrate([10])
-            }}
-            className={`${className} 
+import { useNavigate, Link } from 'react-router-dom'
+const
+    Button = ({ className, href, name, state }) => {
+        const navigate = useNavigate();
+        const navigateTo = (path = "/") => {
+            return navigate(path)
+        }
+        return (
+            <Link to={href}
+                state={state}
+                // onClick={() => {
+                //     navigateTo(href);
+                //     window.navigator.vibrate([10])
+                // }}
+                className={`${className} 
             font-medium
             shadow
             md:shadow-md
@@ -39,11 +40,11 @@ Button = ({ className, href, name }) => {
             md:text-sm
             font-montserrat
             `}
-            style={{
-                whiteSpace: "nowrap"
-            }}
-        >{name || "Details"}</div>
-    )
-}
+                style={{
+                    whiteSpace: "nowrap"
+                }}
+            >{name || "Details"}</Link>
+        )
+    }
 
 export default Button

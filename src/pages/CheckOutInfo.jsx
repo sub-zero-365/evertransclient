@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { NavLink, useSearchParams, useNavigate, Link } from "react-router-dom"
 import Alert from '../components/Alert'
 import AlertBox from '../components/Alert'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import { Loadingbtn } from "../components"
-import {Heading} from  "../components"
+import { Heading } from "../components"
+import { BiCategory } from 'react-icons/bi'
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -16,9 +17,13 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import AnimateText from '../components/AnimateText'
 import busimage from '../Assets/images/busimage.jpg'
 const BusSits = () => {
+  const constraintsRef = useRef(null)
 
+
+  const [view, setView] = useState(false)
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(false)
@@ -33,6 +38,21 @@ const BusSits = () => {
 
 
   const url = process.env.REACT_APP_LOCAL_URL + "/ticket"
+  const handleMarkSeatConSumeSeat = async () => {
+  const busId=queryParameters.get("bus");
+  const sitpos=queryParameters.get("sitpos")
+    if (!busId&& !sitpos) {
+      alert("fail to get ids")
+      return
+    }
+    try {
+      const res = await axios.put(`/bus/${busId}/${sitpos}`)
+      console.log(res)
+    } catch (err) {
+      console.log(err)
+    }
+
+  }
   const handleSubmit = async () => {
     // if(queryParameters.get("triptype"))
     var submitdata = {
@@ -44,7 +64,6 @@ const BusSits = () => {
       sex: queryParameters.get("gender"),
       email: queryParameters.get("email"),
       age: queryParameters.get("age"),
-      time: queryParameters.get("time").toLowerCase(),
       phone: queryParameters.get("phone"),
       fullname: queryParameters.get("name"),
 
@@ -88,10 +107,41 @@ const BusSits = () => {
       animate={{ x: 0, y: 0 }}
       className="h-[calc(100vh-50px)]"
     >
+      <motion.div
+        drag
+        dragConstraints={constraintsRef}
+        onClick={() => setView(c => !c)}
+        animate={{
+          scale: [0.7, 1.2, 0.8],
+        }}
+        transition={{
+          duration: 2,
+          ease: "easeInOut",
+          times: [0, 0.2, 0.5, 0.8, 1],
+          repeat: Infinity,
+          repeatDelay: 1
+        }
+        }
+        className="bottom-1/2
+                        -translate-y-1/2 fixed 
+                        lg:hidden
+                        flex-none 
+                        shadow-2xl button-add  top-auto bg-blue-400 
+w-[2.5rem]
+h-[2.5rem] 
+-rounded-full 
+overflow-hidden 
+right-0
+z-10  "
+      >
+        <div className="flex h-full w-full items-center -scale-animation justify-center ">
+          <BiCategory size={20} color="#fff" className="" />
+        </div>
+      </motion.div>
       <AlertBox
         duration="30000"
         className={`
-     ${error && "!top-1/2 -translate-y-1/2"}
+     ${error && "!top-1/2 -translate-y-1/2"} group
      `}
         error={error}
         confirmFunc={() => setError(false)}
@@ -143,9 +193,9 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             className="w-full h-[calc(100vh-50px)] object-cover" alt="booking " />
 
         </div>
-        <div className="flex-none px-2 w-full pb-10 lg:w-[35rem] lg:px-4  mx-auto max-h-[calc(100vh-50px)] overflow-y-auto lg:shadow-lg mt-6 py-6 pt-0"
-          
-          >
+        <div className="flex-none px-2 w-full pb-24 lg:w-[35rem] lg:px-4  mx-auto max-h-[calc(100vh-50px)] overflow-y-auto lg:shadow-lg mt-6 py-6 pt-0"
+          ref={constraintsRef}
+        >
           <nav className="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
             <ol className="inline-flex items-center space-x-1 md:space-x-3">
               <li className="inline-flex items-center">
@@ -164,14 +214,19 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
                 <div className="flex items-center">
                   <svg aria-hidden="true" className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                   <a href="#" className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
-                    <h1 className="text-slate-400  font-medium text-xl ">Informations</h1>
+                    <h1
+
+                      onClick={handleMarkSeatConSumeSeat}
+                      className="text-slate-400  font-medium text-xl ">Informations</h1>
                   </a>
                 </div>
               </li>
             </ol>
           </nav>
-          <h1 className="text-2xl text-center font-bold
-          font-montserrat">Display Information </h1>
+          <AnimateText text="User Information"
+            className={"!text-sm md:!text-lg lg:!text-2xl !text-center"} />
+          {/* <Heading text="User Information" className="!text-center !text-2xl !font-black !mb-14 !text-slate-900 underline underline-offset-8" /> */}
+
           <div className="border-2 pr-4  bg-white shadow-xl 
           
           py-5 pt-8 rounded-lg mt-5 relative">
@@ -182,68 +237,54 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
                 (queryParameters.get("triptype") === "single" || queryParameters.get("triptype")) == "null" ? "Single Trip" : "Round Trip"
               }
             </span>
-            <div className="flex mb-1 items-center flex-wrap">
-              {/* <div className="w-1/2 text-sm">Full Names</div> */}
-          <Heading text="Fullname" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+            <div className={`grid ${view ? "grid-cols-1 active " : "grid-cols-2"} group justify-center mb-1 items-center `}>
+              <Heading text="Fullname" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <div className=" line-clamp-2 group-[.active]:!text-center capitalize pl-2 border-b-2"> {queryParameters.get("name") || "fail"}</div>
+            </div>
+            <div className={`grid ${view ? "grid-cols-1 active " : "grid-cols-2"} group justify-center- mb-1 items-center `}>
+              <Heading text="ID number" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center"> {queryParameters.get("email")}</div>
+            </div>
+            <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+              <Heading text="From" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2"> {queryParameters.get("name") || "fail"}</div>
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("from")}</div>
             </div>
-            <div className="flex mb-1 items-center flex-wrap">
-              {/* <div className="w-1/2 text-sm">Email Address</div> */}
-          <Heading text="ID number" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+            <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+              <Heading text="To" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2"> {queryParameters.get("email")}</div>
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center"> {queryParameters.get("to")}</div>
             </div>
-            <div className="flex mb-1 items-center flex-wrap">
-              {/* <div className="w-1/2 text-sm">from</div> */}
-          <Heading text="From" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-              
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("from")}</div>
+            <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+              <Heading text="Age" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("age")} years</div>
             </div>
-            <div className="flex mb-1 items-center flex-wrap">
-              {/* <div className="w-1/2 text-sm">To</div> */}
-          <Heading text="To" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-              
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2"> {queryParameters.get("to")}</div>
+            <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+              <Heading text="Gender" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("gender")}</div>
             </div>
-            <div className="flex mb-1 items-center flex-wrap">
-              {/* <div className="w-1/2 text-sm">Age</div> */}
-          <Heading text="Age" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-              
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("age")} years</div>
+            <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+              <Heading text="Seat" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("sitpos")}</div>
             </div>
-            <div className="flex mb-1 items-center flex-wrap">
-              {/* <div className="w-1/2 text-sm">Gender</div> */}
-          <Heading text="Gender" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-              
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("gender")}</div>
-            </div>
-            <div className="flex mb-1 items-center flex-wrap">
-              {/* <div className="w-1/2 text-sm">Sit position</div> */}
-          <Heading text="Seat" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-              
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("sitpos")}</div>
-            </div>
-            <div className="flex mb-1 items-center flex-wrap">
-              {/* <div className="w-1/2 text-sm">Date to Travel</div> */}
-          <Heading text="Travel Date" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-              
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{new Date(queryParameters.get("date")).toLocaleDateString()
+            <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+              <Heading text="Travel Date" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{new Date(queryParameters.get("date")).toLocaleDateString()
               }</div>
             </div>
-            <div className="flex mb-1 items-center flex-wrap">
-              {/* <div className="w-1/2 text-sm">Travel Time</div> */}
-          <Heading text="Travel Time" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-              
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{queryParameters.get("time")}</div>
+            <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+              <Heading text="Travel Time" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("time")}</div>
             </div>
-            <div className="flex mb-1 items-center flex-wrap">
-              {/* <div className="w-1/2 text-sm">Travel Cost</div> */}
-          <Heading text="Travel Cost" className={"!mb-1 !mt-2 !w-1/2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-              
-              <div className="w-1/2 line-clamp-2 capitalize pl-2 border-b-2">{Number(queryParameters.get("sitpos")) > 20 ? 10000 + "frs" : 6500 + "frs"}</div>
+            <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+              <Heading text="Travel Cost" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{Number(queryParameters.get("sitpos")) > 20 ? 10000 + "frs" : 6500 + "frs"}</div>
             </div>
-           
+
           </div>
 
           <div className="hidden h-[80px] md:flex items-center justify-center mt-auto">

@@ -94,7 +94,7 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
                         </td> */}
                         <td className="py-0 text-xs"
                         >
-                            <Button admin
+                            <Button admin state={ticket}
                                 href={`/${admin ? "dashboard" : "user"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
                             />
                         </td>

@@ -59,12 +59,12 @@ const SideBar = () => {
       , to: "/dashboard/assistant"
 
     },
-    {
-      name: "register new employee",
-      icon: <GrServicePlay size={20} />
-      , to: "/dashboard/register"
+    // {
+    //   name: "register new employee",
+    //   icon: <GrServicePlay size={20} />
+    //   , to: "/dashboard/register"
 
-    },
+    // },
 
 
 
