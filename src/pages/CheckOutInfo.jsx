@@ -39,17 +39,21 @@ const BusSits = () => {
 
   const url = process.env.REACT_APP_LOCAL_URL + "/ticket"
   const handleMarkSeatConSumeSeat = async () => {
-  const busId=queryParameters.get("bus");
-  const sitpos=queryParameters.get("sitpos")
-    if (!busId&& !sitpos) {
+    return
+    const busId = queryParameters.get("bus");
+    const sitpos = queryParameters.get("sitpos")
+    if (!busId && !sitpos) {
       alert("fail to get ids")
       return
     }
     try {
       const res = await axios.put(`/bus/${busId}/${sitpos}`)
       console.log(res)
+      return res
     } catch (err) {
       console.log(err)
+
+      throw new Error("something went wrong")
     }
 
   }
@@ -78,6 +82,13 @@ const BusSits = () => {
     const token = localStorage.token
     if (!token) return navigate("/login")
     try {
+      const busId = queryParameters.get("bus");
+      const sitpos = queryParameters.get("sitpos")
+      if (!busId && !sitpos) {
+        alert("fail to get ids")
+        return
+      }
+      const r = await axios.put(`/bus/${busId}/${sitpos}`)
       const res = await axios.post(url, {
         ...submitdata
       }, {
@@ -94,7 +105,6 @@ const BusSits = () => {
       proccedCheckout()
     } catch (err) {
       console.log(err)
-      // alert(err.response.data)
       setIsLoading(false)
       setMessage(err.response.data)
       setError(true)
@@ -216,7 +226,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
                   <a href="#" className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
                     <h1
 
-                      onClick={handleMarkSeatConSumeSeat}
+                    
                       className="text-slate-400  font-medium text-xl ">Informations</h1>
                   </a>
                 </div>

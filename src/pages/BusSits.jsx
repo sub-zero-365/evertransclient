@@ -7,6 +7,7 @@ import { TbArmchair2, TbArmchairOff } from 'react-icons/tb'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Scrollbar, Pagination, Navigation } from 'swiper'
 import axios from 'axios'
+import GenderSelect from 'react-select'
 import Marquee from 'react-fast-marquee'
 import AnimateText from '../components/AnimateText'
 import "swiper/css"
@@ -23,46 +24,49 @@ import "swiper/css/thumbs";
 
 const
   BusSits = () => {
-  
-  
-  
+
+
+
     const [queryParameters] = useSearchParams();
-    
-    const [currentBus,setCurrentBus]=useState(null)
-    useEffect(()=>{
+
+    const [currentBus, setCurrentBus] = useState(null)
+    useEffect(() => {
       (async function () {
-      const id=queryParameters.get("bus");
-      if(!id){
-      alert("fail to get id")
-      }
+        const id = queryParameters.get("bus");
+        if (!id) {
+          alert("fail to get id")
+        }
         try {
-            const res = await axios.get("/bus/"+id,{}
-                
-            )
-           
-            console.log(res.data)
-            setCurrentBus(res.data.bus);
-  
+          const res = await axios.get("/bus/" + id, {}
+
+          )
+
+          console.log(res.data)
+          if (selected&&selected == res.data.bus?.seat_positions[selected]?._id) {
+            setSelected(null)
+          }
+          setCurrentBus(res.data.bus);
+
         } catch (err) {
-        console.log(id)
-            console.log(err)
-  
+          // console.log(id)
+          console.log(err)
+
         }
         finally {
-     
+
         }
-    }())
-    
-    
-    
-    },[])
-    
+      }())
+
+
+
+    }, [])
+
     console.log(queryParameters.get("from"))
     const [userInfo, setUserInfo] = useState({
       name: queryParameters.get("name"),
       age: queryParameters.get("age"),
       phone: queryParameters.get("phone"),
-      gender: queryParameters.get("gender"),
+      gender: (queryParameters.get("gender") || "male"),
       from: queryParameters.get("from"),
       to: queryParameters.get("to"),
       email: queryParameters.get("email"),
@@ -70,7 +74,6 @@ const
       time: queryParameters.get("time"),
       tripType: queryParameters.get("triptype")
     })
-    // const Header = ({ name }) => <h1 className="dark:text-white  font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
 
     const navigate = useNavigate()
     const [selected, setSelected] = useState(queryParameters.get("sitpos"))
@@ -80,7 +83,7 @@ const
     const toggleModal = () => {
       setError(!error)
     }
-    const checkBusAvailabity = (isTaken,id) => {
+    const checkBusAvailabity = (isTaken, id) => {
 
       if (isTaken) {
         setError(true)
@@ -109,7 +112,7 @@ const
         <Modal toggle={error} toggleModal={toggleModal} information={errorMessage}  ></Modal>
         <div className="flex container mx-auto">
           <div className="flex-1 hidden lg:block">
-            <img src="https://www.redbus.in/" className="h-full w-full object-cover" alt="bus "/>
+            <img src="https://www.redbus.in/" className="h-full w-full object-cover" alt="bus " />
 
           </div>
           <div className="flex-none cal-width mx-auto shadow-lg mt-6 py-6 pt-0 pb-20"
@@ -142,9 +145,8 @@ const
             <DateUi dayOfeek={new Date().getDay()}
               date={queryParameters.get("date")}
               time={queryParameters.get("time")} />
-  <AnimateText text="Please Select Seat" 
-                            className={"!text-sm md:!text-lg lg:!text-2xl !text-center"}/>
-            {/* <Heading text={"Please select your bus seat"} className="!mb-2 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" /> */}
+            <AnimateText text="Please Select Seat"
+              className={"!text-sm md:!text-lg lg:!text-2xl !text-center"} />
             <div className="flex justify-between px-2 pb-2">
               <h1 className="text-xs lg:text- shadom-lg lg flex-1">
                 <span className="w-[10px] mr-1 h-[10px] inline-block bg-green-400 rounded-full "></span>Available</h1>
@@ -175,12 +177,11 @@ const
 
                 <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                   {
-                    currentBus?.seat_details?.seat_positions?.slice(0,20)?.map(({isTaken,_id}, i) => {
-                    // console.log(isTaken)
+                    currentBus?.seat_positions?.slice(0, 20)?.map(({ isTaken, _id }, i) => {
                       return (
                         <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
-                        key={_id}
-                        onClick={() => checkBusAvailabity(isTaken, _id)}>
+                          key={_id}
+                          onClick={() => checkBusAvailabity(isTaken, _id)}>
                           <motion.div
                             initial={false}
                             animate={{ scale: selected == i ? [0.8, 1, 0.9] : null }}
@@ -192,7 +193,7 @@ const
 
                             }
 
-                            className={`${(isTaken)? "bg-orange-400" : "bg-green-400"} peer
+                            className={`${(isTaken) ? "bg-orange-400" : "bg-green-400"} peer
                 ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
                 rounded-lg flex items-center justify-center`}>
                             <motion.div
@@ -215,12 +216,11 @@ const
 
                 <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                   {
-                    currentBus?.seat_details?.seat_positions?.slice(20)?.map(({isTaken,_id}, i) => {
-                    // console.log(isTaken)
+                    currentBus?.seat_positions?.slice(20)?.map(({ isTaken, _id }, i) => {
                       return (
                         <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
-                        key={_id}
-                        onClick={() => checkBusAvailabity(isTaken, _id)}>
+                          key={_id}
+                          onClick={() => checkBusAvailabity(isTaken, _id)}>
                           <motion.div
                             initial={false}
                             animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
@@ -232,7 +232,7 @@ const
 
                             }
 
-                            className={`${(isTaken)? "bg-orange-400" : "bg-green-400"} peer
+                            className={`${(isTaken) ? "bg-orange-400" : "bg-green-400"} peer
                 ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
                 rounded-lg flex items-center justify-center`}>
                             <motion.div
@@ -490,7 +490,54 @@ const
                                 dark:bg-color_dark top-[-15px]">
                     user gender
                   </span>
-                  <div className="px-2 w-fit mt-4 flex gap-2">
+                  <div className="z-[100] max-w-[14rem]">
+                    <GenderSelect
+                      onChange={e => {
+                        setUserInfo({ ...userInfo, gender: e.value })
+                        console.log(e.value)
+
+                      }}
+                      defaultValue={{
+                        label: "male",
+                        value: "male"
+                      }}
+                      required
+                      menuPlacement="top"
+                      styles={{
+                        control: base => ({
+                          ...base,
+                          border: 0,
+                          borderBottom: "1px solid black",
+                          boxShadow: "none",
+                          background: "transparent",
+                          color: "red",
+                          borderRadius: 0,
+                          fontSize: 1 + "rem",
+                          zIndex: 1000
+                        }
+                        )
+
+                      }}
+                      options={
+                        [
+                          {
+                            label: "male",
+                            value: "male"
+
+                          },
+                          {
+                            label: "female",
+                            value: "female"
+
+                          }
+
+                        ]
+                      }
+                    />
+
+
+                  </div>
+                  {/* <div className="px-2 w-fit mt-4 flex gap-2">
                     <div className="flex items-center">
 
                       <input
@@ -530,9 +577,9 @@ const
                         htmlFor="gender">
                         female
                       </label>
-                    </div>
+                    </div> */}
 
-                  </div>
+                  {/* </div> */}
 
                 </div>
 
@@ -642,8 +689,8 @@ const
               </div>
 
             </form>
-          </div>        </div>
-      </div>
+          </div>        </div >
+      </div >
     )
   }
 

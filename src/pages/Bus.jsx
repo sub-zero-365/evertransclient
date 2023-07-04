@@ -68,9 +68,7 @@ const Bus = () => {
     }, [])
     const [busDat, setBusData] = useState({
         name: null,
-        seat_details: {
-            number_of_seats: 45
-        },
+            number_of_seats: 45,
         feature: "small bus"
 
     })
@@ -90,10 +88,9 @@ const Bus = () => {
             setIsOpen(false);
             console.log(data)
             setBusData({
-                name: null,
-                seat_details: {
+                // name: null,
                     number_of_seats: 45
-                },
+                ,
                 feature: "small bus"
 
             })
@@ -310,9 +307,7 @@ z-10  "
                                     <Seats options={seatOptions}
                                         onChange={e => setBusData((prev) => ({
                                             ...prev,
-                                            seat_details: {
                                                 number_of_seats: e.value
-                                            }
                                         }))}
                                         isSearchable={false}
                                         styles={{
@@ -400,8 +395,8 @@ z-10  "
 
             </div>
             <div className='w-full grid sm:grid-cols-2 lg:grid-cols-3  px-5  gap-x-2 gap-y-5 pt-10 '>
-                {buses.map(({ seat_details:
-                    { number_of_seats }, feature, name, _id }, i) => {
+                {buses.map(({
+                     number_of_seats , feature, name, _id }, i) => {
                     return (
 
                         <div
