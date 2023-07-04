@@ -1,21 +1,25 @@
-import { CircularProgressbar } from 'react-circular-progressbar';
+
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker from 'react-datepicker';
-import "react-circular-progressbar/dist/styles.css";
-import { GrStackOverflow } from 'react-icons/gr';
 import { VscFolderActive } from 'react-icons/vsc'
 import Select from 'react-select';
+import SelectTrip from 'react-select';
 import SelectSortDate from 'react-select';
 import { useState, useEffect, useRef } from 'react';
-import { AiOutlineMenu, AiOutlineSave } from 'react-icons/ai';
+import { AiOutlineSave } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io"
-import { useParams, NavLink, useSearchParams } from 'react-router-dom';
+import { useParams, NavLink, useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AiOutlineSetting } from 'react-icons/ai';
+import formatQuery from "../utils/formatQueryStringParams"
+import dateFormater from "../utils/DateFormater"
 import axios from 'axios'
 import { BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { MdOutlinePriceChange } from 'react-icons/md'
 import { Autoplay, Navigation, Pagination } from 'swiper'
+import { useDispatch } from 'react-redux';
+import { Button } from '../components'
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -27,14 +31,96 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import {
-  AmountCount, BarChart, ActiveStatusButton, FormatTable,
-  DeactiveStatusButton
-  , PanigationButton, PieChart, Scrollable, TicketCounts, Loadingbtn, AnimatePercent, BoxModel
-  , Form, NextButton,
-  PlaceHolderLoader, PrevButton
+  AmountCount,
+  BarChart,
+  FormatTable,
+  Heading
+  , PanigationButton, PieChart,
+  Scrollable, TicketCounts,
+  Loadingbtn,
+  BoxModel,
+  DataDay
+  , Form,
+  NextButton,
+  PlaceHolderLoader,
+  PrevButton,
+  PercentageBar
+  , ToggleSwitch
 } from '../components';
+import { setUserName } from "../actions/userName"
+
+import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
+import ticketdata from '../actions/userticket';
 const Details = () => {
-  const [querySearch, setQuerySearch] = useSearchParams()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const setuserName = (username) => {
+    dispatch(setUserName(username))
+
+  }
+
+  const [querySearch, setQuerySearch] = useSearchParams();
+  const handleFilterChange = (key, value = null) => {
+    setQuerySearch(preParams => {
+      if (value == null) {
+        preParams.delete(key)
+      } else {
+        preParams.set(key, value)
+      }
+      return preParams
+    })
+
+  }
+
+  const handleBlockChange = () => {
+    if (querySearch.get("account_block")) {
+      // handleFilterChange("account_block")
+      handleRemoveBlockuser()
+
+    } else {
+      // handleFilterChange("account_block", true)
+      handleRestrictUserAdd(querySearch.get("createdBy"))
+
+    }
+
+  }
+  const handleRemoveBlockuser = async () => {
+    const url = `${process.env.REACT_APP_LOCAL_URL}/restricted/${querySearch.get("createdBy")}`
+    try {
+      const res = await axios.delete(url)
+      handleFilterChange("account_block")
+    } catch (err) {
+      alert(err.response.data)
+    }
+  }
+
+
+
+  const handleRestrictUserAdd = async (user_id, url = `${process.env.REACT_APP_LOCAL_URL}/restricted`) => {
+
+    try {
+      const res = await axios.post(url, {
+        user_id: user_id,
+        name: "testuser4"
+      })
+      // setUserRestricted(res.data.status);
+    } catch (err) {
+      // alert(err.response.data)
+      // alert("something went wrong")
+      handleFilterChange("account_block", true)
+    }
+  }
+  const handleRestrictUserget = (user_id, url = process.env.REACT_APP_LOCAL_URL + "/restricted") => {
+    try {
+      const res = axios.get(url)
+      // setUserRestricted(res.data.status)
+    } catch (err) {
+
+    }
+  }
+
+
+
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
   const constraintsRef = useRef(null)
@@ -53,11 +139,8 @@ const Details = () => {
     )
 
   }
-  const [params, setParams] = useState({
-    page: 1,
-    limit: 50,
-    createdBy: id
-  })
+
+
   const onChange = (dates) => {
     const [start, end] = dates;
     setStartDate(start);
@@ -66,6 +149,31 @@ const Details = () => {
   };
   useEffect(() => {
     setIsLoading(true)
+    if (!querySearch.get("limit")) {
+      handleFilterChange("limit", 50)
+    }
+    handleFilterChange("view", "all")
+    if (!querySearch.get("page")) {
+      handleFilterChange("page", 1)
+
+    }
+    async function getData() {
+      const url = process.env.REACT_APP_LOCAL_URL + "/auth/userinfo";
+      try {
+        const res = await axios.get(url, {
+          headers: {
+            'Authorization': "makingmoney " + token
+          }
+        })
+        // const { data: { fullname, } } = res
+        setuserName(res?.data?.user?.fullname)
+        setUserInfo(res.data?.user)
+      } catch (err) {
+        // console.log(err)
+        navigate("/login?message="+err.response.data)
+      }
+    }
+    getData()
   }, [])
   const [_userData, _setUserData] = useState({
     labels: ["active tickets", "inactive tickets"],
@@ -95,8 +203,53 @@ const Details = () => {
 
   }
   )
+  // hjio
+
+  const viewAll = querySearch.get("view");
+
+  const handleSkipChange = (evt) => {
+    if (querySearch.get("limit") === evt.value) {
+      return
+    }
+    
+    handleFilterChange("limit", evt.value)
+    window.navigator.vibrate([100])
+  }
+  const handleChangeText = (e) => {
+
+    handleFilterChange("search", e.target.value)
+  }
+
+
+  const handleBoardingRangeSearch = () => {
+    if (querySearch.get("daterange")) {
+      handleFilterChange("daterange", null)
+    }
+    handleFilterChange("boardingRange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
+  }
+  const handleFilterSearch = () => {
+    if (querySearch.get("boardingRange")) {
+      handleFilterChange("boardingRange", null)
+    }
+    handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
+  }
+  const checkPages = (index) => {
+    if (querySearch.get("page") == index) return
+    handleFilterChange("page", index)
+  }
+  const handleSortTime = (evt) => {
+    if (querySearch.get("sort") == evt.value) return
+    handleFilterChange("sort", evt.value)
+  }
+  const handleChange = (evt) => {
+    if (querySearch.get("ticketStatus") == evt.value) return
+    handleFilterChange("ticketStatus", evt.value)
+  }
+  // hiui
   const [activeSlide, setctiveSlide] = useState(0);
+  // const token = localStorage.getItem("admin_token");
   const token = localStorage.getItem("token");
+
   const [isLoading, setIsLoading] = useState(false)
 
   const [userInfo, setUserInfo] = useState({});
@@ -105,24 +258,15 @@ const Details = () => {
     headers: {
       'Authorization': "makingmoney " + token
     },
-    params
-  }
-  const handleChangeText = (e) => {
-    const temp = params;
-    temp.search = e.target.value;
-    setParams({
-      ...temp
-    })
-
+    params: formatQuery(querySearch.toString())
   }
   async function getData() {
-    const url = process.env.REACT_APP_LOCAL_URL + "/ticket"
+    const url = "/ticket"
     setIsActiveIndexLoading(true)
 
     try {
       const res = await axios.get(url, config)
       setUserData(res?.data || {})
-      console.log(res.data)
       _setUserData({
         labels: ["active tickets", "inactive tickets"],
         datasets: [
@@ -135,7 +279,6 @@ const Details = () => {
       })
     } catch (err) {
       console.log(err)
-      alert(err.response.data)
     }
     setIsLoading(false)
     setIsActiveIndexLoading(false)
@@ -144,131 +287,65 @@ const Details = () => {
 
   useEffect(() => {
     getData();
-  }, [params]);
-  const checkPages = (index) => {
-    const temp = params;
-    if (temp.page === index) {
-      return
-    }
-    temp.page = index
-    setParams({
-      ...temp
-    })
+  }, [querySearch]);
 
-  }
 
 
   useEffect(() => {
-    async function getUserInfo() {
-      const url = process.env.REACT_APP_LOCAL_URL + "/auth/userinfo";
+    // async function getUserInfo() {
+    //   // const url = process.env.REACT_APP_LOCAL_URL + "/admin/staticuser/" + `${id}`;
 
-      try {
-        const { data } = await axios.get(url, config);
-        setUserInfo(data?.user)
+    //   try {
+    //     const { data } = await axios.get("/auth/userinfo", config);
+    //     setUserInfo(data?.user)
 
+    //   } catch (err) {
+    //     console.log(err)
+    //   }
 
-      } catch (err) {
-        console.log(err)
-      }
-
-    }
+    // }
 
 
     getData()
-    getUserInfo()
-  }, [window.location.href])
+    // getUserInfo()
+  }, [])
 
   const [toggle, setToggle] = useState(false);
 
-  const handleFilterSearch = () => {
-    const temp = params;
-    temp.page = 1
-    temp.daterange = `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`
-    setParams({ ...temp });
-    setToggle(false)
-
-  }
-  const sortedOptions = [
-
-    {
-      label: "CreatedAt-",
-      value: "newest"
-
-    },
-    {
-      label: "CreatedAt+",
-      value: "oldest"
-
-    },
-    {
-      label: "traveldate-",
-      value: "new_traveldate"
-
-    },
-    {
-      label: "traveldate+",
-      value: "old_traveldate"
-
-    },
-  ]
-  const sortOptions = [
-    { value: "all", label: "All tickets" },
-    { value: "active", label: <span className="flex items-center justify-between">Active tickets <ActiveStatusButton className="" /> </span> },
-    { value: "inactive", label: <span className="flex items-center justify-between">InActive tickets <DeactiveStatusButton className="" /> </span> },
-
-  ]
-
-  const viewAll = querySearch.get("viewAll");
-  const setViewAll = () => {
-    // alert(viewAll)
-    const temp = querySearch;
-    if (temp.get("viewAll") && temp.get("viewAll") === "all") {
-      setQuerySearch({ "viewAll": "one" })
-
-    } else {
-      setQuerySearch({ "viewAll": "all" })
-
-    }
-
-  }
-  const handleChangeSearchParams = (key, value) => {
-    setQuerySearch(prevState => {
-      if (value == null) {
-        prevState.delete(key)
-      } else {
-        prevState.set(key, value)
-      }
-      return prevState
-    })
-
-  }
-  // handleChangeSearchParams("name", "john joe")
-  const handleChange = (evt) => {
-    const temp = params;
-    if (params.ticketStatus == evt.value) return
-    // if (querySearch.get("ticketStatus") && querySearch.get("ticketStatus") === evt.value) return
-    // handleChangeSearchParams("ticketStatus", evt.value)
-
-    temp.ticketStatus = evt.value
-    temp.page = 1
-    setParams({ ...temp })
-  }
-  const handleSortTime = (evt) => {
-
-    const temp = params;
-    if (params.sort == evt.value) return
-    temp.sort = evt.value
-    temp.page = 1
-    setParams({ ...temp })
-
-
-
-  }
   const selectRef = useRef(null)
   return (
     <motion.div
-      className='pt-4 px-2 max-w-full overflow-x-auto select-none
+      className='pt-4 px-2 max-w-full overflow-x-auto select-none lg:container 
+      mx-auto
     max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark' ref={constraintsRef}>
+      <motion.div
+        onClick={() => setToggle(true)}
+        animate={{
+          scale: [0.7, 1.2, 0.8],
+        }}
+        transition={{
+          duration: 2,
+          ease: "easeInOut",
+          times: [0, 0.2, 0.5, 0.8, 1],
+          repeat: Infinity,
+          repeatDelay: 1
+        }
+        }
+        className="bottom-1/2
+                        -translate-y-1/2 fixed 
+                        flex-none 
+                        shadow-2xl button-add  top-auto bg-blue-400 
+w-[2.5rem]
+h-[2.5rem] 
+-rounded-full 
+overflow-hidden 
+right-0
+z-10  "
+      >
+        <div className="flex h-full w-full items-center -scale-animation justify-center ">
+          <AiOutlineSetting size={20} color="#fff" className="" />
+        </div>
+      </motion.div>
       <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
@@ -277,7 +354,7 @@ const Details = () => {
             </NavLink>
           </li>
           <li>
-            <div class="flex items-center">
+            <div class="flex items-center" >
               <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
               <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
                 <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Employee Details</h1>
@@ -287,106 +364,130 @@ const Details = () => {
 
         </ol>
       </nav>
-      <motion.div
+      <div className="lg:flex  items-start justify-start gap-4">
+        <div
+          className="flex-none w-[18rem] hidden lg:block
+          "
 
-        drag
-        dragConstraints={constraintsRef}
-        className='hover:bg-slate-300 fixed right-0 md:right-[8rem]
-      top-14 bg-white dark:bg-slate-400
-      z-[10]
-      lg:hidden w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={() => setToggle(true)}>
-        <AiOutlineMenu size={25} />
-      </motion.div>
-      <div className="lg:flex container mx-auto items-start justify-start gap-4">
-        <div className="flex-1   mb-6">
-          <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
-            <div>
-              <Swiper
-                className='my-6 px-4 w-full max-w-[calc(100vw-2.5rem)] lg:max-w-lg relative'
-                slidesPerView={1}
-                onSlideChange={(e) => setctiveSlide(e.activeIndex)}
-                modules={[Autoplay, Pagination, Navigation]}
-                navigation={{
-                  prevEl: ".arrow__left",
-                  nextEl: ".arrow__right",
-                }}
-                pagination={{ clickable: true }}
-                autoplay={{
-                  delay: 25000,
-                  disableOnInteraction: false
-                }}
-              >
-                <PrevButton className="!left-1.5" />
-                <NextButton className="!right-1.5" />
-                {
-                  userData?.totalTickets ? <SwiperSlide >
-                    <motion.div
-                      className={`min-h-[12.5rem]--  relative  text-xs mx-0   rounded-lg `}
-                    >
+        >
 
-                      <h1 className="text-xl mb-4  text-montserrat font-medium text-center uppercase mt-2">Active to Inactive ticket ratio</h1>
-                      {
-                        userData?.totalTickets ? <PieChart chartData={_userData} /> : "no data to display cause the query returns 0"
-                      }
+          <Heading text={"Recent Ticket(3)"} className={"!text-center !mb-2"} />
+
+          {
+
+            userData?.tickets?.slice(0, 3).map(({ fullname, traveldate, from, to, _id }, i) => {
+
+              return (
+                <div
+                  key={i}
+                  class="max-w-sm mb-1 shadow=xl
+      bg-white border  border-gray-200 rounded-lg shadow-xl shadow-slate-200 dark:bg-gray-800 dark:border-gray-700">
+                  <div className="grid grid-cols-[1fr,auto] px-2 pt-3
+  pb-2
+  items-center place-items-center border">
+                    <Heading text="Tickets"
+                      className="!mb-0 !text-xs !text-start !mt-0 !pl-0 !ml-0 
+  !font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                    <h4 className='!text-xs text-slate-500 !mb-0 !pb-0'>
+                      {_id}
+                    </h4>
+                  </div>
 
 
-                    </motion.div>
-                  </SwiperSlide>:null
-                }
+                  <div class="p-2">
+                    <Heading text="FullName" className="!mb-0 !text-center !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                    <Heading text={fullname} className="!mb-2 !text-sm !text-center" />
+                    <div className='grid grid-cols-2'>
+                      <div>
+                        <Heading text="From" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                        <Heading text={from} className="!mb-2 !text-sm" />
+                      </div>
 
-                <SwiperSlide >
-                  <motion.div
-                    className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
-                  >
-                    <div className="mb-10 md:mb-5">
-
-                      <h2 className="text-start 
-                        text-color_dark  mt-2 ml-1
-                         tracking-tight text-lg
-                        font-medium">User Book Vs System Book </h2>
-                      <span className="mb-5 w-14 ml-2 h-1 bg-blue-700 block rounded-lg"></span>
-                      <CircularProgressbar
-                        strokeWidth={8}
-                        initialAnimation
-                        circleRatio={0.6}
-                        className='!w-[10rem] md:!w-[10rem]
-                        !max-w-[calc(100%-3rem)] mx-auto !font-black !tracking-tight '
-                        styles={{
-                          path: {
-                            stroke: `transparent`
-                          },
-                          trail: {
-                            stroke: "blue"
-                          },
-                        }}
-                        percentage={66.5 + "%"}
-                        text="66%"
-                      />
-                      <BoxModel activeCount={7476}
-                        className="!bg-white"
-                        inActiveCount={62549}
-                        text1="User"
-                        text2="System"
-                        text={""}
-                      />
-
-
+                      <div>
+                        <Heading text="To" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                        <Heading text={to} className="!mb-2 !text-sm" />
+                      </div>
 
                     </div>
-                  </motion.div>
-                </SwiperSlide>
+                    <Heading text="Travel Date" className="!mb-0 !text-center !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                    <Heading text={(new Date(traveldate).toLocaleDateString())} className="!mb-2 !text-sm !text-center" />
+                    <div className='grid grid-cols-2 gap-x-1 place-items-center'>
 
+                      <Button name="view"
+                        className={"!w-full"}
+                        href={`${_id}`}
+                      />
+                      <a
+                        target='_blank'
+                        className='
+                        w-full
+                        font-medium
+            shadow
+            md:shadow-md
+            shadow-blue-200
+            dark:shadow-slate-800
+            bg-blue-400
+            dark:bg-gray-700
+            pt-1
+            mr-1
+            rounded-sm
+            text-white
+            dark:font-semibold
+            px-3
+            pb-1.5
+            place-items-center  
+            hover:bg-blue-700
+            ease 
+            transition-colors
+            duration-700
+            hover:underline
+            flex
+            justify-center 
+            items-center
+            text-[0.7rem] 
+            md:text-sm
+            font-montserrat
+                        
+                        '
 
-              </Swiper>
-            </div>
+                        href={`${process.env.REACT_APP_LOCAL_URL}/downloadticket/${_id}`}>download</a>
+
+                    </div>
+                  </div>
+                </div>
+              )
+
+            })
+          }
+        </div>
+        <div className="flex-1   mb-6">
+          <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
+
+            <Scrollable className={`!mb-10 !justify-center ${viewAll && "!grid md:!grid-cols-2 gap-y-5"} !transition-all !duration-[1s]`}>
+              <PercentageBar
+                className={`${viewAll && "!min-w-[8rem]"}`}
+                percent={userData?.percentageActive} text="Active Ticket Ratio" />
+              <PercentageBar
+                className={`${viewAll && "!min-w-[8rem]"}`}
+                stroke="red"
+                percent={userData?.percentageInActive} text="InActive Ticket Ratio" />
+            </Scrollable>
             {
               isLoading ?
                 <PlaceHolderLoader />
 
                 :
                 <>
-                  <div className='underline  mb-2 underline-offset-8 w-[400px] mx-auto text-center max-w-3xl md:hidden- font-medium text-slate-700 capitalize' onClick={() => setViewAll()} >{viewAll == "all" ? "view less" : "view all"}</div>
-                  <Scrollable className={`!px-5 ${viewAll === "one" && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
+                  <div className='underline  mb-2 underline-offset-8 w-[400px] mx-auto text-center max-w-3xl md:hidden- font-medium text-slate-700 capitalize' onClick={() => {
+
+                    if (querySearch.get("view")) {
+                      handleFilterChange("view")
+                    } else {
+                      handleFilterChange("view", "all")
+                    }
+
+                  }} >{viewAll == "all" ? "view less" : "view all"}</div>
+                  <Scrollable className={`!px-5 ${viewAll && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
                     <TicketCounts counts={userData?.totalTickets}
                       text={"Total Number Of Tickets"}
                       icon={<AiOutlineSave />} />
@@ -397,7 +498,7 @@ const Details = () => {
                       text={"Total Number Of Inactive Tickets"}
                       counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
                   </Scrollable>
-                  <Scrollable className={`!px-5 ${viewAll === "one" && "!grid md:!grid-cols-2"}`}>
+                  <Scrollable className={`!px-5 ${viewAll && "!grid md:!grid-cols-2"}`}>
                     <AmountCount
                       className="!bg-blue-400"
                       text="Total coset of all tickets"
@@ -421,17 +522,13 @@ const Details = () => {
 
 
           </div>
-
-
         </div>
         <div className={`flex-none py-5
-        
         sidebarr m lg:rounded-lg shadow rounded-lg  overflow-y-auto--
         ${toggle ? "right-0" : "!-right-full"}
-        duration-500 transition-[right] shadow lg:shadow-none lg:max-w-sm lg:w-[20rem] 
-        text-center bg-white rounded-sm right-0 top-14 h-fit
-           w-[calc(100vw-3.5rem)] max-w-sm  z-[6] fixed   lg:static px-4 `}>
-
+        duration-500 transition-[right] shadow lg:shadow-none lg:max-w-sm lg:w-[22rem] 
+        text-center bg-white rounded-sm right-0 top-12 h-fit
+           w-[calc(100vw-3.5rem)] max-w-sm  z-20 fixed   lg:static px-4 `}>
           <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 
        -left-[3.125rem] z-10 rounded-none flex items-center justify-center  font-black border-black"
@@ -442,18 +539,156 @@ const Details = () => {
           <div
             className=' overflow-y-auto max-h-[calc(100vh-5rem)] lg:max-h-fit overflow-x-hidden '
           >
-            <h1 className='text-lg  font-medium leading-6 mb-1'>Employee Name :</h1>
-            <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.fullname || "n/a"}</h4>
-            <h1 className='text-lg  font-medium leading-6 mb-1'>Employee Id:</h1>
+            {querySearch.get("account_block") && "account restricted"}
+            <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4  !text-lg first-letter:text-2xl" />
+            <Heading text={"Full Name"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
+            <h4 className='text-sm text-slate-500 font-medium '
+            >{userInfo?.fullname || "n/a"}</h4>
+            <Heading text={"ID"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '>{userInfo?._id || "n/a"}</h4>
-            <h1 className='text-lg  font-medium leading-6 mb-1'>Phone Number:<span className="px-2 text-white mb-4 rounded-xl text-xs bg-green-400 ml-1">call</span></h1>
+            <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.phone || "n/a"}</h4>
-            <h1 className='text-lg  font-medium leading-6 mb-1'>ID Card N-o: <span className="px-2 text-white mb-4 rounded-xl text-xs bg-green-400 hidden">new</span></h1>
-            <h4 className='text-sm text-slate-500 font-medium '>1234567</h4>
-            <h1 className='text-lg  font-medium leading-6 mb-1'>Account created At: <span className="px-2 text-white mb-4 rounded-xl text-xs bg-green-400">new</span></h1>
-            <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.createdAt || "n/a"}</h4>
+            <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
+            <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.createdAt && (dateFormater().date) || "n/a"}</h4>
 
-            <AnimatePresence className="mt-10">
+            <Swiper
+              className='my-6
+                            px-4 
+                            w-full
+                            lg:w-full 
+                            !relative'
+              slidesPerView={1}
+              modules={[Autoplay, Navigation]}
+              navigation={{
+                prevEl: ".arrow__left",
+                nextEl: ".arrow__right",
+              }}
+            >
+              <PrevButton className="!left-1.5" />
+              <NextButton className="!right-1.5" />
+
+              <SwiperSlide>
+                <Heading text={"Query  Travel At"} className="!font-black !text-sm underline !underline-offset-4 !mb-2 !text-center" />
+
+                <AnimatePresence className="mt-10">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, duration: 2 }}
+                    className="flex flex-col items-center w-full justify-center">
+                    <DatePicker
+                      selected={startDate}
+                      onChange={onChange}
+                      startDate={startDate}
+                      endDate={endDate}
+                      selectsRange
+                      inline
+                    />
+                    <button
+                      data-te-ripple-init
+                      data-te-ripple-color="light"
+                      className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
+  transition duration-150 ease-in-out hover:bg-blue-600
+  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+  focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+  focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+
+                      onClick={handleBoardingRangeSearch}
+
+                    >
+                      {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                    </button>
+
+                    {
+                      querySearch.get("boardingRange") && <button
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
+leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
+transition duration-150 ease-in-out hover:bg-red-600
+hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+
+                        onClick={() => {
+
+                          handleFilterChange("boardingRange")
+                        }}
+                      >
+                        Clear Travel
+                      </button>
+                    }
+                  </motion.div>
+                </AnimatePresence>
+
+              </SwiperSlide>
+              <SwiperSlide>
+                <Heading text={"Query  Created At"}
+                  className="!font-black !text-sm underline !underline-offset-4 !mb-2 !text-center" />
+
+                <AnimatePresence className="mt-10">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, duration: 2 }}
+                    className="flex flex-col items-center w-full justify-center">
+                    <DatePicker
+                      selected={startDate}
+                      onChange={onChange}
+                      startDate={startDate}
+                      endDate={endDate}
+                      selectsRange
+                      inline
+                      maxDate={new Date()}
+                    />
+                    <button
+                      data-te-ripple-init
+                      data-te-ripple-color="light"
+                      className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
+  transition duration-150 ease-in-out hover:bg-blue-600
+  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+  focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+  focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+
+                      onClick={handleFilterSearch}
+
+                    >
+                      {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                    </button>
+
+                    {
+                      querySearch.get("daterange") && <button
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
+leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
+transition duration-150 ease-in-out hover:bg-red-600
+hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+
+                        onClick={() => {
+
+                          handleFilterChange("daterange")
+
+                        }}
+
+                      >
+                        Clear Filter Query
+                      </button>
+                    }
+                  </motion.div>
+                </AnimatePresence>
+
+              </SwiperSlide>
+
+            </Swiper>
+
+
+
+            {/* <AnimatePresence className="mt-10">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -468,43 +703,47 @@ const Details = () => {
                   inline
                   maxDate={new Date()}
                 />
-                <span
+                <button
+                  data-te-ripple-init
+                  data-te-ripple-color="light"
+                  className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
+  transition duration-150 ease-in-out hover:bg-blue-600
+  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+  focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+  focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
                   onClick={handleFilterSearch}
 
-                  className='max-w-[min(calc(100%-2.5rem),400px)]
-            flex items-center
-            justify-center
-             pb-2 px-8
-            text-medium
-            pt-1.5 font-medium rounded-sm
-            text-gray-200
-            shadow-2xl
-             mx-auto bg-blue-600 mt-4  rounded-4'
+                >
+                  {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                </button>
 
-                >  {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}</span>
                 {
-                  params.daterange && <span
+                  querySearch.get("daterange") && <button
+                    data-te-ripple-init
+                    data-te-ripple-color="light"
+                    className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
+leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
+transition duration-150 ease-in-out hover:bg-red-600
+hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+
                     onClick={() => {
-                      const temp = params;
-                      if (temp.daterange) delete temp.daterange;
-                      setParams({ ...temp })
+                      handleFilterChange("daterange")
+                      // const temp = params;
+                      // if (temp.daterange) delete temp.daterange;
+                      // setParams({ ...temp })
 
                     }}
-                    className='max-w-[min(calc(100%-2.5rem),400px)]
-          flex items-center
-          justify-center
-           pb-2 px-8
-          text-medium
-          pt-1.5 font-medium rounded-sm
-          text-gray-200
-          shadow-2xl
-           mx-auto bg-orange-600 mt-4  rounded-4'
 
-                  > Clear filter</span>
+                  >
+                    Clear Filter Query
+                  </button>
                 }
               </motion.div>
-            </AnimatePresence>
+            </AnimatePresence> */}
             <div className="mt-10 mb-10 md:mb-5">
 
               <h2 className="text-start 
@@ -534,55 +773,32 @@ const Details = () => {
                 <NextButton className="!right-1.5 !h-8" />
                 <PrevButton className="!h-8 !left-1.5" />
                 <SwiperSlide>
-                  <h1 className='font-semibold mb-2 text-slate-500'>Active  percentage </h1>
+                  <Heading text="Active ratio percentage" className="!text-sm !md-text-xl underline !underline-offset-4" ></Heading>
+                  <PercentageBar
+                    percent={userData?.percentageActive}
 
-                  <CircularProgressbar
-                    strokeWidth={10}
-                    initialAnimation
-                    circleRatio={userData?.percentageActive ? (userData?.percentageActive / 100) : 0}
-                    className='!w-[10rem] md:!w-[10rem]
-                                    !max-w-[calc(100%-3rem)] mx-auto !font-black '
-                    styles={{
-                      path: {
-                        stroke: `transparent`
-
-                      },
-                      trail: {
-                        stroke: "blue"
-                      },
-                    }}
-                    text={(userData?.percentageActive || 0).toFixed(1) + "%"}
                   />
                 </SwiperSlide>
                 <SwiperSlide>
-                  <h1 className='font-semibold mb-2 text-slate-500'>Inactive ratio percentage </h1>
-                  <CircularProgressbar
-                    // background
-                    strokeWidth={10}
-                    initialAnimation
-                    circleRatio={userData?.percentageInActive ? (userData?.percentageInActive / 100) : 0}
-                    className='!w-[10rem] md:!w-[10rem]
-                                    !max-w-[calc(100%-3rem)] mx-auto !font-black  '
-                    styles={{
-                      path: {
-                        stroke: `transparent`
-                        // stroke: `${userData?.percentageInActive?"red":"transparent"}`
+                  <Heading text="Inactive ratio percentage" className="!text-sm !md-text-xl underline !underline-offset-4" ></Heading>
+                  <PercentageBar
+                    stroke="red"
+                    percent={userData?.percentageInActive}
 
-                      },
-                      trail: {
-                        stroke: "red"
-                      },
-                    }}
-                    text={(userData?.percentageInActive || 0).toFixed(1) + "%"}
                   />
                 </SwiperSlide>
 
               </Swiper>
+              {
+                querySearch.get("daterange") && endDate == null && (
+
+                  <div><DataDay data={userData?.tickets} /> </div>
+                )
+              }
 
 
-
-              <BoxModel activeCount={userData?.totalActiveTickets}
-                inActiveCount={userData?.totalInActiveTickets} />
+              {/* <BoxModel activeCount={userData?.totalActiveTickets}
+                inActiveCount={userData?.totalInActiveTickets} /> */}
 
             </div>
 
@@ -591,27 +807,26 @@ const Details = () => {
         </div>
       </div>
 
-      <div className="flex justify-between
+      <div className="flex justify-between gap-4 ppl-4
       flex-wrap pr-5 items-start mb-10">
         <h1 className="text-2xl mt-4 
         text-gray-700 pl-6
         
         flex tracking-tight">All tickets <span className="text-xs ring-2 ring-gray-700  grid place-items-center
         ml-1 w-5 h-5 bg-gray-500 text-white
-        mb-4 rounded-full border">{userData?.totalTickets || 0} </span> <GrStackOverflow className="inline-block- pl-2 text-4xl hidden md:inline-block" /></h1>
+        mb-4 rounded-full border">{userData?.totalTickets || 0} </span> </h1>
 
         <div className='mt-0'>
           <div className="text-[0.8rem] text-slate-300 uppercase text-center font-semibold mb-1 font-montserrat"> ticket status</div>
           <Select
             styles={style}
-            options={sortOptions}
+            options={sortTicketStatusOptions}
             defaultValue={{
               label: "All tickets",
               value: "all"
             }}
             ref={selectRef}
             isSearchable={false}
-            // key={params.ticketStatus}
             onChange={handleChange}
             className='!border-none !h-8 mt-0' />
         </div>
@@ -619,9 +834,57 @@ const Details = () => {
         <div className='mt-0'>
           <div className="text-[0.8rem]
           text-slate-300 uppercase
+          text-center font-semibold mb-1 font-montserrat"> trip type </div>
+          <SelectTrip
+            onChange={
+              evt => {
+                if (querySearch.get("triptype") == evt.value) return
+                // if (params.evt == evt.value) return
+                handleFilterChange("triptype", evt.value)
+                // setParams(pre => {
+                //   return {
+                //     ...pre,
+                //     triptype: evt.value,
+                //     page: 1
+                //   }
+                // })
+
+
+              }
+            }
+            options={
+
+
+              [
+                {
+                  label: "all trip",
+                  value: "all"
+                }, {
+                  label: "singletrip",
+                  value: "singletrip"
+                }, {
+                  label: "roundtrip",
+                  value: "roundtrip"
+                }
+
+
+              ]}
+            styles={style}
+            defaultValue={{
+              label: "all trip",
+              value: "all"
+            }}
+
+            isSearchable={false}
+            // onChange={handleSortTime}
+            className='!border-none !h-8 mt-0' />
+        </div>
+        <div className='mt-0'>
+          <div className="text-[0.8rem]
+          text-slate-300 uppercase
           text-center font-semibold mb-1 font-montserrat"> sorted date </div>
           <SelectSortDate
-            options={sortedOptions}
+            options={sortedDateOptions}
             styles={style}
             defaultValue={{
               label: "createdAt -",
@@ -638,28 +901,25 @@ const Details = () => {
       <AnimatePresence >
 
         {
-          params?.daterange && <motion.div
-
+          querySearch.get("daterange") && <motion.div
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -40, opacity: 0 }}
-
-            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
+            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-xs
+            tracking-tighter
         font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
 
             <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
               onClick={() => {
-                const temp = params;
-                if (temp.daterange) delete temp.daterange;
-                setParams({ ...temp })
-
+                handleFilterChange("daterange")
               }}
 
             >Clear Filter</span>
-            Date filter is on  </motion.div>
+            Date filter is on and query is from <span> {new Date(startDate).toLocaleDateString()}</span>
+            <span> {endDate !== null ? "to " + new Date(endDate).toLocaleDateString() : null}</span> </motion.div>
         }
         {
-          params?.search && <motion.div
+          querySearch.get("search") && <motion.div
 
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -670,9 +930,10 @@ const Details = () => {
 
             <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
               onClick={() => {
-                const temp = params;
-                if (temp.search) delete temp.search;
-                setParams({ ...temp })
+                handleFilterChange("search")
+                // const temp = params;
+                // if (temp.search) delete temp.search;
+                // setParams({ ...temp })
 
               }}
 
@@ -680,7 +941,7 @@ const Details = () => {
             Text Filter is On  </motion.div>
         }
         {
-          params?.sort && params.sort !== "newest" && <motion.div
+          querySearch.get("sort") && querySearch.get("sort") !== "newest" && <motion.div
 
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -688,20 +949,16 @@ const Details = () => {
 
             className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
         font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-
             <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
               onClick={() => {
-                const temp = params;
-                if (temp.sort) delete temp.sort;
-                setParams({ ...temp })
-
+                handleFilterChange("sort")
               }}
 
             >Clear Filter</span>
-            Sort Filter is On  </motion.div>
+            Text Filter is On  </motion.div>
         }
         {
-          params?.ticketStatus && params.ticketStatus !== "all" && <motion.div
+          querySearch.get("ticketStatus") && querySearch.get("ticketStatus") !== "all" && <motion.div
 
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -712,18 +969,15 @@ const Details = () => {
 
             <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
               onClick={() => {
-                const temp = params;
-                if (temp.ticketStatus) delete temp.ticketStatus;
-                setParams({ ...temp });
-                selectRef?.current?.select?.clearValue()
+                handleFilterChange("ticketStatus")
               }}
 
             >Clear Filter</span>
-            Ticket are set to <span className='px-2 bg-red-300 text-black text-xs rounded-lg mx-4 ring-1 ring-red-900'>{params.ticketStatus}</span>  </motion.div>
+            Ticket are set to <span className='px-2 bg-red-300 text-black text-xs rounded-lg mx-4 ring-1 ring-red-900'>{querySearch.get("ticketStatus")}</span> Filter is On  </motion.div>
         }
       </AnimatePresence>
 
-      <Form handleChangeText={handleChangeText} params={params} />
+      <Form handleChangeText={handleChangeText} params={querySearch} />
 
       <div className="relative max-w-full overflow-x-auto
       shadow-md sm:rounded-lg w-full mb-6 ">
@@ -736,12 +990,8 @@ const Details = () => {
               <th scope="col" className="px-3 py-3">
                 full name
               </th>
-              <th scope="col" className="px-3 py-3">
-                phone
-              </th>
-              <th scope="col" className="px-3 py-3">
-                price
-              </th>
+
+
               <th scope="col" className="px-3 py-3">
                 from
               </th>
@@ -751,20 +1001,19 @@ const Details = () => {
               <th scope="col" className="px-3 py-3">
                 date
               </th>
+
               <th scope="col" className="px-3 py-3">
                 createdAt
               </th>
-              <th scope="col" className="px-3 py-3">
-                time
-              </th>
+
               <th scope="col" className="px-3 py-3">
                 status
               </th>
               <th scope="col" className="px-3 py-3">
-                age
+                type
               </th>
               <th scope="col" className="px-3 py-3">
-                sex
+                price
               </th>
               <th scope="col" className="px-3 py-3">
                 Action
@@ -774,24 +1023,23 @@ const Details = () => {
           </thead>
           {
 
-            !isLoading && <FormatTable tickets={userData?.tickets}
-              currentPage={params.page} />
+            !isLoading && (<FormatTable
+              tickets={userData?.tickets}
+              skip={querySearch.get("limit")}
+              currentPage={querySearch.get("page")} />)
           }
         </table>
       </div>
       {
-
         isLoading && (
-
           <PlaceHolderLoader />
-
         )
       }
       <div className='mt-10 ' />
       <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
         {Array.from({
           length: userData?.numberOfPages
-        }, (text, index) => {
+        }, (_, index) => {
           return <PanigationButton
             text={index + 1}
             active={activeIndex}

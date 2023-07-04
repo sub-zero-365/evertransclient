@@ -40,21 +40,6 @@ const BusSits = () => {
   const url = process.env.REACT_APP_LOCAL_URL + "/ticket"
   const handleMarkSeatConSumeSeat = async () => {
     return
-    const busId = queryParameters.get("bus");
-    const sitpos = queryParameters.get("sitpos")
-    if (!busId && !sitpos) {
-      alert("fail to get ids")
-      return
-    }
-    try {
-      const res = await axios.put(`/bus/${busId}/${sitpos}`)
-      console.log(res)
-      return res
-    } catch (err) {
-      console.log(err)
-
-      throw new Error("something went wrong")
-    }
 
   }
   const handleSubmit = async () => {
@@ -70,7 +55,8 @@ const BusSits = () => {
       age: queryParameters.get("age"),
       phone: queryParameters.get("phone"),
       fullname: queryParameters.get("name"),
-
+      busId : queryParameters.get("bus"),
+      seatposition:Number(queryParameters.get("sitpos"))
     }
     if (queryParameters.get("triptype") !== "null") {
       submitdata = {
@@ -88,7 +74,7 @@ const BusSits = () => {
         alert("fail to get ids")
         return
       }
-      const r = await axios.put(`/bus/${busId}/${sitpos}`)
+      // const r = await axios.put(`/bus/${busId}/${sitpos}`)
       const res = await axios.post(url, {
         ...submitdata
       }, {
@@ -155,8 +141,9 @@ z-10  "
      `}
         error={error}
         confirmFunc={() => setError(false)}
-        seterror={setError}
+        // seterror={setError}
         message={message}
+        setToggle={setError}
 
       />
       <Alert

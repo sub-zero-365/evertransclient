@@ -48,7 +48,7 @@ import { sortedDateOptions, sortTicketStatusOptions, skipOptions } from "../util
 
 const Appointment = () => {
     const ref = useRef(null);
-   
+    
     useEffect(() => {
         if (!querySearch.get("limit")) {
             handleFilterChange("limit", 100)

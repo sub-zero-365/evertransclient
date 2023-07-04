@@ -70,7 +70,7 @@ function App() {
           const { data: { fullname, } } = res
           setuserName(res?.data?.user?.fullname)
         } catch (err) {
-          console.log(err)
+          // console.log(err)
         }
       }
       getData()
