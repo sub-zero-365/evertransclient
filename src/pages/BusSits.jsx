@@ -42,7 +42,7 @@ const
           )
 
           console.log(res.data)
-          if (selected&&selected == res.data.bus?.seat_positions[selected]?._id) {
+          if (selected && selected == res.data.bus?.seat_positions[selected]?._id) {
             setSelected(null)
           }
           setCurrentBus(res.data.bus);
@@ -84,18 +84,25 @@ const
       setError(!error)
     }
     const checkBusAvailabity = (isTaken, id) => {
-
+      if (0 == id) {
+        setSelected(0)
+        return
+      }
       if (isTaken) {
         setError(true)
         setErrorMessage("Seat has already beeen taken ; choose another sheet thanks")
-        window.navigator.vibrate([50, 100, 60])
+        return
       } else {
-        window.navigator.vibrate([50])
         setSelected(id)
+        return
       }
     }
     const proccedCheckout = (e) => {
       e.preventDefault()
+      if(selected===0){
+        gotoCheckOut()
+      return
+      }
       if (!selected) {
         setError(true)
         setErrorMessage("please select a sit and procced thanks")

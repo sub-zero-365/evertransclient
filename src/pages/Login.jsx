@@ -14,7 +14,6 @@ const Login = () => {
   const [toggle, setToggle] = useState(false)
   useEffect(() => {
     if (message) {
-
       setToggle(true)
     }
 
@@ -43,10 +42,8 @@ const Login = () => {
       }
       )
       const { data: { fullname, token } } = res
-      console.log(fullname, token);
       setuserName(fullname)
       localStorage.removeItem("token");
-      // localStorage.token=token
       localStorage.setItem("token", res.data.token)
       navigate("/user")
 

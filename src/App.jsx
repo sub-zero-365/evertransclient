@@ -67,7 +67,7 @@ function App() {
               'Authorization': "makingmoney " + token
             }
           })
-          const { data: { fullname, } } = res
+          // const { data: { fullname, } } = res
           setuserName(res?.data?.user?.fullname)
         } catch (err) {
           // console.log(err)

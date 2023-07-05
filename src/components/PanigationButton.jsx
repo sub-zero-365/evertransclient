@@ -2,10 +2,7 @@
 const PanigationButton = ({ onClick, text, active, index, loading }) => {
     return (
         <div
-
             key={index}
-
-
             className={`flex items-center ${active === index ? "bg-blue-900" : "bg-blue-400"}
     justify-center w-8 h-8 bg-blue-400 text-xs md:text-sm rounded-sm 
     hover:bg-blue-900
@@ -14,7 +11,9 @@ const PanigationButton = ({ onClick, text, active, index, loading }) => {
     flex-none
     shadow-lg`}
             onClick={()=>{onClick()
+            if(window.navigator.vibrate){
                 window.navigator.vibrate([10])
+            }
             }}
         >
             {

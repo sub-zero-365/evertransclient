@@ -88,7 +88,6 @@ const Appointment = () => {
         }
 
         handleFilterChange("limit", evt.value)
-        window.navigator.vibrate([100])
     }
     const handleChangeText = (e) => {
         handleFilterChange("search", e.target.value)

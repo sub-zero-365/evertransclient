@@ -77,7 +77,9 @@ const User = () => {
       if (res.data?.ticket.active === true) {
         try {
           audio.play();
-          window?.navigator?.vibrate([500])
+          if(window.navigator.vibrate){
+            window?.navigator?.vibrate([500])
+          }
         } catch (err) {
           console.log("err: ", err)
         }

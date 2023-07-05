@@ -50,7 +50,7 @@ import {
 import { setUserName } from "../actions/userName"
 
 import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
-import ticketdata from '../actions/userticket';
+// import ticketdata from '../actions/userticket';
 const Details = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -72,18 +72,7 @@ const Details = () => {
 
   }
 
-  const handleBlockChange = () => {
-    if (querySearch.get("account_block")) {
-      // handleFilterChange("account_block")
-      handleRemoveBlockuser()
 
-    } else {
-      // handleFilterChange("account_block", true)
-      handleRestrictUserAdd(querySearch.get("createdBy"))
-
-    }
-
-  }
   const handleRemoveBlockuser = async () => {
     const url = `${process.env.REACT_APP_LOCAL_URL}/restricted/${querySearch.get("createdBy")}`
     try {
@@ -165,11 +154,9 @@ const Details = () => {
             'Authorization': "makingmoney " + token
           }
         })
-        // const { data: { fullname, } } = res
         setuserName(res?.data?.user?.fullname)
         setUserInfo(res.data?.user)
       } catch (err) {
-        // console.log(err)
         navigate("/login?message="+err.response.data)
       }
     }
@@ -213,7 +200,9 @@ const Details = () => {
     }
     
     handleFilterChange("limit", evt.value)
-    window.navigator.vibrate([100])
+    if(window.navigator.vibrate){
+      window.navigator.vibrate([100])
+    }
   }
   const handleChangeText = (e) => {
 

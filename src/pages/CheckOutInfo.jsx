@@ -265,7 +265,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
               <Heading text="Seat" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("sitpos")}</div>
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{(Number(queryParameters.get("sitpos"))+1)}</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
               <Heading text="Travel Date" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />

@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { LineChart, Number } from '../components';
 import AnimateText from '../components/AnimateText'
 import { MdOutlineClose } from 'react-icons/md'
+import { useravatar } from '../Assets/images';
 
 import { setUsers } from '../actions/adminData';
 import { Loader, Button, Heading } from '../components';
@@ -475,7 +476,7 @@ z-10  "
                                 }}
 
 
-                                className="text-center w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
+                                className="w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
                         </div>
 
 
@@ -551,76 +552,92 @@ z-10  "
 
 
 
-            <div className="relative max-w-full w-full  mx-auto overflow-x-auto shadow-md sm:rounded-lg ">
-                <table className="max-w-full w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" className="px-2 py-3">
-                                Index
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                full name
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                phone
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                N_print
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                createdAt
-                            </th>
+   
 
-                            {/* <th scope="col" className="px-6 py-3">
-                                user_id
-                            </th> */}
-
-                            <th scope="col" className="px-6 py-3">
-                                Action
-                            </th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            users_.map(({ user, nHits }, index) => (<tr key={index}
-                                className={`${index & 1 ? "bg-transparent" : "bg-slate-200"}
-                            dark:bg-gray-900 dark:border-gray-700 hover:bg-slate-200`}
-                            >
-                                <td className="px-2 py-4  flex items-center justify-center">
-                                    {index + 1}
-                                </td>
-                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {user?.fullname || "n/a"}
-                                </th>
-                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {user?.phone || "n/a"}
-                                </th>
-                                <th scope="row" className="px-6 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    <Number number={nHits} />
-                                </th>
-
-                                <td className="px-6 py-4">
-                                    {user?.createdAt ?
-                                        (new Date(user?.createdAt).toLocaleDateString()) : "n/a"}
-
-                                </td>
+<div class="w-full  p-4
+lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                    <Heading text="Recent Employees" className="!font-black first-letter:!text-4xl !text-xl underline underline-offset-8 uppercase" />
 
 
+                    <section class=" antialiased bg-gray-100 text-gray-600 ">
+                        <div class="h-">
+                            <div class="w-full max-w-2xl-- mx-auto bg-white shadow-lg rounded-sm ">
 
-                                <td className="px-0 py-0 text-xs" >
-                                    <Button
-                                        name="Check User"
-                                        href={`/dashboard/details/${user?._id || index}?admin=true&createdBy=${user?._id}`}
-                                    ></Button>
-                                </td>
-                            </tr>
-                            ))
-                        }
+                                <div class="p-0">
+                                    <div class="overflow-x-auto">
+                                        <table class="table-auto w-full">
+                                            <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+                                                <tr>
+                                                    <th class="p-2 whitespace-nowrap">
+                                                        <div class="font-semibold text-left">index</div>
+                                                    </th>
+                                                    <th class="p-2 whitespace-nowrap">
+                                                        <div class="font-semibold text-left">Full Name</div>
+                                                    </th>
+                                                    <th class="p-2 whitespace-nowrap">
+                                                        <div class="font-semibold text-left">Phone Number</div>
+                                                    </th>
+                                                    <th class="p-2 whitespace-nowrap">
+                                                        <div class="font-semibold text-left">CreaedAt</div>
+                                                    </th>
+                                                    <th class="p-2 whitespace-nowrap">
+                                                        <div class="font-semibold text-left">N_Prints</div>
+                                                    </th>
+                                                    <th class="p-2 whitespace-nowrap">
+                                                        <div class="font-semibold text-center">action</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="text-sm divide-y divide-gray-100">
+                                                {
 
-                    </tbody>
-                </table>
-            </div>
+                                                    users_.map(({ user, nHits }, index) => {
+                                                        return (
+                                                            <tr key={index}>
+                                                             <td class="p-2 whitespace-nowrap">
+                                                                    <div class="text-left pl-1">{(index+1) || "n/a"}</div>
+                                                                </td>
+                                                                <td class="p-2 whitespace-nowrap">
+                                                                    <div class="flex items-center">
+                                                                        <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
+                                                                            <img class="rounded-full"
+                                                                                src={useravatar}
+                                                                            // src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-05.jpg" width="40" height="40" alt="Alex Shatov" 
+                                                                            />
+                                                                        </div>
+                                                                        <div class="font-medium text-gray-800">{user?.fullname}</div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="p-2 whitespace-nowrap">
+                                                                    <div class="text-left">{user?.phone || "n/a"}</div>
+                                                                </td>
+                                                                <td class="p-2 whitespace-nowrap">
+                                                                    <div class="text-left font-medium text-green-500">{(new Date(user?.createdAt).toDateString())}</div>
+                                                                </td>
+                                                                <td class="p-2 whitespace-nowrap">
+                                                                    <div class="text-left font-medium text-green-500">{nHits}</div>
+                                                                </td>
+                                                                <td class="p-2 whitespace-nowrap">
+                                                                    <Button
+                                                                    className={"!max-w-[14rem] !w-full"}
+                                                                        name="Check User"
+                                                                        href={`/dashboard/details/${user?._id || index}?admin=true&createdBy=${user?._id}`}
+                                                                    ></Button>
+                                                                </td>
+                                                            </tr>
+
+                                                        )
+                                                    })}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
 
         </motion.div>
     )
