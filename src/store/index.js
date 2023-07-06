@@ -7,6 +7,7 @@ import userTicket from "../actions/userticket"
 import userCity from "../actions/userCity"
 import adminData from "../actions/adminData"
 import data from '../actions/applications'
+import userData from '../actions/userData';
 const store = configureStore({
     reducer: {
         sidebar: toggleSideBar.reducer,
@@ -15,7 +16,8 @@ const store = configureStore({
         username:setUserName,
         userTicket:userTicket.reducer,
         userCity:userCity.reducer,
-        setAdminData:adminData
+        setAdminData:adminData,
+        userData
     }
 
 })

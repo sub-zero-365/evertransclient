@@ -27,7 +27,7 @@
 }
 
 body {
-  @apply font-poppins;
+  @apply font-poppins !font-light !text-xs lg:text-sm;
   overscroll-behavior: contain;
 }
 
@@ -117,6 +117,7 @@ body {
 }
 .datePicker {
   width: 100% !important;
+  @apply !font-semibold
 }
 .arrow:is(:hover, :focus) {
   @apply bg-slate-400/25;
@@ -187,7 +188,7 @@ body {
 }
 .custom-calendar.rmdp-wrapper,
 .rmdp-container .custom-calendar.ep-arrow::after {
-  @apply !bg-blue-400;
+  @apply !bg-blue-400 ;
 }
 .myclassName,
 .react-datepicker__day--today {

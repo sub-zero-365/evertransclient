@@ -130,7 +130,7 @@ const DashboardHome = () => {
                     </div>
 
                 </div>
-                <div className="max-w-[calc(100%-2.5rem)] flex justify-center border border-orange-400 mx-auto items-center w-[25rem]">
+                <div className="max-w-[calc(100%-2.5rem)] flex justify-center  border-orange-400 mx-auto items-center w-[25rem]">
                     <PieChart
                         chartData={{
                             labels: ["Active Pirce,InaAcive Price"],

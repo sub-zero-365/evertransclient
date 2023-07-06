@@ -163,14 +163,11 @@ const Bus = () => {
 
     }
     const seatOptions = [
+       ...Array.from({length:12},(arr,i)=>(
         {
-            label: "49",
-            value: "49"
-        },
-        {
-            label: "53",
-            value: "53"
-        },
+            label: 48+i,
+            value: 48+i
+        }))
 
     ]
     const featureOptions = [
