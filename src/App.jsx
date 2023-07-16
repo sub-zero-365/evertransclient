@@ -1,18 +1,19 @@
 import { lazy, Suspense } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css"
 import { useEffect } from 'react'
 import axios from "axios"
-import { UserLayout, DashboardLayout,ProtectedRoute } from "./components";
+import { UserLayout, DashboardLayout, ProtectedRoute } from "./components";
 import { Home, Auth, SingleTicket } from "./pages";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import { useDispatch } from 'react-redux';
-
-import { setUserName } from "./actions/userName"
-import { storeCities } from "./actions/userCity"
+import 'react-datepicker/dist/react-datepicker.css'
 
 const ContactUs = lazy(() => import("./pages/Contact"));
+const Seat = lazy(() => import("./pages/Seats"));
 const Bus = lazy(() => import("./pages/Bus"));
 const Aboutus = lazy(() => import("./pages/Aboutus"));
+const BusRoutes = lazy(() => import("./pages/Routes"));
 const Appointment = lazy(() => import("./pages/Appointment"));
 const CheckOutInfo = lazy(() => import("./pages/CheckOutInfo"));
 const UserBoard = lazy(() => import("./pages/UserBoard"));
@@ -26,58 +27,13 @@ const Users = lazy(() => import("./pages/Users"));
 const DashboardHome = lazy(() => import("./pages/DashBoardHome"));
 const AdminAssistant = lazy(() => import("./pages/AdminContact"));
 const Details = lazy(() => import("./pages/userDetails"));
+const SeatDetails = lazy(() => import("./pages/SeatDetails"));
 const DashRegister = lazy(() => import("./pages/DashRegister"));
+const BusDetails = lazy(() => import("./pages/BusDetails"));
+const FindBus = lazy(() => import("./pages/FindBus"));
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL=process.env.REACT_APP_LOCAL_URL
+axios.defaults.baseURL = process.env.REACT_APP_LOCAL_URL
 function App() {
-  const dispatch = useDispatch();
-  const setuserName = (username) => {
-    dispatch(setUserName(username))
-
-  }
-  const setCity = (cities) => dispatch(storeCities(cities))
-  const token = localStorage.token;
-
-  useEffect(() => {
-    async function getCities() {
-
-      const url = process.env.REACT_APP_LOCAL_URL + "/allcities";
-      try {
-        const res = await axios.get(url, {
-          headers: {
-            'Authorization': "makingmoney " + token
-          }
-        })
-        setCity(res?.data?.cities)
-      } catch (err) {
-        console.log(err)
-      }
-
-
-
-    }
-    getCities()
-
-    if (token) {
-      async function getData() {
-        const url = process.env.REACT_APP_LOCAL_URL + "/auth/userinfo";
-        try {
-          const res = await axios.get(url, {
-            headers: {
-              'Authorization': "makingmoney " + token
-            }
-          })
-          // const { data: { fullname, } } = res
-          setuserName(res?.data?.user?.fullname)
-        } catch (err) {
-          // console.log(err)
-        }
-      }
-      getData()
-
-    }
-  }, [])
-
   return (
     <div className="bg-color_light  dark:bg-color_dark dark:text-white"
     >
@@ -91,26 +47,23 @@ function App() {
               <Route index element={<Home />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
-              <Route path="/" element={<ProtectedRoute/>}>
-              
-              <Route path="booking" element={<Booking />} />
-              <Route path="bussits/:id" element={<BusSits />} />
-              <Route path="information" element={<CheckOutInfo />} />
-              <Route path="user" element={<UserBoard />} />
-              <Route path="user/:id" element={<SingleTicket />} />
-              
+              <Route path="/" element={<ProtectedRoute />}>
+
+                <Route path="bus" element={<FindBus />} />
+                <Route path="booking" element={<Booking />} />
+                <Route path="bussits/:id" element={<BusSits />} />
+                <Route path="information" element={<CheckOutInfo />} />
+                <Route path="user" element={<UserBoard />} />
+                <Route path="user/:id" element={<SingleTicket />} />
+
               </Route>
               <Route path="contact-us" element={<ContactUs />} />
               <Route path="about-us" element={<Aboutus />} />
               <Route path="auth" element={<Auth />} />
             </Route>
             <Route path="/dashboard"
-
-
               element={<DashboardLayout />} >
               <Route index element={<DashboardHome />} />
-              
-              
               <Route path="tickets" element={<Appointment />} />
               <Route path=":id" element={<SingleTicket />} />
               <Route path="cities" element={<Cities />} />
@@ -118,12 +71,19 @@ function App() {
               <Route path="bus" element={<Bus />} />
               <Route path="details/:id" element={<Details />} />
               <Route path="assistant" element={<AdminAssistant />} />
+              <Route path="bus/:id" element={<BusDetails />} />
+              <Route path="seat/:id" element={<SeatDetails />} />
+              <Route path="routes" element={<BusRoutes />} />
+              <Route path="seat" element={<Seat />} />
               <Route path="register" element={<DashRegister />} />
             </Route>
-            <Route path="*" element={<NotFound />} />
+            <Route
+              path="*"
+              element={<NotFound />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
+      <ToastContainer />
     </div>
 
   );

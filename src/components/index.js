@@ -74,3 +74,5 @@ export { default as ToggleSwitch }
 from './ToggleSwitch'
 export { default as AnimateError }
 from './AnimateError'
+export { default as CustomDatePicker }
+from './CustomDatePicker'

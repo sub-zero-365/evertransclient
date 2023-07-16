@@ -1,4 +1,4 @@
-
+import { toast } from "react-toastify"
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker from 'react-datepicker';
 import { VscFolderActive } from 'react-icons/vsc'
@@ -62,23 +62,39 @@ const Details = () => {
 
   const handleBlockChange = () => {
     if (querySearch.get("account_block")) {
-      // handleFilterChange("account_block")
-      handleRemoveBlockuser()
+      const options = {
+        pending: "started",
+        success: "done",
+        error: "oops something broke"
+      }
+      toast.promise(
+        handleRemoveBlockuser()
+        , options
+      )
 
     } else {
-      // handleFilterChange("account_block", true)
-      handleRestrictUserAdd(querySearch.get("createdBy"))
 
+      const options = {
+        pending: "started restricting user",
+        success: "done !",
+        error: "oops something broke"
+      }
+      toast.promise(
+        handleRestrictUserAdd(querySearch.get("createdBy"))
+        , options
+      )
+      // handleRestrictUserAdd(querySearch.get("createdBy"))
     }
-
   }
   const handleRemoveBlockuser = async () => {
     const url = `${process.env.REACT_APP_LOCAL_URL}/restricted/${querySearch.get("createdBy")}`
     try {
       const res = await axios.delete(url)
       handleFilterChange("account_block")
+      return res
     } catch (err) {
-      alert(err.response.data)
+      return err
+
     }
   }
 
@@ -95,12 +111,7 @@ const Details = () => {
       }
     }())
 
-    // if (querySearch.get("account_block")) {
-    //   handleRemoveBlockuser()
 
-    // } else {
-    //   handleRestrictUserAdd(querySearch.get("createdBy"))
-    // }
 
   }, [querySearch.get("account_block")])
 
@@ -111,21 +122,12 @@ const Details = () => {
         user_id: user_id,
         name: "testuser4"
       })
-      // setUserRestricted(res.data.status);
+
     } catch (err) {
-      // alert(err.response.data)
-      // alert("something went wrong")
       handleFilterChange("account_block", true)
     }
   }
-  const handleRestrictUserget = (user_id, url = process.env.REACT_APP_LOCAL_URL + "/restricted") => {
-    try {
-      const res = axios.get(url)
-      // setUserRestricted(res.data.status)
-    } catch (err) {
 
-    }
-  }
 
 
 

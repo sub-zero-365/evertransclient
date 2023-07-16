@@ -28,7 +28,7 @@
 
 body {
   @apply font-poppins !font-light !text-xs lg:text-sm;
-  overscroll-behavior: contain;
+  /* overscroll-behavior: contain; */
 }
 
 .links-item {
@@ -44,6 +44,12 @@ body {
 
 .links-item:hover::before {
   @apply w-full;
+}
+.grid-flow {
+  grid-template-columns: 
+  repeat(auto-fit, minmax(min(8rem,100%), 1fr));
+  display: grid;
+  gap: 0.4rem;
 }
 
 @keyframes scaleanimation {
@@ -117,7 +123,7 @@ body {
 }
 .datePicker {
   width: 100% !important;
-  @apply !font-semibold
+  @apply !font-semibold;
 }
 .arrow:is(:hover, :focus) {
   @apply bg-slate-400/25;
@@ -188,7 +194,7 @@ body {
 }
 .custom-calendar.rmdp-wrapper,
 .rmdp-container .custom-calendar.ep-arrow::after {
-  @apply !bg-blue-400 ;
+  @apply !bg-blue-400;
 }
 .myclassName,
 .react-datepicker__day--today {

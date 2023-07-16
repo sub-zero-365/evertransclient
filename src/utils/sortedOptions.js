@@ -42,3 +42,10 @@ export const sortedDateOptions = [
     { label: 200, value: 200 },
 
 ]
+ export const timeOptions = [
+    { label: "7am", value: "7am" },
+    { label: "10am", value: "10am" },
+    { label: "12am", value: "12am" },
+    { label: "10pm", value: "10pm" },
+
+]

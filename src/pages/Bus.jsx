@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
 import { AiOutlinePlus } from 'react-icons/ai'
-import { Form, Heading } from '../components'
+import { Form, Heading, ToggleSwitch } from '../components'
 import AnimateText from '../components/AnimateText'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, forwardRef } from 'react'
 import { components, style } from "../utils/reactselectOptionsStyles"
 import axios from 'axios'
 import { AnimateError } from '../components'
@@ -12,14 +12,151 @@ import { FiRefreshCcw } from 'react-icons/fi'
 import { MdOutlineClose } from 'react-icons/md'
 import Alert from '../components/Alert'
 import Categories from 'react-select'
+import FromSelect from 'react-select/async'
+import ToSelect from 'react-select/async'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import DatePicker from 'react-datepicker'
 const token = localStorage.getItem("admin_token");
+
 const Bus = () => {
+
+    const [startDate, setStartDate] = useState(new Date());
+    const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
+        <div
+            className="w-full
+            max-w-[10rem]
+          border-b
+          mt-[20px]
+          mx-auto
+          shadow-sm border-black 
+          gap-2
+          p-1 
+          rounded-0
+          bg-transparent my-1  "
+            onClick={onClick} ref={ref}>
+
+            <div className="flex-1">
+                <Heading text="Boarding Date" className="!text-sm !text-slate-400  !mb-1" />
+                <p className="text-xs md:text-lg text-center text-slate-500 font-[500]">{value && (new Date(value).toDateString())}</p>
+            </div>
+        </div>
+    ));
+
+    const newbustoast = () => toast.success("Add bus successfully  !", {
+        position: toast.POSITION.BOTTOM_CENTER
+    })
+    const [activeIndex, setActiveIndex] = useState(null)
+    const BusDetail = ({ number_of_seats, feature, name, _id, seat_positions, active, from, to,time }) => {
+        const counter = seat_positions?.filter((x) => x.isTaken == true)?.length
+        return (
+            <div
+                key={_id}
+                onClick={() => navigate(`${_id}`)}
+                class={`max-w-sm border  border-gray-200 rounded-lg shadow  ${counter == number_of_seats ? "bg-slate-300" : "bg-white"} dark:bg-gray-800 dark:border-gray-700`}>
+                <div className="grid grid-cols-[1fr,auto] px-2 pt-3
+    pb-2
+    items-center place-items-center border">
+                    <Heading text="Bus Details"
+                        className="!mb-0 !text-lg !text-start !mt-0 !pl-0 !ml-0 
+    !font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                    <h4 className='!text-xs text-slate-500 !mb-0 !pb-0'>
+                        {_id}
+                    </h4>
+                </div>
+
+
+                <div class="p-2">
+                    <Heading text="Name" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                    <Heading text={name} className="!mb-2 !text-sm" />
+                    <div className='grid grid-cols-2'>
+                        <div>
+                            <Heading text="Total Seats" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                            <Heading text={number_of_seats} className="!mb-2 !text-sm" />
+                        </div>
+
+                        <div>
+                            <Heading text="Consume" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                            <Heading text={(
+                                counter
+                            )} className="!mb-2 !text-sm" />
+                        </div>
+
+                    </div>
+             
+                    <div className='grid grid-cols-2'>
+                        <div>
+                            <div className='flex'>
+                                <Heading text="Bus Type" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                            </div>
+                            <Heading text={active == true ? "true" : "false"}
+                                className="!mb-2 !text-sm" />
+                        </div>
+                        <div>
+                            <div className='flex items-center'>
+                                <Heading text="active" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                                {
+                                    (activeIndex == _id) && (
+                                        <span className="w-4 h-4  ml-1
+                                rounded-full bg-transparent border-t-2 border-r-2 border-transparent border-2
+                                border-t-orange-400
+                                border-r-orange-400
+                                animate-spin
+                                "></span>
+                                    )
+
+
+                                }
+                            </div>
+                            <ToggleSwitch
+
+                                onChange={() => {
+                                    toast.promise(handleSetActive(_id), {
+                                        pending: "Promise is pending",
+                                        success: "promise  loaded",
+                                        error: "oops something happen"
+                                    })
+
+
+                                }}
+                                message="active"
+                                disabled={activeIndex == _id ? true : false}
+                                state={active} />
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        )
+
+    }
+
+
+    const focusRef = useRef(null)
+    const navigate = useNavigate()
     const [searchText, setSearchText] = useState("")
     const constraintsRef = useRef(null)
     const [toggle, setToggle] = useState(false)
     const [message, setMessage] = useState("")
     const [selected, setSelected] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
+    const [querySearch, setQuerySearch] = useSearchParams();
+
+    const handleFilterChange = (key, value = null) => {
+        setQuerySearch(preParams => {
+            if (value == null) {
+                preParams.delete(key)
+            } else {
+                preParams.set(key, value)
+            }
+            return preParams
+        })
+
+    }
+
     const catOptions = [
 
         {
@@ -50,29 +187,9 @@ const Bus = () => {
         setCat(e.value)
 
     }
-    const handleDeleteBus = async (id) => {
-        setSelected(id)
-        try {
-            const res = await axios.delete("/bus/" + id,
-                {
-                    headers: {
-                        'Authorization': "makingmoney " + token
-                    }
-                }
 
-            )
-            getBuses()
-        } catch (err) {
-            console.log(err)
-            setToggle(true)
-            setMessage(err.response.data)
+    // const [cities, setCities] = useState([])
 
-        }
-        finally {
-            setSelected(null)
-        }
-
-    }
     const getBuses = async () => {
         setIsLoading(true)
         try {
@@ -82,7 +199,7 @@ const Bus = () => {
                         'Authorization': "makingmoney " + token
                     }, params: {
                         search: searchText,
-                        feature:cat
+                        feature: cat
                     }
                 }
             )
@@ -98,33 +215,74 @@ const Bus = () => {
         }
 
     }
+
+    async function getCities(inputValue = "") {
+        const url = "/admin/allcities";
+        try {
+            const res = await axios.get(url, {
+                headers: {
+                    'Authorization': "makingmoney " + token
+                },
+                params: {
+                    search: (inputValue || "")
+                }
+            })
+            // setCities(res?.data?.cities)
+            // console.log(res.data)
+            return res?.data?.cities
+        } catch (err) {
+            console.log(err)
+            alert("some error occurs")
+        }
+
+    }
     useEffect(() => {
         getBuses()
+    }, [searchText, cat])
 
-    }, [searchText,cat])
     const [busDat, setBusData] = useState({
         name: null,
         number_of_seats: 49,
-        feature: "small bus"
+        feature: "small bus",
+        date: startDate
 
     })
-    const handleResetBus = async (id) => {
+    // const handleResetBus = async (id, _id) => {
+    //     try {
+    //         axios.patch("/bus/reset/" + id, {},
+    //             {
+    //                 headers: {
+    //                     'Authorization': "makingmoney " + token
+    //                 }
+    //             }
+    //         )
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    //     finally {
+    //         console.log("done ")
+    //     }
+    // }
+    const handleSetActive = async (id) => {
+        setActiveIndex(id)
         try {
-            axios.patch("/bus/reset/" + id, {},
+            const data = await axios.patch("/bus/active/" + id, {},
                 {
                     headers: {
                         'Authorization': "makingmoney " + token
                     }
                 }
             )
+            getBuses()
+            return data
         } catch (err) {
             console.log(err)
+            return err
+        } finally {
+            setActiveIndex(null)
         }
-        finally {
-            console.log("done ")
-        }
-    }
 
+    }
     const handleAddNewBus = async (e) => {
         e.preventDefault()
         setIsAble(true)
@@ -139,19 +297,21 @@ const Bus = () => {
                 }
             )
             setIsOpen(false);
-            console.log(data)
+            // console.log(data)
             setBusData({
                 name: "",
                 number_of_seats: 49
                 ,
-                feature: "small bus"
+                feature: "small bus",
+                date: startDate
 
             })
+            newbustoast()
             getBuses()
+
         } catch (err) {
             setErr(err.response.data)
             console.log(err)
-
         }
         finally {
             setIsAble(false)
@@ -163,11 +323,11 @@ const Bus = () => {
 
     }
     const seatOptions = [
-       ...Array.from({length:12},(arr,i)=>(
-        {
-            label: 48+i,
-            value: 48+i
-        }))
+        ...Array.from({ length: 12 }, (arr, i) => (
+            {
+                label: 48 + i,
+                value: 48 + i
+            }))
 
     ]
     const featureOptions = [
@@ -185,9 +345,6 @@ const Bus = () => {
         }
     ]
 
-
-
-
     return (
         <div
 
@@ -195,9 +352,8 @@ const Bus = () => {
             className="pt-4 
         !flex-1
       z-10
-    
+    pb-24
         max-w-full 
-        
         overflow-x-auto
         select-none
         max-h-[calc(100vh-4rem)] 
@@ -258,7 +414,13 @@ z-10  "
                             <AnimateText text="Hello admin add new buses to the app"
                                 className={"!text-sm leading-tight md:!text-lg lg:!text-xl !font-light !text-start"} />
                         </div>
-                        <motion.div onClick={() => setIsOpen(c => !c)}
+                        <motion.div onClick={() => {
+                            setIsOpen(true)
+                            setTimeout(() => {
+                                focusRef?.current?.focus()
+                            }, 500)
+
+                        }}
                             initial={{ x: "-50%" }}
                             animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
                             transition={{
@@ -301,6 +463,8 @@ z-10  "
             bg-white
             rounded-2xl
             top-1/2
+            max-h-[calc(100vh-100px)]
+            overflow-y-auto
             -translate-y-1/2
             shadow-xl
             shadow-slate-400
@@ -330,7 +494,7 @@ z-10  "
 
                     <form onSubmit={handleAddNewBus} className="px-6">
                         <div className="relative mb-6" data-te-input-wrapper-init>
-                            <input
+                            <input ref={focusRef}
                                 value={(busDat?.name || "")}
                                 onChange={e => setBusData((prev) => ({
                                     ...prev,
@@ -389,8 +553,6 @@ z-10  "
                                 Bus Name
                             </label>
                         </div>
-
-
 
                         <div className="mb-6 flex items-center justify-center select-none ">
 
@@ -490,175 +652,12 @@ z-10  "
                 />
 
             </div>
-            <div className='w-full grid sm:grid-cols-2 lg:grid-cols-3  px-5  gap-x-2 gap-y-5 pt-10 '>
-                {buses.map(({
-                    number_of_seats, feature, name, _id, seat_positions }, i) => {
+            <div
+
+                className='w-full grid sm:grid-cols-2 lg:grid-cols-3  px-5  gap-x-2 gap-y-5 pt-10 '>
+                {buses.map((arr, i) => {
                     return (
-
-                        <div
-                            key={i}
-                            class="max-w-sm
-                                bg-white border  border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                            <div className="grid grid-cols-[1fr,auto] px-2 pt-3
-                            pb-2
-                            items-center place-items-center border">
-                                <Heading text="Bus Details"
-                                    className="!mb-0 !text-lg !text-start !mt-0 !pl-0 !ml-0 
-                            !font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                                <h4 className='!text-xs text-slate-500 !mb-0 !pb-0'>
-                                    {_id}
-                                </h4>
-                            </div>
-
-
-                            <div class="p-2">
-                                <Heading text="Name" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                                <Heading text={name} className="!mb-2 !text-sm" />
-                                <div className='grid grid-cols-2'>
-                                    <div>
-                                        <Heading text="Total Seats" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                                        <Heading text={number_of_seats} className="!mb-2 !text-sm" />
-                                    </div>
-
-                                    <div>
-                                        <Heading text="Consume" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                                        <Heading text={(
-                                            seat_positions?.filter((x) => x.isTaken == true)?.length
-                                        )} className="!mb-2 !text-sm" />
-                                    </div>
-
-                                </div>
-                                <Heading text="Bus Type" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                                <Heading text={feature} className="!mb-2 !text-sm" />
-                                <div className={`grid  gap-x-6 mt-4 pb-2 ${(
-                                    seat_positions?.filter((x) => x.isTaken == true)?.length
-                                ) !== number_of_seats ? "grid-cols-2" : "grid-cols-3"}`}>
-                                    <div
-                                        onClick={() => setIsOpen(true)}
-                                        className={` 
-            font-medium
-            shadow
-            md:shadow-md
-            shadow-blue-200
-            dark:shadow-slate-800
-            bg-green-400
-            dark:bg-gray-700
-            pt-1
-            mr-1
-            rounded-sm
-            text-white
-            dark:font-semibold
-            px-3
-            pb-1.5
-            place-items-center  
-            hover:bg-green-700
-            ease 
-            transition-colors
-            duration-700
-            hover:underline
-            flex
-            justify-center 
-            items-center
-            text-[0.7rem] 
-            md:text-sm
-            font-montserrat
-            `}
-                                        style={{
-                                            whiteSpace: "nowrap"
-                                        }}
-                                    >Edit Bus</div>
-                                    {
-
-                                        (
-                                            seat_positions?.filter((x) => x.isTaken == true)?.length
-                                        ) == number_of_seats && (
-                                            <button
-                                                disabled={selected && true}
-                                                onClick={() => handleResetBus(_id)}
-                                                className={` 
-                                        ${_id == selected ? "bg-slate-500 hover:slate-red-700 opacity-20" : "bg-red-800 hover:bg-red-700"}
-                                        
-                                        outline-none border-none focus:outline-none focus:border-none
-           font-medium
-           shadow
-           md:shadow-md
-           shadow-blue-200
-           dark:shadow-slate-800
-         
-           dark:bg-gray-700
-           pt-1
-           mr-1
-           rounded-sm
-           text-white
-           dark:font-semibold
-           px-3
-           pb-1.5
-           place-items-center  
-           
-           ease 
-           transition-colors
-           duration-700
-           hover:underline
-           flex
-           justify-center 
-           items-center
-           text-[0.7rem] 
-           md:text-sm
-           font-montserrat
-           max-w-[12rem]
-           `}
-                                                style={{
-                                                    whiteSpace: "nowrap"
-                                                }}
-                                            >resetbus</button>
-                                        )
-                                    }
-
-                                    <button
-                                        disabled={selected && true}
-                                        onClick={() => handleDeleteBus(_id)}
-                                        className={` 
-                                        ${_id == selected ? "bg-slate-500 hover:slate-red-700 opacity-20" : "bg-red-800 hover:bg-red-700"}
-                                        
-                                        outline-none border-none focus:outline-none focus:border-none
-           font-medium
-           shadow
-           md:shadow-md
-           shadow-blue-200
-           dark:shadow-slate-800
-         
-           dark:bg-gray-700
-           pt-1
-           mr-1
-           rounded-sm
-           text-white
-           dark:font-semibold
-           px-3
-           pb-1.5
-           place-items-center  
-           
-           ease 
-           transition-colors
-           duration-700
-           hover:underline
-           flex
-           justify-center 
-           items-center
-           text-[0.7rem] 
-           md:text-sm
-           font-montserrat
-           max-w-[12rem]
-           `}
-                                        style={{
-                                            whiteSpace: "nowrap"
-                                        }}
-                                    >Delete bus</button>
-                                </div>
-
-
-                            </div>
-                        </div>
-
+                        <BusDetail {...arr} />
 
                     )
                 })}

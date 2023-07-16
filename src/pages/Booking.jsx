@@ -3,22 +3,19 @@ import {
   Loader, Modal, PrevButton, NextButton, Heading,
   AnimateError
 } from "../components"
-
+// import {} from '../utils/'
 import { BiChevronDown } from 'react-icons/bi'
 import { useState, forwardRef, useEffect } from "react"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { AiOutlineArrowRight } from 'react-icons/ai'
-import Select from 'react-select'
-import Select2 from 'react-select'
-import Select3 from 'react-select'
-import SelectTime from 'react-select'
+import FromSelect from 'react-select/async'
+import ToSelect from 'react-select/async'
+import TimeSelect from 'react-select'
 import React from 'react';
 import Alert from '../components/Alert'
 import { motion } from 'framer-motion'
-import { useSelector, useDispatch } from 'react-redux'
-import { storeCities } from "../actions/userCity"
-import axios from 'axios'
+
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -29,109 +26,40 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import {getCities} from "../utils/ReactSelectFunction"
+import { components, style } from "../utils/reactselectOptionsStyles"
+
 const Booking = () => {
 
-  const dispatch = useDispatch();
   const [queryParams, setQueryParams] = useSearchParams()
   const [toggle, setToggle] = useState(false)
-  const [time, setTime] = useState("7am");
-  const [endTime, setEndTime] = useState("7am");
-  const setCity = (cities) => dispatch(storeCities(cities));
-  const style = {
-    control: base => ({
-      ...base,
-      border: 0,
-      borderBottom: "1px solid black",
-      boxShadow: "none",
-      background: "transparent",
-      color: "red",
-      borderRadius: 0,
-      fontSize: 1 + "rem"
-    }
-    )
-
-  }
-  const [buses,setBuses]=useState([])
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    
-       (async function () {
-      try {
-          const res = await axios.get("/bus",
-              {
-                  headers: {
-                      'Authorization': "makingmoney " + token
-                  }
-              }
-          )
-          // setIsOpen(false);
-          setBuses(res.data?.buses?.map((bus)=>({label:bus.name,value:bus._id})))
-          console.log(res.data)
-
-      } catch (err) {
-          // setErr(err.response.data)
-          console.log(err)
-
-      }
-      finally {
-   
-      }
-  }())
-    
-    
-    window.scrollTo({
-      top: 0,
-      left: 0,
-    })
-    if (!token) {
-      setToggle(true);
-      setTimeout(() => {
-        navigate("/login")
-      }, 4000)
-
-    }
-
-    async function getCities() {
-
-      const url = process.env.REACT_APP_LOCAL_URL + "/allcities";
-      try {
-        const res = await axios.get(url, {
-          headers: {
-            'Authorization': "makingmoney " + token
-          }
-        })
-        setCity(res?.data?.cities)
-      } catch (err) {
-        console.log(err)
-      }
-
-
-
-    }
-    getCities()
-    
-    
+  const timeOptions = [
+    {
+      label: "7am", value: "7am"
+    },
+    {
+      label: "10am", value: "10am"
+    },
+    {
+      label: "12pm", value: "12pm"
+    },
+    {
+      label: "10pm", value: "10pm"
+    },
+  ]
+  
  
 
-
-  }, [])
   const tripType = queryParams.get("triptype");
-  const onChange = (timeValue, setSecond = null) => {
-    if (setSecond == null) {
-      setTime(timeValue.value);
-      return
-    }
-    setEndTime(timeValue.value)
-  }
+
 
 
   const [fromCities, setFromCities] = useState(queryParams.get("from"))
   const [toCities, setToCities] = useState(queryParams.get("to"))
-const [selectedbus,setSelectedBus]=useState(null)
+  const [time, setTime] = useState("7am")
   const [isLine, setIsline] = useState(false)
-  const options = useSelector(state => state.userCity.cities);
   const navigate = useNavigate()
-  const gotoBusSits = () => navigate(`/bussits/99388863?from=${fromCities}&to=${toCities}&time=${time}&date=${startDate}&endTime=${endTime}&triptype=${tripType}&bus=${selectedbus}`)
+  const gotoBusSits = () => navigate(`/bussits/68763?from=${fromCities}&to=${toCities}&date=${startDate}&triptype=${tripType}&time=${time}`)
   const [demoFetch, setDemoFetch] = useState(false);
   const loadDemoData = (evt) => {
     evt.preventDefault()
@@ -141,19 +69,14 @@ const [selectedbus,setSelectedBus]=useState(null)
       return
     }
 
-    setDemoFetch(true)
-    setTimeout(() => {
-      setDemoFetch(false)
-      gotoBusSits()
-    }, 10)
+    setDemoFetch(false)
+    gotoBusSits()
   }
   const [startDate, setStartDate] = useState(new Date());
 
-  const [endDate, setEndDate] = useState(new Date());
-  const Header = ({ name }) => <h1 className="font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
+  const Header = ({ name }) => <h1 className="font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-sm">{name || "no name was passed"}</h1>
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
     <div
-      // style={{ "--w": "200px" }}
       className="w-full
       border-b
       mt-[20px]
@@ -164,12 +87,12 @@ const [selectedbus,setSelectedBus]=useState(null)
       rounded-0
       bg-transparent my-1  "
       onClick={onClick} ref={ref}>
-   
+
       <Heading text="Date" className={"!pl-0 !mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
       <div className="flex-1">
-        <h4 className="text-lg leading-6 capitalize"> {value}</h4>
-        <p className="text-sm md:text-lg text-slate-500 font-[500]">{value && (new Date(value).toDateString())}</p>
+        <h4 className="text-sm leading-6 capitalize"> {value}</h4>
+        <p className="text-xs md:text-lg text-slate-500 font-[500]">{value && (new Date(value).toDateString())}</p>
       </div>
     </div>
   ));
@@ -212,9 +135,7 @@ const [selectedbus,setSelectedBus]=useState(null)
 
           <div className="flex flex-col justify-center items-center mt-4">
             <div className="flex gap-2 justify-center items-center">
-
               {tripType == "round" ? <Header name="RoundTrip" /> : <Header name="SingleTrip" />}
-
               <span className="!w-5 !h-5 grid items-center rounded-sm justify-center mb-0.5" onClick={() => setIsline(!isLine)} >
                 <BiChevronDown className="text-sm" />
               </span>
@@ -232,50 +153,61 @@ const [selectedbus,setSelectedBus]=useState(null)
               }
             /> </div>
 
-          <Heading text="Bus " className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-          <Select3
-            styles={style}
-            components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-            className="dark:bg-slate-900 mx-2  min-h-8 text-black text-xs md:text-xl"
+
+          <Heading text="From" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
+          <FromSelect
+            defaultOptions
+            catcheOptions
+            loadOptions={getCities}
             required
 
-            onChange={evt => setSelectedBus(evt.value)}
-            options={buses} />
-          <Heading text="From" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
-          <Select
-            styles={style}
+            styles={{
+              ...style,
+              wdith: "100%",
+              fontSize: 10 + "px"
+            }}
+
             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-            className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl" required
-
+            
+            className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
             onChange={evt => setFromCities(evt.value)}
-            options={options} />
+          />
 
           <Heading text="Destination" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
-          <Select2
-            styles={style}
+          <ToSelect
+
+            defaultOptions
+            catcheOptions
+            loadOptions={getCities}
+            required
+
+            styles={{
+              ...style,
+              wdith: "100%",
+              fontSize: 10 + "px"
+            }}
             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
-            required className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl "
+            className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl "
 
             onChange={evt => setToCities(evt.value)}
-            options={options} />
+          />
+
           <AnimateError
             error={fromCities != null && fromCities === toCities}
             errorMessage={"cities should not be thesame"} />
           <Heading text="Time" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
-          <SelectTime
+          <TimeSelect
             styles={style}
+
+            onChange={(evt) => setTime(evt.value)}
             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
             required className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl mb-6"
-
             defaultValue={{
               label: "7am",
               value: "7am"
             }}
 
-            onChange={(evt) => onChange(evt)}
             options={[
               { value: "7am", label: "7am" },
               { value: "10am", label: "10am" },
@@ -295,7 +227,7 @@ const [selectedbus,setSelectedBus]=useState(null)
   focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
             >
-              Next <AiOutlineArrowRight className="!inline-block " />
+              FindBus <AiOutlineArrowRight className="!inline-block " />
             </button>
           </div>
           <div className="md:hidden min-h-8
@@ -311,7 +243,7 @@ const [selectedbus,setSelectedBus]=useState(null)
   focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
             >
-              Next <AiOutlineArrowRight className="!inline-block " />
+              FindBus <AiOutlineArrowRight className="!inline-block " />
             </button>
 
           </div>

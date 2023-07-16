@@ -2,12 +2,14 @@ import { IoMdClose } from "react-icons/io"
 import { RxDashboard } from "react-icons/rx"
 import { TiMessages } from "react-icons/ti"
 import { CiLogout } from "react-icons/ci"
-import { FcAssistant } from "react-icons/fc"
-import { GrServicePlay } from "react-icons/gr"
+// import { FcAssistant } from "react-icons/fc"
+import { GrServicePlay, GrBus } from "react-icons/gr"
+import { GiModernCity } from "react-icons/gi"
 import { NavLink, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { actions } from '../actions/toggleSide'
 import { motion } from 'framer-motion'
+import { BsPersonLinesFill } from "react-icons/bs"
 const SideBar = () => {
 
   const dispatch = useDispatch()
@@ -21,7 +23,6 @@ const SideBar = () => {
       name: "Home",
       icon: <RxDashboard size={20} />
       , to: "/dashboard"
-
     },
 
     {
@@ -33,7 +34,7 @@ const SideBar = () => {
     {
 
       name: "Employees",
-      icon: <TiMessages size={20} />
+      icon: <BsPersonLinesFill size={20} />
 
       , to: "/dashboard/users"
     },
@@ -41,32 +42,31 @@ const SideBar = () => {
     {
 
       name: "Cities",
-      icon: <GrServicePlay size={20} />
+      icon: <GiModernCity size={20} />
       , to: "/dashboard/cities"
 
     },
     {
 
       name: "Buses",
-      icon: <GrServicePlay size={20} />
+      icon: <GrBus size={20} />
       , to: "/dashboard/bus"
 
     },
     {
 
-      name: "new assistant",
-      icon: <FcAssistant size={20} />
-      , to: "/dashboard/assistant"
+      name: "Routes",
+      icon: <GrBus size={20} />
+      , to: "/dashboard/routes"
 
     },
-    // {
-    //   name: "register new employee",
-    //   icon: <GrServicePlay size={20} />
-    //   , to: "/dashboard/register"
+    {
 
-    // },
+      name: "seat",
+      icon: <GrBus size={20} />
+      , to: "/dashboard/seat"
 
-
+    },
 
   ]
   const defaultClasses = "flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md dark:shadow-lg dark:shadow-slate-800 ring-offset-slate-200 mb-2 rounded-md"

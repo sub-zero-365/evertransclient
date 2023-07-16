@@ -1,19 +1,17 @@
 import { useEffect, useRef, useState } from "react"
-import { Link, NavLink, useNavigate } from "react-router-dom"
+import { Link,  useNavigate } from "react-router-dom"
 import { Footer, OurServices } from "../components"
-import { AiOutlinePlus, AiOutlineArrowUp } from "react-icons/ai"
+import { AiOutlineArrowUp } from "react-icons/ai"
 import { motion } from "framer-motion"
 
 
 import { image2, image3, image4, image1 } from "../Assets/images"
 const Home = () => {
     const testimonials = useRef(null)
-    const navigate = useNavigate()
     const [up, setUp] = useState(0);
 
 
     const site_name = "Afri-Con"
-    const gotoBookings = () => navigate("/booking")
 
     useEffect(() => {
         var counter = 0
@@ -58,28 +56,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
             })}>
                 <AiOutlineArrowUp size={30} />
             </div>
-            <motion.div
-initial={{x:"-50%"}}
-
-                animate={{ scale: [0.7, 1.2, 0.8] }}
-
-                transition={{
-                    duration: 2,
-                    ease: "easeInOut",
-                    times: [0, 0.2, 0.5, 0.8, 1],
-                    repeat: Infinity,
-                    repeatDelay: 1
-                }
-
-                }
-                className="bottom-6 shadow-2xl button-add  top-auto bg-blue-400 
-            w-[2.5rem] h-[2.5rem] rounded-full left-1/2 overflow-hidden 
-           -translate-x-1/2
-            z-10 fixed md:hidden " onClick={gotoBookings}>
-                <div className="flex h-full w-full items-center scale-animation justify-center ">
-                    <AiOutlinePlus size={30} color="#fff" className="" />
-                </div>
-            </motion.div>
+         
 
             <section class="bg-white dark:bg-gray-900">
                 <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">

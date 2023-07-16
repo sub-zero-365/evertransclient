@@ -20,60 +20,62 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import formatQuery from "../utils/formatQueryStringParams"
 
-
+import Loader from '../components/Load'
 const
   BusSits = () => {
+    const [seats, setSeats] = useState([])
+    const [loading, setLoading] = useState(false)
 
+    const [queryParameters, setQueryString] = useSearchParams()
 
+    const time = queryParameters.get("time")
+    const from = queryParameters.get("from")
+    const to = queryParameters.get("to")
+    const date = queryParameters.get("date")
 
-    const [queryParameters] = useSearchParams();
-
-    const [currentBus, setCurrentBus] = useState(null)
-    useEffect(() => {
-      (async function () {
-        const id = queryParameters.get("bus");
-        if (!id) {
-          alert("fail to get id")
-        }
-        try {
-          const res = await axios.get("/bus/" + id, {}
-
-          )
-
-          console.log(res.data)
-          if (selected && selected == res.data.bus?.seat_positions[selected]?._id) {
-            setSelected(null)
+    const getSeats = async () => {
+      setLoading(true)
+      const traveldate = decodeURIComponent(date).
+        split("+").join(" ").trim()
+      try {
+        const res = await axios.get("/seat/getstatic", {
+          params: {
+            from,
+            traveldate,
+            to,
+            traveltime: time
           }
-          setCurrentBus(res.data.bus);
+        })
+        setSeats(res.data.seats[0])
+        setUserInfo(pre => (
+          {
+            ...pre, seat_id: res.data.seats[0]._id
+          }
+        ))
+        console.log(res.data.seats)
+      } catch (err) {
+        console.log(err.response.data)
+      } finally {
+        setTimeout(() => {
+          setLoading(false)
 
-        } catch (err) {
-          // console.log(id)
-          console.log(err)
+        }, 5000)
+      }
 
-        }
-        finally {
-
-        }
-      }())
-
-
+    }
+    useEffect(() => {
+      getSeats()
 
     }, [])
 
-    console.log(queryParameters.get("from"))
     const [userInfo, setUserInfo] = useState({
-      name: queryParameters.get("name"),
-      age: queryParameters.get("age"),
-      phone: queryParameters.get("phone"),
-      gender: (queryParameters.get("gender") || "male"),
-      from: queryParameters.get("from"),
-      to: queryParameters.get("to"),
-      email: queryParameters.get("email"),
-      date: queryParameters.get("date"),
-      time: queryParameters.get("time"),
-      tripType: queryParameters.get("triptype")
+      ...formatQuery(queryParameters.toString()),
+      gender: (formatQuery(queryParameters.toString()).gender || "male"),
+      triptype: (formatQuery(queryParameters.toString()).triptype || "singletrip"),
     })
+
 
     const navigate = useNavigate()
     const [selected, setSelected] = useState(queryParameters.get("sitpos"))
@@ -83,14 +85,14 @@ const
     const toggleModal = () => {
       setError(!error)
     }
-    const checkBusAvailabity = (isTaken, id) => {
-      if (0 == id) {
+    const checkBusAvailabity = (isTaken, isReserved, id) => {
+      if (0 == id && isTaken == false || isReserved) {
         setSelected(0)
         return
       }
-      if (isTaken) {
+      if (isTaken || isReserved) {
         setError(true)
-        setErrorMessage("Seat has already beeen taken ; choose another sheet thanks")
+        setErrorMessage("Seat has already beeen taken;")
         return
       } else {
         setSelected(id)
@@ -99,9 +101,9 @@ const
     }
     const proccedCheckout = (e) => {
       e.preventDefault()
-      if(selected===0){
+      if (selected === 0) {
         gotoCheckOut()
-      return
+        return
       }
       if (!selected) {
         setError(true)
@@ -111,7 +113,13 @@ const
       gotoCheckOut()
     }
     const gotoCheckOut = () =>
-      navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}&triptype=${userInfo.tripType}&bus=${queryParameters.get("bus")}`)
+      navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}&triptype=${userInfo.triptype}&seat_id=${userInfo?.seat_id}`)
+    if (!from || !to || !time || !date) {
+      return <div>missing parameters </div>
+    }
+    if (loading) {
+      return <Loader toggle />
+    }
     return (
       <div
         className="min-h-screen"
@@ -171,6 +179,7 @@ const
               pagination={{
                 clickable: true
               }}
+
               navigation={{
                 prevEl: ".arrow__left",
                 nextEl: ".arrow__right",
@@ -180,15 +189,15 @@ const
               <NextButton className="!right-1.5" />
 
               <SwiperSlide className="group">
-                <Heading text={"Seat from 1-20 are Vip"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
+                <Heading text={"First Row"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
 
                 <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                   {
-                    currentBus?.seat_positions?.slice(0, 20)?.map(({ isTaken, _id }, i) => {
+                    seats?.seat_positions?.slice(0, 20)?.map(({ isTaken, _id, isReserved }, i) => {
                       return (
                         <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
                           key={_id}
-                          onClick={() => checkBusAvailabity(isTaken, _id)}>
+                          onClick={() => checkBusAvailabity(isTaken, isReserved, _id)}>
                           <motion.div
                             initial={false}
                             animate={{ scale: selected == i ? [0.8, 1, 0.9] : null }}
@@ -200,7 +209,7 @@ const
 
                             }
 
-                            className={`${(isTaken) ? "bg-orange-400" : "bg-green-400"} peer
+                            className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
                 ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
                 rounded-lg flex items-center justify-center`}>
                             <motion.div
@@ -219,15 +228,15 @@ const
 
               </SwiperSlide>
               <SwiperSlide className="group">
-                <Heading text={"Seat from 1-20 are Vip"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
+                <Heading text={"Second Row"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
 
                 <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                   {
-                    currentBus?.seat_positions?.slice(20)?.map(({ isTaken, _id }, i) => {
+                    seats?.seat_positions?.slice(20)?.map(({ isTaken, isReserved, _id }, i) => {
                       return (
                         <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
                           key={_id}
-                          onClick={() => checkBusAvailabity(isTaken, _id)}>
+                          onClick={() => checkBusAvailabity(isTaken, isReserved, _id)}>
                           <motion.div
                             initial={false}
                             animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
@@ -258,47 +267,7 @@ const
 
               </SwiperSlide>
 
-              {/* <SwiperSlide className="group">
 
-                <Heading text={"Seat from 1-20 are Vip+"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
-
-                <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
-                  {
-                    Array.from({ length: 25 }, (seat, i) => {
-                      return (
-                        <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
-                          onClick={(e) => checkBusAvailabity(i + 20, e)}>
-                          <motion.div
-                            initial={false}
-                            animate={{ scale: selected == i + 20 ? [0.8, 1, 0.9] : null }}
-                            transition={{
-                              duration: 1,
-                              ease: "easeInOut",
-                              repeat: Infinity,
-                            }
-
-                            }
-
-                            className={`${i + 20 & 1 ? "bg-orange-400" : "bg-green-400"} peer
-                ${selected == i + 20 ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
-                rounded-lg flex items-center justify-center`}>
-                            <motion.div
-
-                              initial={false}
-                              animate={{ y: selected == i + 20 ? "1.3rem" : 0 }}
-
-                              className={`absolute top-[-10px] rounded-sm bg-color_light text-[12px] dark:bg-color_dark shadow-lg
-                px-2 rounded-xs `}>{i + 20 + 1}</motion.div>
-                            {i + 20 & 1 ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
-                          </motion.div>
-                        </div>
-                      )
-                    })
-                  }
-                </motion.div>
-
-
-              </SwiperSlide> */}
 
 
             </Swiper>

@@ -24,8 +24,12 @@ const Alert = ({ message,
     return (
         <AnimatePresence>
             <motion.div
-                class={`fixed  ${className} select-none left-1/2 ${toggle ? "top-10" : "!-top-full"}  -translate-x-[50%] w-[25rem] 
-            max-w-[calc(100vw-2.5rem)]   z-[30] overflow-hidden p-4 text-center
+
+                className={`fixed group 
+                ${className} select-none -translate-x-1/2 left-1/2 ${toggle ? "top-1/2 -translate-y-1/2 md:translate-y-0 md:top-10 active" : "!-top-full"}  -translate-x-[50%] w-[25rem] 
+            max-w-[calc(100vw-2.5rem)]
+            
+            z-[30] overflow-hidden p-4 text-center
             bg-white rounded-lg shadow-xl  dark:bg-gray-800 sm:p-5`}>
                 <div
 
@@ -49,8 +53,9 @@ const Alert = ({ message,
                         type="button"
                         a data-te-ripple-init
                         data-te-ripple-color="light"
-                        className="block rounded bg-blue-400 px-6 pb-2 pt-2.5 mx-auto my-4 text-xs font-medium uppercase
-leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150
+                        className="block rounded
+                        group-[.active]:!translate-y-0 translate-y-10  bg-blue-400 px-6 pb-2 pt-2.5 mx-auto my-4 text-xs font-medium uppercase
+leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition-all duration-[1s]
 ease-in-out hover:bg-primary-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]

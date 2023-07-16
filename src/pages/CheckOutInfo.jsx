@@ -43,7 +43,6 @@ const BusSits = () => {
 
   }
   const handleSubmit = async () => {
-    // if(queryParameters.get("triptype"))
     var submitdata = {
       from: queryParameters.get("from"),
       to: queryParameters.get("to"),
@@ -55,8 +54,8 @@ const BusSits = () => {
       age: queryParameters.get("age"),
       phone: queryParameters.get("phone"),
       fullname: queryParameters.get("name"),
-      busId : queryParameters.get("bus"),
-      seatposition:Number(queryParameters.get("sitpos"))
+      seat_id: queryParameters.get("seat_id"),
+      seatposition: Number(queryParameters.get("sitpos"))
     }
     if (queryParameters.get("triptype") !== "null") {
       submitdata = {
@@ -212,8 +211,6 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
                   <svg aria-hidden="true" className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                   <a href="#" className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
                     <h1
-
-                    
                       className="text-slate-400  font-medium text-xl ">Informations</h1>
                   </a>
                 </div>
@@ -265,7 +262,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
               <Heading text="Seat" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{(Number(queryParameters.get("sitpos"))+1)}</div>
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{(Number(queryParameters.get("sitpos")) + 1)}</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
               <Heading text="Travel Date" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />

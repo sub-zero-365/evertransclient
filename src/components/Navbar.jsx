@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { motion, useScroll } from "framer-motion";
 import { storeTicket, setLoading } from "../actions/userticket"
 import Alert from '../components/Alert'
+import Form from './Form';
 const Navbar = () => {
     const [toggle, setToggle] = useState(false)
     const isUserName = useSelector(state => state.username.username);
@@ -139,13 +140,7 @@ ${toggle && "!top-1/2 -translate-y-1/2"}
                             to="/?#ourservices"
                             className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                         >Our Services</NavLink></motion.li>
-                    <motion.li
-                        initial={false}
-                        animate={{ x: isOpen ? [1000, 0, 100, 0] : -1000 }}
-                        className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
-                            to="/booking"
-                            className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                        >Bus Here</NavLink></motion.li>
+
                     <motion.li
                         initial={false}
                         animate={{ x: isOpen ? 0 : -1000 }}
@@ -165,6 +160,9 @@ ${toggle && "!top-1/2 -translate-y-1/2"}
                             to="/contact-us"
                             className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                         >Contact Us</NavLink></motion.li>
+
+
+
                     <motion.li
 
                         initial={false}

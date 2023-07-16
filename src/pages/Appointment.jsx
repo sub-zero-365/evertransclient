@@ -10,6 +10,7 @@ import { setTicketData } from '../actions/adminData';
 import Select from 'react-select';
 import Triptype from 'react-select';
 import SelectSortDate from 'react-select';
+import TimeSelect from 'react-select';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { Swiper, SwiperSlide } from 'swiper/react'
 import formatQuery from "../utils/formatQueryStringParams"
@@ -28,23 +29,22 @@ import "swiper/css/thumbs";
 
 import {
     AmountCount, FormatTable,
-    Loader,
     Scrollable,
     TicketCounts,
     PanigationButton,
     Loadingbtn,
     Form,
     Heading,
-    UserRanking,
     PercentageBar,
     PrevButton,
-    NextButton, PlaceHolderLoader, DataDay
+    NextButton, PlaceHolderLoader,
+    DataDay
 } from '../components';
 import { AiOutlineSave } from 'react-icons/ai';
 import { VscFolderActive } from 'react-icons/vsc';
 import { BiCategory } from 'react-icons/bi';
 import { MdOutlinePriceChange } from 'react-icons/md';
-import { sortedDateOptions, sortTicketStatusOptions, skipOptions } from "../utils/sortedOptions"
+import { sortedDateOptions, sortTicketStatusOptions, skipOptions,timeOptions } from "../utils/sortedOptions"
 
 const Appointment = () => {
     const ref = useRef(null);
@@ -154,6 +154,11 @@ const Appointment = () => {
         if (querySearch.get("ticketStatus") == evt.value) return
         handleFilterChange("page",1)
         handleFilterChange("ticketStatus", evt.value)
+    }
+    const handleTimeChange = (evt) => {
+        if (querySearch.get("traveltime") == evt.value) return
+        handleFilterChange("page",1)
+        handleFilterChange("traveltime", evt.value)
     }
     const [isOpen, setIsOpen] = useState(false);
     async function fetchData() {
@@ -289,6 +294,21 @@ z-10  "
                                     }}
                                     isSearchable={false}
                                     onChange={handleChange}
+                                    className='!border-none !h-8 mt-0' />
+                            </div>
+                            <div className='mt-0 flex-none'>
+                                <Heading text={"Time "} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
+
+                                <TimeSelect
+                                    components={components()}
+                                    options={timeOptions}
+                                    styles={style}
+                                    defaultValue={{
+                                        label: "no time ",
+                                        value: "no time"
+                                    }}
+                                    isSearchable={false}
+                                    onChange={handleTimeChange}
                                     className='!border-none !h-8 mt-0' />
                             </div>
                             <div className='mt-0 flex-none'>
@@ -628,13 +648,9 @@ transition duration-150 ease-in-out hover:bg-red-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-
                                                     onClick={() => {
-
                                                         handleFilterChange("daterange")
-
                                                     }}
-
                                                 >
                                                     Clear Filter Query
                                                 </button>
@@ -669,58 +685,10 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
             <Heading text={"Recent Regular Booking"} className="!mb-4 !text-center md:text-start first-letter:!text-4xl underline underline-offset-8" />
             {
                 isLoading ? (<PlaceHolderLoader />) : (
-                    <div className="relative max-w-full overflow-x-auto
-                    bg-white
-    shadow-md sm:rounded-lg w-full mb-6 ">
-                        <table className="w-full text-sm text-left text-gray-500 
-              dark:text-gray-400 ">
-                            <thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" className="px-2 py-3">
-                                        Index
-                                    </th>
-                                    <th scope="col" className="px-3 py-3">
-                                        full name
-                                    </th>
-
-
-                                    <th scope="col" className="px-3 py-3">
-                                        from
-                                    </th>
-                                    <th scope="col" className="px-3 py-3">
-                                        to
-                                    </th>
-                                    <th scope="col" className="px-3 py-3">
-                                        date
-                                    </th>
-
-                                    <th scope="col" className="px-3 py-3">
-                                        createdAt
-                                    </th>
-
-                                    <th scope="col" className="px-3 py-3">
-                                        status
-                                    </th>
-                                    <th scope="col" className="px-3 py-3">
-                                        type
-                                    </th>
-                                    <th scope="col" className="px-3 py-3">
-                                        price
-                                    </th>
-                                    <th scope="col" className="px-3 py-3">
-                                        Action
-                                    </th>
-
-                                </tr>
-                            </thead>
                             <FormatTable tickets={ticketData?.tickets}
                                 admin
                                 skip={querySearch.get("limit")}
                                 currentPage={querySearch.get("page")} />
-                        </table>
-                    </div>
-
-
                 )
 
             }
