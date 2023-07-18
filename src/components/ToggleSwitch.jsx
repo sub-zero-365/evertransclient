@@ -1,4 +1,4 @@
-export default function ToggleSwitch({ state, message, onChange, disabled }) {
+export default function ToggleSwitch({ state, message, onChange, disabled,initialMessage }) {
     return (
         <div className={`flex justify-center group ${disabled == true ? "disable" : ""}  items-center flex-wrap mt-3 gap-y-1`}
             onClick={e => e.stopPropagation()}>
@@ -29,7 +29,7 @@ export default function ToggleSwitch({ state, message, onChange, disabled }) {
             tracking-tighter
             font-medium
             text-gray-900-- 
-            dark:text-gray-300`}>{(message && state) ? message : "block this user"}</span>
+            dark:text-gray-300`}>{(message && state) ? message :(initialMessage || "block this user")}</span>
         </div>
     )
 

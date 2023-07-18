@@ -1,17 +1,21 @@
 import { motion } from "framer-motion";
 import { Button, DeactiveStatusButton, ActiveStatusButton } from './'
 import { useState, useEffect } from 'react'
-// import { Heading, Scrollable, PanigationButton } from './'
-// import axios from "axios"
-// import { components, style } from "../utils/reactselectOptionsStyles"
-// import BusesSelect from 'react-select/async'rugfuisd
+
 import EditTicketModal from './EditTicketModal'
 const FormatTable = ({ tickets, currentPage, admin, skip }) => {
+    const [ticket, setSelectTicket] = useState({})
     const [isOpen, setIsOpen] = useState(false);
-    const handleEditTicket = async (id) => {
+    const handleEditTicket = async (ticket) => {
         setIsOpen(true)
+        setSelectTicket(ticket)
     }
-    // const [count,setCount]
+    useEffect(() => {
+        if (!isOpen) {
+            setSelectTicket({})
+        }
+    }, [isOpen])
+
     const handleSelectAll = () => {
         const activeIds = tickets?.map((items) => {
             if (items.active == true) {
@@ -137,7 +141,9 @@ font-montserrat
 
 
             }
-            <EditTicketModal isOpen={isOpen}
+            <EditTicketModal
+                ticket={ticket}
+                isOpen={isOpen}
                 setIsOpen={setIsOpen} />
             <div className="relative max-w-full overflow-x-auto
                     bg-white
@@ -262,7 +268,7 @@ font-montserrat
 
 
                                                 onClick={
-                                                    () => handleEditTicket(ticket?._id)
+                                                    () => handleEditTicket(ticket)
 
                                                 }
 

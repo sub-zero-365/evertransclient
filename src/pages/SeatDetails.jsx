@@ -1,8 +1,58 @@
-import { Link } from 'react-router-dom'
-const SeatDetails = () => {
+import { Link, useParams, useNavigate } from 'react-router-dom'
+import {
+    Heading,
+    Scrollable,
+    ToggleSwitch
+}
+    from '../components'
+import { getBuses } from '../utils/ReactSelectFunction'
+import DownloadSelect from "react-select"
+import { components, style } from "../utils/reactselectOptionsStyles"
+import { useState, useEffect } from 'react'
+import BusSelect from 'react-select/async'
+import axios from 'axios'
 
+const SeatDetails = () => {
+    const { id } = useParams()
+    const [seats, setSeats] = useState([])
+    const navigate = useNavigate()
+
+    const handleClick = async (index) => {
+        try {
+            const res = await axios.get(`/seat/ticket/${id}/${index}`)
+            navigate(`/dashboard/${res.data.id}?admin=true`)
+
+        } catch (err) {
+        } finally {
+
+        }
+    }
+    const getSeats = async () => {
+        try {
+            const res = await axios.get("/seat/specific/" + id, {}, {});
+            setSeats(res.data.seat)
+        } catch (err) {
+            console.log(err)
+            alert("fail to get seat" + err.response.data)
+        }
+    }
+    useEffect(() => {
+        getSeats()
+    }, [])
+    const downloadOptions = [
+
+
+        {
+            label: "download all tickets", value: "all"
+        },
+        {
+            label: "deactive tickets", value: "deactive tickets"
+        },
+
+
+    ]
     return (
-        <div className="!flex-1 h-[calc(100vh-60px)] overflow-y-auto ">
+        <div className="!flex-1 h-[calc(100vh-60px)] overflow-y-auto pb-24">
             <nav class="flex mb-5 mt-5 px-5 lg:hidden" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-3">
                     <li class="inline-flex items-center">
@@ -25,7 +75,120 @@ const SeatDetails = () => {
                 </ol>
             </nav>
 
-        </div>
+            {/* contnet dhere e */}
+
+
+            <div className="lg:flex flex-row-reverse lg:flex-row">
+                <div className="flex-none lg:w-[25rem]">
+                    <Heading text={"download options"}
+
+                        className={"!mb-1 !text-center capitalize"}
+                    />
+                    <div className="flex-none w-[min(calc(100%-20px),200px)] mx-auto">
+                        <Heading text={"Assign a bus to seatf"} className="!text-[0.8rem] !text-center !pl-0 !mb-0 uppercase text-slate-400" />
+                        <BusSelect
+                            defaultOptions
+                            catcheOptions
+                            loadOptions={getBuses}
+                            required
+                            styles={{
+                                ...style,
+                                wdith: "100%",
+                                fontSize: 10 + "px"
+                            }}
+                            
+                            // onChange={(e) => handleChange(e, "from")}
+                            components={components()}
+                            className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
+                        />
+                    </div>
+                    <div className='w-[min(calc(100%-20px),200px)] mx-auto mb-2'>
+                        <DownloadSelect options={downloadOptions}
+                            styles={style}
+                            defaultValue={{
+                                label: "deactive tickets",
+                                value: "deactive tickets",
+                            }}
+                            components={components()}
+                        />
+                    </div>
+                    <a role='link' aria-disabled
+                        href={`${process.env.REACT_APP_LOCAL_URL}/seat/download/${id}`}
+
+                        target="_blank"
+
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        className="
+        text-center
+                    w-[min(400px,calc(100%-2.5rem))]
+                     bottom-0
+                     pb-2
+                     block
+                     min-h-[2rem]
+                     mx-auto
+                    rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
+transition duration-150 ease-in-out hover:bg-blue-600
+hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                    >
+                        download borderaux
+                    </a>
+                </div>
+                <div className="flex-1 lg:max-h-[calc(100vh-60px)] overflow-y-auto">
+
+                    <Heading text={"Seat Details"} className="!mb-3" />
+                    
+                    <div className="flex justify-between px-2 pb-2">
+                        <h1 className="text-xs lg:text- shadom-lg lg flex-1">
+                            <span className="w-[10px] mr-1 h-[10px] inline-block bg-green-400 rounded-full "></span>Available</h1>
+                        <h1 className="text-xs lg:text- shadom-lg lg flex-1">
+                            <span className="w-[10px] mr-1 h-[10px] inline-block bg-blue-400 rounded-full "></span>Rerservation
+                        </h1>
+                        <h1 className="text-xs lg:text- shadom-lg lg flex-1">
+                            <span className="w-[10px] mr-1 h-[10px] inline-block bg-orange-400 rounded-full "></span>
+                            Not Available
+                        </h1>
+                    </div>
+
+                    {/* code here */}
+                    <div className="grid gap-x-1 px-4 gap-y-0.5 pt-3 grid-cols-5">
+
+                        {
+
+                            seats?.seat_positions?.map(({ isTaken, isReserved, _id }, index) => {
+                                return (
+                                    <button
+                                        onClick={() => {
+                                            if (!isTaken || !isReserved) {
+                                                handleClick(_id)
+                                            }
+                                        }}
+                                        className={`
+                                    ${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"}
+                                     grid items-center 
+                                    justify-center 
+                                    shadow 
+                                    rounded-sm min-h-[60px]
+                                    cursor-pointer
+                                    hover:rounded-lg`}
+                                    > {(index + 1)}</button>
+                                )
+
+
+                            })}
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div >
     )
 
 }

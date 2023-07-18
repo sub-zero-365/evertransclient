@@ -31,6 +31,7 @@ export const getBuses = async (inputValue = "") => {
         return buses_name
     } catch (err) {
         console.log("error : ", err)
+        alert("error" + err.response.data)
         return err.response.data
 
     }

@@ -2,7 +2,7 @@
 import DatePicker from 'react-datepicker'
 import { useState, useRef, forwardRef } from "react"
 import { Heading } from './'
-const CustomDatePicker = ({ startDate, setStartDate, inline, min, maxDate }) => {
+const CustomDatePicker = ({ startDate, setStartDate, inline, min, maxDate}) => {
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
         <div
             className="w-full
