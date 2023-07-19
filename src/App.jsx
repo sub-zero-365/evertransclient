@@ -60,6 +60,8 @@ function App() {
               <Route path="contact-us" element={<ContactUs />} />
               <Route path="about-us" element={<Aboutus />} />
               <Route path="auth" element={<Auth />} />
+              <Route path="seat/:id" element={<SeatDetails />} />
+              <Route path="seat" element={<Seat />} />
             </Route>
             <Route path="/dashboard"
               element={<DashboardLayout />} >
@@ -73,8 +75,8 @@ function App() {
               <Route path="assistant" element={<AdminAssistant />} />
               <Route path="bus/:id" element={<BusDetails />} />
               <Route path="seat/:id" element={<SeatDetails />} />
-              <Route path="routes" element={<BusRoutes />} />
               <Route path="seat" element={<Seat />} />
+              <Route path="routes" element={<BusRoutes />} />
               <Route path="register" element={<DashRegister />} />
             </Route>
             <Route

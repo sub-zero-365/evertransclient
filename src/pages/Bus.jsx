@@ -464,7 +464,7 @@ z-10  "
             rounded-2xl
             top-1/2
             max-h-[calc(100vh-100px)]
-            overflow-y-auto
+            overflow-y-auto=--
             -translate-y-1/2
             shadow-xl
             shadow-slate-400
@@ -551,6 +551,66 @@ z-10  "
                 dark:peer-focus:text-primary"
                             >
                                 Bus Name
+                            </label>
+                        </div>
+                        <div className="relative mb-6" data-te-input-wrapper-init>
+                            <input 
+                                value={(busDat?.plate_number || "")}
+                                onChange={e => setBusData((prev) => ({
+                                    ...prev,
+                                    plate_number: e.target.value
+                                }))}
+                                type="number"
+                                className="peer block min-h-[auto] w-full 
+                rounded 
+                border-2
+                focus:border-2
+                focus:border-blue-400
+                valid:border-blue-400
+                bg-transparent
+                px-3 py-[0.32rem]
+                leading-[2.15] 
+                outline-none
+                transition-all 
+                duration-200
+                ease-linear
+                focus:placeholder:opacity-100
+                data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                                id="busnumber"
+                                placeholder="Bus Number" required />
+                            <label
+                                htmlFor="busnumber"
+                                className="pointer-events-none 
+                absolute left-3
+                top-0 mb-0
+                max-w-[90%]
+                origin-[0_0]
+                truncate 
+                pt-[0.37rem] 
+                leading-[2.15]
+                text-neutral-500
+                transition-all duration-200  
+                ease-out 
+                peer-focus:-translate-y-[1.15rem]
+                peer-focus:scale-[0.8]
+                peer-valid:scale-[0.8]
+                peer-valid:text-blue-400
+                peer-valid:-translate-y-[1.15rem]
+                peer-focus:text-blue-400
+                peer-focus:bg-white px-0
+                peer-valid:bg-white 
+                dark:peer-focus:bg-color_dark
+                dark:peer-valid:bg-color_dark
+            
+                bg-transparent
+                peer-data-[te-input-state-active]:-translate-y-[1.15rem]
+                 rounded-sm
+                 peer-data-[te-input-state-active]:scale-[0.8]
+                motion-reduce:transition-none
+                dark:text-neutral-200
+                dark:peer-focus:text-primary"
+                            >
+                                Bus Number
                             </label>
                         </div>
 

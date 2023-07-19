@@ -231,7 +231,7 @@ const Details = () => {
   const selectRef = useRef(null)
   return (
     <motion.div
-      className='pt-4 px-2 max-w-full overflow-x-auto select-none  
+      className='pt-4 px-2 max-w-full overflow-x-auto select-none lg:px-10 
       mx-auto
     max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark' ref={constraintsRef}>
       <motion.div
@@ -280,7 +280,7 @@ z-10  "
 
         </ol>
       </nav>
-      <div className="lg:flex  items-start justify-start gap-4">
+      <div className="lg:flex  items-start justify-start gap-4 ">
         <div
           className="flex-none w-[18rem] hidden lg:block
           "
@@ -295,11 +295,12 @@ z-10  "
               return (
                 <div
                   key={i}
-                  class="max-w-sm mb-1 shadow=xl
-      bg-white border  border-gray-200 rounded-lg shadow-xl shadow-slate-300 dark:bg-gray-800 dark:border-gray-700">
+                  class="max-w-sm mb-1 dark:text-white 
+      bg-white  border  border-gray-200 rounded-lg shadow-xl dark:shadow-sm 
+      dark:shadow-black shadow-slate-300 dark:bg-gray-800 dark:border-gray-700">
                   <div className="grid grid-cols-[1fr,auto] px-2 pt-3
   pb-2
-  items-center justify-between border">
+  items-center justify-between border dark:border-slate-400 ">
                     <Heading text="Tickets Details"
                       className="!mb-0 !text-xs !text-start !mt-0 !pl-0 !ml-0 
   !font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
@@ -473,9 +474,13 @@ z-10  "
         <div className={`flex-none py-5
         sidebarr m lg:rounded-lg shadow rounded-lg  overflow-y-auto--
         ${toggle ? "right-0" : "!-right-full"}
-        duration-500 transition-[right] shadow lg:shadow-none lg:max-w-sm lg:w-[22rem] 
-        text-center bg-white rounded-sm right-0 top-12 h-fit
-           w-[calc(100vw-3.5rem)] max-w-sm  z-20 fixed   lg:static px-4 `}>
+        duration-500
+        transition-[right] shadow
+        lg:shadow-none lg:max-w-sm lg:w-[22rem] 
+        text-center bg-white
+        dark:bg-slate-800 rounded-sm right-0 top-12 h-fit
+           w-[calc(100vw-3.5rem)] max-w-sm 
+           z-20 fixed   lg:static px-4 `}>
           <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 
        -left-[3.125rem] z-10 rounded-none flex items-center justify-center  font-black border-black"
@@ -867,17 +872,17 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
         }
       </AnimatePresence>
 
-      <Form 
-      handleChangeText={handleChangeText}
-      params={querySearch} />
-          {
+      <Form
+        handleChangeText={handleChangeText}
+        params={querySearch} />
+      {
 
-            !isLoading && (<FormatTable
-              tickets={userData?.tickets}
-              skip={querySearch.get("limit")}
-              currentPage={querySearch.get("page")} />)
-          }
-        
+        !isLoading && (<FormatTable
+          tickets={userData?.tickets}
+          skip={querySearch.get("limit")}
+          currentPage={querySearch.get("page")} />)
+      }
+
       {
         isLoading && (
           <PlaceHolderLoader />

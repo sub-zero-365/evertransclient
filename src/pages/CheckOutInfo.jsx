@@ -189,7 +189,9 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             className="w-full h-[calc(100vh-50px)] object-cover" alt="booking " />
 
         </div>
-        <div className="flex-none px-2 w-full pb-24 lg:w-[35rem] lg:px-4  mx-auto max-h-[calc(100vh-50px)] overflow-y-auto lg:shadow-lg mt-6 py-6 pt-0"
+        <div className="flex-none px-2 w-full pb-24 lg:w-[35rem] lg:px-4
+        dark:bg-slate-900 
+        mx-auto max-h-[calc(100vh-50px)] overflow-y-auto lg:shadow-lg mt-6 py-6 pt-0"
           ref={constraintsRef}
         >
           <nav className="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
@@ -221,60 +223,63 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             className={"!text-sm md:!text-lg lg:!text-2xl !text-center"} />
           {/* <Heading text="User Information" className="!text-center !text-2xl !font-black !mb-14 !text-slate-900 underline underline-offset-8" /> */}
 
-          <div className="border-2 pr-4  bg-white shadow-xl 
+          <div className="border-2 pr-4  bg-white
+          dark:bg-slate-800  shadow-xl 
           
           py-5 pt-8 rounded-lg mt-5 relative">
 
-            <span className="absolute left-1/2 -translate-x-1/2 border px-10 rounded-lg shadow  min-h-[30px]  bg-color_light
+            <span className="absolute left-1/2 py-2 -translate-x-1/2 border px-10 rounded-lg shadow  min-h-[35px]  bg-color_light
                       dark:bg-color_dark top-[-15px] text-montserrat  font-semibold">
               {
                 (queryParameters.get("triptype") === "single" || queryParameters.get("triptype")) == "null" ? "Single Trip" : "Round Trip"
               }
             </span>
-            <div className={`grid ${view ? "grid-cols-1 active " : "grid-cols-2"} group justify-center mb-1 items-center `}>
-              <Heading text="Fullname" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+            <div className={`grid ${view ? "grid-cols-1 active " : "grid-cols-2"}
+            group justify-center mb-1 items-center `}>
+              <Heading text="Fullname"
+              className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
               <div className=" line-clamp-2 group-[.active]:!text-center capitalize pl-2 border-b-2"> {queryParameters.get("name") || "fail"}</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active " : "grid-cols-2"} group justify-center- mb-1 items-center `}>
-              <Heading text="ID number" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <Heading text="ID number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
               <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center"> {queryParameters.get("email")}</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-              <Heading text="From" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <Heading text="From" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
               <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("from")}</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-              <Heading text="To" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <Heading text="To" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
               <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center"> {queryParameters.get("to")}</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-              <Heading text="Age" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <Heading text="Age" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
               <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("age")} years</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-              <Heading text="Gender" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <Heading text="Gender" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
               <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("gender")}</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-              <Heading text="Seat" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <Heading text="Seat" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
               <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{(Number(queryParameters.get("sitpos")) + 1)}</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-              <Heading text="Travel Date" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <Heading text="Travel Date" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
               <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{new Date(queryParameters.get("date")).toLocaleDateString()
               }</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-              <Heading text="Travel Time" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <Heading text="Travel Time" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
               <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("time")}</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-              <Heading text="Travel Cost" className={"!mb-1 !mt-2 group-[.active]:!text-center !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+              <Heading text="Travel Cost" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
               <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{Number(queryParameters.get("sitpos")) > 20 ? 10000 + "frs" : 6500 + "frs"}</div>
             </div>

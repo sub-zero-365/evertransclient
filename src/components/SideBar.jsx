@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { actions } from '../actions/toggleSide'
 import { motion } from 'framer-motion'
 import { BsPersonLinesFill } from "react-icons/bs"
+import { BsClipboardDataFill } from "react-icons/bs"
 const SideBar = () => {
 
   const dispatch = useDispatch()
@@ -53,17 +54,11 @@ const SideBar = () => {
       , to: "/dashboard/bus"
 
     },
+
     {
 
-      name: "Routes",
-      icon: <GrBus size={20} />
-      , to: "/dashboard/routes"
-
-    },
-    {
-
-      name: "seat",
-      icon: <GrBus size={20} />
+      name: "Borderaux",
+      icon: <BsClipboardDataFill size={20} />
       , to: "/dashboard/seat"
 
     },
@@ -101,7 +96,7 @@ const SideBar = () => {
                 onClick={toggleSideBar}
 
 
-                className={({ isActive }) => (isActive ? "!bg-violet-500 !dark:bg-violet-800 !text-white !text-semibold flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md dark:shadow-lg dark:shadow-slate-800 ring-offset-slate-200 mb-2 rounded-md" : defaultClasses)}
+                className={({ isActive }) => (isActive ? "!bg-violet-500 dark:shadow-black   !text-white !text-semibold flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md  dark:shadow-sm ring-offset-slate-200 mb-2 rounded-md" : defaultClasses)}
 
               >
 

@@ -25,6 +25,7 @@ const User = () => {
   // console.log(location)
   const loadState = location?.state?._id
   const isInView = useInView(ref)
+
   useEffect(() => {
     if (isInView) {
       setIsOpen(true)
@@ -38,7 +39,7 @@ const User = () => {
   const getStatus = (obj, value = "roundtrip") => {
     return obj?.type === value && obj?.doubletripdetails?.some(x => x.active == true)
   }
-  const[redirect,setRedirect]=useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   const navigate = useNavigate();
   const previousPage = () => navigate(-1)
@@ -53,6 +54,7 @@ const User = () => {
   const [params, setParams] = useState({
   })
   const [toggle, setToggle] = useState(false)
+  const showDeactivateButton = queryParameters.get("xyz") ? true : false
   var token = undefined, url = ""
   const isadminuser = queryParameters.get("admin");
   // const shouldplaysound = queryParameters.get("sound");
@@ -254,7 +256,7 @@ const User = () => {
               size={400}
               style={{ height: "auto", maxWidth: "100%", width: "100%" }}
               // value={`https://ntaribotaken.vercel.app/dashboard/${id}?admin=true`}
-              value={`http://192.168.43.68:3000/dashboard/${id}?admin=true&sound=true`}
+              value={`http://192.168.43.68:3000/dashboard/${id}?admin=true&sound=true&xyz=true`}
               viewBox={`0 0 256 256`}
             />
           </div>
@@ -397,7 +399,7 @@ lg:py-10
 
             {
               ticketData?.type === "roundtrip" ? (
-                <div className="grid grid-cols-1 md:grid-cols-1 justify-center md:justify-between px-4">
+                showDeactivateButton&&<div className="grid grid-cols-1 md:grid-cols-1 justify-center md:justify-between px-4">
                   <div className="flex justify-center flex-col">
                     <div className="flex mb-1 items-center justify-center">
                       <Heading text="First Trip" className="text-center first-letter:!text-2xl !pl-0 !text-xs !font-black !mb-1 mr-2" />
@@ -538,11 +540,9 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
               )
                 : (
-
-                  <AnimatePresence>
+                  showDeactivateButton&&<AnimatePresence>
                     {
                       ticket?.active ?
-
                         <motion.div
                           animate={{ opacity: [0, 1], bottom: ["-2rem", "4rem", "2rem"] }}
                           exit={{ opacity: 0, bottom: "-2rem" }}

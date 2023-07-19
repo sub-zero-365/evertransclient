@@ -11,6 +11,8 @@ import { useSearchParams } from 'react-router-dom'
 import {
     timeOptions
 } from "../utils/sortedOptions"
+import dateFormater from '../utils/DateFormater'
+
 import formatQuery from "../utils/formatQueryStringParams"
 import {
     AnimatePresence,
@@ -24,6 +26,7 @@ import { components, style } from "../utils/reactselectOptionsStyles"
 import DatePicker from 'react-datepicker';
 
 const Seats = () => {
+
     const [querySearch, setQuerySearch] = useSearchParams();
     const handleFilterChange = (key, value = null) => {
         setQuerySearch(preParams => {
@@ -87,11 +90,13 @@ const Seats = () => {
 
     return (
         <div className="h-[calc(100vh-60px)] !flex-1 w-full overflow-y-auto">
-            <div className="flex  flex-col lg:flex-row  lg:mt-10 lg:px-8 max-w-full rounded-sm shadow-sm lg:mx-10
-            py-10 items-start justify-between bg-white lg:mb-14">
+            <div className="flex
+            flex-col lg:flex-row
+            lg:mt-10 lg:px-8 max-w-full rounded-sm shadow-sm lg:mx-10
+            py-10 items-start justify-between lg:mb-14">
 
                 <div className="
-                flex-1
+                flex-none lg:w-[20rem]
                 w-full 
                 px-2 lg:px-0">
                     <Scrollable className={`
@@ -174,7 +179,7 @@ const Seats = () => {
                     </Scrollable>
 
                 </div>
-                <div className="flex-none flex flex-col items-center w-full  lg:w-fit hidden- lg:block flex-end px-5 ">
+                <div className="flex-none flex flex-col my-6 lg:my-0 items-center w-full  lg:w-fit hidden- lg:block flex-end px-5 ">
                     <DatePicker
                         wrapperClassName="!w-full !bg-orange !border-none !outline-none "
                         className="!w-full  !mt-5 min-h-[2rem] !mx-auto  !border-2 !text-center   !outline-none "
@@ -184,7 +189,7 @@ const Seats = () => {
                         startDate={startDate}
                         endDate={endDate}
                         selectsRange
-                        inline={inline && true}
+                        inline
                         containerStyle={{
                             width: "100%"
                         }}
@@ -236,14 +241,14 @@ ring-red-300'>
 
 
             </AnimatePresence>
-            <section className=" antialiased bg-gray-100 text-gray-600 pb-24">
-                <div className="h-">
-                    <div className="w-full max-w-2xl-- mx-auto bg-white shadow-lg rounded-sm ">
+            <section className=" antialiased  text-gray-600 pb-24">
+                    <div className="w-full max-w-2xl-- mx-auto bg-white dark:bg-slate-800 shadow-lg rounded-sm ">
 
                         <div className="p-0">
                             <div className="overflow-x-auto">
                                 <table className="table-auto w-full">
-                                    <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+                                    <thead className="text-xs font-semibold uppercase text-gray-400 
+                                    dark:bg-slate-800 bg-gray-50">
                                         <tr>
                                             <th className="p-2 whitespace-nowrap">
                                                 <div className="font-semibold text-left">index</div>
@@ -284,20 +289,20 @@ ring-red-300'>
                                                         <td className="p-2 whitespace-nowrap">
                                                             <div className="text-left pl-1">{(index + 1) || "n/a"}</div>
                                                         </td>
-                                                        <td className="p-2 whitespace-nowrap text-orange-900">
+                                                        <td className="p-2 whitespace-nowrap text-orange-900 dark:text-white">
                                                             <div className="text-left">{from || "n/a"}</div>
                                                         </td>
                                                         <td className="p-2 whitespace-nowrap">
-                                                            <div className="text-left  text-orange-900">{to}</div>
+                                                            <div className="text-left  text-orange-900 dark:text-white">{to}</div>
                                                         </td>
                                                         <td className="p-2 whitespace-nowrap">
-                                                            <div className="text-left  text-orange-900">{traveldate}</div>
+                                                            <div className="text-left  text-orange-900 dark:text-white">{dateFormater(traveldate).date}</div>
                                                         </td>
                                                         <td className="p-2 whitespace-nowrap">
-                                                            <div className="text-left  text-orange-900">{traveltime}</div>
+                                                            <div className="text-left  text-orange-900 dark:text-white">{traveltime}</div>
                                                         </td>
                                                         <td className="p-2 whitespace-nowrap">
-                                                            <div className="text-left  text-orange-900">{bus?.bus || "n/a"}</div>
+                                                            <div className="text-left  text-orange-900 dark:text-white">{bus?.bus || "n/a"}</div>
                                                         </td>
                                                         <td className="p-2 whitespace-nowrap flex ">
                                                             <UiButton onClick={() => navigate(`${_id}`)} name="details" />
@@ -312,7 +317,6 @@ ring-red-300'>
                             </div>
                         </div>
                     </div>
-                </div>
             </section>
         </div>
     )

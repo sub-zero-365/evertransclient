@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { IoMdClose } from 'react-icons/io'
 import { BsMoonStars, BsSun } from 'react-icons/bs';
@@ -10,6 +10,36 @@ import { storeTicket, setLoading } from "../actions/userticket"
 import Alert from '../components/Alert'
 import Form from './Form';
 const Navbar = () => {
+    useEffect(() => {
+        if (localStorage.theme === 'white') {
+            setDarkTheme(false)
+            return
+        }
+        else if (localStorage.theme === 'dark' || (
+            window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+            setDarkTheme(true)
+
+        } else {
+            document.documentElement.classList.remove('dark')
+            setDarkTheme(false)
+
+        }
+    }, [])
+    const [darkTheme, setDarkTheme] = useState(false)
+    const toggleDarkTheme = () => {
+        changeTheme()
+
+    }
+    const changeTheme = () => {
+        if (!darkTheme) {
+            localStorage.setItem("theme", "dark")
+        } else {
+            localStorage.setItem("theme", "white")
+        }
+        document.documentElement.classList.toggle('dark')
+        setDarkTheme(c => !c)
+    }
     const [toggle, setToggle] = useState(false)
     const isUserName = useSelector(state => state.username.username);
     const dispatch = useDispatch()
@@ -42,20 +72,20 @@ const Navbar = () => {
     }
     const gotoUserPage = () => navigate("/user")
     const [isOpen, setIsOpen] = useState(false)
-    const [darkTheme, setDarkTheme] = useState(false)
+    // const [darkTheme, setDarkTheme] = useState(false)
     const toggleNavBar = () => {
         setIsOpen(c => !c)
 
     }
-    const toggleDarkTheme = () => {
-        setDarkTheme(c => !c)
-        changeTheme()
+    // const toggleDarkTheme = () => {
+    //     setDarkTheme(c => !c)
+    //     changeTheme()
 
-    }
+    // }
     const navigateToHome = () => navigate("/")
-    const changeTheme = () => {
-        document.documentElement.classList.toggle('dark')
-    }
+    // const changeTheme = () => {
+    //     document.documentElement.classList.toggle('dark')
+    // }
 
 
     const container = {
@@ -118,6 +148,10 @@ ${toggle && "!top-1/2 -translate-y-1/2"}
                         className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                     >Contact Us</NavLink></li>
                     <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                        to="/seat"
+                        className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                    >Boarderaux</NavLink></li>
+                    <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/dashboard"
                         className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                     >Dashboard</NavLink></li>
@@ -162,6 +196,17 @@ ${toggle && "!top-1/2 -translate-y-1/2"}
                         >Contact Us</NavLink></motion.li>
 
 
+
+                    <motion.li
+
+                        initial={false}
+                        animate={{ x: isOpen ? 0 : -1000 }}
+                        transition={{ delay: 0.2 }}
+
+                        className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                            to="/seat"
+                            className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                        >Boarderaux</NavLink></motion.li>
 
                     <motion.li
 

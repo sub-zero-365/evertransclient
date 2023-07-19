@@ -135,7 +135,6 @@ const DashboardHome = () => {
                         chartData={{
                             labels: ["Active Pirce,InaAcive Price"],
                             datasets: [
-
                                 {
                                     label: "ticket data",
                                     data: [ticketData?.totalActivePrice, ticketData?.totalInActivePrice]
@@ -152,52 +151,11 @@ const DashboardHome = () => {
 
             <Heading text="Recent Book Tickets" className="!font-black first-letter:!text-2xl !text-lg underline underline-offset-8 uppercase" />
 
-            <div className="relative overflow-x-auto shadow-md bg-white sm:rounded-lg w-full mb-6 ">
-                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" className="px-2 py-3">
-                                Index
-                            </th>
-                            <th scope="col" className="px-3 py-3">
-                                full name
-                            </th>
-
-
-                            <th scope="col" className="px-3 py-3">
-                                from
-                            </th>
-                            <th scope="col" className="px-3 py-3">
-                                to
-                            </th>
-                            <th scope="col" className="px-3 py-3">
-                                date
-                            </th>
-                            <th scope="col" className="px-3 py-3">
-                                createdat
-                            </th>
-                            <th scope="col" className="px-3 py-3">
-                                type
-                            </th>
-                            <th scope="col" className="px-3 py-3">
-                                status
-                            </th>
-                            <th scope="col" className="px-3 py-3">
-                                price
-                            </th>
-                            <th scope="col" className="px-3 py-3">
-                                Action
-                            </th>
-
-                        </tr>
-                    </thead>
                     <FormatTable tickets={ticketData.tickets}
                         skip={10}
                         currentPage={1}
                         admin />
 
-                </table>
-            </div>
             <div className="md:grid grid-cols-12 items-start space-y-5 gap-x-6 container mx-auto px-5 md:px-14">
 
                 <div class="w-full  p-4 col-span-6 lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">

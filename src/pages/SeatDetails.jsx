@@ -5,14 +5,35 @@ import {
     ToggleSwitch
 }
     from '../components'
+import { useSearchParams } from 'react-router-dom'
+
 import { getBuses } from '../utils/ReactSelectFunction'
 import DownloadSelect from "react-select"
 import { components, style } from "../utils/reactselectOptionsStyles"
 import { useState, useEffect } from 'react'
 import BusSelect from 'react-select/async'
 import axios from 'axios'
-
+// import { MobilePDFReader } from 'react-pdf-viewer';
 const SeatDetails = () => {
+    const [querySearch, setQuerySearch] = useSearchParams();
+
+    const handleFilterChange = (key, value = null) => {
+        setQuerySearch(preParams => {
+            if (value == null) {
+                preParams.delete(key)
+            } else {
+                preParams.set(key, value)
+            }
+            return preParams
+        })
+
+    }
+    const handleChange = ({ value }, key) => {
+        if (querySearch.get(key) === value) {
+            return
+        }
+        handleFilterChange(key, value);
+    }
     const { id } = useParams()
     const [seats, setSeats] = useState([])
     const navigate = useNavigate()
@@ -23,6 +44,7 @@ const SeatDetails = () => {
             navigate(`/dashboard/${res.data.id}?admin=true`)
 
         } catch (err) {
+            console.log("err", err)
         } finally {
 
         }
@@ -80,12 +102,9 @@ const SeatDetails = () => {
 
             <div className="lg:flex flex-row-reverse lg:flex-row">
                 <div className="flex-none lg:w-[25rem]">
-                    <Heading text={"download options"}
-
-                        className={"!mb-1 !text-center capitalize"}
-                    />
+              
                     <div className="flex-none w-[min(calc(100%-20px),200px)] mx-auto">
-                        <Heading text={"Assign a bus to seatf"} className="!text-[0.8rem] !text-center !pl-0 !mb-0 uppercase text-slate-400" />
+                        <Heading text={"Assign a bus to seat"} className="!text-[0.8rem] !text-center !pl-0 !mb-0 uppercase text-slate-400" />
                         <BusSelect
                             defaultOptions
                             catcheOptions
@@ -96,24 +115,13 @@ const SeatDetails = () => {
                                 wdith: "100%",
                                 fontSize: 10 + "px"
                             }}
-                            
-                            // onChange={(e) => handleChange(e, "from")}
                             components={components()}
                             className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
                         />
                     </div>
-                    <div className='w-[min(calc(100%-20px),200px)] mx-auto mb-2'>
-                        <DownloadSelect options={downloadOptions}
-                            styles={style}
-                            defaultValue={{
-                                label: "deactive tickets",
-                                value: "deactive tickets",
-                            }}
-                            components={components()}
-                        />
-                    </div>
+                 
                     <a role='link' aria-disabled
-                        href={`${process.env.REACT_APP_LOCAL_URL}/seat/download/${id}`}
+                        href={`${process.env.REACT_APP_LOCAL_URL}/seat/download/${id}?${querySearch.toString()}`}
 
                         target="_blank"
 
@@ -140,7 +148,7 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                 <div className="flex-1 lg:max-h-[calc(100vh-60px)] overflow-y-auto">
 
                     <Heading text={"Seat Details"} className="!mb-3" />
-                    
+
                     <div className="flex justify-between px-2 pb-2">
                         <h1 className="text-xs lg:text- shadom-lg lg flex-1">
                             <span className="w-[10px] mr-1 h-[10px] inline-block bg-green-400 rounded-full "></span>Available</h1>
@@ -162,7 +170,7 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                                 return (
                                     <button
                                         onClick={() => {
-                                            if (!isTaken || !isReserved) {
+                                            if (isTaken === true || isReserved == true) {
                                                 handleClick(_id)
                                             }
                                         }}
