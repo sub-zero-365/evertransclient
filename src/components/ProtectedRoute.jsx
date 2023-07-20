@@ -2,10 +2,13 @@ import { Outlet, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { setUserName } from "../actions/userName"
+import Alert from '../components/Alert'
 
 const ProtectedRoute = () => {
+    const [toggle, setToggle] = useState(false)
+    const [message, setMessage] = useState("")
     const location = useLocation()
     const navigate = useNavigate()
 
@@ -16,7 +19,6 @@ const ProtectedRoute = () => {
 
     const dispatch = useDispatch();
     const token = localStorage.getItem("token") || localStorage.getItem("admin_token")
-
     useEffect(() => {
         if (!token) return
         async function getData() {
@@ -29,22 +31,22 @@ const ProtectedRoute = () => {
                 })
 
                 setuserName(res?.data?.user?.fullname);
-                // return res.data.user
-                // (async function () {
-                //     const url = `/restricted/${res?.data?.user?._id}`
-                //     try {
-                //       const res = await axios.get(url)
-                //     } catch (err) {
+                return res.data.user
 
-                //     }
-                //   }())
             } catch (err) {
                 navigate("/login?message=" + "something broke login again ")
             }
         }
-        getData().then((user) => {
-            const { _id } = user;
-            console.log("testing",_id)
+        getData().then(async({ _id }) => {
+                const url = `/restricted/${_id}`
+                try {
+                    const res = await axios.get(url);
+                    setToggle(true)
+                    setMessage(res.data.message)
+                } catch (err) {
+
+                }
+    
         })
     }, [location.pathname])
 
@@ -52,7 +54,17 @@ const ProtectedRoute = () => {
         return <Navigate to="/login?message=hello user please login to access this protected route" replace />
     }
     return (
-        <Outlet />
+       <> 
+        <Alert message={message}
+        duration="30000"
+        className={`
+      ${toggle && "!top-1/2 -translate-y-1/2"}
+      `}
+        toggle={toggle}
+        setToggle={()=>0}
+      />
+       
+       <Outlet /></>
     )
 }
 export default ProtectedRoute
