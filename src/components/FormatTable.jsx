@@ -67,8 +67,14 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
                                 date
                             </th>
 
+                            <th scope="col" className="px-3 py-3 hidden lg:block">
+                             time
+                            </th>
                             <th scope="col" className="px-3 py-3">
                                 createdAt
+                            </th>
+                            <th scope="col" className="px-3 py-3">
+                                phone
                             </th>
 
                             <th scope="col" className="px-3 py-3">
@@ -136,9 +142,19 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
                                             (new Date(ticket.traveldate).toLocaleDateString()) : "n/a"}
 
                                     </td>
+                                    <td className="px-3 py-2 hidden lg:block">
+                                        {ticket?.traveltime ?
+                                           ticket?.traveltime : "n/a"}
+
+                                    </td>
                                     <td className="px-3 py-2">
                                         {ticket?.createdAt ?
                                             (new Date(ticket.createdAt).toLocaleDateString()) : "n/a"}
+
+                                    </td>
+                                    <td className="px-3 py-2">
+                                        {ticket?.email ?
+                                           ticket?.email : "n/a"}
 
                                     </td>
 

@@ -30,6 +30,8 @@ import { getCities } from "../utils/ReactSelectFunction"
 import { motion, AnimatePresence } from 'framer-motion'
 import UiButton from './UiButton'
 const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
+    const token = localStorage.getItem("token");
+
     const { from, to, type } = ticket
     const [data, setData] = useState({})
     const [show, setShow] = useState(false)
@@ -38,6 +40,7 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
     const [params, setParams] = useState({
         page: 1,
     })
+    const [selectseat, setSelectseat] = useState(ticket.seatposition)
     const [next, setNext] = useState(false)
     useEffect(() => {
         setParams((pre) => ({
@@ -56,6 +59,7 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
         if (!isOpen) {
             setNext(false)
         }
+        setSelectseat(ticket?.seatposition)
     }, [isOpen])
     const handleChange = ({ value }, key) => {
         setParams((pre) => ({
@@ -97,15 +101,23 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
         getData()
     }
     // const handleEditTicket /updateticket/:id
-    const handleEditMeta = async (seatposition) => {
+    const handleEditMeta = async (seat__id, seatposition, traveltime,traveldate) => {
+        console.log(seat__id, seatposition)
+        if (seat__id == null) alert("select seat")
         try {
-            await axios.patch("/ticket/updateticket/" + ticket._id, {
+            const res = await axios.patch("/ticket/updateticket/" + ticket._id, {
                 seatposition,
-                seat_id: ticket.seat_id,
+                seat_id: seat__id,
+                traveltime,traveldate
+            }, {
 
+                headers: {
+                    'Authorization': "makingmoney " + token
+                },
             });
+            console.log(res)
+            setIsOpen(false)
         } catch (err) {
-
             console.log(err)
         }
 
@@ -177,42 +189,48 @@ shadow-slate-400
                                     <PrevButton className="!left-1.5 arrow__left" />
                                     <NextButton className="!right-1.5 arrow__right" />
                                     {
-                                        data?.seats.length >= 1 ? data?.seats?.map(({ seat_positions, traveltime }) => {
-                                            return (
-                                                <SwiperSlide>
-                                                    <div>
-                                                        <Heading text={traveltime} className="!mb-1" />
+                                        data?.seats.length >= 1 ?
+                                            data?.seats
+                                                ?.map(({ seat_positions, traveltime,traveldate, _id: seat__id }, index) => {
+                                                    return (
+                                                        <SwiperSlide key={index}>
+                                                            <div>
+                                                                <Heading text={traveltime} className="!mb-1" />
 
-                                                        <Scrollable
-                                                            className="!gap-x-1 !justify-center !mb-1
+                                                                <Scrollable
+                                                                    className="!gap-x-1 !justify-center !mb-1
                                                             !gap-y-0.5 !flex-wrap px-2">
-                                                            {
-                                                                seat_positions?.
-                                                                    filter(({ isTaken, isReserved }) => {
-                                                                        if (isTaken == false) {
-                                                                            return true
-                                                                        }
-                                                                        // if (isReserved == false) {
-                                                                        //     return true
-                                                                        // }
+                                                                    {
+                                                                        seat_positions?.
+                                                                            filter(({ isTaken, isReserved }) => {
+                                                                                if (isTaken == false) {
+                                                                                    return true
+                                                                                }
 
-                                                                    })?.map(({ _id },
-                                                                        index) => (<PanigationButton
-                                                                            onClick={() => 0}
-                                                                            text={(_id + 1)}
-                                                                            index={(_id + 1)} />))
-                                                            }
-                                                        </Scrollable>
-                                                        <UiButton onClick={() => 0} name="Submit"
-                                                            className="!px-8 !mx-auto !mb-5 !bg-green-500" />
-                                                    </div>
-                                                </SwiperSlide>
-                                            )
-                                        }) : <>
-                                            <Heading text="oops no Seat found "
-                                                className="!text-center !mb-0 !font-semibold !text-xl !pl-0" />
-                                            <img src={emptybox} className="" />
-                                        </>
+
+                                                                            })?.map(({ _id }) => (<
+                                                                                PanigationButton
+                                                                                className={`${(_id == selectseat) && "!border-2 !border-"}`}
+                                                                                onClick={() => setSelectseat(_id)}
+                                                                                text={(_id + 1)}
+                                                                                index={(_id + 1)}
+                                                                                active={selectseat + 1}
+                                                                                key={_id}
+                                                                            />))
+                                                                    }
+                                                                </Scrollable>
+                                                                {selectseat !== null && (<UiButton onClick={() => handleEditMeta(seat__id,
+                                                                    selectseat, traveltime,traveldate)} name="Submit"
+                                                                    className="!px-8 !mx-auto !mb-5 !bg-green-500" />
+                                                                )}
+                                                            </div>
+                                                        </SwiperSlide>
+                                                    )
+                                                }) : <>
+                                                <Heading text="oops no Seat found "
+                                                    className="!text-center !mb-0 !font-semibold !text-xl !pl-0" />
+                                                <img src={emptybox} className="" />
+                                            </>
 
                                     }
 

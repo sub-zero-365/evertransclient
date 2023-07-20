@@ -1,18 +1,15 @@
 import { useEffect, useRef, useState } from "react"
-import { Link,  useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Footer, OurServices } from "../components"
 import { AiOutlineArrowUp } from "react-icons/ai"
 import { motion } from "framer-motion"
 
-
+import AnimateText from '../components/AnimateText'
 import { image2, image3, image4, image1 } from "../Assets/images"
 const Home = () => {
     const testimonials = useRef(null)
     const [up, setUp] = useState(0);
-
-
     const site_name = "Afri-Con"
-
     useEffect(() => {
         var counter = 0
 
@@ -56,17 +53,13 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
             })}>
                 <AiOutlineArrowUp size={30} />
             </div>
-         
+
 
             <section class="bg-white dark:bg-gray-900">
                 <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
                     <div class="mr-auto place-self-center lg:col-span-7">
-                        <motion.h1
-                            initial={{ x: -100, opacity: 0, y: 10, scale: 0.8 }}
-                            whileInView={{ x: 0, opacity: 1, y: 0, scale: 1 }}
-                            transition={{ duration: 0.4 }}
-                            class="max-w-2xl mb-4 text-3xl font-extrabold tracking-tight leading-8 md:text-4xl xl:text-5xl dark:text-white">Stop Finding <br /> and Start Tracking</motion.h1>
-                        <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">From checkout to global sales tax compliance, companies around the world use Flowbite to simplify their payment stack.</p>
+                        <AnimateText text="Stop find and start tracking" className="!text-3xl !uppercase !text-start lg:!text-2xl" />
+                        <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">click below to get started </p>
                         <Link href="#" to={"/booking"} class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
                             Get started
                             <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -80,7 +73,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                         {/* <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" alt="mockup"/> */}
                     </div>
                 </div>
-            </section>
+            </section >
             <div id="ourservices">
                 <OurServices />
             </div>
@@ -110,7 +103,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                                 >Mission</h2>
                                 <p className="text-slate-500 text-[14px]">
                                     At  {site_name} our mission is to give people the power to build community and bring the world closer together.
-                                   
+
                                 </p>
                             </div>
                         </div>
@@ -124,7 +117,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                                 >Benefits</h2>
                                 <p className="text-slate-500 text-[14px]">
                                     We invest in training and development in a big way, so you can build your future along with ours, creating an impactful career unique to you.
-                                   
+
                                 </p>
                             </div>
                         </div>
@@ -138,7 +131,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                                 <p className="text-slate-500 text-[14px]">
                                     SAP started in 1972 as a team of five colleagues with a desire to do something new. Together, they changed enterprise software and reinvented how business was done. Today, as a market leader in enterprise application software, we remain true to our roots.
                                     We invest in training and development in a big way, so you can build your future along with ours, creating an impactful career unique to you.
-                                   
+
                                 </p>
                             </div>
                         </div>
@@ -345,7 +338,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
 
 
             <Footer />
-        </div>
+        </div >
     )
 }
 

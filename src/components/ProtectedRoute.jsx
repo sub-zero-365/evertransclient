@@ -29,11 +29,23 @@ const ProtectedRoute = () => {
                 })
 
                 setuserName(res?.data?.user?.fullname);
+                // return res.data.user
+                // (async function () {
+                //     const url = `/restricted/${res?.data?.user?._id}`
+                //     try {
+                //       const res = await axios.get(url)
+                //     } catch (err) {
+
+                //     }
+                //   }())
             } catch (err) {
                 navigate("/login?message=" + "something broke login again ")
             }
         }
-        getData()
+        getData().then((user) => {
+            const { _id } = user;
+            console.log("testing",_id)
+        })
     }, [location.pathname])
 
     if (!token) {

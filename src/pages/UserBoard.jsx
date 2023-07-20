@@ -19,6 +19,9 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { MdOutlinePriceChange } from 'react-icons/md'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import { useDispatch, useSelector } from 'react-redux';
+// import {}
+import Alert from '../components/Alert'
+
 import { Button } from '../components'
 import "swiper/css"
 import "swiper/css/navigation"
@@ -53,6 +56,8 @@ import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptio
 const Details = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [message, setMessage] = useState("")
+  const [toggle_, setToggle_] = useState(false)
 
   const { userData } = useSelector(state => state.userData);
   // console.log(userData)
@@ -205,6 +210,7 @@ const Details = () => {
     params: formatQuery(querySearch.toString())
   }
   async function getData() {
+  
     const url = "/ticket"
     setIsActiveIndexLoading(true)
 
@@ -213,7 +219,11 @@ const Details = () => {
       setUserData(res.data)
 
     } catch (err) {
+      setToggle_(true)
       console.log(err)
+      setMessage(err.response.data)
+      console.log(err)
+      // alert(err.response.data)
     }
     setIsActiveIndexLoading(false)
 
@@ -229,11 +239,67 @@ const Details = () => {
   const [toggle, setToggle] = useState(false);
 
   const selectRef = useRef(null)
+  const LoadingBox = ({ }) => {
+
+
+    return (
+      <div role="status" class="max-w-md p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+          </div>
+          <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+        </div>
+        <div class="flex items-center justify-between pt-4">
+          <div>
+            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+          </div>
+          <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+        </div>
+        <div class="flex items-center justify-between pt-4">
+          <div>
+            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+          </div>
+          <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+        </div>
+        <div class="flex items-center justify-between pt-4">
+          <div>
+            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+          </div>
+          <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+        </div>
+        <div class="flex items-center justify-between pt-4">
+          <div>
+            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+          </div>
+          <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+        </div>
+        <span class="sr-only">Loading...</span>
+      </div>
+
+    )
+
+  }
   return (
     <motion.div
       className='pt-4 px-2 max-w-full overflow-x-auto select-none lg:px-10 
       mx-auto
     max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark' ref={constraintsRef}>
+     <Alert message={message}
+        duration="30000"
+        className={`
+      ${toggle_ && "!top-1/2 -translate-y-1/2"}
+      `}
+        toggle={toggle_}
+        // confirmFunc={() =>0}
+        setToggle={()=>0}
+
+      />
       <motion.div
         onClick={() => setToggle(true)}
         animate={{
@@ -290,52 +356,57 @@ z-10  "
           <Heading text={"Recent Ticket(3)"} className={"!text-center !mb-2"} />
 
           {
-
-            userData?.tickets?.slice(0, 3).map(({ fullname, traveldate, from, to, _id, createdAt }, i) => {
-              return (
-                <div
-                  key={i}
-                  class="max-w-sm mb-1 dark:text-white 
+            isLoading ? <>
+            <LoadingBox />
+            <LoadingBox />
+            
+            
+            </> :
+              userData?.tickets?.slice(0, 3).map(({ fullname, traveldate, from, to, _id, createdAt }, i) => {
+                return (
+                  <div
+                    key={i}
+                    class="max-w-sm mb-1 dark:text-white 
       bg-white  border  border-gray-200 rounded-lg shadow-xl dark:shadow-sm 
       dark:shadow-black shadow-slate-300 dark:bg-gray-800 dark:border-gray-700">
-                  <div className="grid grid-cols-[1fr,auto] px-2 pt-3
+                    <div className="grid grid-cols-[1fr,auto] px-2 pt-3
   pb-2
   items-center justify-between border dark:border-slate-400 ">
-                    <Heading text="Tickets Details"
-                      className="!mb-0 !text-xs !text-start !mt-0 !pl-0 !ml-0 
+                      <Heading text="Tickets Details"
+                        className="!mb-0 !text-xs !text-start !mt-0 !pl-0 !ml-0 
   !font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                    <h4 className='!text-xs text-slate-500 !mb-0 !pb-0'>
-                      {createdAt && (dateFormater(createdAt).date)}
-                    </h4>
-                  </div>
-
-
-                  <div class="p-2">
-                    <Heading text="FullName" className="!mb-0 !text-center !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                    <Heading text={fullname} className="!mb-2 !text-sm !text-center" />
-                    <div className='grid grid-cols-2'>
-                      <div>
-                        <Heading text="From" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                        <Heading text={from} className="!mb-2 !text-sm" />
-                      </div>
-
-                      <div>
-                        <Heading text="To" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                        <Heading text={to} className="!mb-2 !text-sm" />
-                      </div>
-
+                      <h4 className='!text-xs text-slate-500 !mb-0 !pb-0'>
+                        {createdAt && (dateFormater(createdAt).date)}
+                      </h4>
                     </div>
-                    <Heading text="Travel Date" className="!mb-0 !text-center !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                    <Heading text={(new Date(traveldate).toLocaleDateString())} className="!mb-2 !text-sm !text-center" />
-                    <div className='grid grid-cols-2 gap-x-1 place-items-center'>
 
-                      <Button name="view"
-                        className={"!w-full"}
-                        href={`${_id}`}
-                      />
-                      <a
-                        target='_blank'
-                        className='
+
+                    <div class="p-2">
+                      <Heading text="FullName" className="!mb-0 !text-center !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                      <Heading text={fullname} className="!mb-2 !text-sm !text-center" />
+                      <div className='grid grid-cols-2'>
+                        <div>
+                          <Heading text="From" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
+                          <Heading text={from} className="!mb-2 !text-sm" />
+                        </div>
+
+                        <div>
+                          <Heading text="To" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
+                          <Heading text={to} className="!mb-2 !text-sm" />
+                        </div>
+
+                      </div>
+                      <Heading text="Travel Date" className="!mb-0 !text-center !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
+                      <Heading text={(new Date(traveldate).toLocaleDateString())} className="!mb-2 !text-sm !text-center" />
+                      <div className='grid grid-cols-2 gap-x-1 place-items-center'>
+
+                        <Button name="view"
+                          className={"!w-full"}
+                          href={`${_id}`}
+                        />
+                        <a
+                          target='_blank'
+                          className='
                         w-full
                         font-medium
             shadow
@@ -366,14 +437,14 @@ z-10  "
                         
                         '
 
-                        href={`${process.env.REACT_APP_LOCAL_URL}/downloadticket/${_id}`}>download</a>
+                          href={`${process.env.REACT_APP_LOCAL_URL}/downloadticket/${_id}`}>download</a>
 
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
+                )
 
-            })
+              })
           }
         </div>
         <div className="flex-1   mb-6">
@@ -488,6 +559,31 @@ z-10  "
           >
             <IoMdClose size={25} />
           </span>
+          {
+          
+          isLoading?
+          <div role="status" class="animate-pulse">
+              <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
+              <div class="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px] mb-3"></div>
+              <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
+              <div class="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px] mb-3"></div>
+              <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
+              <div class="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px] mb-3"></div>
+              <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
+              <div class="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px] mb-3"></div>
+              <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
+              <div class="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px] mb-3"></div>
+              <div class="flex items-center justify-center mt-4">
+                  <svg class="w-8 h-8 text-gray-200 dark:text-gray-700 mr-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
+                  </svg>
+                  <div class="w-20 h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 mr-3"></div>
+                  <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+              </div>
+              <span class="sr-only">Loading...</span>
+          </div>
+          
+          :
           <div
             className=' overflow-y-auto max-h-[calc(100vh-5rem)] lg:max-h-fit overflow-x-hidden '
           >
@@ -698,6 +794,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
             </div>
 
           </div>
+          }
 
         </div>
       </div>

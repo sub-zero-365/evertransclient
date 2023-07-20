@@ -149,7 +149,7 @@ const Appointment = () => {
     return (
         <motion.div
             className="max-w-full !flex-1 w-full   overflow-auto max-h-[calc(100vh-3rem)] pt-10 " >
-            {isLoading && (<Loader toggle dark />)}
+            {/* {isLoading && (<Loader toggle dark />)} */}
             <div> </div>
             <Heading text="Employees OverView" />
             <div className="lg:flex lg:mb-14 w-full  lg:px-10">
@@ -499,7 +499,9 @@ z-10  "
             dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
             dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
             dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                            disabled={isLoading}
                             data-te-ripple-init
+
                             data-te-ripple-color="light">
                             {isLoading ? <Loadingbtn /> : "Create Account"}
                         </button>
@@ -552,92 +554,92 @@ z-10  "
 
 
 
-   
 
-<div class="w-full  p-4
+
+            <div class="w-full  p-4
 lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                    <Heading text="Recent Employees" className="!font-black first-letter:!text-4xl !text-xl underline underline-offset-8 uppercase" />
+                <Heading text="Recent Employees" className="!font-black first-letter:!text-4xl !text-xl underline underline-offset-8 uppercase" />
 
 
-                    <section class=" antialiased bg-gray-100 text-gray-600 ">
-                        <div class="h-">
-                            <div class="w-full max-w-2xl-- mx-auto bg-white shadow-lg rounded-sm ">
+                <section class=" antialiased bg-gray-100 text-gray-600 ">
+                    <div class="h-">
+                        <div class="w-full max-w-2xl-- mx-auto bg-white shadow-lg rounded-sm ">
 
-                                <div class="p-0">
-                                    <div class="overflow-x-auto">
-                                        <table class="table-auto w-full">
-                                            <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
-                                                <tr>
-                                                    <th class="p-2 whitespace-nowrap">
-                                                        <div class="font-semibold text-left">index</div>
-                                                    </th>
-                                                    <th class="p-2 whitespace-nowrap">
-                                                        <div class="font-semibold text-left">Full Name</div>
-                                                    </th>
-                                                    <th class="p-2 whitespace-nowrap">
-                                                        <div class="font-semibold text-left">Phone Number</div>
-                                                    </th>
-                                                    <th class="p-2 whitespace-nowrap">
-                                                        <div class="font-semibold text-left">CreaedAt</div>
-                                                    </th>
-                                                    <th class="p-2 whitespace-nowrap">
-                                                        <div class="font-semibold text-left">N_Prints</div>
-                                                    </th>
-                                                    <th class="p-2 whitespace-nowrap">
-                                                        <div class="font-semibold text-center">action</div>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="text-sm divide-y divide-gray-100">
-                                                {
+                            <div class="p-0">
+                                <div class="overflow-x-auto">
+                                    <table class="table-auto w-full">
+                                        <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+                                            <tr>
+                                                <th class="p-2 whitespace-nowrap">
+                                                    <div class="font-semibold text-left">index</div>
+                                                </th>
+                                                <th class="p-2 whitespace-nowrap">
+                                                    <div class="font-semibold text-left">Full Name</div>
+                                                </th>
+                                                <th class="p-2 whitespace-nowrap">
+                                                    <div class="font-semibold text-left">Phone Number</div>
+                                                </th>
+                                                <th class="p-2 whitespace-nowrap">
+                                                    <div class="font-semibold text-left">CreaedAt</div>
+                                                </th>
+                                                <th class="p-2 whitespace-nowrap">
+                                                    <div class="font-semibold text-left">N_Prints</div>
+                                                </th>
+                                                <th class="p-2 whitespace-nowrap">
+                                                    <div class="font-semibold text-center">action</div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-sm divide-y divide-gray-100">
+                                            {
 
-                                                    users_.map(({ user, nHits }, index) => {
-                                                        return (
-                                                            <tr key={index}>
-                                                             <td class="p-2 whitespace-nowrap">
-                                                                    <div class="text-left pl-1">{(index+1) || "n/a"}</div>
-                                                                </td>
-                                                                <td class="p-2 whitespace-nowrap">
-                                                                    <div class="flex items-center">
-                                                                        <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                                                                            <img class="rounded-full"
-                                                                                src={useravatar}
-                                                                            // src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-05.jpg" width="40" height="40" alt="Alex Shatov" 
-                                                                            />
-                                                                        </div>
-                                                                        <div class="font-medium text-gray-800">{user?.fullname}</div>
+                                                users_.map(({ user, nHits }, index) => {
+                                                    return (
+                                                        <tr key={index}>
+                                                            <td class="p-2 whitespace-nowrap">
+                                                                <div class="text-left pl-1">{(index + 1) || "n/a"}</div>
+                                                            </td>
+                                                            <td class="p-2 whitespace-nowrap">
+                                                                <div class="flex items-center">
+                                                                    <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
+                                                                        <img class="rounded-full"
+                                                                            src={useravatar}
+                                                                        // src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-05.jpg" width="40" height="40" alt="Alex Shatov" 
+                                                                        />
                                                                     </div>
-                                                                </td>
-                                                                <td class="p-2 whitespace-nowrap">
-                                                                    <div class="text-left">{user?.phone || "n/a"}</div>
-                                                                </td>
-                                                                <td class="p-2 whitespace-nowrap">
-                                                                    <div class="text-left font-medium text-green-500">{(new Date(user?.createdAt).toDateString())}</div>
-                                                                </td>
-                                                                <td class="p-2 whitespace-nowrap">
-                                                                    <div class="text-left font-medium text-green-500">{nHits}</div>
-                                                                </td>
-                                                                <td class="p-2 whitespace-nowrap">
-                                                                    <Button
+                                                                    <div class="font-medium text-gray-800">{user?.fullname}</div>
+                                                                </div>
+                                                            </td>
+                                                            <td class="p-2 whitespace-nowrap">
+                                                                <div class="text-left">{user?.phone || "n/a"}</div>
+                                                            </td>
+                                                            <td class="p-2 whitespace-nowrap">
+                                                                <div class="text-left font-medium text-green-500">{(new Date(user?.createdAt).toDateString())}</div>
+                                                            </td>
+                                                            <td class="p-2 whitespace-nowrap">
+                                                                <div class="text-left font-medium text-green-500">{nHits}</div>
+                                                            </td>
+                                                            <td class="p-2 whitespace-nowrap">
+                                                                <Button
                                                                     className={"!max-w-[14rem] !w-full"}
-                                                                        name="Check User"
-                                                                        href={`/dashboard/details/${user?._id || index}?admin=true&createdBy=${user?._id}`}
-                                                                    ></Button>
-                                                                </td>
-                                                            </tr>
+                                                                    name="Check User"
+                                                                    href={`/dashboard/details/${user?._id || index}?admin=true&createdBy=${user?._id}`}
+                                                                ></Button>
+                                                            </td>
+                                                        </tr>
 
-                                                        )
-                                                    })}
+                                                    )
+                                                })}
 
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </div>
+                </section>
 
-                </div>
+            </div>
 
         </motion.div>
     )

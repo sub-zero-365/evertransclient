@@ -89,7 +89,7 @@ const Seats = () => {
 
 
     return (
-        <div className="h-[calc(100vh-60px)] !flex-1 w-full overflow-y-auto">
+        <div className="h-[calc(100vh-60px)] container mx-auto !flex-1 w-full overflow-y-auto">
             <div className="flex
             flex-col lg:flex-row
             lg:mt-10 lg:px-8 max-w-full rounded-sm shadow-sm lg:mx-10

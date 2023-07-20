@@ -1,19 +1,21 @@
 
-const PanigationButton = ({ onClick, text, active, index, loading }) => {
+const PanigationButton = ({ onClick, text, active, index, loading, className }) => {
     return (
         <div
             key={index}
-            className={`flex items-center ${active === index ? "bg-blue-900" : "bg-blue-400"}
+            className={`className flex items-center ${active === index ? "bg-blue-900" : "bg-blue-400 focus:bg-blue-900"}
     justify-center w-8 h-8 bg-blue-400 text-xs md:text-sm rounded-sm 
     hover:bg-blue-900
+    focus:bg-blue-900
     text-white 
     !select-none
     flex-none
     shadow-lg`}
-            onClick={()=>{onClick()
-            if(window.navigator.vibrate){
-                window.navigator.vibrate([10])
-            }
+            onClick={() => {
+                onClick()
+                if (window.navigator.vibrate) {
+                    window.navigator.vibrate([10])
+                }
             }}
         >
             {
@@ -22,7 +24,7 @@ const PanigationButton = ({ onClick, text, active, index, loading }) => {
                 border-t-orange-400
                 border-r-orange-400
                 animate-spin
-                "></span> : text:text
+                "></span> : text : text
 
             }
 
