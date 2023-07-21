@@ -8,7 +8,7 @@ import SelectSortDate from 'react-select';
 import { useState, useEffect, useRef } from 'react';
 import { AiOutlineSave } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io"
-import { useParams, NavLink, useSearchParams, useNavigate, json } from 'react-router-dom';
+import { NavLink, useSearchParams, useNavigate, json } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineSetting } from 'react-icons/ai';
 import formatQuery from "../utils/formatQueryStringParams"
@@ -19,6 +19,8 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { MdOutlinePriceChange } from 'react-icons/md'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import { useDispatch, useSelector } from 'react-redux';
+import ClearFilter from '../components/ClearFilter'
+
 // import {}
 import Alert from '../components/Alert'
 
@@ -890,84 +892,17 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
 
       </div>
-      <AnimatePresence >
-
-        {
-          querySearch.get("daterange") && <motion.div
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-xs
-            tracking-tighter
-        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-
-            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-              onClick={() => {
-                handleFilterChange("daterange")
-              }}
-
-            >Clear Filter</span>
-            Date filter is on and query is from <span> {new Date(startDate).toLocaleDateString()}</span>
-            <span> {endDate !== null ? "to " + new Date(endDate).toLocaleDateString() : null}</span> </motion.div>
-        }
-        {
-          querySearch.get("search") && <motion.div
-
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-
-            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
-        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-
-            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-              onClick={() => {
-                handleFilterChange("search")
-                // const temp = params;
-                // if (temp.search) delete temp.search;
-                // setParams({ ...temp })
-
-              }}
-
-            >Clear Filter</span>
-            Text Filter is On  </motion.div>
-        }
-        {
-          querySearch.get("sort") && querySearch.get("sort") !== "newest" && <motion.div
-
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-
-            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
-        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-              onClick={() => {
-                handleFilterChange("sort")
-              }}
-
-            >Clear Filter</span>
-            Text Filter is On  </motion.div>
-        }
-        {
-          querySearch.get("ticketStatus") && querySearch.get("ticketStatus") !== "all" && <motion.div
-
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-
-            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
-        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-
-            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-              onClick={() => {
-                handleFilterChange("ticketStatus")
-              }}
-
-            >Clear Filter</span>
-            Ticket are set to <span className='px-2 bg-red-300 text-black text-xs rounded-lg mx-4 ring-1 ring-red-900'>{querySearch.get("ticketStatus")}</span> Filter is On  </motion.div>
-        }
-      </AnimatePresence>
+      <ClearFilter keys={[
+                            "sort,newest"
+                            ,
+                            "ticketStatus,all",
+                            "search,*",
+                            "daterange,*",
+                            "boardingRange,*",
+                            "triptype,all",
+                            "limit,100",
+                            "sort,newest",
+                            ]} />
 
       <Form
         handleChangeText={handleChangeText}

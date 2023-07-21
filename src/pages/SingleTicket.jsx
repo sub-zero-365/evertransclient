@@ -152,7 +152,6 @@ const User = () => {
   const handleChangeParams = (index) => {
     setActive(index);
     setIsloading(true)
-    setTimeout(() => {
       setParams(prev => {
         return (
           {
@@ -162,7 +161,6 @@ const User = () => {
         )
       })
 
-    }, 2000)
 
 
   }

@@ -18,6 +18,22 @@
   --color-text: #b1affd;
   --color-subtext: #ffba71;
 }
+.react-datepicker__day.react-datepicker__day--disabled {
+  @apply !text-slate-50 !hidden;
+}
+.react-datepicker {
+  border: none !important;
+  @apply !bg-white dark:!bg-slate-900 !shadow-md;
+}
+.react-datepicker__header {
+  @apply !bg-transparent !text-black dark:!text-white;
+}
+.react-datepicker__day {
+  @apply !rounded-full !text-black dark:!text-white;
+}
+.react-datepicker__day--in-range {
+  @apply !rounded-full  dark:!text-white !bg-green-500 !text-white;
+}
 
 .gradient__text {
   background: var(--gradient-text);
@@ -46,8 +62,7 @@ body {
   @apply w-full;
 }
 .grid-flow {
-  grid-template-columns: 
-  repeat(auto-fit, minmax(min(8rem,100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 1fr));
   display: grid;
   gap: 0.4rem;
 }
@@ -182,28 +197,6 @@ body {
   perspective: 100px;
 }
 
-.myclassName,
-.react-datepicker__day--selected {
-  background: red !important;
-  @apply !rounded-full !shadow-lg !bg-green-900/25;
-}
-.myclassName,
-.react-datepicker__day--range {
-  background: red !important;
-  @apply !rounded-full !shadow-lg !bg-green-900/25;
-}
-.custom-calendar.rmdp-wrapper,
-.rmdp-container .custom-calendar.ep-arrow::after {
-  @apply !bg-blue-400;
-}
-.myclassName,
-.react-datepicker__day--today {
-  background: red !important;
-  @apply !rounded-full;
-}
-.react-datepicker-wrapper {
-  @apply !border-none !outline-none;
-}
 .icons-container .icon {
   @apply scale-0 rotate-90;
 }

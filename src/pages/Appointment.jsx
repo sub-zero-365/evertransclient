@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setTicketData } from '../actions/adminData';
 import Select from 'react-select';
 import Triptype from 'react-select';
+import ClearFilter from '../components/ClearFilter'
 import SelectSortDate from 'react-select';
 import TimeSelect from 'react-select';
 import { AiOutlineSetting } from 'react-icons/ai';
@@ -44,11 +45,11 @@ import { AiOutlineSave } from 'react-icons/ai';
 import { VscFolderActive } from 'react-icons/vsc';
 import { BiCategory } from 'react-icons/bi';
 import { MdOutlinePriceChange } from 'react-icons/md';
-import { sortedDateOptions, sortTicketStatusOptions, skipOptions,timeOptions } from "../utils/sortedOptions"
+import { sortedDateOptions, sortTicketStatusOptions, skipOptions, timeOptions } from "../utils/sortedOptions"
 
 const Appointment = () => {
     const ref = useRef(null);
-    
+
     useEffect(() => {
         if (!querySearch.get("limit")) {
             handleFilterChange("limit", 100)
@@ -61,7 +62,7 @@ const Appointment = () => {
         if (!querySearch.get("view")) {
             handleFilterChange("view", "all")
         }
-        if (ref&&ref.current) {
+        if (ref && ref.current) {
             ref.current.scrollLeft = querySearch.get("page") * 30
         }
     }, [])
@@ -110,16 +111,16 @@ const Appointment = () => {
             handleFilterChange("daterange", null)
         }
         handleFilterChange("boardingRange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
-        handleFilterChange("page",1)
-    
+        handleFilterChange("page", 1)
+
     }
     const handleFilterSearch = () => {
         if (querySearch.get("boardingRange")) {
             handleFilterChange("boardingRange", null)
         }
         handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
-        handleFilterChange("page",1)
-    
+        handleFilterChange("page", 1)
+
     }
     const onChange = (dates) => {
         const [start, end] = dates;
@@ -147,17 +148,17 @@ const Appointment = () => {
     }
     const handleSortTime = (evt) => {
         if (querySearch.get("sort") == evt.value) return
-        handleFilterChange("page",1)
+        handleFilterChange("page", 1)
         handleFilterChange("sort", evt.value)
     }
     const handleChange = (evt) => {
         if (querySearch.get("ticketStatus") == evt.value) return
-        handleFilterChange("page",1)
+        handleFilterChange("page", 1)
         handleFilterChange("ticketStatus", evt.value)
     }
     const handleTimeChange = (evt) => {
         if (querySearch.get("traveltime") == evt.value) return
-        handleFilterChange("page",1)
+        handleFilterChange("page", 1)
         handleFilterChange("traveltime", evt.value)
     }
     const [isOpen, setIsOpen] = useState(false);
@@ -217,14 +218,14 @@ z-10  "
                     <AiOutlineSetting size={20} color="#fff" className="" />
                 </div>
             </motion.div>
-            
+
             <div>
                 <div className="lg:flex items-start justify-start gap-4"
                 >
                     <div className="flex-1 w-full pt-10 lg:pt-0 container mx-auto">
                         <div className="flex justify-between px-4"
                         >
-                            <Heading text="OverView" className="!text-black first-letter:!text-3xl" />
+                            <Heading text="OverView" className=" !font-semibold !pl-0first-letter:!text-3xl" />
                             <span onClick={() => {
                                 if (querySearch.get("view")) {
                                     handleFilterChange("view")
@@ -247,13 +248,13 @@ z-10  "
                             <TicketCounts counts={ticketData?.totalTickets || ticketData?.totalTickets === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
                                 text={"Total Number"}
                                 icon={<AiOutlineSave />} />
-                            <TicketCounts counts={ticketData?.totalActiveTickets || ticketData?.totalActiveTickets === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
+                            <TicketCounts counts={ticketData?.totalActiveTickets || (ticketData?.totalActiveTickets === 0) && "0" || <span className='text-xs font-black '>loading ...</span>}
                                 text={"Active Tickets"}
 
                                 icon={<VscFolderActive />} />
                             <TicketCounts
                                 text={"Inactive Tickets"}
-                                counts={ticketData?.totalInActiveTickets || ticketData?.totalInActiveTickets === 0 && "0" || <span className='text-xs font-black '>loading ...</span>} icon={<BiCategory />} />
+                                counts={ticketData?.totalInActiveTickets || (ticketData?.totalInActiveTickets === 0) && "0" || <span className='text-xs font-black '>loading ...</span>} icon={<BiCategory />} />
                         </Scrollable>
                         <Scrollable className={`!px-5 ${viewAll && "!grid md:!grid-cols-2"} !transition-all !duration-[1s]`}>
                             <AmountCount
@@ -296,21 +297,7 @@ z-10  "
                                     onChange={handleChange}
                                     className='!border-none !h-8 mt-0' />
                             </div>
-                            <div className='mt-0 flex-none'>
-                                <Heading text={"Time "} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
 
-                                <TimeSelect
-                                    components={components()}
-                                    options={timeOptions}
-                                    styles={style}
-                                    defaultValue={{
-                                        label: "no time ",
-                                        value: "no time"
-                                    }}
-                                    isSearchable={false}
-                                    onChange={handleTimeChange}
-                                    className='!border-none !h-8 mt-0' />
-                            </div>
                             <div className='mt-0 flex-none'>
                                 <Heading text={"sorted date"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
 
@@ -395,85 +382,17 @@ z-10  "
                             </div>
 
                         </Scrollable>
-
-                        <AnimatePresence >
-
-                            {
-                                querySearch.get("daterange") && <motion.div
-
-                                    initial={{ y: 40, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    exit={{ y: -40, opacity: 0 }}
-
-                                    className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
-font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-
-                                    <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-                                        onClick={() => {
-                                            handleFilterChange("daterange")
-                                            
-                                        }}
-
-                                    >Clear Filter</span>
-                                    Date filter is on  </motion.div>
-                            }
-                            {
-                                querySearch.get("search") && <motion.div
-
-                                    initial={{ y: 40, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    exit={{ y: -40, opacity: 0 }}
-
-                                    className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
-font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-
-                                    <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-                                        onClick={() => {
-                                            handleFilterChange("search")
-                                        }}
-
-                                    >Clear Filter</span>
-                                    Text Filter is On  </motion.div>
-                            }
-                            {
-                                querySearch.get("sort") && querySearch.get("sort") !== "newest" && <motion.div
-
-                                    initial={{ y: 40, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    exit={{ y: -40, opacity: 0 }}
-
-                                    className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
-font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-
-                                    <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-                                        onClick={() => {
-                                            handleFilterChange("sort")
-                                        }}
-
-                                    >Clear Filter</span>
-                                    Text Filter is On  </motion.div>
-                            }
-                            {
-                                querySearch.get("ticketStatus") && querySearch.get("ticketStatus") !== "all" && <motion.div
-
-                                    initial={{ y: 40, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    exit={{ y: -40, opacity: 0 }}
-
-                                    className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
-font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-
-                                    <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-                                        onClick={() => {
-                                            handleFilterChange("ticketStatus")
-
-                                        }}
-
-                                    >Clear Filter</span>
-                                    Ticket are set to <span className='px-2 bg-red-300 text-black text-xs rounded-lg mx-4 ring-1 ring-red-900'>{querySearch.get("ticketStatus")}</span> Filter is On  </motion.div>
-                            }
-
-                        </AnimatePresence>
+                            <ClearFilter keys={[
+                            "sort,newest"
+                            ,
+                            "ticketStatus,all",
+                            "search,*",
+                            "daterange,*",
+                            "boardingRange,*",
+                            "triptype,all",
+                            "limit,100",
+                            ]} />
+                         
                     </div>
                     <div
                         onClick={() => setIsOpen(false)}
@@ -559,6 +478,7 @@ font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-au
                                                 endDate={endDate}
                                                 selectsRange
                                                 inline
+                                                rangeColors={['#f33e5b', '#3ecf8e', '#fed14c']}
                                                 containerStyle={{
                                                     width: "100%"
                                                 }}
@@ -673,7 +593,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                                     </div>
                                 )
                             }
-                            {/* <UserRanking /> */}
+                         
 
 
                         </div>
@@ -685,19 +605,19 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
             <Heading text={"Recent Regular Booking"} className="!mb-4 !text-center md:text-start first-letter:!text-4xl underline underline-offset-8" />
             {
                 isLoading ? (<PlaceHolderLoader />) : (
-                            <FormatTable tickets={ticketData?.tickets}
-                                admin
-                                skip={querySearch.get("limit")}
-                                currentPage={querySearch.get("page")} />
+                    <FormatTable tickets={ticketData?.tickets}
+                        admin
+                        skip={querySearch.get("limit")}
+                        currentPage={querySearch.get("page")} />
                 )
 
             }
 
 
-            <div className='mt-10 '  />
+            <div className='mt-10 ' />
             <div ref={ref}
-            className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto flex  md:gap-x-2"
-                
+                className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto flex  md:gap-x-2"
+
             >
                 {Array.from({
                     length: ticketData?.numberOfPages

@@ -3,7 +3,6 @@ import {
   Loader, Modal, PrevButton, NextButton, Heading,
   AnimateError
 } from "../components"
-// import {} from '../utils/'
 import { BiChevronDown } from 'react-icons/bi'
 import { useState, forwardRef, useEffect } from "react"
 import DatePicker from 'react-datepicker'
@@ -141,13 +140,11 @@ const Booking = () => {
               </span>
             </div>
             <DatePicker
-              wrapperClassName="datePicker" className="datePicker"
               inline={isLine}
               selected={startDate}
               onChange={(date) => setStartDate(date)}
               minDate={new Date()}
               Date={new Date()}
-              // isClearable
               required
               customInput={<ExampleCustomInput />
               }

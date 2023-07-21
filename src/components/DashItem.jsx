@@ -1,21 +1,17 @@
 
 import { BsFillPersonFill } from 'react-icons/bs'
 import {Button,Heading} from "./"
-import { useNavigate } from 'react-router-dom'
 const DashItem = ({ icon, Counts, href, Name }) => {
-    const navigate = useNavigate();
     return (
         <div className="p-4 mb-4 relative group z-1
         md:w-full mx-auto md:mx-initial overflow-hidden  shadow-sm  md:rounded-lg lg:rounded-xl
-        shadow-slate-200 rounded-lg
+        shadow-slate-200 dark:shadow-black rounded-lg
         bg-white dark:bg-slate-800">
-            {/* <div className="absolute top-0 h-1 w-0 left-0 transition-[width] bg-green-400 duration-700 group-hover:w-full"></div> */}
-            {/* <div className="absolute top-auto bottom-0 h-1 w-0 right-0 transition-[width] bg-green-400 duration-700 group-hover:w-full"></div> */}
             <div className="flex justify-between mb-2 items-start">
             <Heading text={Name || "loading"} className="!pl-0 first-letter:!text-2xl
             !text-lg !mb-0 !font-black !uppercase "/>
     
-    <Button name="view" className={"!shadow-xl !rounded-xl !text-white !px-5  !z-10 !mr-0"} href={href}/>
+    <Button name="view" className={"!shadow-xl  !rounded-sm  !text-white !px-5  !z-10 !mr-0"} href={href}/>
             </div>
             <div className="absolut top-auto bottom-0 h-1 mb-6 w-full right-0 transition-[width] bg-green-400 duration-700 group-hover:w-0"></div>
             

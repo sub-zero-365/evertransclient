@@ -299,7 +299,7 @@ const Details = () => {
   const selectRef = useRef(null)
   return (
     <motion.div
-      className='pt-4 px-2 max-w-full overflow-x-auto select-none
+      className='pt-4 px-2 max-w-full overflow-x-auto select-none container mx-auto
     max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark' ref={constraintsRef}>
       <motion.div
         onClick={() => setToggle(true)}
@@ -934,55 +934,13 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
       <Form handleChangeText={handleChangeText} params={querySearch} />
 
-      <div className="relative max-w-full overflow-x-auto
-      shadow-md sm:rounded-lg w-full mb-6 ">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-          <thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-2 py-3">
-                Index
-              </th>
-              <th scope="col" className="px-3 py-3">
-                full name
-              </th>
 
+      {
 
-              <th scope="col" className="px-3 py-3">
-                from
-              </th>
-              <th scope="col" className="px-3 py-3">
-                to
-              </th>
-              <th scope="col" className="px-3 py-3">
-                date
-              </th>
+        !isLoading && <FormatTable tickets={userData?.tickets} admin
+          currentPage={querySearch.get("page")} />
+      }
 
-              <th scope="col" className="px-3 py-3">
-                createdAt
-              </th>
-
-              <th scope="col" className="px-3 py-3">
-                status
-              </th>
-              <th scope="col" className="px-3 py-3">
-                type
-              </th>
-              <th scope="col" className="px-3 py-3">
-                price
-              </th>
-              <th scope="col" className="px-3 py-3">
-                Action
-              </th>
-
-            </tr>
-          </thead>
-          {
-
-            !isLoading && <FormatTable tickets={userData?.tickets} admin
-              currentPage={querySearch.get("page")} />
-          }
-        </table>
-      </div>
       {
         isLoading && (
           <PlaceHolderLoader />

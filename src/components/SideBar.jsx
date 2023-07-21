@@ -64,7 +64,7 @@ const SideBar = () => {
     },
 
   ]
-  const defaultClasses = "flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md dark:shadow-lg dark:shadow-slate-800 ring-offset-slate-200 mb-2 rounded-md"
+  const defaultClasses = "flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md dark:shadow-sm dark:shadow-black ring-offset-slate-200 mb-2 rounded-md"
   return (
 
     <div className={`w-[15rem] overflow-auto 
@@ -94,10 +94,7 @@ const SideBar = () => {
                 end
                 key={index}
                 onClick={toggleSideBar}
-
-
-                className={({ isActive }) => (isActive ? "!bg-violet-500 dark:shadow-black   !text-white !text-semibold flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md  dark:shadow-sm ring-offset-slate-200 mb-2 rounded-md" : defaultClasses)}
-
+                className={({ isActive }) => (isActive ? "!bg-violet-500 dark:shadow-black   !text-white !text-semibold flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md  dark:!shadow-sm ring-offset-slate-200 mb-2 rounded-md" : defaultClasses)}
               >
 
                 {icon}
@@ -109,7 +106,7 @@ const SideBar = () => {
       {/*  */}
       <div
         onClick={() => navigate("/")}
-        className=" md:hidden  absolute bottom-8 w-full max-w-[calc(15rem-2.5rem)]   py-2 px-10 items-center text-white
+        className=" md:hidden  absolute bottom-8 w-full max-w-[calc(15rem-2.5rem)]   py-2 px-7 items-center text-white
         ml-auto hover:bg-blue-800   flex gap-2  bg-blue-500 transition-colors duration-300 hover:text-white  mb-2 rounded-lg">
         <CiLogout size={25} />
         <h3 className="text-xs text-center">view site</h3>

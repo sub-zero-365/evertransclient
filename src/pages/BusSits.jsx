@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { TbArmchair2, TbArmchairOff } from 'react-icons/tb'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Scrollbar, Pagination, Navigation } from 'swiper'
+import Alert from "../components/Alert"
 import axios from 'axios'
 import GenderSelect from 'react-select'
 import Marquee from 'react-fast-marquee'
@@ -57,11 +58,12 @@ const
         console.log(res.data.seats)
       } catch (err) {
         console.log(err.response.data)
+        setToggle(true)
+        setMessage(err.response.data)
       } finally {
-        setTimeout(() => {
-          setLoading(false)
 
-        }, 5000)
+        setLoading(false)
+
       }
 
     }
@@ -75,7 +77,8 @@ const
       gender: (formatQuery(queryParameters.toString()).gender || "male"),
       triptype: (formatQuery(queryParameters.toString()).triptype || "singletrip"),
     })
-
+    const [toggle, setToggle] = useState(false)
+    const [message, setMessage] = useState(false)
 
     const navigate = useNavigate()
     const [selected, setSelected] = useState(queryParameters.get("sitpos"))
@@ -124,6 +127,10 @@ const
       <div
         className="min-h-screen"
       >
+        <Alert toggle={toggle}
+        duration="30000"
+          message={message}
+          setToggle={setToggle} />
         <Modal toggle={error} toggleModal={toggleModal} information={errorMessage}  ></Modal>
         <div className="flex container mx-auto">
           <div className="flex-1 hidden lg:block">
