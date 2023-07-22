@@ -41,7 +41,7 @@ font-montserrat
 
 const UiButton = ({ className, onClick, name }) => {
     return (
-        <button
+        <button 
             onClick={onClick}
 
             className={` ${className}

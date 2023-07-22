@@ -13,9 +13,7 @@ const animateVariant = {
 }
 const ClearFilter = ({ keys }) => {
     const [querySearch, setQuerySearch] = useSearchParams();
-    console.log(keys.map((key, index) => key.split(",")).map(([value, forbidden]) => {
-        return value
-    }))
+
 
     const handleFilterChange = (key, value = null) => {
         setQuerySearch(preParams => {

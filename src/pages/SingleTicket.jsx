@@ -55,6 +55,7 @@ const User = () => {
   })
   const [toggle, setToggle] = useState(false)
   const showDeactivateButton = queryParameters.get("xyz") ? true : false
+  // const showDeactivateButton = true
   var token = undefined, url = ""
   const isadminuser = queryParameters.get("admin");
   // const shouldplaysound = queryParameters.get("sound");
@@ -253,8 +254,8 @@ const User = () => {
             <QRCode
               size={400}
               style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-              // value={`https://ntaribotaken.vercel.app/dashboard/${id}?admin=true`}
-              value={`http://192.168.43.68:3000/dashboard/${id}?admin=true&sound=true&xyz=true`}
+              value={`https://ntaribotaken.vercel.app/dashboard/${id}?admin=true`}
+              // value={`http://192.168.43.68:3000/dashboard/${id}?admin=true&sound=true&xyz=true`}
               viewBox={`0 0 256 256`}
             />
           </div>
