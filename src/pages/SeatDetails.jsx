@@ -6,7 +6,7 @@ import {
 }
     from '../components'
 import { useSearchParams } from 'react-router-dom'
-
+import samplePDF from "../Assets/afrique-con boarding passs.pdf"
 import { getBuses } from '../utils/ReactSelectFunction'
 import DownloadSelect from "react-select"
 import { components, style } from "../utils/reactselectOptionsStyles"
@@ -14,9 +14,13 @@ import { useState, useEffect } from 'react'
 import BusSelect from 'react-select/async'
 import axios from 'axios'
 // import { MobilePDFReader } from 'react-pdf-viewer';
+import { Document, Page } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
+
 const SeatDetails = () => {
     const [querySearch, setQuerySearch] = useSearchParams();
-
+    const [loading, setLoading] = useState(false)
     const handleFilterChange = (key, value = null) => {
         setQuerySearch(preParams => {
             if (value == null) {
@@ -50,12 +54,15 @@ const SeatDetails = () => {
         }
     }
     const getSeats = async () => {
+        setLoading(true)
         try {
             const res = await axios.get("/seat/specific/" + id, {}, {});
             setSeats(res.data.seat)
         } catch (err) {
             console.log(err)
             alert("fail to get seat" + err.response.data)
+        } finally {
+            setLoading(false)
         }
     }
     useEffect(() => {
@@ -73,8 +80,10 @@ const SeatDetails = () => {
 
 
     ]
+    if (loading) return <div>Loading ....</div>
+
     return (
-        <div className="!flex-1 h-[calc(100vh-60px)] overflow-y-auto pb-24">
+        <div className="!flex-1 h-[calc(100vh-60px)] container mx-auto overflow-y-auto pb-24">
             <nav class="flex mb-5 mt-5 px-5 lg:hidden" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-3">
                     <li class="inline-flex items-center">
@@ -102,7 +111,7 @@ const SeatDetails = () => {
 
             <div className="lg:flex flex-row-reverse lg:flex-row">
                 <div className="flex-none lg:w-[25rem]">
-              
+
                     <div className="flex-none w-[min(calc(100%-20px),200px)] mx-auto">
                         <Heading text={"Assign a bus to seat"} className="!text-[0.8rem] !text-center !pl-0 !mb-0 uppercase text-slate-400" />
                         <BusSelect
@@ -119,7 +128,7 @@ const SeatDetails = () => {
                             className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
                         />
                     </div>
-                 
+
                     <a role='link' aria-disabled
                         href={`${process.env.REACT_APP_LOCAL_URL}/seat/download/${id}?${querySearch.toString()}`}
 
@@ -144,9 +153,8 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                     >
                         download borderaux
                     </a>
-                </div>
-                <div className="flex-1 lg:max-h-[calc(100vh-60px)] overflow-y-auto">
 
+                    {/* [rrjsfgjsofhdgihsdfhg] */}
                     <Heading text={"Seat Details"} className="!mb-3" />
 
                     <div className="flex justify-between px-2 pb-2">
@@ -175,13 +183,13 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                                             }
                                         }}
                                         className={`
-                                    ${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"}
-                                     grid items-center 
-                                    justify-center 
-                                    shadow 
-                                    rounded-sm min-h-[60px]
-                                    cursor-pointer
-                                    hover:rounded-lg`}
+                ${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"}
+                 grid items-center 
+                justify-center 
+                shadow 
+                rounded-sm min-h-[60px]
+                cursor-pointer
+                hover:rounded-lg`}
                                     > {(index + 1)}</button>
                                 )
 
@@ -191,6 +199,17 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
                     </div>
 
+
+
+                </div>
+                <div className="flex-1 lg:max-h-[calc(100vh-60px)] overflow-y-auto px-5">
+                    <Document className="max-h-screen mx-auto overflow-y-auto "
+                        file={`${process.env.REACT_APP_LOCAL_URL}/seat/download/${id}`}
+                    >
+                    {
+                    [1,2,3].map((arr,index)=><Page className="!mx-0 !py-0" pageNumber={index+1} key={index} />)
+                    }
+                    </Document>
                 </div>
 
             </div>

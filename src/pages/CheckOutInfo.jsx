@@ -42,13 +42,26 @@ const BusSits = () => {
     return
 
   }
+  const formatPrice = (triptype, seatposition) => {
+    // if (Number(seat))
+    const seatnumber = Number(seatposition) + 1;
+
+    if (!seatnumber) alert("invalid seat number")
+    if (triptype == "null" || triptype == "single") {
+      return seatnumber <= 20 ? 10000 : 6500
+    }
+    if (triptype == "round") {
+      return seatnumber <= 20 ? 20000 : 13000
+    }
+    return "invalid seatposition"
+  }
   const handleSubmit = async () => {
     var submitdata = {
       from: queryParameters.get("from"),
       to: queryParameters.get("to"),
       traveldate: new Date(queryParameters.get("date")),
       traveltime: queryParameters.get("time") || "n/a",
-      price: Number(queryParameters.get("sitpos")) > 20 ? 10000 : 6500,
+      price: formatPrice(queryParameters.get("triptype"),queryParameters.get("sitpos")),
       sex: queryParameters.get("gender"),
       email: queryParameters.get("email"),
       age: queryParameters.get("age"),
@@ -237,7 +250,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             <div className={`grid ${view ? "grid-cols-1 active " : "grid-cols-2"}
             group justify-center mb-1 items-center `}>
               <Heading text="Fullname"
-              className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+                className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
               <div className=" line-clamp-2 group-[.active]:!text-center capitalize pl-2 border-b-2"> {queryParameters.get("name") || "fail"}</div>
             </div>
             <div className={`grid ${view ? "grid-cols-1 active " : "grid-cols-2"} group justify-center- mb-1 items-center `}>
@@ -281,7 +294,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
               <Heading text="Travel Cost" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{Number(queryParameters.get("sitpos")) > 20 ? 10000 + "frs" : 6500 + "frs"}</div>
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{formatPrice(queryParameters.get("triptype"),queryParameters.get("sitpos")) } frs</div>
             </div>
 
           </div>

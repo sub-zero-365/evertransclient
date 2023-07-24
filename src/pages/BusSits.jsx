@@ -89,13 +89,13 @@ const
       setError(!error)
     }
     const checkBusAvailabity = (isTaken, isReserved, id) => {
-      if (0 == id && isTaken == false || isReserved) {
+      if (0 == id && isTaken == false && isReserved == false) {
         setSelected(0)
         return
       }
-      if (isTaken || isReserved) {
+      if (isTaken == true || isReserved == true) {
         setError(true)
-        setErrorMessage("Seat has already beeen taken;")
+        setErrorMessage(`Seat has been ${isTaken ? "Taken" : "Reserved"} please choose another one thanks`)
         return
       } else {
         setSelected(id)
@@ -128,7 +128,7 @@ const
         className="min-h-screen"
       >
         <Alert toggle={toggle}
-        duration="30000"
+          duration="30000"
           message={message}
           setToggle={setToggle} />
         <Modal toggle={error} toggleModal={toggleModal} information={errorMessage}  ></Modal>
@@ -252,10 +252,8 @@ const
                               ease: "easeInOut",
                               repeat: Infinity,
                             }
-
                             }
-
-                            className={`${(isTaken) ? "bg-orange-400" : "bg-green-400"} peer
+                            className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
                 ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
                 rounded-lg flex items-center justify-center`}>
                             <motion.div

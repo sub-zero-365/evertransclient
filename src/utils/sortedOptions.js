@@ -41,13 +41,10 @@ export const skipOptions = [
   { label: 50, value: 50 },
   { label: 100, value: 100 },
   { label: 200, value: 200 },
-
 ]
 export const timeOptions = [
   { label: "7am", value: "7am" },
   { label: "10am", value: "10am" },
-  { label: "12am", value: "12am" },
   { label: "10pm", value: "10pm" },
-
 ]
 export default 748

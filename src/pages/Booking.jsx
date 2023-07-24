@@ -14,7 +14,7 @@ import TimeSelect from 'react-select'
 import React from 'react';
 import Alert from '../components/Alert'
 import { motion } from 'framer-motion'
-
+import { timeOptions } from '../utils/sortedOptions'
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -25,33 +25,15 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-import {getCities} from "../utils/ReactSelectFunction"
+import { getCities } from "../utils/ReactSelectFunction"
 import { components, style } from "../utils/reactselectOptionsStyles"
 
 const Booking = () => {
 
   const [queryParams, setQueryParams] = useSearchParams()
   const [toggle, setToggle] = useState(false)
-  const timeOptions = [
-    {
-      label: "7am", value: "7am"
-    },
-    {
-      label: "10am", value: "10am"
-    },
-    {
-      label: "12pm", value: "12pm"
-    },
-    {
-      label: "10pm", value: "10pm"
-    },
-  ]
-  
- 
 
   const tripType = queryParams.get("triptype");
-
-
 
   const [fromCities, setFromCities] = useState(queryParams.get("from"))
   const [toCities, setToCities] = useState(queryParams.get("to"))
@@ -165,7 +147,7 @@ const Booking = () => {
             }}
 
             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-            
+
             className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
             onChange={evt => setFromCities(evt.value)}
           />
@@ -196,7 +178,7 @@ const Booking = () => {
           <Heading text="Time" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
           <TimeSelect
             styles={style}
-
+            isSearchable={false}
             onChange={(evt) => setTime(evt.value)}
             components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
             required className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl mb-6"
@@ -204,13 +186,7 @@ const Booking = () => {
               label: "7am",
               value: "7am"
             }}
-
-            options={[
-              { value: "7am", label: "7am" },
-              { value: "10am", label: "10am" },
-              { value: "12am", label: "12am" },
-              { value: "10pm", label: "10pm" },
-            ]} />
+            options={timeOptions} />
 
           <div className="hidden min-h-8 md:flex items-center justify-center mt-auto">
             <button

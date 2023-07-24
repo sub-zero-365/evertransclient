@@ -18,6 +18,10 @@ import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import QRCode from "react-qr-code";
 import { BsChevronCompactUp } from 'react-icons/bs'
 import succcesssound from '../utils/successsound.mp3'
+import { Document, Page } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
+
 const User = () => {
   const ref = useRef(null);
 
@@ -153,14 +157,14 @@ const User = () => {
   const handleChangeParams = (index) => {
     setActive(index);
     setIsloading(true)
-      setParams(prev => {
-        return (
-          {
-            ...prev,
-            index
-          }
-        )
-      })
+    setParams(prev => {
+      return (
+        {
+          ...prev,
+          index
+        }
+      )
+    })
 
 
 
@@ -178,7 +182,7 @@ const User = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="min-w-3xl flex-none lg:px-24 !w-full md:px-5 mx-auto  max-h-[calc(100vh-60px)] pb-64 overflow-y-auto">
+    <div className="min-w-3xl flex-none lg:px-10 !w-full md:px-5 mx-auto  max-h-[calc(100vh-60px)] pb-64 overflow-y-auto">
 
       {isLoading && <Loader toggle />}
       <ReOrderBooking
@@ -248,8 +252,8 @@ const User = () => {
 
         )
       }
-      <div className="lg:flex items-start">
-        <div className="flex-1">
+      <div className="lg:flex items-start !w-full  justify-between">
+        <div className="flex-1 lg:flex-none w-full max-w-sm">
           <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
             <QRCode
               size={400}
@@ -312,16 +316,28 @@ const User = () => {
           <div ref={ref} className="mt-56" />
         </div>
         {/*  */}
+        <div className="max-h-screen w-full hidden lg:block flex-1 overflow-hidden">
+          <Document
+            file={`${process.env.REACT_APP_LOCAL_URL}/downloadticket/${id}`}
+          >
+            {
+              [1, 2, 3].map((arr, index) => <Page className="!mx-0 !py-0" pageNumber={index + 1} key={index} />)
+            }
+          </Document>
 
-        <div className="lg:static lg:flex-none lg:py-10
+        </div>
+
+        <div className="lg:static lg:flex-none lg:py-10 
                                      bottom-0
                                      fixed
                                      w-full
                                      flex flex-col
                                      -translate-x-1/2
+                                     lg:translate-x-0
                                      left-1/2
                                      md:w-[min(25rem,calc(100%-1rem))]
                                      md:left-[calc(5rem+50%)]
+                                     lg:w-[20rem]
                                      
       ">
           <button
@@ -378,6 +394,7 @@ const User = () => {
            duration-300
 w-[min(25rem,calc(100%-1rem))]
 bg-white
+dark:bg-slate-800
 mb-5
 rounded-lg
 shadow-xl
@@ -392,13 +409,13 @@ lg:py-10
 
 
               <Heading text={(ticketData?.username || "n/a")}
-                className="text-center capitalize !text-lg !font-manrope !mb-5 !font-medium !text-slate-600" />
+                className="text-center capitalize !text-lg !font-manrope !mb-5 !font-medium !text-slate-600 dark:!text-white" />
             </div>
 
 
             {
               ticketData?.type === "roundtrip" ? (
-                showDeactivateButton&&<div className="grid grid-cols-1 md:grid-cols-1 justify-center md:justify-between px-4">
+                showDeactivateButton && <div className="grid grid-cols-1 md:grid-cols-1 justify-center md:justify-between px-4">
                   <div className="flex justify-center flex-col">
                     <div className="flex mb-1 items-center justify-center">
                       <Heading text="First Trip" className="text-center first-letter:!text-2xl !pl-0 !text-xs !font-black !mb-1 mr-2" />
@@ -539,7 +556,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
               )
                 : (
-                  showDeactivateButton&&<AnimatePresence>
+                  showDeactivateButton && <AnimatePresence>
                     {
                       ticket?.active ?
                         <motion.div
@@ -593,7 +610,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
             {
 
               ticket?.active && (
-                <Marquee play pauseOnClick pauseOnHover className="capitalize text-red-500 dark:text-red-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5   dark:text-white- max-w-5xl">
+                <Marquee play pauseOnClick pauseOnHover className="capitalize text-red-500 dark:text-red-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5   dark:text-white-">
                   caution this action are not reversible
                 </Marquee>
               )

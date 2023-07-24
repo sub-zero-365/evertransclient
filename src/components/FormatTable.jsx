@@ -68,7 +68,7 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
                             </th>
 
                             <th scope="col" className="px-3 py-3 hidden lg:block">
-                             time
+                                time
                             </th>
                             <th scope="col" className="px-3 py-3">
                                 createdAt
@@ -135,29 +135,22 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
                                     <td className="px-3 py-2">
                                         <span className="font-medium ">{ticket?.to || "n/a"}</span>
                                     </td>
-
-
                                     <td className="px-3 py-2">
                                         {ticket?.traveldate ?
                                             (new Date(ticket.traveldate).toLocaleDateString()) : "n/a"}
-
                                     </td>
                                     <td className="px-3 py-2 hidden lg:block">
                                         {ticket?.traveltime ?
-                                           ticket?.traveltime : "n/a"}
-
+                                            ticket?.traveltime : "n/a"}
                                     </td>
                                     <td className="px-3 py-2">
                                         {ticket?.createdAt ?
                                             (new Date(ticket.createdAt).toLocaleDateString()) : "n/a"}
-
                                     </td>
-                                    <td className="px-3 py-2">
+                                    <td className="px-3 py-2 cursor-pointer">
                                         {ticket?.email ?
-                                           ticket?.email : "n/a"}
-
+                                            <a href={`tel:${ticket?.email} `} >{ticket?.email}</a> : "n/a"}
                                     </td>
-
 
                                     <FormatTd ticket={ticket} />
                                     <td className="px-3 py-2">

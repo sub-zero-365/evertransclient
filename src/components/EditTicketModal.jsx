@@ -16,6 +16,7 @@ import ToSelect from 'react-select/async'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Scrollbar, Pagination, Navigation } from 'swiper'
+import AnimateError from './AnimateError'
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -29,6 +30,7 @@ import "swiper/css/thumbs";
 import { getCities } from "../utils/ReactSelectFunction"
 import { motion, AnimatePresence } from 'framer-motion'
 import UiButton from './UiButton'
+import AnimatedText from './AnimateText'
 const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
     const token = localStorage.getItem("token");
 
@@ -50,11 +52,9 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
             to
         }))
     }, [startDate, isOpen, show])
-    useEffect(() => {
-        // if (params.from) delete params.from
-        // if (params.to) delete params.to
-        console.log(params)
-    }, [show])
+    // useEffect(() => {
+
+    // }, [show])
     useEffect(() => {
         if (!isOpen) {
             setNext(false)
@@ -101,26 +101,30 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
         getData()
     }
     // const handleEditTicket /updateticket/:id
-    const handleEditMeta = async (seat__id, seatposition, traveltime,traveldate) => {
+    const [submitloading, setSubmitLoading] = useState(false)
+    const handleEditMeta = async (seat__id, seatposition, traveltime, traveldate) => {
         console.log(seat__id, seatposition)
+        setSubmitLoading(true)
         if (seat__id == null) alert("select seat")
         try {
             const res = await axios.patch("/ticket/updateticket/" + ticket._id, {
                 seatposition,
                 seat_id: seat__id,
-                traveltime,traveldate
+                traveltime, traveldate
             }, {
 
                 headers: {
                     'Authorization': "makingmoney " + token
                 },
             });
-            console.log(res)
+            // console.log(res)
             setIsOpen(false)
         } catch (err) {
             console.log(err)
         }
-
+        finally {
+            setSubmitLoading(false)
+        }
     }
     const getNextDay = (date = new Date()) => {
         const next = new Date(date.getTime());
@@ -135,7 +139,9 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
 w-screen h-screen 
 bg-slate-600/50 flex items-center justify-center`}>
 
-            <div
+            <motion.div
+                animate={{ y: isOpen ? 0 : 50,opacity: isOpen ? 1 : 0.2 }}
+                transition={{ duration: 0.4 }}
                 onClick={e => e.stopPropagation()}
                 className={`
 relative
@@ -152,7 +158,7 @@ shadow-xl
 dark:shadow-sm 
 dark:shadow-black
 shadow-slate-400 
- pb-10`}
+ pb-2`}
 
             >
                 <AnimatePresence>
@@ -167,10 +173,11 @@ shadow-slate-400
                                 className={` w-full z-[30] rounded-lg bg-white/95 dark:bg-slate-800 inset-0 `}>
                                 <div className="flex gap-x-3 items-center">
                                     <span
+                                        onClick={() => setNext(!next)}
                                         className='hover:bg-slate-300 
                                 w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full '
                                     >
-                                        <AiOutlineArrowLeft size={20} onClick={() => setNext(!next)}
+                                        <AiOutlineArrowLeft size={20}
                                             className="flex-none pl-1 " />
 
                                     </span>
@@ -191,7 +198,7 @@ shadow-slate-400
                                     {
                                         data?.seats.length >= 1 ?
                                             data?.seats
-                                                ?.map(({ seat_positions, traveltime,traveldate, _id: seat__id }, index) => {
+                                                ?.map(({ seat_positions, traveltime, traveldate, _id: seat__id }, index) => {
                                                     return (
                                                         <SwiperSlide key={index}>
                                                             <div>
@@ -201,14 +208,22 @@ shadow-slate-400
                                                                     className="!gap-x-1 !justify-center !mb-1
                                                             !gap-y-0.5 !flex-wrap px-2">
                                                                     {
-                                                                        seat_positions?.
+                                                                        seat_positions?.slice(
+                                                                            ...(
+                                                                                (ticket.seatposition + 1) <= 20 ? [0, 20] : [20]
+                                                                            )
+
+                                                                        )?.
                                                                             filter(({ isTaken, isReserved }) => {
+
+
                                                                                 if (isTaken == false) {
                                                                                     return true
                                                                                 }
 
 
-                                                                            })?.map(({ _id }) => (<
+                                                                            })
+                                                                            ?.map(({ _id }) => (<
                                                                                 PanigationButton
                                                                                 className={`${(_id == selectseat) && "!border-2 !border-"}`}
                                                                                 onClick={() => setSelectseat(_id)}
@@ -219,17 +234,23 @@ shadow-slate-400
                                                                             />))
                                                                     }
                                                                 </Scrollable>
-                                                                {selectseat !== null && (<UiButton onClick={() => handleEditMeta(seat__id,
-                                                                    selectseat, traveltime,traveldate)} name="Submit"
+                                                                {selectseat !== null && (<UiButton
+                                                                    disabled={submitloading}
+                                                                    onClick={() => handleEditMeta(seat__id,
+                                                                        selectseat, traveltime, traveldate)} name={
+                                                                            submitloading ? "Please wait ..." : "Submit"
+                                                                        }
                                                                     className="!px-8 !mx-auto !mb-5 !bg-green-500" />
                                                                 )}
                                                             </div>
                                                         </SwiperSlide>
                                                     )
                                                 }) : <>
-                                                <Heading text="oops no Seat found "
-                                                    className="!text-center !mb-0 !font-semibold !text-xl !pl-0" />
-                                                <img src={emptybox} className="" />
+                                                <AnimatedText text="oops no Available  Seat found on this day"
+                                                    className="!text-center  !mb-0 !font-semibold 
+                                                    !text-xl !pl-0 !absolute z-10 !text-black !top-14 !left-4" />
+                                                <img src={emptybox} className="h-full w-[calc(100%-10px)] object-cover overflow-hidden max-h-[20rem] dark:grayscale-[100%] 
+                                                dark:invert-0 mx-auto dark:blur-[2px]" />
                                             </>
 
                                     }
@@ -241,8 +262,11 @@ shadow-slate-400
                             </motion.div>
                         ) : (
 
-                            <motion.form
-
+                            isOpen && <motion.form
+                                initial={{ y: 40, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: 40, opacity: 0 }}
+                                // transition={{ delay:isOpen? 0.2:0 }}
                                 className="px-6" onSubmit={handleSubmit}>
                                 <CustomDatePicker
                                     startDate={startDate}
@@ -337,10 +361,10 @@ shadow-slate-400
                 </AnimatePresence>
 
 
-            </div>
+            </motion.div>
 
 
-        </div>
+        </div >
 
     )
 

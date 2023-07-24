@@ -39,11 +39,12 @@ font-montserrat
 
 }
 
-const UiButton = ({ className, onClick, name }) => {
+const UiButton = ({ className, onClick, name, disabled }) => {
     return (
-        <button 
+        <button
             onClick={onClick}
-
+            disabled={disabled}
+            
             className={` ${className}
 font-medium
 shadow

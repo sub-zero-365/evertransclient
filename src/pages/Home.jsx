@@ -68,9 +68,11 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                             Learn More
                         </Link>
                     </div>
-                    <div class="hidden- mt-2 lg:mt-0 lg:col-span-5 lg:flex">
-                        <img src="https://www.pngmart.com/files/6/Bus-Transparent-Images-PNG.png" alt="bus" />
-                        {/* <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" alt="mockup"/> */}
+                    <div class="hidden- mt-2 lg:mt-0 lg:col-span-5 lg:flex group relative">
+                        <img src="https://clipart-library.com/img/133458.png"
+                            alt="bus"
+                            className="md:hover:scale-[1.2]  md:hover:scale-x-[1.2]  hover:-translate-x-10
+                        duration-300 ease transition-all" />
                     </div>
                 </div>
             </section >
@@ -78,7 +80,13 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                 <OurServices />
             </div>
 
-            <div className="container rounded-lg md:overflow-hidden
+            <motion.div
+                initial={{ y: 50, opacity: 0.3 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                transition={{ duration: 1 ,}}
+                
+                // initial={{y:20,opacity:0.3}}
+                className="container rounded-lg md:overflow-hidden
             mx-auto shadow-2xl  py-10-
              z-40  mb-[90px]   flex ">
                 <div className="flex-none hidden md:block w-[150px]  md:relative ">
@@ -153,7 +161,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                     </div>
 
                 </div>
-            </div>
+            </motion.div>
 
 
 

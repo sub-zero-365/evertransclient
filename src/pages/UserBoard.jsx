@@ -20,7 +20,7 @@ import { MdOutlinePriceChange } from 'react-icons/md'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import { useDispatch, useSelector } from 'react-redux';
 import ClearFilter from '../components/ClearFilter'
-
+import UiButton from '../components/UiButton'
 // import {}
 import Alert from '../components/Alert'
 
@@ -234,6 +234,8 @@ const Details = () => {
   useEffect(() => {
     getData();
   }, [querySearch]);
+  const _view = JSON.parse(localStorage.getItem("__view")) ==true ? true : false
+  const [__view, __setView] = useState(_view)
   const [greetingtext, setGreetingText] = useState("GOOD MORNING")
   useEffect(() => {
     const timer = setInterval(() => {
@@ -246,7 +248,7 @@ const Details = () => {
 
         setGreetingText("GOOD EVENING")
       }
-    }, 10000);
+    }, 1000);
     return () => {
       clearInterval(timer)
     }
@@ -365,7 +367,7 @@ z-10  "
 
         </ol>
       </nav>
-      <div className="lg:flex  items-start justify-start gap-4 ">
+      <div className={`lg:flex ${__view&&"lg:flex-row-reverse"}  items-start justify-start gap-4 `}>
         <div
           className="flex-none w-[18rem] hidden lg:block
           "
@@ -466,34 +468,28 @@ z-10  "
               })
           }
         </div>
-        <div className="flex-1   mb-6">
-          <div className="flex  items-center  mb-10  justify-between
+        <div className="flex-1   mb-6 ">
+          <div className="flex  items-start  mb-10  justify-between
         py-1 mx-auto mt-5 max-w-sm rounded-lg shadow bg-white dark:bg-slate-800 ">
             <div className="flex-1">
               <Heading text={greetingtext} className="!mb-2 !font-black mt-0 !italic" />
               <p className="mb-3 text-sm  px-6 uppercase">{userInfo?.fullname} </p>
             </div>
-            <motion.div
-              initial={{ x: "-50%" }}
-              animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                times: [0, 0.2, 0.5, 0.8, 1],
-                repeat: Infinity,
-                repeatDelay: 1
-              }
 
-              }
-              className="bottom-6 flex-none ml-2 shadow-2xl button-add  top-auto bg-blue-400 
-w-[2rem] h-[2rem] rounded-full left-1/2 overflow-hidden 
--translate-x-1/2
-z-10  "
-            >
-              <div className="flex h-full w-full items-center scale-animation justify-center ">
-                {/* <AiOutlinePlus size={30} color="#fff" className="" /> */}
-              </div>
-            </motion.div>
+            <UiButton
+              name="change view"
+              className="!hidden lg:!block"
+              onClick={() => {
+                if (__view == true) {
+                  __setView(false)
+                  localStorage.setItem("__view", JSON.stringify(__view))
+                }else{
+                  __setView(true)
+                  localStorage.setItem("__view", JSON.stringify(__view))
+                }
+
+              }}
+            />
 
           </div>
           <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
@@ -647,13 +643,16 @@ z-10  "
                 <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
                 <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.createdAt && (dateFormater().date) || "n/a"}</h4>
 
-                <Swiper
+                <Swiper 
                   className='my-6
                             px-4 
                             w-full
                             lg:w-full 
-                            !relative'
+                            !relative
+                          
+                            '
                   slidesPerView={1}
+                  onSlideChange={(e)=>console.log(e)}
                   modules={[Autoplay, Navigation]}
                   navigation={{
                     prevEl: ".arrow__left",
@@ -663,15 +662,15 @@ z-10  "
                   <PrevButton className="!left-1.5" />
                   <NextButton className="!right-1.5" />
 
-                  <SwiperSlide>
+                  <SwiperSlide className="group ">
                     <Heading text={"Query  Travel At"} className="!font-black !text-sm underline !underline-offset-4 !mb-2 !text-center" />
 
-                    <AnimatePresence className="mt-10">
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, duration: 2 }}
-                        className="flex flex-col items-center w-full justify-center">
+                   
+                      <div
+                     
+                        className="flex flex-col
+                        items-center w-full justify-center group-[.swiper-slide-active]:!translate-y-0 
+                         translate-y-[50px] ease duration-[1s] transition-all">
                         <DatePicker
                           selected={startDate}
                           onChange={onChange}
@@ -715,20 +714,19 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                             Clear Travel
                           </button>
                         }
-                      </motion.div>
-                    </AnimatePresence>
+                      </div>
+         
 
                   </SwiperSlide>
-                  <SwiperSlide>
+                  <SwiperSlide className="group">
                     <Heading text={"Query  Created At"}
                       className=" !text-sm !text-slate-500 !font-semibold !underline-offset-4 !mb-2 !text-center" />
 
-                    <AnimatePresence className="mt-10">
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, duration: 2 }}
-                        className="flex flex-col items-center w-full justify-center">
+            
+                      <div
+                     
+                        className="flex flex-col items-center w-full justify-center  group-[.swiper-slide-active]:!translate-y-0 
+                        translate-y-[50px] ease duration-[1s] transition-all">
                         <DatePicker
                           selected={startDate}
                           onChange={onChange}
@@ -775,8 +773,8 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                             Clear Filter Query
                           </button>
                         }
-                      </motion.div>
-                    </AnimatePresence>
+                      </div>
+          
 
                   </SwiperSlide>
 
