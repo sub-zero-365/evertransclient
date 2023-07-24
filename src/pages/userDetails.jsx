@@ -495,8 +495,7 @@ z-10  "
             <Heading text={"Full Name"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '
             >{userInfo?.fullname || "n/a"}</h4>
-            <Heading text={"ID"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
-            <h4 className='text-sm text-slate-500 font-medium '>{userInfo?._id || "n/a"}</h4>
+      
             <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.phone || "n/a"}</h4>
             <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
@@ -643,119 +642,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
 
 
-            {/* <AnimatePresence className="mt-10">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0, duration: 2 }}
-                className="flex flex-col items-center w-full justify-center">
-                <DatePicker
-                  selected={startDate}
-                  onChange={onChange}
-                  startDate={startDate}
-                  endDate={endDate}
-                  selectsRange
-                  inline
-                  maxDate={new Date()}
-                />
-                <button
-                  data-te-ripple-init
-                  data-te-ripple-color="light"
-                  className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
-  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
-  transition duration-150 ease-in-out hover:bg-blue-600
-  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-
-                  onClick={handleFilterSearch}
-
-                >
-                  {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
-                </button>
-
-                {
-                  querySearch.get("daterange") && <button
-                    data-te-ripple-init
-                    data-te-ripple-color="light"
-                    className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
-leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-transition duration-150 ease-in-out hover:bg-red-600
-hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-
-                    onClick={() => {
-                      handleFilterChange("daterange")
-                      // const temp = params;
-                      // if (temp.daterange) delete temp.daterange;
-                      // setParams({ ...temp })
-
-                    }}
-
-                  >
-                    Clear Filter Query
-                  </button>
-                }
-              </motion.div>
-            </AnimatePresence> */}
-            <div className="mt-10 mb-10 md:mb-5">
-
-              <h2 className="text-start 
-                                    text-color_dark  mt-2 ml-1
-                                     tracking-tight 
-                                    font-medium">Booking OverView </h2>
-              <span className="mb-5 w-14 ml-2 h-1 bg-blue-700 block rounded-lg"></span>
-              <Swiper
-
-                className='my-6 px-4 max-w-sm lg:max-w-lg relative'
-                slidesPerView={1}
-                // onSlideChange={(e) => setctiveSlide(e.activeIndex)}
-                modules={[Autoplay, Pagination, Navigation]}
-                navigation={{
-
-                  prevEl: ".arrow__left",
-                  nextEl: ".arrow__right",
-
-
-                }}
-                pagination={{ clickable: true }}
-                autoplay={{
-                  delay: 2500,
-                  disableOnInteraction: false
-                }}
-              >
-                <NextButton className="!right-1.5 !h-8" />
-                <PrevButton className="!h-8 !left-1.5" />
-                <SwiperSlide>
-                  <Heading text="Active ratio percentage" className="!text-sm !md-text-xl underline !underline-offset-4" ></Heading>
-                  <PercentageBar
-                    percent={userData?.percentageActive}
-
-                  />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Heading text="Inactive ratio percentage" className="!text-sm !md-text-xl underline !underline-offset-4" ></Heading>
-                  <PercentageBar
-                    stroke="red"
-                    percent={userData?.percentageInActive}
-
-                  />
-                </SwiperSlide>
-
-              </Swiper>
-              {
-                querySearch.get("daterange") && endDate == null && (
-
-                  <div><DataDay data={userData?.tickets} /> </div>
-                )
-              }
-
-
-              {/* <BoxModel activeCount={userData?.totalActiveTickets}
-                inActiveCount={userData?.totalInActiveTickets} /> */}
-
-            </div>
+          
 
           </div>
 

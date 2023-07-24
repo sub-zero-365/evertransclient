@@ -24,8 +24,44 @@ const DashboardHome = () => {
     const setTicketDataFunction = (payload) => {
         return dispatch(setTicketData(payload))
     }
-
+    const [e_count, setE_count] = useState(null)
+    const [b_count, setB_count] = useState(null)
     useEffect(() => {
+        const getBuses = async () => {
+
+            try {
+                const { data: { nHits } } = await axios.get("/bus",
+                    {
+                        headers: {
+                            'Authorization': "makingmoney " + token
+                        },
+                    }
+                )
+                setB_count(nHits)
+
+            } catch (err) {
+                console.log("error : ", err)
+
+            }
+            finally {
+
+            }
+
+        }
+
+        getBuses()
+        const getUsers = async () => {
+            try {
+                const { data: { nHits } } = await axios.get("/admin/userticketlength", {
+                    headers: {
+                        'Authorization': "makingmoney " + token
+                    },
+                })
+                setE_count(nHits)
+            } catch (err) {
+                console.log(err)
+            }
+        }
         (async function () {
             const url = `${process.env.REACT_APP_LOCAL_URL}/admin/alltickets`
             try {
@@ -41,20 +77,7 @@ const DashboardHome = () => {
             }
         }())
 
-        async function fetchData() {
-
-            try {
-                const response = await axios.get("/admin/userticketlength", {
-                    headers: {
-                        'Authorization': "makingmoney " + token
-                    },
-
-                })
-                setUsers([...response?.data?.userdetails]);
-            } catch (err) {
-                console.log(err)
-            }
-        }
+        getUsers()
 
     }, [])
 
@@ -64,7 +87,7 @@ const DashboardHome = () => {
             <div className="lg:grid gap-4 lg:grid-cols-3 px-4">
                 <DashItem Name={"Employees"}
                     href={"users"}
-                    Counts={23}
+                    Counts={e_count}
                     icon={<BsTicketPerforated className='text-3xl' />} />
                 <DashItem Name={"Tickets"}
                     href={"tickets"}
@@ -72,11 +95,11 @@ const DashboardHome = () => {
                     icon={<BsTicketPerforated className='text-3xl' />} />
                 <DashItem Name={"Buses"}
                     href={"bus"}
-                    Counts={23}
+                    Counts={b_count}
                     icon={<BiBus className='text-3xl' />} />
                 <DashItem Name={"Cities"}
                     href={"cities"}
-                    Counts={23}
+                    Counts={2}
                     icon={<BiBus className='text-3xl' />} />
 
             </div>
@@ -151,12 +174,12 @@ const DashboardHome = () => {
 
             <Heading text="Recent Book Tickets" className="!font-black first-letter:!text-2xl !text-lg underline underline-offset-8 uppercase" />
 
-                    <FormatTable tickets={ticketData.tickets}
-                        skip={10}
-                        currentPage={1}
-                        admin />
+            <FormatTable tickets={ticketData.tickets}
+                skip={10}
+                currentPage={1}
+                admin />
 
-          
+
 
 
         </div>

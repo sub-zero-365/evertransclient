@@ -116,9 +116,7 @@ const Details = () => {
     console.log(dates)
   };
   useEffect(() => {
-    if (!querySearch.get("limit")) {
-      handleFilterChange("limit", 50)
-    }
+   
     handleFilterChange("view", "all")
     if (!querySearch.get("page")) {
       handleFilterChange("page", 1)
@@ -846,7 +844,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
         </div>
       </div>
 
-      <div className="flex justify-between gap-4 ppl-4
+      <div className="flex justify-between lg:justify-center  gap-x-4 gap-y-2 lg:gap-x-6
       flex-wrap pr-5 items-start mb-10">
         <h1 className="text-2xl mt-4 
         text-gray-700 pl-6

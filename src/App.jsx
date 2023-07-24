@@ -8,7 +8,16 @@ import { Home, Auth, SingleTicket } from "./pages";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import 'react-datepicker/dist/react-datepicker.css'
-
+import "swiper/css"
+import "swiper/css/navigation"
+import "swiper/css/pagination"
+import "swiper/css/autoplay"
+import "swiper/css/a11y"
+import "swiper/css/scrollbar"
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
 const ContactUs = lazy(() => import("./pages/Contact"));
 const Seat = lazy(() => import("./pages/Seats"));
 const Bus = lazy(() => import("./pages/Bus"));

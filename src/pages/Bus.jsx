@@ -74,16 +74,7 @@ const Bus = () => {
                             <Heading text="Total Seats" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
                             <Heading text={number_of_seats} className="!mb-2 !text-sm" />
                         </div>
-
-                        <div>
-                            <Heading text="Consume" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                            <Heading text={(
-                                counter
-                            )} className="!mb-2 !text-sm" />
-                        </div>
-
                     </div>
-             
                     <div className='grid grid-cols-2'>
                         <div>
                             <div className='flex'>
@@ -93,35 +84,8 @@ const Bus = () => {
                                 className="!mb-2 !text-sm" />
                         </div>
                         <div>
-                            <div className='flex items-center'>
-                                <Heading text="active" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                                {
-                                    (activeIndex == _id) && (
-                                        <span className="w-4 h-4  ml-1
-                                rounded-full bg-transparent border-t-2 border-r-2 border-transparent border-2
-                                border-t-orange-400
-                                border-r-orange-400
-                                animate-spin
-                                "></span>
-                                    )
-
-
-                                }
-                            </div>
-                            <ToggleSwitch
-
-                                onChange={() => {
-                                    toast.promise(handleSetActive(_id), {
-                                        pending: "Promise is pending",
-                                        success: "promise  loaded",
-                                        error: "oops something happen"
-                                    })
-
-
-                                }}
-                                message="active"
-                                disabled={activeIndex == _id ? true : false}
-                                state={active} />
+                         
+                          
                         </div>
 
                     </div>
@@ -216,26 +180,7 @@ const Bus = () => {
 
     }
 
-    async function getCities(inputValue = "") {
-        const url = "/admin/allcities";
-        try {
-            const res = await axios.get(url, {
-                headers: {
-                    'Authorization': "makingmoney " + token
-                },
-                params: {
-                    search: (inputValue || "")
-                }
-            })
-            // setCities(res?.data?.cities)
-            // console.log(res.data)
-            return res?.data?.cities
-        } catch (err) {
-            console.log(err)
-            alert("some error occurs")
-        }
 
-    }
     useEffect(() => {
         getBuses()
     }, [searchText, cat])
@@ -247,22 +192,7 @@ const Bus = () => {
         date: startDate
 
     })
-    // const handleResetBus = async (id, _id) => {
-    //     try {
-    //         axios.patch("/bus/reset/" + id, {},
-    //             {
-    //                 headers: {
-    //                     'Authorization': "makingmoney " + token
-    //                 }
-    //             }
-    //         )
-    //     } catch (err) {
-    //         console.log(err)
-    //     }
-    //     finally {
-    //         console.log("done ")
-    //     }
-    // }
+    
     const handleSetActive = async (id) => {
         setActiveIndex(id)
         try {
@@ -408,7 +338,7 @@ z-10  "
             >
 
                 <div className="flex-1 ">
-                    <div className="flex px-5  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow bg-white mx-4">
+                    <div className="flex px-5  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow bg-white dark:bg-slate-900 mx-4">
                         <div className="flex-1 ">
                             <Heading text="Hey Add A New Bus" className="!mb-0 !pl-0 !font-black mt-0" />
                             <AnimateText text="Hello admin add new buses to the app"
@@ -437,7 +367,7 @@ w-[2rem] h-[2rem] rounded-full left-1/2 overflow-hidden
 -translate-x-1/2
 z-10  "
                         >
-                            <div className="flex h-full w-full items-center scale-animation justify-center ">
+                            <div className="flex h-full w-full items-center scale-animation dark:bg-slate- justify-center ">
                                 <AiOutlinePlus size={30} color="#fff" className="" />
                             </div>
                         </motion.div>
@@ -461,6 +391,9 @@ z-10  "
             w-[min(calc(100%-2.5rem),25rem)]
             min-h-[10rem]
             bg-white
+            dark:bg-slate-900
+            dark:shadow-dark
+            dark:shadow-sm
             rounded-2xl
             top-1/2
             max-h-[calc(100vh-100px)]
@@ -481,6 +414,7 @@ z-10  "
             mx-4
             mt-2
             bg-slate-100
+            dark:bg-slate-600
             hover:bg-red-400
             ease duration-500
             transition-colors
@@ -539,8 +473,8 @@ z-10  "
                 peer-focus:text-blue-400
                 peer-focus:bg-white px-0
                 peer-valid:bg-white 
-                dark:peer-focus:bg-color_dark
-                dark:peer-valid:bg-color_dark
+                dark:peer-focus:bg-slate-900
+                dark:peer-valid:bg-slate-900
             
                 bg-transparent
                 peer-data-[te-input-state-active]:-translate-y-[1.15rem]
@@ -599,8 +533,8 @@ z-10  "
                 peer-focus:text-blue-400
                 peer-focus:bg-white px-0
                 peer-valid:bg-white 
-                dark:peer-focus:bg-color_dark
-                dark:peer-valid:bg-color_dark
+                dark:peer-focus:bg-slate-900
+                dark:peer-valid:bg-slate-900
             
                 bg-transparent
                 peer-data-[te-input-state-active]:-translate-y-[1.15rem]
@@ -639,10 +573,11 @@ z-10  "
                                         }}
                                     />
                                 </div>
-                                <div className="flex !text-sm
+                                <div className="flex !text-sm 
                                 flex-col items-center">
                                     <Heading text="Bus Type" className="!text-sm !text-slate-400  !mb-1" />
                                     <Features
+                                    className=" dark:text-white"
                                         options={featureOptions}
                                         onChange={e => setBusData((prev) => ({
                                             ...prev,

@@ -59,19 +59,17 @@ const User = () => {
   })
   const [toggle, setToggle] = useState(false)
   const showDeactivateButton = queryParameters.get("xyz") ? true : false
-  // const showDeactivateButton = true
   var token = undefined, url = ""
   const isadminuser = queryParameters.get("admin");
-  // const shouldplaysound = queryParameters.get("sound");
   const audio = new Audio(succcesssound);
 
   async function getData() {
     if (isadminuser == null) {
       token = localStorage.getItem("token")
-      url = `${process.env.REACT_APP_LOCAL_URL}/ticket/${id}`
+      url = `/ticket/${id}`
     } else {
       token = localStorage.getItem("admin_token");
-      url = `${process.env.REACT_APP_LOCAL_URL}/admin/staticticket/${id}`;
+      url = `/admin/staticticket/${id}`;
     }
     try {
       const res = await axios.get(url, {
@@ -128,12 +126,21 @@ const User = () => {
 
 
   const redeemTicket = async () => {
+    let token = null
     setLoadbtn(true)
     setIsloading(true)
-    token = localStorage.getItem("admin_token")
-    const url = `${process.env.REACT_APP_LOCAL_URL}/admin/edit/${id}`;
+    let url = ""
+    if (isadminuser) {
+      url = `/admin/edit/${id}`
+      token = localStorage.getItem("admin_token");
+    } else {
+      url = `/ticket/edit/${id}`
+      token = localStorage.getItem("token");
+
+    }
+
     try {
-      const res = await axios.get(url, {
+      const res = await axios.post(url, {}, {
         headers: {
           'Authorization': "makingmoney " + token
         },
@@ -300,7 +307,13 @@ const User = () => {
             <div>
               <h2 className="text-center  text-lg md:text-xl font-medium  "> status</h2>
               <p className="text-center sidebar text-slate-500 mb-4 grid place-items-center"> {ticket?.active ?
-                <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span>
+
+
+                ticket?.type == "roundtrip" ? <div className="flex gap-x-1">
+                  {ticket?.doubletripdetails[0]?.active ? <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span> : <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>}
+                  {ticket?.doubletripdetails[1]?.active ? <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span> : <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>}
+                </div> : <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span>
+
                 :
                 <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>
 

@@ -149,16 +149,13 @@ const Seats = () => {
                     !transition-all 
                     !duration-[1s]`}>
                         <TicketCounts counts={data?.seats?.length || 0 === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
-                            text={"Total Routes"}
+                            text={"Total Travels"}
                             icon={<AiOutlineSave />} />
-                        <TicketCounts counts={0 || 0 === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
-                            text={"Total Seats"}
+                        <TicketCounts counts={data?.routes_count || 0 === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
+                            text={"Total Routes"}
                             icon={<VscFolderActive />}
                         />
-                        <TicketCounts
-                            text={"Inactive Tickets"}
-                            counts={0 || 0 === 0 && "0" || <span className='text-xs font-black '>loading ...</span>} />
-                    </Scrollable>
+                         </Scrollable>
                 </div>
 
                 <div className="flex-none flex flex-col my-6 lg:my-0 items-center w-full  lg:w-fit hidden- lg:block flex-end px-5 ">

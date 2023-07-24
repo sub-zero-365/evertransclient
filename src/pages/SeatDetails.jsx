@@ -1,8 +1,7 @@
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import {
-    Heading,
-    Scrollable,
-    ToggleSwitch
+    Heading,PrevButton,
+    NextButton
 }
     from '../components'
 import { useSearchParams } from 'react-router-dom'
@@ -13,9 +12,12 @@ import { components, style } from "../utils/reactselectOptionsStyles"
 import { useState, useEffect } from 'react'
 import BusSelect from 'react-select/async'
 import axios from 'axios'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, Navigation } from 'swiper'
 // import { MobilePDFReader } from 'react-pdf-viewer';
 import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
+
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
 
 const SeatDetails = () => {
@@ -109,7 +111,7 @@ const SeatDetails = () => {
             {/* contnet dhere e */}
 
 
-            <div className="lg:flex flex-row-reverse lg:flex-row">
+            <div className="lg:flex flex-row-reverse lg:flex-row gap-x-6">
                 <div className="flex-none lg:w-[25rem]">
 
                     <div className="flex-none w-[min(calc(100%-20px),200px)] mx-auto">
@@ -203,12 +205,44 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
                 </div>
                 <div className="flex-1 lg:max-h-[calc(100vh-60px)] overflow-y-auto px-5">
-                    <Document className="max-h-screen mx-auto overflow-y-auto "
+                    <Document className="max-h-screen mx-auto overflow-y-auto bg-white dark:!bg-slate-900"
                         file={`${process.env.REACT_APP_LOCAL_URL}/seat/download/${id}`}
                     >
-                    {
-                    [1,2,3].map((arr,index)=><Page className="!mx-0 !py-0" pageNumber={index+1} key={index} />)
-                    }
+                        <Swiper  slidesPerView={1}
+                                modules={[Autoplay, Navigation]}
+                                autoplay={{
+                                    delay: 25000,
+                                    disableOnInteraction: false
+                                  }}
+                                navigation={{
+                                    prevEl: ".arrow__left",
+                                    nextEl: ".arrow__right",
+                                }}>
+                                 <PrevButton className="!left-1.5" />
+                                <NextButton className="!right-1.5" />
+                            {
+                                [1, 2, 3].map((arr, index) => {
+                                    return (
+                                        <SwiperSlide className="group relative">
+                                            <Page
+                                            className="!mx-0 !py-0
+                                            group-[.swiper-slide-active]:!z-10 
+                                            group-[.swiper-slide-active]:!opacity-100
+                                            group-[.swiper-slide-active]:!rotate-0
+                                            group-[.swiper-slide-active]:!scale-100
+                                            absolute inset-0 h-full w-full 
+                                            scale-[0.5]
+                                            rotate-45
+                                            opacity-0
+                                            z-[-100]
+                                            ease duration-[1s] transition-all" 
+                                            pageNumber={index + 1} key={index} />
+                                        </SwiperSlide>
+                                    )
+
+                                })
+                            }
+                        </Swiper>
                     </Document>
                 </div>
 

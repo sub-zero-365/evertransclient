@@ -1,24 +1,32 @@
-import { Outlet, useNavigate, Navigate } from "react-router-dom"
+import { Outlet, useNavigate, Navigate, useLocation,Link } from "react-router-dom"
 import { SideBar } from './'
 import { useDispatch, useSelector } from "react-redux"
 import { actions } from '../actions/toggleSide'
 import { AiOutlineMenu } from 'react-icons/ai'
 import Alert from "./Alert"
 import { useState, useEffect } from 'react'
+import UiButton from "../components/UiButton"
 const DashBoardLayout = () => {
+    const token = localStorage.getItem("admin_token");
+    const location = useLocation()
+    useEffect(() => {
+
+    }
+        , [location.pathname])
     const navigate = useNavigate()
 
-    const token = localStorage.getItem("admin_token");
-    
-    
+const [view,setView]=useState(false)
+
     const [toggle, setToggle] = useState(false);
     const dispatch = useDispatch();
     const toggleSideBar = () => dispatch(actions.toggleSideBar())
+
     if (!token) {
-        return <Navigate to="/auth?message=you must logging to continue as admin" replace/>
+        return <Navigate to="/auth?message=you must logging to continue as admin" replace />
     }
     return (
-        <div className="overflow-x-hidden"><Alert toggle={toggle}
+        <div className="overflow-x-hidden container mx-auto">
+        <Alert toggle={toggle}
             setToggle={setToggle} message={"Do you want to log out ?"}
             confirmFunc={() => {
                 localStorage.removeItem("admin_token")
@@ -31,9 +39,9 @@ const DashBoardLayout = () => {
                 <div className='hover:bg-slate-300 md:hidden w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={toggleSideBar}>
                     <AiOutlineMenu size={25} />
                 </div>
-                <h1 className="-auto">DashBoard </h1>
+                <Link to="/dashboard" className="-auto">DashBoard </Link>
                 <div className="md:space-x-3">
-
+                    <UiButton name="Change view" className="hidden lg:!inline-block" onClick={() => setView(!view)} />
 
                     <button
                         data-te-ripple-init
@@ -67,7 +75,7 @@ const DashBoardLayout = () => {
                     </button>
                 </div>
             </div>
-            <div className="flex">
+            <div className={`flex ${view&&"lg:flex-row-reverse"} ease duration-500 transition-all`}>
                 <SideBar />
                 <Outlet />
             </div>

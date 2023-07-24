@@ -13,9 +13,9 @@ import ClearFilter from '../components/ClearFilter'
 import SelectSortDate from 'react-select';
 import TimeSelect from 'react-select';
 import { AiOutlineSetting } from 'react-icons/ai';
-import { Swiper, SwiperSlide } from 'swiper/react'
 import formatQuery from "../utils/formatQueryStringParams"
 import { components, style } from "../utils/reactselectOptionsStyles"
+import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation } from 'swiper'
 import "swiper/css"
 import "swiper/css/navigation"
@@ -412,7 +412,10 @@ z-10  "
                 group
                 lg:visible
                 sidebarr bg-slate-500/50 
-                lg:bg-white shadow 
+                lg:bg-white
+                lg:dark:bg-slate-800
+                
+                shadow 
                 lg:ml-2
                 lg:py-10
                 lg:mr-10
@@ -436,6 +439,7 @@ z-10  "
                              h-[calc(100%-0px)]
                              lg:h-full 
                              bg-white
+                             dark:bg-slate-800
                              shadow
                              md:shadow-none
                              w-[min(25rem,calc(100vw-4rem))]
@@ -459,15 +463,14 @@ z-10  "
                                 <PrevButton className="!left-1.5" />
                                 <NextButton className="!right-1.5" />
 
-                                <SwiperSlide>
+                                <SwiperSlide className="group">
                                     <Heading text={"Query  Travel At"} className="!font-black !text-sm underline !underline-offset-4 !mb-2 !text-center" />
 
-                                    <AnimatePresence className="mt-10">
-                                        <motion.div
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0, duration: 2 }}
-                                            className="flex flex-col items-center w-full justify-center">
+                        
+                                        <div
+                                         
+                                            className="flex flex-col items-center w-full justify-center  group-[.swiper-slide-active]:!translate-y-0 
+                                            translate-y-[50px] ease duration-[1s] transition-all">
                                             <DatePicker
                                                 wrapperClassName="!w-full !bg-orange !border-none !outline-none "
                                                 className="!w-full !bg-orange-500 !border-none !outline-none "
@@ -519,20 +522,20 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                                                     Clear Travel
                                                 </button>
                                             }
-                                        </motion.div>
-                                    </AnimatePresence>
+                                        </div>
+                            
 
                                 </SwiperSlide>
-                                <SwiperSlide>
+                                <SwiperSlide className="group">
                                     <Heading text={"Query  Created At"}
                                         className="!font-black !text-sm underline !underline-offset-4 !mb-2 !text-center" />
 
-                                    <AnimatePresence className="mt-10">
-                                        <motion.div
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
+                     
+                                        <div
+                                          
                                             exit={{ opacity: 0, duration: 2 }}
-                                            className="flex flex-col items-center w-full justify-center">
+                                            className="flex flex-col items-center w-full justify-center  group-[.swiper-slide-active]:!translate-y-0 
+                                            translate-y-[50px] ease duration-[1s] transition-all">
                                             <DatePicker
                                                 selected={startDate}
                                                 onChange={onChange}
@@ -575,8 +578,8 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                                                     Clear Filter Query
                                                 </button>
                                             }
-                                        </motion.div>
-                                    </AnimatePresence>
+                                        </div>
+                           
 
                                 </SwiperSlide>
 

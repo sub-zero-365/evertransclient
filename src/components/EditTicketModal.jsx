@@ -34,7 +34,17 @@ import AnimatedText from './AnimateText'
 const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
     const token = localStorage.getItem("token");
 
-    const { from, to, type } = ticket
+    let { from, to, type } = ticket
+    if (type == "roundtrip") {
+        // this when from return tripF
+        const [first, second] = ticket?.doubletripdetails
+        if (first.active == false && second.active == true && ticket.active == true) {
+            let tmp = from;
+            from = to;
+            to = tmp;
+        }
+
+    }
     const [data, setData] = useState({})
     const [show, setShow] = useState(false)
     const [startDate, setStartDate] = useState(new Date())
@@ -140,7 +150,7 @@ w-screen h-screen
 bg-slate-600/50 flex items-center justify-center`}>
 
             <motion.div
-                animate={{ y: isOpen ? 0 : 50,opacity: isOpen ? 1 : 0.2 }}
+                animate={{ y: isOpen ? 0 : 50, opacity: isOpen ? 1 : 0.2 }}
                 transition={{ duration: 0.4 }}
                 onClick={e => e.stopPropagation()}
                 className={`
@@ -277,7 +287,7 @@ shadow-slate-400
                                     <ToggleSwitch
                                         message="edit the travel path is open"
                                         state={type == "singletrip" ? true : show}
-                                        disabled={type == "singletrip"}
+                                        disabled={type == "singletrip"?false:ticket?.doubletripdetails[0].active}
                                         onChange={() => setShow(!show)}
                                         initialMessage="edit travel path" />
                                 </div>

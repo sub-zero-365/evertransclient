@@ -82,7 +82,7 @@ const Appointment = () => {
 
         async function fetchData() {
             if (token == null) {
-                alert("please login to get token")
+              navigate("/auth?message=please login again ")
             }
             try {
                 const response = await axios.get(url, {
@@ -149,13 +149,14 @@ const Appointment = () => {
     return (
         <motion.div
             className="max-w-full !flex-1 w-full   overflow-auto max-h-[calc(100vh-3rem)] pt-10 " >
-            {/* {isLoading && (<Loader toggle dark />)} */}
-            <div> </div>
-            <Heading text="Employees OverView" />
+            <div className="flex gap-x-1 items-center">
+            <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users_?.length }</h2>
+            </div>
             <div className="lg:flex lg:mb-14 w-full  lg:px-10">
                 <div className={` flex-1 relative  text-xs mx-0   rounded-lg `}
                 >
-                    <div className="flex  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow bg-white mx-4">
+                    <div className="flex  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow
+                    bg-white dark:bg-slate-800 mx-4">
                         <div className="flex-1">
                             <Heading text="Add A New Employee" className="!mb-2 !font-black mt-0" />
                             <p className="mb-3 text-sm  px-6">Employees added help to book ticket and give more data</p>
@@ -201,10 +202,12 @@ z-10  "
             w-[min(calc(100%-2.5rem),25rem)]
             min-h-[10rem]
             bg-white
+            dark:bg-slate-800
+            dark:shadow-sm
+            dark:shadow-dark
             z-20
             rounded-2xl
             top-1/2
-            
             -translate-y-1/2
             lg:translate-x-0
             lg:translate-y-0
@@ -510,30 +513,10 @@ z-10  "
                     </form>
                 </div>
 
-                {/* <div className="flex-none lg:w-[25rem]   shadow-xl lg:rounded-lg bg-white shadow-slate-400 shadow-offset-4">
-                    side bar here
-                </div> */}
-
+         
 
             </div>
-            {/* <Scrollable className="mb-10 mt-5">
-                <AmountCount
-                    className="!bg-blue-400"
-                    text="All employees"
-                    icon={<BiCategory />}
-                    amount={67} />
-                <AmountCount
-                    className="!bg-blue-400"
-                    text="All employees"
-                    icon={<BiCategory />}
-                    amount={67} />
-                <AmountCount
-                    className="!bg-blue-400"
-                    text="All employees"
-                    icon={<BiCategory />}
-                    amount={67} />
-            </Scrollable> */}
-
+           
 
 
             <form className="px-4 md:px-6 my-5 max-w-2xl mx-auto"
@@ -556,19 +539,15 @@ z-10  "
 
 
 
-            <div class="w-full  p-4
+            <div class="w-full  lg:p-4
 lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <Heading text="Recent Employees" className="!font-black first-letter:!text-4xl !text-xl underline underline-offset-8 uppercase" />
 
 
-                <section class=" antialiased bg-gray-100 text-gray-600 ">
-                    <div class="h-">
-                        <div class="w-full max-w-2xl-- mx-auto bg-white shadow-lg rounded-sm ">
-
-                            <div class="p-0">
+                        <div class="w-full max-w-2xl-- mx-auto bg-white dark:bg-slate-900 shadow-lg rounded-sm ">
                                 <div class="overflow-x-auto">
-                                    <table class="table-auto w-full">
-                                        <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+                                    <table class="table-auto w-full text-black dark:text-white">
+                                        <thead class="text-xs font-semibold uppercase text-gray-400 dark:bg-gray-800 bg-gray-50">
                                             <tr>
                                                 <th class="p-2 whitespace-nowrap">
                                                     <div class="font-semibold text-left">index</div>
@@ -604,10 +583,9 @@ lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-g
                                                                     <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
                                                                         <img class="rounded-full"
                                                                             src={useravatar}
-                                                                        // src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-05.jpg" width="40" height="40" alt="Alex Shatov" 
                                                                         />
                                                                     </div>
-                                                                    <div class="font-medium text-gray-800">{user?.fullname}</div>
+                                                                    <div class="font-medium text-gray-800 dark:text-white">{user?.fullname}</div>
                                                                 </div>
                                                             </td>
                                                             <td class="p-2 whitespace-nowrap">
@@ -634,10 +612,7 @@ lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-g
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                        </div>
                     </div>
-                </section>
 
             </div>
 

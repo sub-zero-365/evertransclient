@@ -229,7 +229,27 @@ body {
 ::-webkit-scrollbar-track {
   @apply bg-gray-400;
 }
+.css-qbdosj-Input,
+.css-60vmsc-control,
+.css-1fdsijx-ValueContainer{
 
+@apply !bg-transparent
+}
+.react-pdf__Page {
+  @apply bg-white dark:!bg-slate-900;
+}
+.react-pdf__Page__textContent,
+.textLayer,
+.react-pdf__Page__annotations,
+.annotationLayer {
+  @apply !hidden;
+}
+.css-1nmdiq5-menu {
+  @apply  dark:!bg-slate-900 dark:!text-white !rounded-sm !-translate-y-2;
+}
+.react-pdf__Page__canvas {
+  @apply !max-w-full !w-full;
+}
 ::-webkit-scrollbar-thumb {
   @apply rounded-lg border-2 border-orange-200 bg-blue-50;
 }
