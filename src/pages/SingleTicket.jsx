@@ -84,7 +84,7 @@ const User = () => {
 
       const lettodaydate = dateFormater(new Date()).date;
       const ticketTravelDate = dateFormater(res.data.ticket?.traveldate).date;
-      if ((dayjs(ticketTravelDate).diff(lettodaydate, "day")) < 0) {
+      if ((dayjs(ticketTravelDate).diff(lettodaydate, "day")) < 0 && ticket.active==true) {
         // alert("this user needs to travel on a later day")
         setRedirect(true)
         setMessage(`this ticket travel date is on the ${ticketTravelDate} but the traveller arrived on the  ${lettodaydate}`)
@@ -190,15 +190,15 @@ const User = () => {
 
   return (
     <div className="min-w-3xl flex-none lg:px-10 !w-full md:px-5 mx-auto  max-h-[calc(100vh-60px)] pb-64 overflow-y-auto">
-
       {isLoading && <Loader toggle />}
+      
       <ReOrderBooking
         duration="30000"
-        className={`
-    ${redirect && "!top-1/2 -translate-y-1/2"}
-    `}
+        className={`${redirect && "!top-1/2 -translate-y-1/2"}`}
         toggle={redirect}
-        confirmFunc={() => navigate(`/dashboard/bus?assing_new_seat=true&ticketid=${id}&from=${ticket?.from}&to=${ticket?.to}&type=${ticket?.type}`)}
+        confirmFunc={() =>0}
+        
+        // navigate(`/user?assing_new_seat=true&_id=${id}&from=${ticket?.from}&fullname=${ticket?.fullname}&to=${ticket?.to}&type=${ticket?.type}`)
         setToggle={setRedirect}
         message={message} />
       <Alert message={message}

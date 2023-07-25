@@ -21,6 +21,9 @@ import { Autoplay, Navigation, Pagination } from 'swiper'
 import { useDispatch, useSelector } from 'react-redux';
 import ClearFilter from '../components/ClearFilter'
 import UiButton from '../components/UiButton'
+
+
+
 // import {}
 import Alert from '../components/Alert'
 
@@ -35,6 +38,10 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import {
+
+  useQuery,
+} from '@tanstack/react-query'
 import {
   AmountCount,
   BarChart,
@@ -63,8 +70,22 @@ const Details = () => {
 
   const { userData } = useSelector(state => state.userData);
   // console.log(userData)
-
-
+  const { isLoading: loading, error, data } = useQuery({
+    queryKey: ['repoData'],
+    queryFn: async () => {
+      axios.get("/auth/userinfo", {
+        headers: {
+          'Authorization': "makingmoney " + token
+        }
+      }).then((data)=>data)
+      
+    }
+    ,
+  })
+  useEffect(() => {
+   
+    console.log("user data with tenstack query", loading, data, error)
+  }, [])
   const setUserData = (data) => {
     dispatch(setUserDataFunc(data))
   }
@@ -116,7 +137,7 @@ const Details = () => {
     console.log(dates)
   };
   useEffect(() => {
-   
+
     handleFilterChange("view", "all")
     if (!querySearch.get("page")) {
       handleFilterChange("page", 1)
@@ -232,7 +253,7 @@ const Details = () => {
   useEffect(() => {
     getData();
   }, [querySearch]);
-  const _view = JSON.parse(localStorage.getItem("__view")) ==true ? true : false
+  const _view = JSON.parse(localStorage.getItem("__view")) == true ? true : false
   const [__view, __setView] = useState(_view)
   const [greetingtext, setGreetingText] = useState("GOOD MORNING")
   useEffect(() => {
@@ -365,7 +386,7 @@ z-10  "
 
         </ol>
       </nav>
-      <div className={`lg:flex ${__view&&"lg:flex-row-reverse"}  items-start justify-start gap-4 `}>
+      <div className={`lg:flex ${__view && "lg:flex-row-reverse"}  items-start justify-start gap-4 `}>
         <div
           className="flex-none w-[18rem] hidden lg:block
           "
@@ -481,7 +502,7 @@ z-10  "
                 if (__view == true) {
                   __setView(false)
                   localStorage.setItem("__view", JSON.stringify(__view))
-                }else{
+                } else {
                   __setView(true)
                   localStorage.setItem("__view", JSON.stringify(__view))
                 }
@@ -641,7 +662,7 @@ z-10  "
                 <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
                 <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.createdAt && (dateFormater().date) || "n/a"}</h4>
 
-                <Swiper 
+                <Swiper
                   className='my-6
                             px-4 
                             w-full
@@ -650,7 +671,7 @@ z-10  "
                           
                             '
                   slidesPerView={1}
-                  onSlideChange={(e)=>console.log(e)}
+                  onSlideChange={(e) => console.log(e)}
                   modules={[Autoplay, Navigation]}
                   navigation={{
                     prevEl: ".arrow__left",
@@ -663,116 +684,116 @@ z-10  "
                   <SwiperSlide className="group ">
                     <Heading text={"Query  Travel At"} className="!font-black !text-sm underline !underline-offset-4 !mb-2 !text-center" />
 
-                   
-                      <div
-                     
-                        className="flex flex-col
+
+                    <div
+
+                      className="flex flex-col
                         items-center w-full justify-center group-[.swiper-slide-active]:!translate-y-0 
                          translate-y-[50px] ease duration-[1s] transition-all">
-                        <DatePicker
-                          selected={startDate}
-                          onChange={onChange}
-                          startDate={startDate}
-                          endDate={endDate}
-                          selectsRange
-                          inline
-                        />
-                        <button
-                          data-te-ripple-init
-                          data-te-ripple-color="light"
-                          className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+                      <DatePicker
+                        selected={startDate}
+                        onChange={onChange}
+                        startDate={startDate}
+                        endDate={endDate}
+                        selectsRange
+                        inline
+                      />
+                      <button
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
   transition duration-150 ease-in-out hover:bg-blue-600
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                          onClick={handleBoardingRangeSearch}
+                        onClick={handleBoardingRangeSearch}
 
-                        >
-                          {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
-                        </button>
+                      >
+                        {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                      </button>
 
-                        {
-                          querySearch.get("boardingRange") && <button
-                            data-te-ripple-init
-                            data-te-ripple-color="light"
-                            className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
+                      {
+                        querySearch.get("boardingRange") && <button
+                          data-te-ripple-init
+                          data-te-ripple-color="light"
+                          className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
 leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
 transition duration-150 ease-in-out hover:bg-red-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                            onClick={() => {
+                          onClick={() => {
 
-                              handleFilterChange("boardingRange")
-                            }}
-                          >
-                            Clear Travel
-                          </button>
-                        }
-                      </div>
-         
+                            handleFilterChange("boardingRange")
+                          }}
+                        >
+                          Clear Travel
+                        </button>
+                      }
+                    </div>
+
 
                   </SwiperSlide>
                   <SwiperSlide className="group">
                     <Heading text={"Query  Created At"}
                       className=" !text-sm !text-slate-500 !font-semibold !underline-offset-4 !mb-2 !text-center" />
 
-            
-                      <div
-                     
-                        className="flex flex-col items-center w-full justify-center  group-[.swiper-slide-active]:!translate-y-0 
+
+                    <div
+
+                      className="flex flex-col items-center w-full justify-center  group-[.swiper-slide-active]:!translate-y-0 
                         translate-y-[50px] ease duration-[1s] transition-all">
-                        <DatePicker
-                          selected={startDate}
-                          onChange={onChange}
-                          startDate={startDate}
-                          endDate={endDate}
-                          selectsRange
-                          inline
-                          maxDate={new Date()}
-                        />
-                        <button
-                          data-te-ripple-init
-                          data-te-ripple-color="light"
-                          className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+                      <DatePicker
+                        selected={startDate}
+                        onChange={onChange}
+                        startDate={startDate}
+                        endDate={endDate}
+                        selectsRange
+                        inline
+                        maxDate={new Date()}
+                      />
+                      <button
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
   transition duration-150 ease-in-out hover:bg-blue-600
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                          onClick={handleFilterSearch}
+                        onClick={handleFilterSearch}
 
-                        >
-                          {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
-                        </button>
+                      >
+                        {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                      </button>
 
-                        {
-                          querySearch.get("daterange") && <button
-                            data-te-ripple-init
-                            data-te-ripple-color="light"
-                            className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
+                      {
+                        querySearch.get("daterange") && <button
+                          data-te-ripple-init
+                          data-te-ripple-color="light"
+                          className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
 leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
 transition duration-150 ease-in-out hover:bg-red-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                            onClick={() => {
+                          onClick={() => {
 
-                              handleFilterChange("daterange")
+                            handleFilterChange("daterange")
 
-                            }}
+                          }}
 
-                          >
-                            Clear Filter Query
-                          </button>
-                        }
-                      </div>
-          
+                        >
+                          Clear Filter Query
+                        </button>
+                      }
+                    </div>
+
 
                   </SwiperSlide>
 
@@ -945,6 +966,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
         "triptype,all",
         "limit,100",
         "sort,newest",
+        "_id,xyx",
       ]} />
 
       <Form

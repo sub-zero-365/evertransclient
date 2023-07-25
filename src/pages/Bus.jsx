@@ -12,36 +12,36 @@ import { FiRefreshCcw } from 'react-icons/fi'
 import { MdOutlineClose } from 'react-icons/md'
 import Alert from '../components/Alert'
 import Categories from 'react-select'
-import FromSelect from 'react-select/async'
-import ToSelect from 'react-select/async'
+// import FromSelect from 'react-select/async'
+// import ToSelect from 'react-select/async'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import DatePicker from 'react-datepicker'
+// import DatePicker from 'react-datepicker'
 const token = localStorage.getItem("admin_token");
 
 const Bus = () => {
 
     const [startDate, setStartDate] = useState(new Date());
-    const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
-        <div
-            className="w-full
-            max-w-[10rem]
-          border-b
-          mt-[20px]
-          mx-auto
-          shadow-sm border-black 
-          gap-2
-          p-1 
-          rounded-0
-          bg-transparent my-1  "
-            onClick={onClick} ref={ref}>
+    // const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
+    //     <div
+    //         className="w-full
+    //         max-w-[10rem]
+    //       border-b
+    //       mt-[20px]
+    //       mx-auto
+    //       shadow-sm border-black 
+    //       gap-2
+    //       p-1 
+    //       rounded-0
+    //       bg-transparent my-1  "
+    //         onClick={onClick} ref={ref}>
 
-            <div className="flex-1">
-                <Heading text="Boarding Date" className="!text-sm !text-slate-400  !mb-1" />
-                <p className="text-xs md:text-lg text-center text-slate-500 font-[500]">{value && (new Date(value).toDateString())}</p>
-            </div>
-        </div>
-    ));
+    //         <div className="flex-1">
+    //             <Heading text="Boarding Date" className="!text-sm !text-slate-400  !mb-1" />
+    //             <p className="text-xs md:text-lg text-center text-slate-500 font-[500]">{value && (new Date(value).toDateString())}</p>
+    //         </div>
+    //     </div>
+    // ));
 
     const newbustoast = () => toast.success("Add bus successfully  !", {
         position: toast.POSITION.BOTTOM_CENTER

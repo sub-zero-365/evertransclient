@@ -6,7 +6,7 @@ import { LineChart, Number } from '../components';
 import AnimateText from '../components/AnimateText'
 import { MdOutlineClose } from 'react-icons/md'
 import { useravatar } from '../Assets/images';
-
+import Alert from '../components/Alert'
 import { setUsers } from '../actions/adminData';
 import { Loader, Button, Heading } from '../components';
 import { AiOutlinePlus } from 'react-icons/ai'
@@ -14,7 +14,9 @@ import { motion } from 'framer-motion'
 import { UserData } from '../Assets/userdata';
 import { setUserName } from "../actions/userName"
 import { Loadingbtn } from "../components";
+
 const Appointment = () => {
+ 
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
     const setuserName = (username) => {
@@ -25,11 +27,12 @@ const Appointment = () => {
     const phone = useRef(null)
     const fullnames = useRef(null)
     const email = useRef(null)
-
+let [t,setT]=useState(false)
+    // var [m,setM]=useState("")
     const handleSubmit = async (e) => {
+    
         e.preventDefault()
         setIsLoading(true)
-
         const url = process.env.REACT_APP_LOCAL_URL + "/auth/register"
         try {
             const res = await axios.post(
@@ -44,8 +47,11 @@ const Appointment = () => {
             setuserName(fullname)
             localStorage.removeItem("token");
             localStorage.setItem("token", res.data.token)
-            navigate("/user")
+            // navigate("/user")
             // return res
+            setIsOpen(false)
+            setT(true)
+            fetchData()
             setIsLoading(false)
         } catch (err) {
             console.log(err)
@@ -75,45 +81,46 @@ const Appointment = () => {
     }
     const [text, setText] = useState("")
 
+    async function fetchData() {
+        const url = "/admin/userticketlength"
+    
+        if (token == null) {
+          navigate("/auth?message=please login again ")
+        }
+        try {
+            const response = await axios.get(url, {
+                headers: {
+                    'Authorization': "makingmoney " + token
+                },
+                params: {
+                    search: text
+                }
+            })
+            setUsers_([...response?.data?.userdetails]);
+            setUserData({
+                ...{
+                    labels: [...response?.data?.userdetails].map((v) => v.user.fullname),
+                    datasets: [
+                        {
+                            label: "ticket vs user data",
+                            data: [...response?.data?.userdetails].map((v) => v.nHits)
 
+                        },
+                    ]
+
+                }
+
+            })
+        } catch (err) {
+            setUsers_([])
+            alert("fail to get users")
+            console.log(err)
+        }
+    }
 
     useEffect(() => {
-        const url = process.env.REACT_APP_LOCAL_URL + "/admin/userticketlength"
 
-        async function fetchData() {
-            if (token == null) {
-              navigate("/auth?message=please login again ")
-            }
-            try {
-                const response = await axios.get(url, {
-                    headers: {
-                        'Authorization': "makingmoney " + token
-                    },
-                    params: {
-                        search: text
-                    }
-                })
-                setUsers_([...response?.data?.userdetails]);
-                setUserData({
-                    ...{
-                        labels: [...response?.data?.userdetails].map((v) => v.user.fullname),
-                        datasets: [
-                            {
-                                label: "ticket vs user data",
-                                data: [...response?.data?.userdetails].map((v) => v.nHits)
-
-                            },
-                        ]
-
-                    }
-
-                })
-            } catch (err) {
-                setUsers_([])
-                alert("fail to get users")
-                console.log(err)
-            }
-        }
+     
         fetchData()
 
 
@@ -148,7 +155,9 @@ const Appointment = () => {
     })
     return (
         <motion.div
+    
             className="max-w-full !flex-1 w-full   overflow-auto max-h-[calc(100vh-3rem)] pt-10 " >
+            <Alert toggle={t} message="Created successfully" setToggle={setT}/>
             <div className="flex gap-x-1 items-center">
             <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users_?.length }</h2>
             </div>
