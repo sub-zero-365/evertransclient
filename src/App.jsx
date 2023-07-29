@@ -18,6 +18,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import "core-js/features/array/at";
 import {
   QueryClient,
   QueryClientProvider,
@@ -27,6 +28,7 @@ import {
 const queryClient = new QueryClient()
 const ContactUs = lazy(() => import("./pages/Contact"));
 const Seat = lazy(() => import("./pages/Seats"));
+const Assistant = lazy(() => import("./pages/Assistant"));
 const Bus = lazy(() => import("./pages/Bus"));
 const Aboutus = lazy(() => import("./pages/Aboutus"));
 const BusRoutes = lazy(() => import("./pages/Routes"));
@@ -47,8 +49,13 @@ const SeatDetails = lazy(() => import("./pages/SeatDetails"));
 const DashRegister = lazy(() => import("./pages/DashRegister"));
 const BusDetails = lazy(() => import("./pages/BusDetails"));
 const FindBus = lazy(() => import("./pages/FindBus"));
+const Assist = lazy(() => import("./pages/Assistant.user"));
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = process.env.REACT_APP_LOCAL_URL
+
+
+
+
 function App() {
   return (
     <div className="bg-color_light  dark:bg-color_dark dark:text-white"
@@ -64,16 +71,18 @@ function App() {
                 <Route index element={<Home />} />
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
-                <Route path="/" element={<ProtectedRoute />}>
 
+                <Route path="/" element={<ProtectedRoute />}>
                   <Route path="bus" element={<FindBus />} />
                   <Route path="booking" element={<Booking />} />
                   <Route path="bussits/:id" element={<BusSits />} />
                   <Route path="information" element={<CheckOutInfo />} />
-                  <Route path="user" element={<UserBoard />} />
                   <Route path="user/:id" element={<SingleTicket />} />
-
+                  <Route path="user" element={<UserBoard />} />
                 </Route>
+
+                <Route path="assistant" element={<Assist />} />
+
                 <Route path="contact-us" element={<ContactUs />} />
                 <Route path="about-us" element={<Aboutus />} />
                 <Route path="auth" element={<Auth />} />
@@ -89,12 +98,13 @@ function App() {
                 <Route path="users" element={<Users />} />
                 <Route path="bus" element={<Bus />} />
                 <Route path="details/:id" element={<Details />} />
-                <Route path="assistant" element={<AdminAssistant />} />
+                {/* <Route path="assistant" element={<AdminAssistant />} /> */}
                 <Route path="bus/:id" element={<BusDetails />} />
                 <Route path="seat/:id" element={<SeatDetails />} />
                 <Route path="seat" element={<Seat />} />
                 <Route path="routes" element={<BusRoutes />} />
                 <Route path="register" element={<DashRegister />} />
+                <Route path="assistants" element={<Assistant />} />
               </Route>
               <Route
                 path="*"

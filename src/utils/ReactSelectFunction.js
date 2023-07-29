@@ -24,6 +24,7 @@ export const getBuses = async (inputValue = "") => {
             }
         )
         const { buses } = res.data;
+        
         const buses_name = buses.map(({ _id, name }) => ({
             label: name,
             value: _id,

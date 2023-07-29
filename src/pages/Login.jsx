@@ -41,11 +41,24 @@ const Login = () => {
         phone: phone.current.value,
       }
       )
-      const { data: { fullname, token } } = res
-      setuserName(fullname)
+      // const { data:
+      //   { user: {
+      //     fullname
+      //   },
+      //     token }
+      // } = res
+      setuserName(res.data?.user?.fullname)
+
+      if ("redirect" in res.data?.user) {
+        // localStorage.removeItem("assist_token");
+        localStorage.setItem("assist_token", res.data.token)
+        navigate("/assistant")
+        return
+      }
       localStorage.removeItem("token");
       localStorage.setItem("token", res.data.token)
       navigate("/user")
+      console.log(res.data)
 
     } catch (err) {
       console.log(err)

@@ -428,22 +428,24 @@ z-10  "
                             className="
                         absolute
                         top-0
-                        md:static
+                        lg:static
                         group-[.visible]:right-0
                         group-[.invisible]:-right-full
                         transition-all
                         duration-[1s]
                         ease
                              pt-10
-                             md:pt-0
+                             lg:pt-0
                              h-[calc(100%-0px)]
+                             overflow-auto
+                             lg:overflow-visible
                              lg:h-full 
                              bg-white
                              dark:bg-slate-800
                              shadow
                              md:shadow-none
                              w-[min(25rem,calc(100vw-4rem))]
-                             md:w-full
+                             lg:w-full
                              ">
 
                             <Heading text="Date Query" className="!font-black" />

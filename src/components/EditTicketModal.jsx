@@ -15,7 +15,7 @@ import FromSelect from 'react-select/async'
 import ToSelect from 'react-select/async'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Scrollbar, Pagination, Navigation } from 'swiper'
+import { Navigation } from 'swiper'
 import AnimateError from './AnimateError'
 import "swiper/css"
 import "swiper/css/navigation"
@@ -31,12 +31,15 @@ import { getCities } from "../utils/ReactSelectFunction"
 import { motion, AnimatePresence } from 'framer-motion'
 import UiButton from './UiButton'
 import AnimatedText from './AnimateText'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
     const token = localStorage.getItem("token");
-
+    let [upgrade, setUpgrade] = useState(false)
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate()
+    const goto = searchParams.get("admin") || false
     let { from, to, type } = ticket
     if (type == "roundtrip") {
-        // this when from return tripF
         const [first, second] = ticket?.doubletripdetails
         if (first.active == false && second.active == true && ticket.active == true) {
             let tmp = from;
@@ -62,12 +65,13 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
             to
         }))
     }, [startDate, isOpen, show])
-    // useEffect(() => {
+    const [err, setErr] = useState("")
 
-    // }, [show])
     useEffect(() => {
         if (!isOpen) {
             setNext(false)
+            if (upgrade) setUpgrade(false)
+            if (show) setShow(false)
         }
         setSelectseat(ticket?.seatposition)
     }, [isOpen])
@@ -80,22 +84,12 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
 
     const getData = async () => {
         setLoading(true)
-        // if (!params.from) {
-        //     params.from = from
-
-        // }
-        // if (!params.to) {
-        //     params.to = to
-        // }
-        console.log(from, to)
-
         try {
             console.log("params", params)
             const res = await axios.get("/seat",
                 {
                     params
                 })
-            console.log(res.data)
             setData(res.data)
         } catch (err) {
             console.log("err", err)
@@ -105,12 +99,10 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
 
         }
     }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         getData()
     }
-    // const handleEditTicket /updateticket/:id
     const [submitloading, setSubmitLoading] = useState(false)
     const handleEditMeta = async (seat__id, seatposition, traveltime, traveldate) => {
         console.log(seat__id, seatposition)
@@ -120,20 +112,29 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
             const res = await axios.patch("/ticket/updateticket/" + ticket._id, {
                 seatposition,
                 seat_id: seat__id,
-                traveltime, traveldate
+                traveltime, traveldate,
+                ...params
             }, {
 
                 headers: {
                     'Authorization': "makingmoney " + token
                 },
             });
-            // console.log(res)
             setIsOpen(false)
+            if (!goto) return navigate(`${ticket?._id}`)
+            navigate(`/dashboard/${ticket?._id}`)
         } catch (err) {
-            console.log(err)
+            console.log(err);
+            setErr(err.response.data);
+            setTimeout(() => {
+                setErr(null)
+            },
+                5000)
         }
         finally {
-            setSubmitLoading(false)
+            setTimeout(() => {
+                setSubmitLoading(false)
+            }, 5000)
         }
     }
     const getNextDay = (date = new Date()) => {
@@ -150,12 +151,10 @@ w-screen h-screen
 bg-slate-600/50 flex items-center justify-center`}>
 
             <motion.div
-                animate={{ y: isOpen ? 0 : 50, opacity: isOpen ? 1 : 0.2 }}
-                transition={{ duration: 0.4 }}
+
                 onClick={e => e.stopPropagation()}
                 className={`
 relative
-
 flex-none
 transition-[opacity]
 z-50
@@ -169,7 +168,6 @@ dark:shadow-sm
 dark:shadow-black
 shadow-slate-400 
  pb-2`}
-
             >
                 <AnimatePresence>
                     {
@@ -191,7 +189,7 @@ shadow-slate-400
                                             className="flex-none pl-1 " />
 
                                     </span>
-                                    <Heading text={"Select Seat"} className="!inline-block !flex-1 !text-center !mb-0 !ml-1">select bus</Heading>
+                                    <Heading text={"Select Seat"} className="!inline-block !flex-1 !pl-0 !text-center !mb-0 !ml-1">select bus</Heading>
                                 </div>
                                 <Swiper
                                     slidesPerView={1}
@@ -208,31 +206,40 @@ shadow-slate-400
                                     {
                                         data?.seats.length >= 1 ?
                                             data?.seats
-                                                ?.map(({ seat_positions, traveltime, traveldate, _id: seat__id }, index) => {
+                                                ?.map(({ seat_positions,
+                                                    traveltime,
+                                                    traveldate,
+                                                    _id: seat__id }, index) => {
                                                     return (
                                                         <SwiperSlide key={index}>
+                                                            {
+                                                                ticket?.seatposition > 19 && (
+                                                                    <div className="">
+                                                                        <div className="flex justify-center ">
+                                                                            <Heading className="!mb-0 !text-sm !text-red-600 !text-semibold !text-center" text="Upgrade to Vip Seat!" />
+                                                                        </div>
+                                                                        <ToggleSwitch
+                                                                            initialMessage={"upgrade user"}
+                                                                            message={"caution you want to upgrade!"}
+                                                                            state={upgrade
+                                                                            }
+                                                                            onChange={() => setUpgrade(!upgrade)} /></div>
+                                                                )
+                                                            }
                                                             <div>
                                                                 <Heading text={traveltime} className="!mb-1" />
-
                                                                 <Scrollable
                                                                     className="!gap-x-1 !justify-center !mb-1
                                                             !gap-y-0.5 !flex-wrap px-2">
                                                                     {
                                                                         seat_positions?.slice(
                                                                             ...(
-                                                                                (ticket.seatposition + 1) <= 20 ? [0, 20] : [20]
+                                                                                (((ticket?.seatposition + 1) <= 20) || upgrade) ? [0, 20] : [20]
                                                                             )
 
                                                                         )?.
-                                                                            filter(({ isTaken, isReserved }) => {
-
-
-                                                                                if (isTaken == false) {
-                                                                                    return true
-                                                                                }
-
-
-                                                                            })
+                                                                            filter(({ isTaken, isReserved }) => (isTaken == false)
+                                                                            )
                                                                             ?.map(({ _id }) => (<
                                                                                 PanigationButton
                                                                                 className={`${(_id == selectseat) && "!border-2 !border-"}`}
@@ -244,6 +251,9 @@ shadow-slate-400
                                                                             />))
                                                                     }
                                                                 </Scrollable>
+                                                                <AnimateError
+                                                                    error={err}
+                                                                    errorMessage={err} />
                                                                 {selectseat !== null && (<UiButton
                                                                     disabled={submitloading}
                                                                     onClick={() => handleEditMeta(seat__id,
@@ -264,18 +274,10 @@ shadow-slate-400
                                             </>
 
                                     }
-
-
-
                                 </Swiper>
-
                             </motion.div>
                         ) : (
-
                             isOpen && <motion.form
-                                initial={{ y: 40, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                exit={{ y: 40, opacity: 0 }}
                                 // transition={{ delay:isOpen? 0.2:0 }}
                                 className="px-6" onSubmit={handleSubmit}>
                                 <CustomDatePicker
@@ -287,14 +289,12 @@ shadow-slate-400
                                     <ToggleSwitch
                                         message="edit the travel path is open"
                                         state={type == "singletrip" ? true : show}
-                                        disabled={type == "singletrip"?false:ticket?.doubletripdetails[0].active}
+                                        disabled={type == "singletrip" ? true : ticket?.doubletripdetails[0].active}
                                         onChange={() => setShow(!show)}
                                         initialMessage="edit travel path" />
                                 </div>
                                 {
-
                                     show && (
-
                                         <div className="lg:px-2 mb-2">
                                             <div className="flex-none">
                                                 <Heading text={"From"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
@@ -330,14 +330,10 @@ shadow-slate-400
                                                     className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
                                                 />
                                             </div>
-
                                         </div>
-
                                     )
 
                                 }
-
-
                                 <button
                                     disabled={false}
                                     type="submit"
@@ -362,22 +358,12 @@ shadow-slate-400
                                 >
                                     {loading ? "Please wait" : "Find Avalaible Seat"}
                                 </button>
-
-
                             </motion.form>
                         )
-
                     }
                 </AnimatePresence>
-
-
             </motion.div>
-
-
         </div >
-
     )
-
-
 }
 export default EditTicketModal

@@ -18,7 +18,9 @@ const ProtectedRoute = () => {
     }
 
     const dispatch = useDispatch();
-    const token = localStorage.getItem("token") || localStorage.getItem("admin_token")
+    const token = localStorage.getItem("token") || localStorage.getItem("assistant_token")
+
+    // || localStorage.getItem("admin_token")
     useEffect(() => {
         if (!token) return
         async function getData() {

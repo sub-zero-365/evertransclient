@@ -3,6 +3,7 @@ import { RxDashboard } from "react-icons/rx"
 import { TiMessages } from "react-icons/ti"
 import { CiLogout } from "react-icons/ci"
 // import { FcAssistant } from "react-icons/fc"
+import {useState} from 'react'
 import { GrServicePlay, GrBus } from "react-icons/gr"
 import { GiModernCity } from "react-icons/gi"
 import { NavLink, useNavigate } from "react-router-dom"
@@ -11,6 +12,7 @@ import { actions } from '../actions/toggleSide'
 import { motion } from 'framer-motion'
 import { BsPersonLinesFill } from "react-icons/bs"
 import { BsClipboardDataFill } from "react-icons/bs"
+import { FcAssistant } from 'react-icons/fc'
 const SideBar = () => {
 
   const dispatch = useDispatch()
@@ -30,7 +32,7 @@ const SideBar = () => {
 
       name: "Tickets",
       icon: <TiMessages size={20} />
-      , to: "/dashboard/tickets?view=all"
+      , to: "/dashboard/tickets?view=all&admin=true"
     },
     {
 
@@ -62,19 +64,38 @@ const SideBar = () => {
       , to: "/dashboard/seat"
 
     },
+    {
+
+      name: "Assistants",
+      icon: <FcAssistant size={20} />
+      , to: "/dashboard/assistants"
+
+    },
 
   ]
+  const [view, setView] = useState(false)
+  const handleChangeView = () => {
+    if (view) return setView(false)
+    return setView(true)
+
+  }
   const defaultClasses = "flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md dark:shadow-sm dark:shadow-black ring-offset-slate-200 mb-2 rounded-md"
   return (
 
-    <div className={`w-[15rem] overflow-auto 
-    select-none max-w-[calc(100vw-2.5rem)] z-[100]
+    <div className={`w-[15rem] 
+    md:w-fit lg:w-[15rem]
+    ${view&&"w-fit"}
+    md:overflow-y-auto
+    select-none 
+    max-w-[calc(100vw-2.5rem)]
+    z-[100]
     px-4 text-xs overflow-y--auto flex-none fixed
     md:static transition-[left]
     duration-700 ${isSideOpen ? "left-0" : "left-[-100%]"}
     top-0 h-full md:top-0 bg-color_light
     dark:bg-color_dark
-    md:h-[calc(100svh-3.75rem)]
+    
+    md:h-[calc(100vh-3.75rem)]
     overflow-visible shadow-lg `}>
       <span className="absolute w-[3.125rem] h-[3.125rem] top-0
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all md:hidden duration-500 
@@ -83,8 +104,15 @@ const SideBar = () => {
       >
         <IoMdClose size={25} />
       </span>
-      <h3 className="text-2xl text-center py-4 font-manrope md:hidden ">Dashboard</h3>
-      <div className="group">
+      <span className="absolute w-[3.125rem] h-[3.125rem] top-[3.125rem] mt-2
+       text-red-700 hover:bg-orange-500 rounded-e-md transition-all md:hidden duration-500 
+       -right-[3.125rem] z-10 rounded-none flex items-center justify-center border-2- font-black border-black"
+        onClick={handleChangeView}
+      >
+        <GrServicePlay size={25} />
+      </span>
+      <h3 className="text-2xl text-center py-4 font-manrope hidden ">Dashboard</h3>
+      <div className="group md:w-fit lg:w-full ">
 
         {
 
@@ -98,7 +126,7 @@ const SideBar = () => {
               >
 
                 {icon}
-                <h3 className="text-xs md:text-sm ml-5 group-[.active]:hidden">{name}</h3>
+                <h3 className={`text-xs md:text-sm ml-5 group-[.active]:hidden ${view&&"hidden"} md:hidden lg:block`}>{name}</h3>
               </NavLink></motion.div>))
 
         }
@@ -106,10 +134,13 @@ const SideBar = () => {
       {/*  */}
       <div
         onClick={() => navigate("/")}
-        className=" md:hidden  absolute bottom-8 w-full max-w-[calc(15rem-2.5rem)]   py-2 px-7 items-center text-white
-        ml-auto hover:bg-blue-800   flex gap-2  bg-blue-500 transition-colors duration-300 hover:text-white  mb-2 rounded-lg">
+        className=" md:hidden  absolute bottom-8 w-full  max-w-[calc(15rem-2.5rem)]
+        py-2 px-2 
+        items-center text-white
+         hover:bg-blue-800   flex gap-2 
+        bg-blue-500 transition-colors duration-300 hover:text-white  mb-2 rounded-lg">
         <CiLogout size={25} />
-        <h3 className="text-xs text-center">view site</h3>
+        <h3 className={`text-xs text-center ${view&&"hidden"}`}>view site</h3>
       </div>
 
     </div>

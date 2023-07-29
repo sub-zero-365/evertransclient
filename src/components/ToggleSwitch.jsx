@@ -1,6 +1,8 @@
 export default function ToggleSwitch({ state, message, onChange, disabled, initialMessage }) {
     return (
-        <div className={`flex justify-center group ${disabled == true ? "disable" : ""}  items-center flex-wrap mt-3 gap-y-1`}
+        <div 
+        data-title={(disabled?"This Switch is disabled":null)}
+        className={`flex justify-center group ${disabled == true ? "disable" : ""}  items-center flex-wrap mt-3 gap-y-1`}
             onClick={e => e.stopPropagation()}>
             <label className="relative inline-flex items-center  cursor-pointer">
                 <input type="checkbox" value="" className="sr-only peer"
@@ -38,7 +40,7 @@ export default function ToggleSwitch({ state, message, onChange, disabled, initi
             tracking-tighter
             font-medium
             text-gray-900-- 
-            dark:text-gray-300`}>{(message && state) ? message : (initialMessage || "block this user")}</span>
+            dark:text-gray-300`}>{(message && state) ? message : (initialMessage || "place holder for initial message")}</span>
         </div>
     )
 

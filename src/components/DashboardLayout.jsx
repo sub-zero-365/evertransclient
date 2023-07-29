@@ -25,7 +25,7 @@ const [view,setView]=useState(false)
         return <Navigate to="/auth?message=you must logging to continue as admin" replace />
     }
     return (
-        <div className="overflow-x-hidden container mx-auto">
+        <div className="overflow-x-hidden xl:container mx-auto">
         <Alert toggle={toggle}
             setToggle={setToggle} message={"Do you want to log out ?"}
             confirmFunc={() => {

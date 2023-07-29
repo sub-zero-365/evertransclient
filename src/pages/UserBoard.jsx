@@ -1,4 +1,5 @@
-
+import { MdOutlineClose } from 'react-icons/md'
+import AnimateText from '../components/AnimateText'
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker from 'react-datepicker';
 import { VscFolderActive } from 'react-icons/vsc'
@@ -63,29 +64,50 @@ import { setUserData as setUserDataFunc } from '../actions/userData'
 
 import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
 const Details = () => {
+  const [isOpen, setIsOpen] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [message, setMessage] = useState("")
   const [toggle_, setToggle_] = useState(false)
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const { userData } = useSelector(state => state.userData);
-  // console.log(userData)
-  const { isLoading: loading, error, data } = useQuery({
-    queryKey: ['repoData'],
-    queryFn: async () => {
-      axios.get("/auth/userinfo", {
+  const handleChangePassWord = async (e) => {
+    setLoading(true)
+    e.preventDefault()
+    try {
+      console.log(
+        password1.current.value,
+        password2.current.value,
+        password3.current.value)
+      const res = await axios.post("/user/updatepassword", {
+        oldpassword: password1.current.value,
+        newpassword: password2.current.value,
+        confirmpassword: password3.current.value
+      }, {
         headers: {
           'Authorization': "makingmoney " + token
         }
-      }).then((data)=>data)
-      
+      })
+      setIsOpen(false)
+      // console.log(res.data)
+    } catch (err) {
+      console.log(err)
+      setError(err.response.data)
+      setTimeout(() => {
+        setError(null)
+      }, 6000)
+
     }
-    ,
-  })
-  useEffect(() => {
-   
-    console.log("user data with tenstack query", loading, data, error)
-  }, [])
+    finally {
+      setLoading(false)
+    }
+
+
+  }
+  const { userData } = useSelector(state => state.userData);
+
+ 
   const setUserData = (data) => {
     dispatch(setUserDataFunc(data))
   }
@@ -113,7 +135,10 @@ const Details = () => {
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
-  const constraintsRef = useRef(null)
+  const constraintsRef = useRef(null);
+  const password1 = useRef(null);
+  const password2 = useRef(null);
+  const password3 = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
 
@@ -220,7 +245,6 @@ const Details = () => {
     handleFilterChange("ticketStatus", evt.value)
   }
   const token = localStorage.getItem("token");
-
   const { loading: isLoading } = useSelector(state => state.userData)
 
   const [userInfo, setUserInfo] = useState({});
@@ -284,6 +308,8 @@ const Details = () => {
 
     return (
       <div role="status" class="max-w-md p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
+
+
         <div class="flex items-center justify-between">
           <div>
             <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
@@ -329,7 +355,251 @@ const Details = () => {
     <motion.div
       className='pt-4 px-2 max-w-full overflow-x-auto select-none lg:px-10 
       mx-auto
-    max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark' ref={constraintsRef}>
+    max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark'
+      ref={constraintsRef}>
+      <div
+        className={`overlay ${isOpen && "active"} transition-[visible] duration-100
+      group grid place-items-center `}
+        onClick={() => setIsOpen(false)}
+      >
+        <div
+          onClick={e => e.stopPropagation()}
+          className={`
+          -translate-x-[50px]
+          md:translate-x-0
+          md:translate-y-[50px]
+          group-[.active]:translate-x-0
+          duration-700
+          ease 
+          transition-all
+          opacity-60
+          md:group-[.active]:translate-y-0
+          group-[.active]:opacity-100
+          bg-white
+          dark:bg-slate-800
+          shadow-sm
+          rounded-lg
+          w-[min(calc(100%-40px),400px)]
+          
+            py-5 pb-10`}>
+
+          <AnimateText text="change password " className='!text-lg' />
+          <form
+            onSubmit={handleChangePassWord}
+            className='px-5'
+          >
+            <div className="relative mb-6" data-te-input-wrapper-init>
+              <input ref={password1}
+                type="text"
+                className="peer block min-h-[auto] w-full 
+              rounded 
+              border-2
+              focus:border-2
+              focus:border-blue-400
+              valid:border-blue-400
+              bg-transparent
+              px-3 py-[0.32rem]
+              leading-[2.15] 
+              outline-none
+              transition-all 
+              duration-200
+              ease-linear
+              focus:placeholder:opacity-100
+              data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                id="password1"
+                placeholder="Password" required />
+              <label
+                htmlFor="password1"
+                className="pointer-events-none 
+              absolute left-3
+              top-0 mb-0
+              max-w-[90%]
+              origin-[0_0]
+              truncate 
+              pt-[0.37rem] 
+              leading-[2.15]
+              text-neutral-500
+              transition-all duration-200  
+              ease-out 
+              peer-focus:-translate-y-[1.15rem]
+              peer-focus:scale-[0.8]
+              peer-valid:scale-[0.8]
+              peer-valid:text-blue-400
+              peer-valid:-translate-y-[1.15rem]
+              peer-focus:text-blue-400
+              peer-focus:bg-white
+              peer-valid:bg-white
+              dark:peer-focus:bg-color_dark
+              dark:peer-valid:bg-color_dark
+              px-0
+              bg-transparent
+              peer-data-[te-input-state-active]:-translate-y-[1.15rem]
+               rounded-sm
+               peer-data-[te-input-state-active]:scale-[0.8]
+              motion-reduce:transition-none
+              dark:text-neutral-200
+              dark:peer-focus:text-primary"
+
+              >
+                Old Passowrd
+              </label>
+            </div>
+            <div className="relative mb-6" data-te-input-wrapper-init>
+              <input ref={password2}
+                type="password"
+                className="peer block min-h-[auto] w-full 
+              rounded 
+              border-2
+              focus:border-2
+              focus:border-blue-400
+              valid:border-blue-400
+              bg-transparent
+              px-3 py-[0.32rem]
+              leading-[2.15] 
+              outline-none
+              transition-all 
+              duration-200
+              ease-linear
+              focus:placeholder:opacity-100
+              data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                id="password2"
+                placeholder="New Password" required />
+              <label
+                htmlFor="password2"
+                className="pointer-events-none 
+              absolute left-3
+              top-0 mb-0
+              max-w-[90%]
+              origin-[0_0]
+              truncate 
+              pt-[0.37rem] 
+              leading-[2.15]
+              text-neutral-500
+              transition-all duration-200  
+              ease-out 
+              peer-focus:-translate-y-[1.15rem]
+              peer-focus:scale-[0.8]
+              peer-valid:scale-[0.8]
+              peer-valid:text-blue-400
+              peer-valid:-translate-y-[1.15rem]
+              peer-focus:text-blue-400
+              peer-focus:bg-white
+              peer-valid:bg-white
+              dark:peer-focus:bg-color_dark
+              dark:peer-valid:bg-color_dark
+              px-0
+              bg-transparent
+              peer-data-[te-input-state-active]:-translate-y-[1.15rem]
+               rounded-sm
+               peer-data-[te-input-state-active]:scale-[0.8]
+              motion-reduce:transition-none
+              dark:text-neutral-200
+              dark:peer-focus:text-primary"
+
+              >
+                New Password
+              </label>
+            </div>
+            <div className="relative mb-6" data-te-input-wrapper-init>
+              <input ref={password3}
+                type="password"
+                className="peer block min-h-[auto] w-full 
+              rounded 
+              border-2
+              focus:border-2
+              focus:border-blue-400
+              valid:border-blue-400
+              bg-transparent
+              px-3 py-[0.32rem]
+              leading-[2.15] 
+              outline-none
+              transition-all 
+              duration-200
+              ease-linear
+              focus:placeholder:opacity-100
+              data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                id="password3"
+                placeholder="Email address" required />
+              <label
+                htmlFor="password3"
+                className="pointer-events-none 
+              absolute left-3
+              top-0 mb-0
+              max-w-[90%]
+              origin-[0_0]
+              truncate 
+              pt-[0.37rem] 
+              leading-[2.15]
+              text-neutral-500
+              transition-all duration-200  
+              ease-out 
+              peer-focus:-translate-y-[1.15rem]
+              peer-focus:scale-[0.8]
+              peer-valid:scale-[0.8]
+              peer-valid:text-blue-400
+              peer-valid:-translate-y-[1.15rem]
+              peer-focus:text-blue-400
+              peer-focus:bg-white
+              peer-valid:bg-white
+              dark:peer-focus:bg-color_dark
+              dark:peer-valid:bg-color_dark
+              px-0
+              bg-transparent
+              peer-data-[te-input-state-active]:-translate-y-[1.15rem]
+               rounded-sm
+               peer-data-[te-input-state-active]:scale-[0.8]
+              motion-reduce:transition-none
+              dark:text-neutral-200
+              dark:peer-focus:text-primary"
+
+              >Confirm Password
+              </label>
+            </div>
+
+
+            <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
+              <motion.h1
+                animate={{
+                  opacity: error ? 1 : 0,
+                  y: error ? 0 : -40,
+                  x: error ? 0 : -1000
+
+                }}
+
+
+                className="w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
+            </div>
+
+
+            <button
+              type="submit"
+              className="inline-block bg-blue-400
+            w-full rounded bg-primary px-7
+            pb-2.5 pt-3 text-sm font-medium
+            uppercase leading-normal
+            text-white
+            shadow-[0_4px_9px_-4px_#3b71ca]
+            transition duration-150
+            ease-in-out hover:bg-primary-600
+            hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+            focus:bg-primary-600 
+            focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
+            focus:outline-none focus:ring-0 active:bg-primary-700 
+            active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+            dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
+            dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
+            dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
+            dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+              disabled={isLoading}
+              data-te-ripple-init
+              data-te-ripple-color="light">
+              {loading ? <Loadingbtn /> : "Change Password"}
+            </button>
+
+
+          </form>
+        </div>
+      </div>
       <Alert message={message}
         duration="30000"
         className={`
@@ -653,15 +923,16 @@ z-10  "
               >
                 {querySearch.get("account_block") && "account restricted"}
                 <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4  !text-lg first-letter:text-2xl" />
-                {/* <Heading text={"Full Name"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
-                <h4 className='text-sm text-slate-500 font-medium '
-                >{userInfo?.fullname || "n/a"}</h4> */}
-
                 <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
                 <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.phone || "n/a"}</h4>
                 <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
                 <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.createdAt && (dateFormater().date) || "n/a"}</h4>
-
+                <UiButton
+                  name="Update Password" className="!mx-auto !rounded-lg !mt-2"
+                  onClick={() => {
+                    // if (toggle) setToggle(false)
+                    setIsOpen(true)
+                  }} />
                 <Swiper
                   className='my-6
                             px-4 

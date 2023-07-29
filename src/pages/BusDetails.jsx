@@ -21,13 +21,13 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-import Currenttrip from 'react-select'
-import Categories from 'react-select'
-import FromSelect from 'react-select/async'
-import ToSelect from 'react-select/async'
-import { MdOutlineClose } from 'react-icons/md'
-import AnimateText from '../components/AnimateText'
-import ErrorAlert from '../components/Alert'
+// import Currenttrip from 'react-select'
+// import Categories from 'react-select'
+// import FromSelect from 'react-select/async'
+// import ToSelect from 'react-select/async'
+// import { MdOutlineClose } from 'react-icons/md'
+// import AnimateText from '../components/AnimateText'
+// import ErrorAlert from '../components/Alert'
 const token = localStorage.getItem("admin_token");
 
 const BusDetails = () => {

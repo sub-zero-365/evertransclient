@@ -84,7 +84,7 @@ const DashboardHome = () => {
     return (
         <div className="w-full pt-6 pb-24 max-h-[calc(100vh-3rem)] overflow-y-auto">
             <Heading text="OverFlow" className="!font-black underline underline-offset-8 uppercase" />
-            <div className="lg:grid gap-4 lg:grid-cols-3 px-4">
+            <div className="md:grid md:grid-cols-2 gap-4 lg:grid-cols-3 px-4">
                 <DashItem Name={"Employees"}
                     href={"users"}
                     Counts={e_count}

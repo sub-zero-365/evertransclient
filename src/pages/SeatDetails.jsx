@@ -1,6 +1,10 @@
+import { Document, Page } from 'react-pdf';
+import "core-js/features/array/at";
+// import { pdfjs } from 'react-pdf';
+import AnimatedText from "../components/AnimateText"
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import {
-    Heading,PrevButton,
+    Heading, PrevButton,
     NextButton
 }
     from '../components'
@@ -12,14 +16,10 @@ import { components, style } from "../utils/reactselectOptionsStyles"
 import { useState, useEffect } from 'react'
 import BusSelect from 'react-select/async'
 import axios from 'axios'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay, Navigation } from 'swiper'
-// import { MobilePDFReader } from 'react-pdf-viewer';
-import { Document, Page } from 'react-pdf';
-import { pdfjs } from 'react-pdf';
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
-
+import {
+    useQuery,
+} from '@tanstack/react-query'
+import UiButton from '../components/UiButton'
 const SeatDetails = () => {
     const [querySearch, setQuerySearch] = useSearchParams();
     const [loading, setLoading] = useState(false)
@@ -34,14 +34,20 @@ const SeatDetails = () => {
         })
 
     }
-    const handleChange = ({ value }, key) => {
+    const onChange = ({ value }, key) => {
         if (querySearch.get(key) === value) {
             return
         }
         handleFilterChange(key, value);
     }
+    const { data: ticketData, isLoading, error } = useQuery({
+        queryKey: ['seatdetailstickets'],
+        queryFn: async () => axios.get(`/seat/seatdetails/${id}`),
+        // enabled: false,
+    });
+    // console.log("tickets data", ticketData)
     const { id } = useParams()
-    const [seats, setSeats] = useState([])
+    const [seats, setSeats] = useState({})
     const navigate = useNavigate()
 
     const handleClick = async (index) => {
@@ -59,7 +65,11 @@ const SeatDetails = () => {
         setLoading(true)
         try {
             const res = await axios.get("/seat/specific/" + id, {}, {});
-            setSeats(res.data.seat)
+            setSeats(res.data)
+            console.log(res.data.seat.bus.bus)
+            if (res.data?.seat?.bus?.bus !== "demobus") {
+                onChange({ value: res.data?.seat?.bus?._id }, "bus_id")
+            }
         } catch (err) {
             console.log(err)
             alert("fail to get seat" + err.response.data)
@@ -108,7 +118,6 @@ const SeatDetails = () => {
                 </ol>
             </nav>
 
-            {/* contnet dhere e */}
 
 
             <div className="lg:flex flex-row-reverse lg:flex-row gap-x-6">
@@ -121,24 +130,31 @@ const SeatDetails = () => {
                             catcheOptions
                             loadOptions={getBuses}
                             required
+                            defaulValues={{
+                                value: seats?.seat?.bus?._id,
+                                label: seats?.seat?.bus?.bus,
+                            }}
                             styles={{
                                 ...style,
                                 wdith: "100%",
                                 fontSize: 10 + "px"
                             }}
+                            onChange={(e) => onChange(e, "bus_id")}
                             components={components()}
                             className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
                         />
                     </div>
+                    {
+                        querySearch.get("bus_id") !== null && (
+                            <a
+                                role='link' aria-disabled
+                                href={`${process.env.REACT_APP_LOCAL_URL}/seat/download/${id}?${querySearch.toString()}`}
 
-                    <a role='link' aria-disabled
-                        href={`${process.env.REACT_APP_LOCAL_URL}/seat/download/${id}?${querySearch.toString()}`}
+                                target="_blank"
 
-                        target="_blank"
-
-                        data-te-ripple-init
-                        data-te-ripple-color="light"
-                        className="
+                                data-te-ripple-init
+                                data-te-ripple-color="light"
+                                className={`
         text-center
                     w-[min(400px,calc(100%-2.5rem))]
                      bottom-0
@@ -151,12 +167,13 @@ leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
 transition duration-150 ease-in-out hover:bg-blue-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                    >
-                        download borderaux
-                    </a>
+focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]`}
+                            >
+                                download borderaux
+                            </a>
+                        )
+                    }
 
-                    {/* [rrjsfgjsofhdgihsdfhg] */}
                     <Heading text={"Seat Details"} className="!mb-3" />
 
                     <div className="flex justify-between px-2 pb-2">
@@ -176,7 +193,7 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
                         {
 
-                            seats?.seat_positions?.map(({ isTaken, isReserved, _id }, index) => {
+                            seats?.seat?.seat_positions?.map(({ isTaken, isReserved, _id }, index) => {
                                 return (
                                     <button
                                         onClick={() => {
@@ -205,45 +222,90 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
                 </div>
                 <div className="flex-1 lg:max-h-[calc(100vh-60px)] overflow-y-auto px-5">
-                    <Document className="max-h-screen mx-auto overflow-y-auto bg-white dark:!bg-slate-900"
-                        file={`${process.env.REACT_APP_LOCAL_URL}/seat/download/${id}`}
-                    >
-                        <Swiper  slidesPerView={1}
-                                modules={[Autoplay, Navigation]}
-                                autoplay={{
-                                    delay: 25000,
-                                    disableOnInteraction: false
-                                  }}
-                                navigation={{
-                                    prevEl: ".arrow__left",
-                                    nextEl: ".arrow__right",
-                                }}>
-                                 <PrevButton className="!left-1.5" />
-                                <NextButton className="!right-1.5" />
-                            {
-                                [1, 2, 3].map((arr, index) => {
-                                    return (
-                                        <SwiperSlide className="group relative">
-                                            <Page
-                                            className="!mx-0 !py-0
-                                            group-[.swiper-slide-active]:!z-10 
-                                            group-[.swiper-slide-active]:!opacity-100
-                                            group-[.swiper-slide-active]:!rotate-0
-                                            group-[.swiper-slide-active]:!scale-100
-                                            absolute inset-0 h-full w-full 
-                                            scale-[0.5]
-                                            rotate-45
-                                            opacity-0
-                                            z-[-100]
-                                            ease duration-[1s] transition-all" 
-                                            pageNumber={index + 1} key={index} />
-                                        </SwiperSlide>
-                                    )
+                    {error ? "some error occurs" : null}
+                    <div>
 
-                                })
-                            }
-                        </Swiper>
-                    </Document>
+                    </div>
+                    <AnimatedText text={"Passenger manifest"} className="!uppercase !text-3xl lg:!text-4xl !mb-2" />
+                    <div className="lg:mx-2 shadow-sm rounded-sm  lg:mt-10 w-full">
+                        <div className="relative max-w-full overflow-x-auto
+                    bg-white
+    shadow-md sm:rounded-lg w-full mb-6 ">
+                            <table className="w-full text-sm text-left text-gray-500 
+              dark:text-gray-400 transition-colors duration-[2s]">
+                                <thead className="text-xs text-gray-700 dark:bg-slate-800 uppercase dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" className="px-2 py-3">
+                                            Index
+                                        </th>
+                                        <th scope="col-span-3"
+                                            className="px-3 py-3">
+                                            Fullname
+                                        </th>
+                                        <th scope="col" className="px-3 py-3">
+                                            Seat
+                                        </th>
+                                        <th scope="col" className="px-3 py-3">
+                                            ID Card  Number
+                                        </th>
+                                        <th scope="col" className="px-3 py-3">
+                                            Sex
+                                        </th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody
+                                    className="pt-4 pb-12 text-xs md:text-sm"
+                                >
+                                    {
+                                        ticketData?.data?.tickets?.map(({ fullname, seatposition, sex, email }, index) => (
+                                            <tr
+                                                key={index}
+                                                className={` ${index % 2 == 0
+                                                    ? "bg-slate-100" : "bg-white"}
+                                        hover:bg-slate-300
+                        dark:hover:bg-slate-500
+                border-slate-100  text-xs
+                border-b-2
+                dark:bg-gray-900
+                dark:border-gray-600
+                `}
+                                            >
+                                                <th className="px-2 py-4  flex items-center justify-center">
+                                                    {
+
+                                                        (index + 1)
+                                                    }
+                                                </th>
+
+
+
+                                                <td className="px-3 py-2">
+                                                    <span className="font-medium flex items-center justify-center min-w-fit" style={{
+                                                        workBreak: "none"
+                                                    }}>{fullname || "n/a"}</span>
+                                                </td>
+                                                <td className="px-3 py-2">
+                                                    <span className="font-medium ">{seatposition || "singletrip"}</span>
+                                                </td>
+                                                <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    {email || "n/a"}
+                                                </th>
+
+                                                <td className="py-0 text-xs flex items-center"
+                                                >
+                                                    {sex || "n/a"}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
                 </div>
 
             </div>

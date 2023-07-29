@@ -38,13 +38,13 @@ const
 
     const getSeats = async () => {
       setLoading(true)
-      const traveldate = decodeURIComponent(date).
-        split("+").join(" ").trim()
+      // const traveldate = decodeURIComponent(date)?.
+      //   split("+")?.join(" ").trim()
       try {
         const res = await axios.get("/seat/getstatic", {
           params: {
             from,
-            traveldate,
+            traveldate: date,
             to,
             traveltime: time
           }
@@ -52,7 +52,7 @@ const
         setSeats(res.data.seats[0])
         setUserInfo(pre => (
           {
-            ...pre, seat_id: res.data.seats[0]._id
+            ...pre, seat_id: res.data.seats[0]?._id
           }
         ))
         console.log(res.data.seats)
@@ -133,11 +133,11 @@ const
           setToggle={setToggle} />
         <Modal toggle={error} toggleModal={toggleModal} information={errorMessage}  ></Modal>
         <div className="flex container mx-auto">
-          <div className="flex-1 hidden lg:block">
-            <img src="https://www.redbus.in/" className="h-full w-full object-cover" alt="bus " />
+          <div className="flex-1 hidden lg:block max-h-[calc(100vh-60px)]">
+            <img src="https://img.freepik.com/free-vector/turn-people-transport-flat-illustration_1284-58398.jpg?size=626&ext=jpg&ga=GA1.2.848633073.1641348984&semt=ais" alt="bus " className="h-full w-full object-cover" />
 
           </div>
-          <div className="flex-none cal-width mx-auto shadow-lg mt-6 py-6 pt-0 pb-20"
+          <div className="flex-none cal-width mx-auto shadow-lg mt-6 py-6 pt-0 pb-20 max-h-[calc(100vh-60px)] overflow-y-auto"
             style={{ "--w": "500px" }}>
             <nav className="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
               <ol className="inline-flex items-center space-x-1 md:space-x-3">
@@ -285,7 +285,7 @@ const
               <div className="relative mb-6" data-te-input-wrapper-init>
                 <input
 
-                  value={userInfo.name}
+                  value={decodeURIComponent((userInfo.name || ""))}
                   onChange={e => setUserInfo({ ...userInfo, name: e.target.value })}
                   type="text"
                   className="peer block min-h-[auto] w-full 
@@ -647,7 +647,7 @@ const
                 data-te-ripple-color="light"
 
               >
-                Procced Checkout
+                Checkout
               </button>
               <div className="md:hidden  h-[2.7rem] flex
                             items-center justify-center mt-5 fixed z-10 bottom-8 w-full">

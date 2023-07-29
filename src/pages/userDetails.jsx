@@ -478,7 +478,7 @@ z-10  "
         sidebarr m lg:rounded-lg shadow rounded-lg  overflow-y-auto--
         ${toggle ? "right-0" : "!-right-full"}
         duration-500 transition-[right] shadow lg:shadow-none lg:max-w-sm lg:w-[22rem] 
-        text-center bg-white rounded-sm right-0 top-12 h-fit
+        text-center bg-white dark:bg-slate-800 rounded-sm right-0 top-12 h-fit
            w-[calc(100vw-3.5rem)] max-w-sm  z-20 fixed   lg:static px-4 `}>
           <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 

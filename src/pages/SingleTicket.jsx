@@ -1,3 +1,6 @@
+
+import UiButton from '../components/UiButton'
+import EditTicketModal from '../components/EditTicketModal'
 import { useSearchParams, useParams, NavLink, Link, useNavigate, useLocation } from "react-router-dom"
 import { useEffect, useState, useRef } from "react"
 import Alert from '../components/Alert'
@@ -11,25 +14,19 @@ import dateFormater from '../utils/DateFormater'
 import axios from 'axios'
 import Marquee from 'react-fast-marquee'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
-// import { image1 } from "../Assets/images"
 import { Loadingbtn } from '../components'
 import { MdOutlineReportOff } from 'react-icons/md'
 import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import QRCode from "react-qr-code";
 import { BsChevronCompactUp } from 'react-icons/bs'
 import succcesssound from '../utils/successsound.mp3'
-import { Document, Page } from 'react-pdf';
-import { pdfjs } from 'react-pdf';
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
 
 const User = () => {
   const ref = useRef(null);
-
+  const [isOpen_, setIsOpen_] = useState(false);
   const location = useLocation();
-  // console.log(location)
   const loadState = location?.state?._id
   const isInView = useInView(ref)
-
   useEffect(() => {
     if (isInView) {
       setIsOpen(true)
@@ -58,7 +55,8 @@ const User = () => {
   const [params, setParams] = useState({
   })
   const [toggle, setToggle] = useState(false)
-  const showDeactivateButton = queryParameters.get("xyz") ? true : false
+  // const showDeactivateButton = queryParameters.get("xyz") ? true : false
+  const showDeactivateButton = true
   var token = undefined, url = ""
   const isadminuser = queryParameters.get("admin");
   const audio = new Audio(succcesssound);
@@ -84,14 +82,12 @@ const User = () => {
 
       const lettodaydate = dateFormater(new Date()).date;
       const ticketTravelDate = dateFormater(res.data.ticket?.traveldate).date;
-      if ((dayjs(ticketTravelDate).diff(lettodaydate, "day")) < 0 && ticket.active==true) {
-        // alert("this user needs to travel on a later day")
+      if ((dayjs(ticketTravelDate).diff(lettodaydate, "day")) < 0 && ticket?.active == true) {
         setRedirect(true)
         setMessage(`this ticket travel date is on the ${ticketTravelDate} but the traveller arrived on the  ${lettodaydate}`)
-        // throw BadRequestError(`fail cause the user is trying to back date the date`)
       }
 
-      if (res.data?.ticket.active === true) {
+      if (res.data?.ticket?.active === true) {
         try {
           audio.play();
           if (window.navigator.vibrate) {
@@ -103,7 +99,7 @@ const User = () => {
 
 
       }
-      if (!res.data.ticket) {
+      if (!res.data?.ticket) {
         setToggle(true)
       }
       if (isLoading) {
@@ -187,17 +183,17 @@ const User = () => {
     redeemTicket()
   }, [params])
   const [isOpen, setIsOpen] = useState(false);
-
+  if (isLoading) return <Loader toggle />
   return (
     <div className="min-w-3xl flex-none lg:px-10 !w-full md:px-5 mx-auto  max-h-[calc(100vh-60px)] pb-64 overflow-y-auto">
-      {isLoading && <Loader toggle />}
-      
+
+      <EditTicketModal isOpen={isOpen_} setIsOpen={setIsOpen_} ticket={ticket} />
       <ReOrderBooking
         duration="30000"
         className={`${redirect && "!top-1/2 -translate-y-1/2"}`}
         toggle={redirect}
-        confirmFunc={() =>0}
-        
+        confirmFunc={() => 0}
+
         // navigate(`/user?assing_new_seat=true&_id=${id}&from=${ticket?.from}&fullname=${ticket?.fullname}&to=${ticket?.to}&type=${ticket?.type}`)
         setToggle={setRedirect}
         message={message} />
@@ -259,7 +255,7 @@ const User = () => {
 
         )
       }
-      <div className="lg:flex items-start !w-full  justify-between">
+      <div className="lg:flex items-start !w-full  justify-center">
         <div className="flex-1 lg:flex-none w-full max-w-sm">
           <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
             <QRCode
@@ -270,6 +266,15 @@ const User = () => {
               viewBox={`0 0 256 256`}
             />
           </div>
+          {
+            ticket?.active && (
+              <UiButton
+                className="!mx-auto !mt-5"
+                name="edit this ticket" onClick={() => setIsOpen_(true)} />
+
+            )
+
+          }
 
           <Marquee play pauseOnClick pauseOnHover className="capitalize text-red-500 dark:text-red-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5 text-gray-900- md:text-lg lg:text-xl dark:text-white- w-full !max-w-2xl">
             this ticket is valid for a period of 1month
@@ -329,16 +334,7 @@ const User = () => {
           <div ref={ref} className="mt-56" />
         </div>
         {/*  */}
-        <div className="max-h-screen w-full hidden lg:block flex-1 overflow-hidden">
-          <Document
-            file={`${process.env.REACT_APP_LOCAL_URL}/downloadticket/${id}`}
-          >
-            {
-              [1, 2, 3].map((arr, index) => <Page className="!mx-0 !py-0" pageNumber={index + 1} key={index} />)
-            }
-          </Document>
 
-        </div>
 
         <div className="lg:static lg:flex-none lg:py-10 
                                      bottom-0
@@ -421,7 +417,7 @@ lg:py-10
               <Heading text="Created By :" className="text-center !text-lg underline  underline-offset-8 !font-black !mb-0" />
 
 
-              <Heading text={(ticketData?.username || "n/a")}
+              <Heading text={(ticketData?.username || "loading ...")}
                 className="text-center capitalize !text-lg !font-manrope !mb-5 !font-medium !text-slate-600 dark:!text-white" />
             </div>
 
@@ -572,7 +568,8 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                   showDeactivateButton && <AnimatePresence>
                     {
                       ticket?.active ?
-                        <motion.div
+                        <motion.button
+                          disabled={redirect}
                           animate={{ opacity: [0, 1], bottom: ["-2rem", "4rem", "2rem"] }}
                           exit={{ opacity: 0, bottom: "-2rem" }}
 
@@ -595,7 +592,7 @@ transition duration-150 ease-in-out hover:bg-red-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-                  ">{!loadbtn ? <> Remove validatility <MdOutlineReportOff className="text-2xl text-gray-900 ml-2" /> </> : <Loadingbtn toggle />}</motion.div>
+                  ">{!loadbtn ? <> Remove validatility <MdOutlineReportOff className="text-2xl text-gray-900 ml-2" /> </> : <Loadingbtn toggle />}</motion.button>
 
 
                         : <>

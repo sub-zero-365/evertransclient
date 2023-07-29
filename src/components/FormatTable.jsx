@@ -37,7 +37,6 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
     }
     return (
         <>
-
             <EditTicketModal
                 ticket={ticket}
                 isOpen={isOpen}
@@ -96,9 +95,6 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
                     <motion.tbody
                         className="pt-4 pb-12 text-xs md:text-sm"
                         key={currentPage}
-                        initial={{ x: 100, opacity: 0.1 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ duration: 0.5 }}
 
                     >
                         {

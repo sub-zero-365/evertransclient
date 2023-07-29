@@ -1,7 +1,6 @@
 import {motion} from 'framer-motion'
 
 export default function AnimateError({error,errorMessage}) {
-
     return (
         <div className="mb-6 flex
         items-center
@@ -16,7 +15,7 @@ export default function AnimateError({error,errorMessage}) {
 
                 }}
                 transition={{ duration: 0.3 }}
-                className="w-fit flex-none mx-auto tracking-[0.2rem] underline underline-offset-4 mt-0.5  text-center ">  {errorMessage || "empty error box with no message"}</motion.h1>
+                className="w-fit flex-none mx-auto tracking-[0.2rem]  mt-0.5  text-center ">  {errorMessage}</motion.h1>
         </div>
 
     )
