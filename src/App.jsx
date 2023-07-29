@@ -51,8 +51,14 @@ const BusDetails = lazy(() => import("./pages/BusDetails"));
 const FindBus = lazy(() => import("./pages/FindBus"));
 const Assist = lazy(() => import("./pages/Assistant.user"));
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = process.env.REACT_APP_LOCAL_URL
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+  axios.defaults.baseURL = process.env.REACT_APP_LOCAL_URL
+  // dev code
+} else {
+  // production code
+  axios.defaults.baseURL = process.env.REACT_APP_PROD_URL
 
+}
 
 
 

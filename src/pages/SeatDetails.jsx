@@ -7,9 +7,12 @@ import {
     Heading, PrevButton,
     NextButton
 }
+
     from '../components'
+import { toast } from "react-toastify"
+
 import { useSearchParams } from 'react-router-dom'
-import samplePDF from "../Assets/afrique-con boarding passs.pdf"
+// import samplePDF from "../Assets/afrique-con boarding passs.pdf"
 import { getBuses } from '../utils/ReactSelectFunction'
 import DownloadSelect from "react-select"
 import { components, style } from "../utils/reactselectOptionsStyles"
@@ -50,16 +53,16 @@ const SeatDetails = () => {
     const [seats, setSeats] = useState({})
     const navigate = useNavigate()
 
+
+
+    // setTimeout(() => {
+    //     navigate(`/dashboard/${res.data.id}?admin=true`)
+    // }, 300)
     const handleClick = async (index) => {
-        try {
-            const res = await axios.get(`/seat/ticket/${id}/${index}`)
-            navigate(`/dashboard/${res.data.id}?admin=true`)
 
-        } catch (err) {
-            console.log("err", err)
-        } finally {
+        return axios.get(`/seat/ticket/${id}/${index}`)
 
-        }
+
     }
     const getSeats = async () => {
         setLoading(true)
@@ -198,7 +201,17 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                                     <button
                                         onClick={() => {
                                             if (isTaken === true || isReserved == true) {
-                                                handleClick(_id)
+                                                toast.promise(
+                                                    handleClick(_id).then(({ data: { id } }) => {
+                                                        navigate(`/dashboard/${id}`)
+
+                                                    })
+                                                    , {
+                                                        pending: "loading",
+                                                        success: "finish loading ...",
+                                                        error: "Something went wrong ,try again later"
+                                                    }
+                                                )
                                             }
                                         }}
                                         className={`
