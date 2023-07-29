@@ -33,7 +33,7 @@ const Login = () => {
     setIsLoading(true)
 
 
-    const url = process.env.REACT_APP_LOCAL_URL + "/auth/login"
+    const url ="/auth/login"
     try {
       const res = await axios.post(
         url, {

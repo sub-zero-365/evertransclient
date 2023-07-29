@@ -87,7 +87,7 @@ const Details = () => {
     }
   }
   const handleRemoveBlockuser = async () => {
-    const url = `${process.env.REACT_APP_LOCAL_URL}/restricted/${querySearch.get("createdBy")}`
+    const url = `/restricted/${querySearch.get("createdBy")}`
     try {
       const res = await axios.delete(url)
       handleFilterChange("account_block")
@@ -100,7 +100,7 @@ const Details = () => {
 
   useEffect(() => {
     (async function () {
-      const url = `${process.env.REACT_APP_LOCAL_URL}/restricted/${querySearch.get("createdBy")}`
+      const url = `/restricted/${querySearch.get("createdBy")}`
       try {
         const res = await axios.get(url)
         handleFilterChange("account_block", true)
@@ -115,7 +115,7 @@ const Details = () => {
 
   }, [querySearch.get("account_block")])
 
-  const handleRestrictUserAdd = async (user_id, url = `${process.env.REACT_APP_LOCAL_URL}/restricted`) => {
+  const handleRestrictUserAdd = async (user_id, url = `/restricted`) => {
 
     try {
       const res = await axios.post(url, {
@@ -245,7 +245,7 @@ const Details = () => {
     params: formatQuery(querySearch.toString())
   }
   async function getData() {
-    const url = process.env.REACT_APP_LOCAL_URL + "/admin/alltickets"
+    const url =  "/admin/alltickets"
     setIsActiveIndexLoading(true)
 
     try {
@@ -277,7 +277,7 @@ const Details = () => {
 
   useEffect(() => {
     async function getUserInfo() {
-      const url = process.env.REACT_APP_LOCAL_URL + "/admin/staticuser/" + `${id}`;
+      const url = "/admin/staticuser/" + `${id}`;
 
       try {
         const { data } = await axios.get(url, config);

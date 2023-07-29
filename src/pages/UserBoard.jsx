@@ -169,7 +169,7 @@ const Details = () => {
 
     }
     async function getUserInfo() {
-      const url = process.env.REACT_APP_LOCAL_URL + "/auth/userinfo";
+      const url = "/auth/userinfo";
       try {
         const res = await axios.get(url, {
           headers: {
@@ -747,7 +747,7 @@ z-10  "
                         
                         '
 
-                          href={`${process.env.REACT_APP_LOCAL_URL}/downloadticket/${_id}`}>download</a>
+                          href={`${process.env.REACT_APP_PROD_URL}/downloadticket/${_id}`}>download</a>
 
                       </div>
                     </div>

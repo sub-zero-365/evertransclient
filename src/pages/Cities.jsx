@@ -28,7 +28,7 @@ const Cities = () => {
 
   async function getCities() {
 
-    const url = process.env.REACT_APP_LOCAL_URL + "/allcities";
+    const url = "/allcities";
     if (token == null) {
       alert("login to get accesstoken")
     }
@@ -62,7 +62,7 @@ const Cities = () => {
 
     if (!id) return
     setIsLoading(true)
-    const url = process.env.REACT_APP_LOCAL_URL + "/admin/city/" + id;
+    const url = "/admin/city/" + id;
     try {
       await axios.put(url, {
         value: newCity
@@ -82,7 +82,7 @@ const Cities = () => {
   }
   const addFunc = async (e) => {
     e.preventDefault()
-    const url = process.env.REACT_APP_LOCAL_URL + "/admin/city";
+    const url = "/admin/city";
     setIsLoading(true)
 
     try {
@@ -106,7 +106,7 @@ const Cities = () => {
   }
   const confirmFunc = async () => {
     if (!id) return
-    const url = process.env.REACT_APP_LOCAL_URL + "/admin/city/" + id;
+    const url ="/admin/city/" + id;
     try {
       await axios.delete(url, {
         headers: {

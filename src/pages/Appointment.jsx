@@ -136,7 +136,7 @@ const Appointment = () => {
 
     const token = localStorage.getItem("admin_token");
 
-    const url = `${process.env.REACT_APP_LOCAL_URL}/admin/alltickets`
+    const url = `/admin/alltickets`
 
     useEffect(() => {
         fetchData()

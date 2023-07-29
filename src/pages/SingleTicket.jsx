@@ -185,7 +185,7 @@ const User = () => {
   const [isOpen, setIsOpen] = useState(false);
   if (isLoading) return <Loader toggle />
   return (
-    <div className="min-w-3xl flex-none lg:px-10 !w-full md:px-5 mx-auto  max-h-[calc(100vh-60px)] pb-64 overflow-y-auto">
+    <div className="min-w-3xl flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-60px)] pb-64 overflow-y-auto">
 
       <EditTicketModal isOpen={isOpen_} setIsOpen={setIsOpen_} ticket={ticket} />
       <ReOrderBooking
@@ -627,7 +627,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
             }
 
             <a
-              href={`${process.env.REACT_APP_LOCAL_URL}/downloadticket/${id}`}
+              href={`${process.env.REACT_APP_PROD_URL}/downloadticket/${id}`}
 
               target="_blank"
               className="inline---block 

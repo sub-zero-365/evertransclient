@@ -7,7 +7,7 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai"
 const AdminLogin = () => {
   const [seePassword, toggleSeePassword] = useState(true)
   const [isLoading, setIsLoading] = useState(false);
-  const url = process.env.REACT_APP_LOCAL_URL + "/auth/admin"
+  const url = "/auth/admin"
   const [number, setNumber] = useState(null)
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false)

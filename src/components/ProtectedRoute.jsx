@@ -24,7 +24,7 @@ const ProtectedRoute = () => {
     useEffect(() => {
         if (!token) return
         async function getData() {
-            const url = process.env.REACT_APP_LOCAL_URL + "/auth/userinfo";
+            const url =  "/auth/userinfo";
             try {
                 const res = await axios.get(url, {
                     headers: {

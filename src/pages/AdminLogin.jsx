@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 const AdminLogin = () => {
 
   const [isLoading, setIsLoading] = useState(false);
-  const url = process.env.REACT_APP_LOCAL_URL + "/auth/admin"
+  const url ="/auth/admin"
   const [number, setNumber] = useState(null)
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false);

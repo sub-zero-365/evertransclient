@@ -37,7 +37,7 @@ const BusSits = () => {
   const Header = ({ name }) => <h1 className="dark:text-white  font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
 
 
-  const url = process.env.REACT_APP_LOCAL_URL + "/ticket"
+  const url = "/ticket"
   const handleMarkSeatConSumeSeat = async () => {
     return
 

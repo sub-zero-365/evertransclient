@@ -339,7 +339,7 @@ const Seats = () => {
                                                         text-[0.7rem] 
                                                         md:text-sm
                                                         font-montserrat`}
-                                                            href={`${process.env.REACT_APP_LOCAL_URL}/seat/download/${_id}`} >download</a>
+                                                            href={`${process.env.REACT_APP_PROD_URL}/seat/download/${_id}`} >download</a>
                                                     </td>
                                                 </tr>
 

@@ -151,7 +151,7 @@ const SeatDetails = () => {
                         querySearch.get("bus_id") !== null && (
                             <a
                                 role='link' aria-disabled
-                                href={`${process.env.REACT_APP_LOCAL_URL}/seat/download/${id}?${querySearch.toString()}`}
+                                href={`/seat/download/${id}?${querySearch.toString()}`}
 
                                 target="_blank"
 

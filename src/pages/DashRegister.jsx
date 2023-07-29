@@ -26,7 +26,7 @@ const Register = () => {
     e.preventDefault()
     setIsLoading(true)
 
-    const url = process.env.REACT_APP_LOCAL_URL + "/auth/register"
+    const url ="/auth/register"
     try {
       const res = await axios.post(
         url, {
