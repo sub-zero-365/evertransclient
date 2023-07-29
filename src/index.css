@@ -218,7 +218,11 @@ body {
     transform: scale(1.3) rotateX(30deg);
   }
 }
-
+@media screen and (max-width:599px){
+  input,select,textarea{
+    @apply !text-lg;
+  }
+}
 .screen {
   width: 100%;
   height: 100%;
