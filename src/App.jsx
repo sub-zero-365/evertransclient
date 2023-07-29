@@ -87,7 +87,6 @@ function App() {
                   <Route path="user" element={<UserBoard />} />
                 </Route>
 
-                <Route path="assistant" element={<Assist />} />
 
                 <Route path="contact-us" element={<ContactUs />} />
                 <Route path="about-us" element={<Aboutus />} />
@@ -112,6 +111,10 @@ function App() {
                 <Route path="register" element={<DashRegister />} />
                 <Route path="assistants" element={<Assistant />} />
               </Route>
+              <Route path="assistant" element={<Assist />}>
+                <Route path=":id" element={<SingleTicket />} />
+              </Route>
+
               <Route
                 path="*"
                 element={<NotFound />} />

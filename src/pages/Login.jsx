@@ -50,8 +50,8 @@ const Login = () => {
       setuserName(res.data?.user?.fullname)
 
       if ("redirect" in res.data?.user) {
-        // localStorage.removeItem("assist_token");
-        localStorage.setItem("assist_token", res.data.token)
+        localStorage.setItem("assist_token", res.data.token);
+        console.log("token when loading as assistant",res)
         navigate("/assistant")
         return
       }

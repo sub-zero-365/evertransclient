@@ -1127,8 +1127,6 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                   }
 
 
-                  {/* <BoxModel activeCount={userData?.totalActiveTickets}
-                inActiveCount={userData?.totalInActiveTickets} /> */}
 
                 </div>
 

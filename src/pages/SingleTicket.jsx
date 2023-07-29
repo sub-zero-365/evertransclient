@@ -60,16 +60,32 @@ const User = () => {
   var token = undefined, url = ""
   const isadminuser = queryParameters.get("admin");
   const audio = new Audio(succcesssound);
+  const readonly = queryParameters.get("readonly") == "7gu8dsutf8asdf"
+  // // alert(readonly)
+  // const baseurl = window.location.href;
+  // let url_ = new URL(baseurl);
+  // let params_ = new URLSearchParams(url_.search);
+  // console.log("url", url_, url_.search,params_.get("readyonly"))
+  // // console.log(baseurl)
 
   async function getData() {
-    if (isadminuser == null) {
-      token = localStorage.getItem("token")
-      url = `/ticket/${id}`
+    console.log("readyonly code  here", queryParameters.get("readonly") ? "true" : "false")
+    if (readonly) {
+      token = localStorage.getItem("assist_token");
+      console.log("enter here ")
+      url = `/assistant/ticket/${id}`
     } else {
-      token = localStorage.getItem("admin_token");
-      url = `/admin/staticticket/${id}`;
+      // alert(readonly)
+      if (isadminuser == null) {
+        token = localStorage.getItem("token")
+        url = `/ticket/${id}`
+      } else {
+        token = localStorage.getItem("admin_token");
+        url = `/admin/staticticket/${id}`;
+      }
     }
     try {
+      console.log("in try block")
       const res = await axios.get(url, {
         headers: {
           'Authorization': "makingmoney " + token
@@ -77,6 +93,7 @@ const User = () => {
       }
 
       )
+      console.log(res.data)
       setTicket(res.data.ticket)
       setTicketData(res.data.ticket)
 
@@ -106,10 +123,13 @@ const User = () => {
         setIsloading(false);
       }
       setLoadbtn(false)
+      console.log("not here ")
+
     } catch (err) {
+      console.log(err)
+      // console.log("readonly ", readonly)
       setIsloading(false)
       setToggle(true)
-      console.log(err)
       setMessage(err.response.data)
     }
   }
@@ -126,12 +146,19 @@ const User = () => {
     setLoadbtn(true)
     setIsloading(true)
     let url = ""
-    if (isadminuser) {
-      url = `/admin/edit/${id}`
-      token = localStorage.getItem("admin_token");
+    if (readonly) {
+      url = `/assistant/edit/${id}`
+      token = localStorage.getItem("assist_token");
+
     } else {
-      url = `/ticket/edit/${id}`
-      token = localStorage.getItem("token");
+      if (isadminuser) {
+        url = `/admin/edit/${id}`
+        token = localStorage.getItem("admin_token");
+      } else {
+        url = `/ticket/edit/${id}`
+        token = localStorage.getItem("token");
+
+      }
 
     }
 
@@ -143,7 +170,7 @@ const User = () => {
         params
       }
       )
-
+      console.log(res)
       setTicket(res.data?.updateTicket)
       setTicketData(res.data?.updateTicket)
       setMessage("successfull edited ticket")
@@ -185,9 +212,12 @@ const User = () => {
   const [isOpen, setIsOpen] = useState(false);
   if (isLoading) return <Loader toggle />
   return (
-    <div className="min-w-3xl flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-60px)] pb-64 overflow-y-auto">
+    <div className={`min-w-3xl flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-60px)] pb-64 overflow-y-auto ${!isadminuser && "container"}`}>
 
-      <EditTicketModal isOpen={isOpen_} setIsOpen={setIsOpen_} ticket={ticket} />
+      {
+        ticket && (<EditTicketModal isOpen={isOpen_} setIsOpen={setIsOpen_} ticket={ticket} />)
+
+      }
       <ReOrderBooking
         duration="30000"
         className={`${redirect && "!top-1/2 -translate-y-1/2"}`}

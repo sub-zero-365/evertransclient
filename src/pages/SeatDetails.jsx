@@ -1,11 +1,12 @@
-import { Document, Page } from 'react-pdf';
-import "core-js/features/array/at";
+// import { Document, Page } from 'react-pdf';
+// import "core-js/features/array/at";
 // import { pdfjs } from 'react-pdf';
 import AnimatedText from "../components/AnimateText"
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import {
-    Heading, PrevButton,
-    NextButton
+    Heading, 
+    // PrevButton,
+    // NextButton
 }
 
     from '../components'
@@ -22,7 +23,7 @@ import axios from 'axios'
 import {
     useQuery,
 } from '@tanstack/react-query'
-import UiButton from '../components/UiButton'
+// import UiButton from '../components/UiButton'
 const SeatDetails = () => {
     const [querySearch, setQuerySearch] = useSearchParams();
     const [loading, setLoading] = useState(false)
@@ -46,18 +47,13 @@ const SeatDetails = () => {
     const { data: ticketData, isLoading, error } = useQuery({
         queryKey: ['seatdetailstickets'],
         queryFn: async () => axios.get(`/seat/seatdetails/${id}`),
-        // enabled: false,
     });
-    // console.log("tickets data", ticketData)
     const { id } = useParams()
     const [seats, setSeats] = useState({})
     const navigate = useNavigate()
 
 
 
-    // setTimeout(() => {
-    //     navigate(`/dashboard/${res.data.id}?admin=true`)
-    // }, 300)
     const handleClick = async (index) => {
 
         return axios.get(`/seat/ticket/${id}/${index}`)
@@ -83,18 +79,18 @@ const SeatDetails = () => {
     useEffect(() => {
         getSeats()
     }, [])
-    const downloadOptions = [
+    // const downloadOptions = [
 
 
-        {
-            label: "download all tickets", value: "all"
-        },
-        {
-            label: "deactive tickets", value: "deactive tickets"
-        },
+    //     {
+    //         label: "download all tickets", value: "all"
+    //     },
+    //     {
+    //         label: "deactive tickets", value: "deactive tickets"
+    //     },
 
 
-    ]
+    // ]
     if (loading) return <div>Loading ....</div>
 
     return (

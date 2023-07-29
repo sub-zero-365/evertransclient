@@ -1,7 +1,14 @@
+
+import { Outlet } from 'react-router-dom'
 const Assist = () => {
     return (
         <div className="h-[calc(100%-60px)">
-            login as assistant
+            <div>
+                <div className="tops">
+                    readady to scan tickets now
+                </div>
+                <Outlet />
+            </div>
         </div>)
 }
 export default Assist
