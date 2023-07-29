@@ -189,7 +189,10 @@ shadow-slate-400
                                             className="flex-none pl-1 " />
 
                                     </span>
-                                    <Heading text={"Select Seat"} className="!inline-block !flex-1 !pl-0 !text-center !mb-0 !ml-1">select bus</Heading>
+                                    <Heading text={"Select Seat"} className="!inline-block !flex-1 !text-lg !pl-0 !text-center !mb-0 !ml-1">select bus</Heading>
+                                    <Heading text={`Travel Date: ${(new Date(startDate).toLocaleDateString())}`} className="!inline-block !text-xs !flex-1 !italic !text-gray-800 !font-bold dark:!text-white !pl-0 !mb-0 !ml-1">select bus</Heading>
+
+
                                 </div>
                                 <Swiper
                                     slidesPerView={1}
@@ -227,7 +230,7 @@ shadow-slate-400
                                                                 )
                                                             }
                                                             <div>
-                                                                <Heading text={traveltime} className="!mb-1" />
+                                                                <Heading text={`Departure time:   ${traveltime}`} className="!mb-1 !text-lg !text-center" />
                                                                 <Scrollable
                                                                     className="!gap-x-1 !justify-center !mb-1
                                                             !gap-y-0.5 !flex-wrap px-2">

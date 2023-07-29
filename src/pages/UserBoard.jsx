@@ -19,11 +19,11 @@ import { BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { MdOutlinePriceChange } from 'react-icons/md'
 import { Autoplay, Navigation, Pagination } from 'swiper'
-import { useDispatch, useSelector } from 'react-redux';
 import ClearFilter from '../components/ClearFilter'
 import UiButton from '../components/UiButton'
+import { useSelector, useDispatch } from 'react-redux'
 
-
+import { toast } from 'react-toastify'
 
 // import {}
 import Alert from '../components/Alert'
@@ -64,6 +64,11 @@ import { setUserData as setUserDataFunc } from '../actions/userData'
 
 import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
 const Details = () => {
+  const isUserName = useSelector(state => state.username.username);
+
+  const onPasswordSuccess = () => toast.success("Password Change Successfully!!", {
+    position: toast.POSITION.BOTTOM_CENTER
+  })
   const [isOpen, setIsOpen] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -76,10 +81,7 @@ const Details = () => {
     setLoading(true)
     e.preventDefault()
     try {
-      console.log(
-        password1.current.value,
-        password2.current.value,
-        password3.current.value)
+
       const res = await axios.post("/user/updatepassword", {
         oldpassword: password1.current.value,
         newpassword: password2.current.value,
@@ -90,7 +92,7 @@ const Details = () => {
         }
       })
       setIsOpen(false)
-      // console.log(res.data)
+      onPasswordSuccess()
     } catch (err) {
       console.log(err)
       setError(err.response.data)
@@ -107,7 +109,7 @@ const Details = () => {
   }
   const { userData } = useSelector(state => state.userData);
 
- 
+
   const setUserData = (data) => {
     dispatch(setUserDataFunc(data))
   }
@@ -758,16 +760,16 @@ z-10  "
           }
         </div>
         <div className="flex-1   mb-6 ">
-          <div className="flex  items-start  mb-10  justify-between
-        py-1 mx-auto mt-5 max-w-sm rounded-lg shadow bg-white dark:bg-slate-800 ">
+          <div className="flex  items-center  mb-10  justify-between
+        py-2 mx-auto mt-5 max-w-sm rounded-xl shadow bg-white dark:bg-slate-950 px-6 ">
             <div className="flex-1">
-              <Heading text={greetingtext} className="!mb-2 !font-black mt-0 !italic" />
-              <p className="mb-3 text-sm  px-6 uppercase">{userInfo?.fullname} </p>
+              <Heading text={greetingtext} className="!mb-1 !font-black mt-0 !italic" />
+              <p className="mb-3 text-sm font-montserrat px-6 uppercase italic !font-light">{(isUserName || "loading")} </p>
             </div>
 
             <UiButton
               name="change view"
-              className="!hidden lg:!block"
+              className="!hidden lg:!block !rounded-xl !text-sm capitalize lg:!ml-2"
               onClick={() => {
                 if (__view == true) {
                   __setView(false)
@@ -1140,13 +1142,13 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
       flex-wrap pr-5 items-start mb-10">
         <h1 className="text-2xl mt-4 
         text-gray-700 pl-6
-        
+        dark:text-white
         flex tracking-tight">All tickets <span className="text-xs ring-2 ring-gray-700  grid place-items-center
         ml-1 w-5 h-5 bg-gray-500 text-white
         mb-4 rounded-full border">{userData?.totalTickets || 0} </span> </h1>
 
         <div className='mt-0'>
-          <div className="text-[0.8rem] text-slate-300 uppercase text-center font-semibold mb-1 font-montserrat"> ticket status</div>
+          <div className="text-[0.8rem] text-slate-300 dark:text-white uppercase text-center font-semibold mb-1 font-montserrat"> ticket status</div>
           <Select
             styles={style}
             options={sortTicketStatusOptions}
@@ -1162,25 +1164,16 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
         <div className='mt-0'>
           <div className="text-[0.8rem]
-          text-slate-300 uppercase
+          text-slate-300 dark:text-white uppercase
           text-center font-semibold mb-1 font-montserrat"> trip type </div>
           <SelectTrip
             onChange={
               evt => {
                 if (querySearch.get("triptype") == evt.value) return
-                // if (params.evt == evt.value) return
                 handleFilterChange("triptype", evt.value)
-                // setParams(pre => {
-                //   return {
-                //     ...pre,
-                //     triptype: evt.value,
-                //     page: 1
-                //   }
-                // })
-
-
               }
             }
+
             options={
 
 
@@ -1200,7 +1193,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
               ]}
             styles={style}
             defaultValue={{
-              label: "all trip",
+              label: querySearch.get("triptype") || "all trip",
               value: "all"
             }}
 
@@ -1210,13 +1203,13 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
         </div>
         <div className='mt-0'>
           <div className="text-[0.8rem]
-          text-slate-300 uppercase
+          text-slate-300 dark:text-white uppercase
           text-center font-semibold mb-1 font-montserrat"> sorted date </div>
           <SelectSortDate
             options={sortedDateOptions}
             styles={style}
             defaultValue={{
-              label: "createdAt -",
+              label:querySearch.get("sort") || "createdAt -",
               value: "newest"
             }}
 
