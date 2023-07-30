@@ -14,7 +14,7 @@ import Alert from '../components/Alert'
 import Categories from 'react-select'
 // import FromSelect from 'react-select/async'
 // import ToSelect from 'react-select/async'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams,Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 // import DatePicker from 'react-datepicker'
 const token = localStorage.getItem("admin_token");
@@ -50,9 +50,9 @@ const Bus = () => {
     const BusDetail = ({ number_of_seats, feature, name, _id, seat_positions, active, from, to,time }) => {
         const counter = seat_positions?.filter((x) => x.isTaken == true)?.length
         return (
-            <div
+            <Link to={`${_id}`}
                 key={_id}
-                onClick={() => navigate(`${_id}`)}
+                // onClick={() => navigate(`${_id}`)}
                 class={`max-w-sm border  border-gray-200 rounded-lg shadow  ${counter == number_of_seats ? "bg-slate-300" : "bg-white"} dark:bg-gray-800 dark:border-gray-700`}>
                 <div className="grid grid-cols-[1fr,auto] px-2 pt-3
     pb-2
@@ -80,18 +80,15 @@ const Bus = () => {
                             <div className='flex'>
                                 <Heading text="Bus Type" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
                             </div>
-                            <Heading text={active == true ? "true" : "false"}
+                            <Heading text={"VIP Bus"}
                                 className="!mb-2 !text-sm" />
                         </div>
-                        <div>
-                         
-                          
-                        </div>
+                        
 
                     </div>
 
                 </div>
-            </div>
+            </Link>
 
 
         )

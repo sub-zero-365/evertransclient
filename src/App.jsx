@@ -85,14 +85,16 @@ function App() {
                   <Route path="information" element={<CheckOutInfo />} />
                   <Route path="user/:id" element={<SingleTicket />} />
                   <Route path="user" element={<UserBoard />} />
+                  <Route path="seat" element={<Seat />} />
+                  <Route path="seat/:id" element={<SeatDetails />} />
+
+
                 </Route>
 
 
                 <Route path="contact-us" element={<ContactUs />} />
                 <Route path="about-us" element={<Aboutus />} />
                 <Route path="auth" element={<Auth />} />
-                <Route path="seat/:id" element={<SeatDetails />} />
-                <Route path="seat" element={<Seat />} />
               </Route>
               <Route path="/dashboard"
                 element={<DashboardLayout />} >

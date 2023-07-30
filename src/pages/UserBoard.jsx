@@ -64,6 +64,15 @@ import { setUserData as setUserDataFunc } from '../actions/userData'
 
 import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
 const Details = () => {
+  let downloadbaseurl = null
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+        downloadbaseurl = process.env.REACT_APP_LOCAL_URL
+        // dev code
+    } else {
+        // production code
+        downloadbaseurl = process.env.REACT_APP_PROD_URL
+
+    }
   const isUserName = useSelector(state => state.username.username);
 
   const onPasswordSuccess = () => toast.success("Password Change Successfully!!", {
@@ -749,7 +758,7 @@ z-10  "
                         
                         '
 
-                          href={`${process.env.REACT_APP_PROD_URL}/downloadticket/${_id}`}>download</a>
+                          href={`${downloadbaseurl}/downloadticket/${_id}`}>download</a>
 
                       </div>
                     </div>

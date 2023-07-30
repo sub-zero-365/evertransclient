@@ -41,7 +41,15 @@ const User = () => {
     return obj?.type === value && obj?.doubletripdetails?.some(x => x.active == true)
   }
   const [redirect, setRedirect] = useState(false);
+  let downloadbaseurl = null
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+        downloadbaseurl = process.env.REACT_APP_LOCAL_URL
+        // dev code
+    } else {
+        // production code
+        downloadbaseurl = process.env.REACT_APP_PROD_URL
 
+    }
   const navigate = useNavigate();
   const previousPage = () => navigate(-1)
   const [active, setActive] = useState(null);
@@ -657,8 +665,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
             }
 
             <a
-              href={`${process.env.REACT_APP_PROD_URL}/downloadticket/${id}`}
-
+              href={`${downloadbaseurl}/downloadticket/${id}`}
               target="_blank"
               className="inline---block 
                                     w-[min(300px,calc(100%-2.5rem))]

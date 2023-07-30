@@ -26,10 +26,20 @@ import DatePicker from 'react-datepicker';
 import { useInView } from 'framer-motion'
 import { PlaceHolderLoader } from '../components'
 const Seats = () => {
+    let downloadbaseurl = null
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+        downloadbaseurl = process.env.REACT_APP_LOCAL_URL
+        // dev code
+    } else {
+        // production code
+        downloadbaseurl = process.env.REACT_APP_PROD_URL
+
+    }
     const ref = useRef(null)
-    const isInView = useInView(ref)
+    // const isInView = useInView(ref)
     const { loading, seats: data } = useSelector(state => state.seatData);
-    const [seat,setSeat]=useState([])
+    // const [seat,setSeat]=useState([])
+    
     // useEffect(() => {
     //     if (isInView) {
     //         console.log("im in view")
@@ -78,6 +88,8 @@ const Seats = () => {
         return dispatch(setSeats(payload))
     }
     const [querySearch, setQuerySearch] = useSearchParams();
+    const isadminuser = querySearch.get("admin")
+    
     const handleFilterChange = (key, value = null) => {
         setQuerySearch(preParams => {
             if (value == null) {
@@ -311,7 +323,8 @@ const Seats = () => {
                                                     </td>
                                                     <td className="p-2 whitespace-nowrap flex lg:grid 
                                                     lg:grid-cols-2 lg:max-w-[15rem]">
-                                                        <UiButton onClick={() => navigate(`${_id}`)} name="details" />
+                                                        <UiButton
+                                                        onClick={() => navigate(`${_id}?${isadminuser&&"admin=true"}`)} name="details" />
                                                         < a
                                                             className={`font-medium
                                                         shadow
@@ -339,7 +352,7 @@ const Seats = () => {
                                                         text-[0.7rem] 
                                                         md:text-sm
                                                         font-montserrat`}
-                                                            href={`${process.env.REACT_APP_PROD_URL}/seat/download/${_id}`} >download</a>
+                                                            href={`${downloadbaseurl}/seat/download/${_id}`} >download</a>
                                                     </td>
                                                 </tr>
 

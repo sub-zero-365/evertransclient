@@ -1,8 +1,5 @@
 import { FiRefreshCcw } from 'react-icons/fi'
 
-// import {
-//     useQuery,
-// } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios';
@@ -15,6 +12,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import AnimatedError from "../components/AnimateError"
 import { Loadingbtn } from "../components";
 import { UiButtonDanger } from '../components/UiButton'
+import { toast } from 'react-toastify'
+
 const Appointment = () => {
     const constraintsRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
@@ -25,21 +24,14 @@ const Appointment = () => {
     const [activeIndex, setActiveIndex] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const handleDeleteUser = async (_id, index) => {
-        setActiveIndex(index)
-        try {
-            await axios.delete(`/assistant/${_id}`,
-                {
-                    headers: {
-                        "Authorization": "makingmoney " + token
-                    }
-                })
-            console.log("delete successfully")
-            getData()
-        } catch (err) {
-            console.log(err)
-        } finally {
-            setActiveIndex(null)
-        }
+        return axios.delete(`/assistant/${_id}`,
+            {
+                headers: {
+                    "Authorization": "makingmoney " + token
+                }
+            })
+
+
     }
     const [error, setError] = useState(null)
     const handleCreateNewAssistant = async () => {
@@ -98,7 +90,7 @@ const Appointment = () => {
             setError(err.response.data)
         }
         finally {
-            
+
         }
     }
     useEffect(() => {
@@ -107,7 +99,7 @@ const Appointment = () => {
         setLoading(false)
     }, [])
 
-    
+
     const token = localStorage.getItem("admin_token");
 
     const [text, setText] = useState("")
@@ -538,7 +530,20 @@ lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-g
 
                                                         <UiButtonDanger
                                                             disabled={activeIndex == index}
-                                                            onClick={() => handleDeleteUser(_id, index)}
+                                                            onClick={() => {
+                                                                setActiveIndex(_id)
+
+                                                                toast.promise(handleDeleteUser(_id, index).then((data) => {
+                                                                    getData()
+                                                                    setActiveIndex(null)
+
+                                                                }), {
+                                                                    pending: "please wait deleting...",
+                                                                    success: " Done deleting",
+                                                                    error: "Something went wrong ,try again later"
+
+                                                                })
+                                                            }}
                                                             name="delete " />
                                                     </td>
                                                 </motion.tr>

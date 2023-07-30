@@ -3,7 +3,7 @@ import { RxDashboard } from "react-icons/rx"
 import { TiMessages } from "react-icons/ti"
 import { CiLogout } from "react-icons/ci"
 // import { FcAssistant } from "react-icons/fc"
-import {useState} from 'react'
+import { useState } from 'react'
 import { GrServicePlay, GrBus } from "react-icons/gr"
 import { GiModernCity } from "react-icons/gi"
 import { NavLink, useNavigate } from "react-router-dom"
@@ -13,6 +13,7 @@ import { motion } from 'framer-motion'
 import { BsPersonLinesFill } from "react-icons/bs"
 import { BsClipboardDataFill } from "react-icons/bs"
 import { FcAssistant } from 'react-icons/fc'
+import { BsSliders2Vertical } from 'react-icons/bs'
 const SideBar = () => {
 
   const dispatch = useDispatch()
@@ -61,7 +62,7 @@ const SideBar = () => {
 
       name: "Borderaux",
       icon: <BsClipboardDataFill size={20} />
-      , to: "/dashboard/seat"
+      , to: "/dashboard/seat?admin=true"
 
     },
     {
@@ -84,7 +85,7 @@ const SideBar = () => {
 
     <div className={`w-[15rem] 
     md:w-fit lg:w-[15rem]
-    ${view&&"w-fit"}
+    ${view && "w-fit"}
     md:overflow-y-auto
     select-none 
     max-w-[calc(100vw-2.5rem)]
@@ -105,11 +106,11 @@ const SideBar = () => {
         <IoMdClose size={25} />
       </span>
       <span className="absolute w-[3.125rem] h-[3.125rem] top-[3.125rem] mt-2
-       text-red-700 hover:bg-orange-500 rounded-e-md transition-all md:hidden duration-500 
+       text-slate-700 hover:bg-slate-500 rounded-e-md transition-all md:hidden duration-500 
        -right-[3.125rem] z-10 rounded-none flex items-center justify-center border-2- font-black border-black"
         onClick={handleChangeView}
       >
-        <GrServicePlay size={25} />
+        <BsSliders2Vertical size={25} />
       </span>
       <h3 className="text-2xl text-center py-4 font-manrope hidden ">Dashboard</h3>
       <div className="group md:w-fit lg:w-full ">
@@ -126,7 +127,7 @@ const SideBar = () => {
               >
 
                 {icon}
-                <h3 className={`text-xs md:text-sm ml-5 group-[.active]:hidden ${view&&"hidden"} md:hidden lg:block`}>{name}</h3>
+                <h3 className={`text-xs md:text-sm ml-5 group-[.active]:hidden ${view && "hidden"} md:hidden lg:block`}>{name}</h3>
               </NavLink></motion.div>))
 
         }
@@ -140,7 +141,7 @@ const SideBar = () => {
          hover:bg-blue-800   flex gap-2 
         bg-blue-500 transition-colors duration-300 hover:text-white  mb-2 rounded-lg">
         <CiLogout size={25} />
-        <h3 className={`text-xs text-center ${view&&"hidden"}`}>view site</h3>
+        <h3 className={`text-xs text-center ${view && "hidden"}`}>view site</h3>
       </div>
 
     </div>

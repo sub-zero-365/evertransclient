@@ -4,7 +4,7 @@
 import AnimatedText from "../components/AnimateText"
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import {
-    Heading, 
+    Heading,
     // PrevButton,
     // NextButton
 }
@@ -25,7 +25,18 @@ import {
 } from '@tanstack/react-query'
 // import UiButton from '../components/UiButton'
 const SeatDetails = () => {
+    let downloadbaseurl = null
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+        downloadbaseurl = process.env.REACT_APP_LOCAL_URL
+        // dev code
+    } else {
+        // production code
+        downloadbaseurl = process.env.REACT_APP_PROD_URL
+
+    }
+
     const [querySearch, setQuerySearch] = useSearchParams();
+    const isadminuser = querySearch.get("admin")
     const [loading, setLoading] = useState(false)
     const handleFilterChange = (key, value = null) => {
         setQuerySearch(preParams => {
@@ -146,8 +157,9 @@ const SeatDetails = () => {
                     {
                         querySearch.get("bus_id") !== null && (
                             <a
-                                role='link' aria-disabled
-                                href={`/seat/download/${id}?${querySearch.toString()}`}
+                                role='link'
+                                aria-disabled
+                                href={`${downloadbaseurl}/seat/download/${id}?${querySearch.toString()}`}
 
                                 target="_blank"
 
@@ -199,7 +211,7 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                                             if (isTaken === true || isReserved == true) {
                                                 toast.promise(
                                                     handleClick(_id).then(({ data: { id } }) => {
-                                                        navigate(`/dashboard/${id}`)
+                                                        navigate(`/${isadminuser ? "dashboard" : "user"}/${id}?${isadminuser && "admin=true"}`)
 
                                                     })
                                                     , {
