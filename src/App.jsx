@@ -113,7 +113,8 @@ function App() {
                 <Route path="register" element={<DashRegister />} />
                 <Route path="assistants" element={<Assistant />} />
               </Route>
-              <Route path="assistant" element={<Assist />}>
+              <Route path="assistant" 
+              element={<Assist />}>
                 <Route path=":id" element={<SingleTicket />} />
               </Route>
 
