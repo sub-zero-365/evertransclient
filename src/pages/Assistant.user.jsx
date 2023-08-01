@@ -9,8 +9,11 @@ import { toast } from 'react-toastify'
 import { Loadingbtn, } from '../components'
 import { motion } from 'framer-motion'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
-
+// // import { QrReader } from 'react-qr-reader';
+// import QrReader from 'react-qr-scanner'
+// import {toast } from 'react-toastify'
 const Assist = () => {
+
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const password1 = useRef(null);
@@ -19,12 +22,32 @@ const Assist = () => {
     const onPasswordSuccess = () => toast.success("Password Change Successfully!!", {
         position: toast.POSITION.BOTTOM_CENTER
     })
+    const onLoadFailure = () => toast.error("Something went wrong", {
+        position: toast.POSITION.TOP_CENTER
+    })
+    const [userData, setUserData] = useState({})
+    const getAssistant = async () => {
+        return axios.get("/assistant/user", {
+            headers: {
+                'Authorization': "makingmoney " + token
+            }
+        })
+    }
+    useEffect(() => {
+        getAssistant().then(({ data }) => {
+            // console.log(data)
+            setUserData(data)
+        }).catch(err => {
+            // console.log(err)
+            onLoadFailure()
+        })
+    }, [])
     const handleChangePassWord = async (e) => {
         setLoading(true)
         e.preventDefault()
         try {
 
-            const res = await axios.post("/user/updatepassword", {
+            const res = await axios.patch("/assistant", {
                 oldpassword: password1.current.value,
                 newpassword: password2.current.value,
                 confirmpassword: password3.current.value
@@ -325,9 +348,17 @@ const Assist = () => {
                                 </Link>
                             )
                         }
-                        <Heading text="Logging as Assistant"
-                            className="!flex-1 !text-center"
-                        />
+                        <div className="flex flex-wrap  mt-2">
+                            <Heading text="Phone Number :"
+                                className="!flex-1 !inline-block"
+                            />
+                            <Heading
+                                text={`${userData?.assistant?.phone || "loading"}`}
+                                className="!text-xl !font-black !text-black !pl-2 !inline-block"
+                            />
+
+                        </div>
+
                     </div>
                     <UiButtonDanger
                         name="Logout ?"
@@ -340,10 +371,28 @@ const Assist = () => {
                 {
                     show && (
                         <div className="mb">
-                            <AnimateText
-                                text={"WelCome Assistant ; Ready to scan "}
-                                className="!text-3xl !text-gray-900 italic"
-                            />
+                            <div className="flex space-x-2 flex-wrap">
+                                <AnimateText
+                                    text={"WelCome"}
+                                    className="!text-xl !text-gray-900 italic !mb-0"
+                                />
+                                <AnimateText
+                                    text={`${userData?.assistant?.fullname || "loading"}`}
+                                    className="!text-3xl !text-black"
+                                />
+                                <AnimateText
+                                    text={"Ready to scan "}
+                                    className="!text-xl !text-gray-900 italic !mb-0"
+                                />
+                            </div>
+
+
+                            <>
+                                <Heading text="Go To Camera App Scan Ticket You will be redirect to this page"
+
+                                    className="!text-center !pl-0"
+                                />
+                            </>
                         </div>
                     )
                 }

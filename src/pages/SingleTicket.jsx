@@ -42,14 +42,14 @@ const User = () => {
   }
   const [redirect, setRedirect] = useState(false);
   let downloadbaseurl = null
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-        downloadbaseurl = process.env.REACT_APP_LOCAL_URL
-        // dev code
-    } else {
-        // production code
-        downloadbaseurl = process.env.REACT_APP_PROD_URL
+  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    downloadbaseurl = process.env.REACT_APP_LOCAL_URL
+    // dev code
+  } else {
+    // production code
+    downloadbaseurl = process.env.REACT_APP_PROD_URL
 
-    }
+  }
   const navigate = useNavigate();
   const previousPage = () => navigate(-1)
   const [active, setActive] = useState(null);
@@ -63,27 +63,18 @@ const User = () => {
   const [params, setParams] = useState({
   })
   const [toggle, setToggle] = useState(false)
-  // const showDeactivateButton = queryParameters.get("xyz") ? true : false
-  const showDeactivateButton = true
+  const showDeactivateButton = queryParameters.get("xyz") ? true : false
+  // const showDeactivateButton = true
   var token = undefined, url = ""
   const isadminuser = queryParameters.get("admin");
   const audio = new Audio(succcesssound);
-  const readonly = queryParameters.get("readonly") == "7gu8dsutf8asdf"
-  // // alert(readonly)
-  // const baseurl = window.location.href;
-  // let url_ = new URL(baseurl);
-  // let params_ = new URLSearchParams(url_.search);
-  // console.log("url", url_, url_.search,params_.get("readyonly"))
-  // // console.log(baseurl)
-
+  const readonly = (queryParameters.get("readonly") === "7gu8dsutf8asdf" || false)
   async function getData() {
-    console.log("readyonly code  here", queryParameters.get("readonly") ? "true" : "false")
     if (readonly) {
       token = localStorage.getItem("assist_token");
       console.log("enter here ")
       url = `/assistant/ticket/${id}`
     } else {
-      // alert(readonly)
       if (isadminuser == null) {
         token = localStorage.getItem("token")
         url = `/ticket/${id}`
@@ -101,7 +92,7 @@ const User = () => {
       }
 
       )
-      console.log(res.data)
+      // console.log(res.data)
       setTicket(res.data.ticket)
       setTicketData(res.data.ticket)
 
@@ -134,8 +125,7 @@ const User = () => {
       console.log("not here ")
 
     } catch (err) {
-      console.log(err)
-      // console.log("readonly ", readonly)
+      // console.log(err)
       setIsloading(false)
       setToggle(true)
       setMessage(err.response.data)
@@ -221,10 +211,8 @@ const User = () => {
   if (isLoading) return <Loader toggle />
   return (
     <div className={`min-w-3xl flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-60px)] pb-64 overflow-y-auto ${!isadminuser && "container"}`}>
-
       {
-        ticket && (<EditTicketModal isOpen={isOpen_} setIsOpen={setIsOpen_} ticket={ticket} />)
-
+        (ticket&&readonly==false)&& (<EditTicketModal isOpen={isOpen_} setIsOpen={setIsOpen_} ticket={ticket} />)
       }
       <ReOrderBooking
         duration="30000"
@@ -296,6 +284,8 @@ const User = () => {
       <div className="lg:flex items-start !w-full  justify-center">
         <div className="flex-1 lg:flex-none w-full max-w-sm">
           <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
+            
+           
             <QRCode
               size={400}
               style={{ height: "auto", maxWidth: "100%", width: "100%" }}
@@ -305,7 +295,7 @@ const User = () => {
             />
           </div>
           {
-            ticket?.active && (
+            (ticket?.active&&readonly==false)&& (
               <UiButton
                 className="!mx-auto !mt-5"
                 name="edit this ticket" onClick={() => setIsOpen_(true)} />
@@ -663,31 +653,33 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 </Marquee>
               )
             }
+            {
+              !readonly && (
+                <a
+                  href={`${downloadbaseurl}/downloadticket/${id}?payload=79873ghadsguy&requ`}
+                  target="_blank"
+                  className="inline---block 
+                        w-[min(300px,calc(100%-2.5rem))]
+                         bottom-0
+                         pb-2.5
+                         block
+                         min-h-[2rem]
+                         mx-auto
+                         pt-2
+                         text-center
+                        rounded bg-green-500   px-2 py-1 text-xs font-montserrat font-medium 
+leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
+transition duration-150 ease-in-out hover:bg-green-600
+hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:bg-green-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                >
+                  Download ticket
+                </a>
+              )
 
-            <a
-              href={`${downloadbaseurl}/downloadticket/${id}`}
-              target="_blank"
-              className="inline---block 
-                                    w-[min(300px,calc(100%-2.5rem))]
-                                     bottom-0
-                                     pb-2.5
-                                     block
-                                     min-h-[2rem]
-                                     mx-auto
-                                     pt-2
-                                     text-center
-                                    rounded bg-green-500   px-2 py-1 text-xs font-montserrat font-medium 
-  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
-  transition duration-150 ease-in-out hover:bg-green-600
-  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:bg-green-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+            }
 
-
-
-            >
-              Download ticket
-            </a>
 
           </motion.div>
         </div>
