@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 import { useState, useEffect, useRef } from "react"
 import { NavLink, useSearchParams, useNavigate, Link } from "react-router-dom"
 import Alert from '../components/Alert'
@@ -20,7 +21,7 @@ import "swiper/css/thumbs";
 import AnimateText from '../components/AnimateText'
 import busimage from '../Assets/images/busimage.jpg'
 const BusSits = () => {
-  const constraintsRef = useRef(null)
+  const constraintsRef = useRef(null);
 
 
   const [view, setView] = useState(false)
@@ -34,14 +35,14 @@ const BusSits = () => {
     setToggle(true)
   }
   const [message, setMessage] = useState("")
-  const Header = ({ name }) => <h1 className="dark:text-white  font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
+  // const Header = ({ name }) => <h1 className="dark:text-white  font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
 
 
   const url = "/ticket"
-  const handleMarkSeatConSumeSeat = async () => {
-    return
+  // const handleMarkSeatConSumeSeat = async () => {
+  //   return
 
-  }
+  // }
   const formatPrice = (triptype, seatposition) => {
     // if (Number(seat))
     const seatnumber = Number(seatposition) + 1;
@@ -55,13 +56,16 @@ const BusSits = () => {
     }
     return "invalid seatposition"
   }
+  console.log(dayjs(queryParameters.get("date")).format("YYYY-MM-DD"),queryParameters.get("date"))
+
   const handleSubmit = async () => {
     var submitdata = {
       from: queryParameters.get("from"),
       to: queryParameters.get("to"),
-      traveldate: new Date(queryParameters.get("date")),
+      traveldate: dayjs(`${queryParameters.get("date")}`).format("YYYY-MM-DD"),
+      // traveldate: dayjs(queryParameters.get("date")).format("YYYY-MM-DD"),
       traveltime: queryParameters.get("time") || "n/a",
-      price: formatPrice(queryParameters.get("triptype"),queryParameters.get("sitpos")),
+      price: formatPrice(queryParameters.get("triptype"), queryParameters.get("sitpos")),
       sex: queryParameters.get("gender"),
       email: queryParameters.get("email"),
       age: queryParameters.get("age"),
@@ -78,7 +82,7 @@ const BusSits = () => {
     }
     setIsLoading(true)
     const token = localStorage.token
-    if (!token) return navigate("/login")
+    // if (!token) return navigate("/login")
     try {
       const busId = queryParameters.get("bus");
       const sitpos = queryParameters.get("sitpos")
@@ -294,7 +298,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
               <Heading text="Travel Cost" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{formatPrice(queryParameters.get("triptype"),queryParameters.get("sitpos")) } frs</div>
+              <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{formatPrice(queryParameters.get("triptype"), queryParameters.get("sitpos"))} frs</div>
             </div>
 
           </div>
