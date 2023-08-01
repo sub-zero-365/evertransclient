@@ -212,7 +212,7 @@ const User = () => {
   return (
     <div className={`min-w-3xl flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-60px)] pb-64 overflow-y-auto ${!isadminuser && "container"}`}>
       {
-        (ticket&&readonly==false)&& (<EditTicketModal isOpen={isOpen_} setIsOpen={setIsOpen_} ticket={ticket} />)
+        (ticket && readonly == false) && (<EditTicketModal isOpen={isOpen_} setIsOpen={setIsOpen_} ticket={ticket} />)
       }
       <ReOrderBooking
         duration="30000"
@@ -284,8 +284,8 @@ const User = () => {
       <div className="lg:flex items-start !w-full  justify-center">
         <div className="flex-1 lg:flex-none w-full max-w-sm">
           <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
-            
-           
+
+
             <QRCode
               size={400}
               style={{ height: "auto", maxWidth: "100%", width: "100%" }}
@@ -295,7 +295,7 @@ const User = () => {
             />
           </div>
           {
-            (ticket?.active&&readonly==false)&& (
+            (ticket?.active && readonly == false) && (
               <UiButton
                 className="!mx-auto !mt-5"
                 name="edit this ticket" onClick={() => setIsOpen_(true)} />
@@ -357,7 +357,20 @@ const User = () => {
           <p className="text-center text-slate-500 mb-10 ">{dateFormater(ticket?.createdAt).date + " at " + dateFormater(ticket?.createdAt).time || "n/a"} </p>
           <h2 className="text-center  text-lg md:text-xl font-medium  "> price of the ticket</h2>
           <p className="text-center text-slate-500 mb-10 " >{ticket?.price + "frs" || "n/a"} </p>
+          {
+            (ticket) && (
+              <Link
+                to={`/${isadminuser?"dashboard/seat":"seat"}/${ticket?.seat_id}?rd_from=assistant&ticket_seat=${ticket.seatposition}&${isadminuser?"admin=true":null}`}
+              >
+                <UiButton
+                  className="!bg-green-600 !mt-5 !text-sm !mx-auto !w-[min(100%,calc(100%-60px))]"
+                  name="Locate Borderaux"
+                />
+              </Link>
 
+            )
+
+          }
 
           <div ref={ref} className="mt-56" />
         </div>

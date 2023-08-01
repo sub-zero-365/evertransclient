@@ -15,7 +15,7 @@ import { toast } from "react-toastify"
 import { useSearchParams } from 'react-router-dom'
 // import samplePDF from "../Assets/afrique-con boarding passs.pdf"
 import { getBuses } from '../utils/ReactSelectFunction'
-import DownloadSelect from "react-select"
+// import DownloadSelect from "react-select"
 import { components, style } from "../utils/reactselectOptionsStyles"
 import { useState, useEffect } from 'react'
 import BusSelect from 'react-select/async'
@@ -23,6 +23,7 @@ import axios from 'axios'
 import {
     useQuery,
 } from '@tanstack/react-query'
+import { motion } from 'framer-motion'
 // import UiButton from '../components/UiButton'
 const SeatDetails = () => {
     let downloadbaseurl = null
@@ -37,6 +38,22 @@ const SeatDetails = () => {
 
     const [querySearch, setQuerySearch] = useSearchParams();
     const isadminuser = querySearch.get("admin")
+    let ticket_seat = querySearch.get("ticket_seat") || false;
+    // if (ticket_seat) ticket_seat += 1
+    const [activeSeat, setActiveSeat] = useState((ticket_seat || null));
+    useEffect(() => {
+        let timer = null
+        if (activeSeat) {
+            timer = setTimeout(() => {
+                setActiveSeat(null)
+            }, 6000)
+
+        }
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [activeSeat])
+
     const [loading, setLoading] = useState(false)
     const handleFilterChange = (key, value = null) => {
         setQuerySearch(preParams => {
@@ -206,7 +223,14 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
                             seats?.seat?.seat_positions?.map(({ isTaken, isReserved, _id }, index) => {
                                 return (
-                                    <button
+                                    <motion.button
+                                        animate={{ scale: activeSeat == index? [0.8, 1, 0.9] : null
+                                     }}
+                                        transition={{
+                                          duration: 1,
+                                          ease: "easeInOut",
+                                          repeat: Infinity,
+                                        }}
                                         onClick={() => {
                                             if (isTaken === true || isReserved == true) {
                                                 toast.promise(
@@ -223,6 +247,7 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                                             }
                                         }}
                                         className={`
+                                        ${activeSeat == index && "!bg-red-950"}
                 ${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"}
                  grid items-center 
                 justify-center 
@@ -230,7 +255,7 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                 rounded-sm min-h-[60px]
                 cursor-pointer
                 hover:rounded-lg`}
-                                    > {(index + 1)}</button>
+                                    > {(index + 1)}</motion.button>
                                 )
 
 
