@@ -23,7 +23,7 @@ const Appointment = () => {
     const [err, setErr] = useState("")
     const [activeIndex, setActiveIndex] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
-    const handleDeleteUser = async (_id, index) => {
+    const handleDeleteUser = async (_id, index=null) => {
         return axios.delete(`/assistant/${_id}`,
             {
                 headers: {
@@ -534,6 +534,8 @@ lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-g
                                                                 setActiveIndex(_id)
 
                                                                 toast.promise(handleDeleteUser(_id, index).then((data) => {
+                                                                    
+                                                                    console.log(data)
                                                                     getData()
                                                                     setActiveIndex(null)
 
