@@ -9,9 +9,6 @@ import { toast } from 'react-toastify'
 import { Loadingbtn, } from '../components'
 import { motion } from 'framer-motion'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
-// // import { QrReader } from 'react-qr-reader';
-// import QrReader from 'react-qr-scanner'
-// import {toast } from 'react-toastify'
 const Assist = () => {
 
     const [error, setError] = useState("")
@@ -35,10 +32,8 @@ const Assist = () => {
     }
     useEffect(() => {
         getAssistant().then(({ data }) => {
-            // console.log(data)
             setUserData(data)
         }).catch(err => {
-            // console.log(err)
             onLoadFailure()
         })
     }, [])
@@ -59,7 +54,6 @@ const Assist = () => {
             setIsOpen(false)
             onPasswordSuccess()
         } catch (err) {
-            console.log(err)
             setError(err.response.data)
             setTimeout(() => {
                 setError(null)
@@ -73,7 +67,6 @@ const Assist = () => {
 
     }
     const location = useLocation()
-    console.log(location)
     const [show, setShow] = useState(true)
 
     useEffect(() => {
