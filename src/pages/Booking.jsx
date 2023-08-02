@@ -55,7 +55,7 @@ const Booking = () => {
   }
   const [startDate, setStartDate] = useState(new Date());
 
-  const Header = ({ name }) => <h1 className="font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-sm">{name || "no name was passed"}</h1>
+  const Header = ({ name }) => <h1 className="font-black text-center text-slate-900 dark:text-white mb-4 tracking-tighter  underline underline-offset-8 text-sm">{name || "no name was passed"}</h1>
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
     <div
       className="w-full
@@ -106,7 +106,9 @@ const Booking = () => {
         md:mt-0 pt-10  md:w-[25rem]  lg:w-[30rem]
         md:max-w-[calc(100vw-2.5rem)] md:max-h-[calc(100vh-60px)]  md:overflow-y-auto">
 
-          <div className="shadow-lg mx-4 min-h-[3rem] -mt-[25px] bg-white dark:bg-slate-700 rounded-lg flex p-1 ">
+          <div className="shadow-lg mx-4 min-h-[3rem]
+          -mt-[25px] bg-white dark:bg-slate-700
+          dark:text-white rounded-lg flex p-1 ">
             <Link to=".?triptype=single" className={`w-1/2 ${(tripType === "single" || !tripType) ? "bg-blue-400" : "bg-orange-400"} text-center text-white flex items-center justify-center rounded-sm `}>One Way</Link>
             <Link to=".?triptype=round" className={`w-1/2 ${tripType === "round" ? "bg-blue-400" : "bg-orange-400"} text-center text-black flex items-center justify-center
           rounded-sm `}>Round Trip</Link>
@@ -115,8 +117,8 @@ const Booking = () => {
 
 
           <div className="flex flex-col justify-center items-center mt-4">
-            <div className="flex gap-2 justify-center items-center">
-              {tripType == "round" ? <Header name="RoundTrip" /> : <Header name="SingleTrip" />}
+            <div className="flex gap-2 dark:!text-white justify-center items-center">
+              {tripType == "round" ? <Header className="dark:!text-white" name="RoundTrip" /> : <Header className="dark:!text-white" name="SingleTrip" />}
               <span className="!w-5 !h-5 grid items-center rounded-sm justify-center mb-0.5" onClick={() => setIsline(!isLine)} >
                 <BiChevronDown className="text-sm" />
               </span>

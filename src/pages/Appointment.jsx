@@ -364,6 +364,38 @@ z-10  "
                                     }
                                     className='!border-none !h-8 mt-0' />
                             </div>
+                            <div className='mt-0 flex-none'>
+                                <Heading text={"Time Select"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
+                                <Triptype
+                                    styles={{
+                                        control: base => ({
+                                            ...base,
+                                            border: 0,
+                                            borderBottom: "1px solid black",
+                                            boxShadow: "none",
+                                            background: "transparent",
+                                            color: "red",
+                                            borderRadius: 0,
+                                            fontSize: 1 + "rem"
+                                        }
+                                        )
+                                    }
+
+                                    }
+                                    components={components()}
+                                    options={
+                                       timeOptions
+                                    }
+                                    defaultValue={{
+                                        label: "select time",
+                                        value: "all"
+                                    }}
+                                    isSearchable={false}
+                                    onChange={
+                                        (e) => handleFilterChange("traveltime", e.value)
+                                    }
+                                    className='!border-none !h-8 mt-0' />
+                            </div>
                             <div>
 
                                 <Heading text={"N Column"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
@@ -391,6 +423,7 @@ z-10  "
                             "boardingRange,*",
                             "triptype,all",
                             "limit,100",
+                            "traveltime,7487",
                             ]} />
                          
                     </div>

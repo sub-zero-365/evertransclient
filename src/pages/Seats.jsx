@@ -38,58 +38,13 @@ const Seats = () => {
     const ref = useRef(null)
     // const isInView = useInView(ref)
     const { loading, seats: data } = useSelector(state => state.seatData);
-    // const [seat,setSeat]=useState([])
-    
-    // useEffect(() => {
-    //     if (isInView) {
-    //         console.log("im in view")
 
-    //         const { numberOfPages, currentPage } = data;
-    //         if (currentPage < numberOfPages) {
-    //             let i = currentPage;
-    //             ++i
-
-    //             handleFilterChange("page", i)
-    //             if (i == numberOfPages) {
-    //                 ref.current.classList.add("hidden")
-    //             }
-    //             console.log("page ", i)
-    //         }
-    //         console.log("im in view")
-    //     }
-    // }, [isInView])
-    // const handleLoadMore = (dir) => {
-    //     const { numberOfPages, currentPage } = data;
-    //     if (dir === 1) {
-    //         if (currentPage < numberOfPages) {
-    //             let i = currentPage;
-
-
-    //             handleFilterChange("page", ++i)
-
-    //             console.log("page ", i)
-    //         }
-    //     }
-    //     if (dir === -1) {
-    //         if (currentPage > 1) {
-    //             let i = currentPage;
-
-
-    //             handleFilterChange("page", --i)
-
-    //             console.log("page ", i)
-    //         }
-    //     }
-    //     console.log("im in view")
-    // }
-    // }
     const dispatch = useDispatch()
     const setData = (payload) => {
         return dispatch(setSeats(payload))
     }
     const [querySearch, setQuerySearch] = useSearchParams();
     const isadminuser = querySearch.get("admin")
-    
     const handleFilterChange = (key, value = null) => {
         setQuerySearch(preParams => {
             if (value == null) {
@@ -99,7 +54,9 @@ const Seats = () => {
             }
             return preParams
         })
+
     }
+
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
 
@@ -186,8 +143,8 @@ const Seats = () => {
                         }}
                     />
                     <UiButton onClick={handleDateRangeChange}
-                    name="query"
-                    className="!mx-auto !block !px-10 !mt-1 lg:px-10" />
+                        name="query"
+                        className="!mx-auto !block !px-10 !mt-1 lg:px-10" />
                 </div>
             </div>
             <Scrollable className="
@@ -324,7 +281,7 @@ const Seats = () => {
                                                     <td className="p-2 whitespace-nowrap flex lg:grid 
                                                     lg:grid-cols-2 lg:max-w-[15rem]">
                                                         <UiButton
-                                                        onClick={() => navigate(`${_id}?${isadminuser&&"admin=true"}`)} name="details" />
+                                                            onClick={() => navigate(`${_id}?${isadminuser && "admin=true"}`)} name="details" />
                                                         < a
                                                             className={`font-medium
                                                         shadow
@@ -362,7 +319,7 @@ const Seats = () => {
                                 </tbody>
                             </table>
                         </div>
-<UiButton onClick={()=>0} name="loadmore"/>
+                        <UiButton onClick={() => 0} name="loadmore" />
 
                     </div>
                 )

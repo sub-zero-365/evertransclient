@@ -14,7 +14,9 @@ import { BsPersonLinesFill } from "react-icons/bs"
 import { BsClipboardDataFill } from "react-icons/bs"
 import { FcAssistant } from 'react-icons/fc'
 import { BsSliders2Vertical } from 'react-icons/bs'
-import { GrUserAdmin } from 'react-icons/gr'
+// import { GrUserAdmin } from 'react-icons/gr'
+import { AiOutlineMessage } from "react-icons/ai"
+import { IoMdContacts } from "react-icons/io"
 const SideBar = () => {
 
   const dispatch = useDispatch()
@@ -66,18 +68,17 @@ const SideBar = () => {
       , to: "/dashboard/seat?admin=true"
 
     },
-    // {
 
-    //   name: "Admins",
-    //   icon: <FcAssistant size={20} />
-    //   , to: "/dashboard/assistants"
-
-    // },
     {
 
       name: "Assistants",
       icon: <FcAssistant size={20} />
       , to: "/dashboard/assistants"
+
+    }, {
+      name: "Contacts",
+      icon: <IoMdContacts size={20} />
+      , to: "/dashboard/contacts"
 
     },
 

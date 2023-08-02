@@ -1,4 +1,5 @@
-import { Outlet, useNavigate, Navigate, useLocation,Link } from "react-router-dom"
+import { AiOutlineArrowUp } from "react-icons/ai"
+import { Outlet, useNavigate, Navigate, useLocation, Link } from "react-router-dom"
 import { SideBar } from './'
 import { useDispatch, useSelector } from "react-redux"
 import { actions } from '../actions/toggleSide'
@@ -15,7 +16,7 @@ const DashBoardLayout = () => {
         , [location.pathname])
     const navigate = useNavigate()
 
-const [view,setView]=useState(false)
+    const [view, setView] = useState(false)
 
     const [toggle, setToggle] = useState(false);
     const dispatch = useDispatch();
@@ -26,13 +27,14 @@ const [view,setView]=useState(false)
     }
     return (
         <div className="overflow-x-hidden xl:container mx-auto">
-        <Alert toggle={toggle}
-            setToggle={setToggle} message={"Do you want to log out ?"}
-            confirmFunc={() => {
-                localStorage.removeItem("admin_token")
-                navigate("/auth");
+        
+            <Alert toggle={toggle}
+                setToggle={setToggle} message={"Do you want to log out ?"}
+                confirmFunc={() => {
+                    localStorage.removeItem("admin_token")
+                    navigate("/auth");
 
-            }} />
+                }} />
             <div className="min-h-[3rem] z-[0] 
             relative border-5 justify-between flex items-center  
             bg-white dark:bg-color_dark shadow-sm shadow-slate-300 container-- mx-auto px-4" >
@@ -75,7 +77,7 @@ const [view,setView]=useState(false)
                     </button>
                 </div>
             </div>
-            <div className={`flex ${view&&"lg:flex-row-reverse"} ease duration-500 transition-all`}>
+            <div className={`flex ${view && "lg:flex-row-reverse"} ease duration-500 transition-all`}>
                 <SideBar />
                 <Outlet />
             </div>

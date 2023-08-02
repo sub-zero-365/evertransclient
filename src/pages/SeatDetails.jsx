@@ -17,7 +17,7 @@ import { useSearchParams } from 'react-router-dom'
 import { getBuses } from '../utils/ReactSelectFunction'
 // import DownloadSelect from "react-select"
 import { components, style } from "../utils/reactselectOptionsStyles"
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import BusSelect from 'react-select/async'
 import axios from 'axios'
 import {
@@ -26,6 +26,7 @@ import {
 import { motion } from 'framer-motion'
 // import UiButton from '../components/UiButton'
 const SeatDetails = () => {
+    const ref = useRef(null)
     let downloadbaseurl = null
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
         downloadbaseurl = process.env.REACT_APP_LOCAL_URL
@@ -39,16 +40,23 @@ const SeatDetails = () => {
     const [querySearch, setQuerySearch] = useSearchParams();
     const isadminuser = querySearch.get("admin")
     let ticket_seat = querySearch.get("ticket_seat") || false;
-    // if (ticket_seat) ticket_seat += 1
     const [activeSeat, setActiveSeat] = useState((ticket_seat || null));
+    const scrollElement = () => {
+            ref.current?.scrollIntoView({
+                "behavior": "smooth"
+            })
+    }
     useEffect(() => {
         let timer = null
+
         if (activeSeat) {
+
             timer = setTimeout(() => {
                 setActiveSeat(null)
             }, 6000)
 
         }
+        
         return () => {
             clearTimeout(timer)
         }
@@ -101,24 +109,15 @@ const SeatDetails = () => {
             console.log(err)
             alert("fail to get seat" + err.response.data)
         } finally {
+            scrollElement()
+        
             setLoading(false)
         }
     }
     useEffect(() => {
         getSeats()
     }, [])
-    // const downloadOptions = [
 
-
-    //     {
-    //         label: "download all tickets", value: "all"
-    //     },
-    //     {
-    //         label: "deactive tickets", value: "deactive tickets"
-    //     },
-
-
-    // ]
     if (loading) return <div>Loading ....</div>
 
     return (
@@ -206,7 +205,10 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
                     <div className="flex justify-between px-2 pb-2">
                         <h1 className="text-xs lg:text- shadom-lg lg flex-1">
-                            <span className="w-[10px] mr-1 h-[10px] inline-block bg-green-400 rounded-full "></span>Available</h1>
+                            <span className="w-[10px] mr-1 h-[10px] inline-block bg-green-400 rounded-full "
+
+                            // onClick={scrollElement}
+                            ></span>Available</h1>
                         <h1 className="text-xs lg:text- shadom-lg lg flex-1">
                             <span className="w-[10px] mr-1 h-[10px] inline-block bg-blue-400 rounded-full "></span>Rerservation
                         </h1>
@@ -224,12 +226,14 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                             seats?.seat?.seat_positions?.map(({ isTaken, isReserved, _id }, index) => {
                                 return (
                                     <motion.button
-                                        animate={{ scale: activeSeat == index? [0.8, 1, 0.9] : null
-                                     }}
+                                        ref={activeSeat == index ? ref : null}
+                                        animate={{
+                                            scale: activeSeat == index ? [0.8, 1, 0.9] : null
+                                        }}
                                         transition={{
-                                          duration: 1,
-                                          ease: "easeInOut",
-                                          repeat: Infinity,
+                                            duration: 1,
+                                            ease: "easeInOut",
+                                            repeat: Infinity,
                                         }}
                                         onClick={() => {
                                             if (isTaken === true || isReserved == true) {

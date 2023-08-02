@@ -6,6 +6,7 @@ import axios from "axios"
 import { UserLayout, DashboardLayout, ProtectedRoute } from "./components";
 import { Home, Auth, SingleTicket } from "./pages";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import ContactLayout from "./pages/ContactLayout"
 
 import 'react-datepicker/dist/react-datepicker.css'
 import "swiper/css"
@@ -112,9 +113,11 @@ function App() {
                 <Route path="routes" element={<BusRoutes />} />
                 <Route path="register" element={<DashRegister />} />
                 <Route path="assistants" element={<Assistant />} />
+                <Route path="contacts" element={<ContactLayout />}>
+                </Route>
               </Route>
-              <Route path="assistant" 
-              element={<Assist />}>
+              <Route path="assistant"
+                element={<Assist />}>
                 <Route path=":id" element={<SingleTicket />} />
               </Route>
 
