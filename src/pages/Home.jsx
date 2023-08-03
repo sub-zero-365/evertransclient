@@ -13,17 +13,55 @@ import { getCities } from "../utils/ReactSelectFunction"
 import { hero } from "../Assets/images"
 import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import dateFormater from '../utils/DateFormater'
-
+import axios from "axios"
 import { components, style } from "../utils/reactselectOptionsStyles"
-
+// import UiButton from '../components/UiButton'
 const Home = () => {
-    const ticket = {}
+    let downloadbaseurl = null
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+        downloadbaseurl = process.env.REACT_APP_LOCAL_URL
+        // dev code
+    } else {
+        // production code
+        downloadbaseurl = process.env.REACT_APP_PROD_URL
+
+    }
+    const [ticket, setTicket] = useState({})
     const testimonials = useRef(null)
     const [up, setUp] = useState(0);
     const [fromCities, setFromCities] = useState("")
     const [toCities, setToCities] = useState("")
     const [isOpen, setIsOpen] = useState(false)
     const site_name = "Afri-Con"
+    const [loading, setLoading] = useState(false)
+    const [err, setErr] = useState("")
+    const [id, setId] = useState("")
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+        setIsOpen(true)
+        setLoading(true)
+        setErr(null)
+        try {
+            const { data: { ticket } } = await axios.post("/public/ticket",
+                {
+                    id
+                    , from: fromCities,
+                    to: toCities
+                })
+            setTicket(ticket)
+            console.log("enter here ")
+        } catch (err) {
+            console.log(err)
+            setErr(err.response.data)
+        } finally {
+            setTimeout(() => {
+                setLoading(false)
+            }, 2000)
+        }
+
+
+    }
     useEffect(() => {
         var counter = 0
 
@@ -63,79 +101,133 @@ const Home = () => {
       group grid place-items-center `}
                 onClick={() => setIsOpen(false)}
             >
+
                 <div
                     onClick={e => e.stopPropagation()}
                     className={`
-                    max-h-[calc(100%-60px)]
-                    overflow-auto
-          -translate-x-[50px]
-          md:translate-x-0
-          md:translate-y-[50px]
-          group-[.active]:translate-x-0
-          duration-700
-          ease 
-          transition-all
-          opacity-60
-          md:group-[.active]:translate-y-0
-          group-[.active]:opacity-100
-          bg-white
-          dark:bg-slate-800
-          shadow-sm
-          rounded-lg
-          w-[min(calc(100%-40px),400px)]
-          
-            py-5 pb-10`}>
-                    <h1 className="text-center font-semibold  font-montserrat text-xl mt-4 md:text-2xl tracking-tighter leading-10 oblique text-blue-900">Ticket Details</h1>
-                    <h2 className="text-center  text-lg md:text-xl font-medium  "> Ticket id</h2>
-                    <p className="text-center text-slate-500 mb-4 "> {ticket?._id}</p>
+    lg:max-h-[calc(100%-100px)]
+    max-h-[calc(100%-60px)]
+    overflow-auto
+-translate-x-[50px]
+md:translate-x-0
+md:translate-y-[50px]
+group-[.active]:translate-x-0
+duration-700
+ease 
+transition-all
+opacity-60
+md:group-[.active]:translate-y-0
+group-[.active]:opacity-100
+bg-white
+dark:bg-slate-800
+shadow-sm
+rounded-lg
+w-[min(calc(100%-40px),400px)]
 
-                    <h2 className="text-center  text-lg md:text-xl font-medium  "> Traveler Name</h2>
-                    <p className="text-center text-slate-500 mb-4 ">{ticket?.fullname || "n/a"}</p>
+py-5 pb-10`}>
+                    {
+                        loading ? <AnimateText text="loading please wait ..." className="!text-2xl" /> : (
+                            err ? <>
+                                <Heading text={err} className="!text-rose-600" />
+                                <p className="mb-4 px-4 text-center lg:text-start text-sm">contact customer service if something is wrong </p>
+                                <Link
+                                    to="contact-us"
+                                >
+                                    <UiButton name="Contact Customer Services" className="!pb-2.5 !pt-1.5 w-[min(400px,calc(100%-60px))] !mx-auto" />
+                                </Link>
 
-                    <h2 className="text-center  text-lg md:text-xl font-medium  ">Travel Date </h2>
-                    <p className="text-center text-slate-500 mb-4 "> {ticket?.traveldate ? dateFormater(ticket?.traveldate).date : "n/a"}</p>
-                    <h2 className="text-center  text-lg md:text-xl font-medium  ">travel time </h2>
-                    <p className="text-center text-slate-500 mb-4 "> {ticket?.traveltime || "n/a"}</p>
-                    <div className="grid grid-cols-2">
+                            </>
+                                : (
+                                    <div>
+                                        <h1 className="text-center font-semibold  font-montserrat text-xl mt-4 md:text-2xl tracking-tighter leading-10 oblique text-blue-900">Ticket Details</h1>
+                                        <h2 className="text-center  text-lg md:text-xl font-medium  "> Ticket id</h2>
+                                        <p className="text-center text-slate-500 mb-4 "> {ticket?._id}</p>
 
-                        <div>
-                            <h2 className="text-center  text-lg md:text-xl font-medium  "> From</h2>
-                            <p className="text-center text-slate-500 mb-4 ">{ticket?.from || "n/a"} </p>
+                                        <h2 className="text-center  text-lg md:text-xl font-medium  "> Traveler Name</h2>
+                                        <p className="text-center text-slate-500 mb-4 ">{ticket?.fullname || "n/a"}</p>
 
-                        </div>
-                        <div>
-                            <h2 className="text-center  text-lg md:text-xl font-medium  "> To</h2>
-                            <p className="text-center text-slate-500 mb-4 ">{ticket?.to || "n/a"}</p>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-2">
+                                        <h2 className="text-center  text-lg md:text-xl font-medium  ">Travel Date </h2>
+                                        <p className="text-center text-slate-500 mb-4 "> {ticket?.traveldate ? dateFormater(ticket?.traveldate).date : "n/a"}</p>
+                                        <h2 className="text-center  text-lg md:text-xl font-medium  ">travel time </h2>
+                                        <p className="text-center text-slate-500 mb-4 "> {ticket?.traveltime || "n/a"}</p>
+                                        <div className="grid grid-cols-2">
 
-                        <div>
+                                            <div>
+                                                <h2 className="text-center  text-lg md:text-xl font-medium  "> From</h2>
+                                                <p className="text-center text-slate-500 mb-4 ">{ticket?.from || "n/a"} </p>
 
-                            <h2 className="text-center  text-lg md:text-xl font-medium  "> sex</h2>
-                            <p className="text-center text-slate-500 mb-4 ">{ticket?.sex || "n/a"} </p>
-                        </div>
-                        <div>
-                            <h2 className="text-center  text-lg md:text-xl font-medium  "> status</h2>
-                            <p className="text-center sidebar text-slate-500 mb-4 grid place-items-center"> {ticket?.active ?
+                                            </div>
+                                            <div>
+                                                <h2 className="text-center  text-lg md:text-xl font-medium  "> To</h2>
+                                                <p className="text-center text-slate-500 mb-4 ">{ticket?.to || "n/a"}</p>
+                                            </div>
+                                        </div>
+                                        <div className="grid grid-cols-2">
+
+                                            <div>
+
+                                                <h2 className="text-center  text-lg md:text-xl font-medium  "> sex</h2>
+                                                <p className="text-center text-slate-500 mb-4 ">{ticket?.sex || "n/a"} </p>
+                                            </div>
+                                            <div>
+                                                <h2 className="text-center  text-lg md:text-xl font-medium  "> status</h2>
+                                                <p className="text-center sidebar text-slate-500 mb-4 grid place-items-center"> {ticket?.active ?
 
 
-                                ticket?.type == "roundtrip" ? <div className="flex gap-x-1">
-                                    {ticket?.doubletripdetails[0]?.active ? <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span> : <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>}
-                                    {ticket?.doubletripdetails[1]?.active ? <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span> : <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>}
-                                </div> : <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span>
+                                                    ticket?.type == "roundtrip" ? <div className="flex gap-x-1">
+                                                        {ticket?.doubletripdetails[0]?.active ? <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span> : <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>}
+                                                        {ticket?.doubletripdetails[1]?.active ? <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span> : <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>}
+                                                    </div> : <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span>
 
-                                :
-                                <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>
+                                                    :
+                                                    <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>
 
-                            }</p>
-                        </div>
-                    </div>
-                    <h2 className="text-center  text-lg md:text-xl font-medium  "> this ticket was created at </h2>
-                    <p className="text-center text-slate-500 mb-10 ">{dateFormater(ticket?.createdAt).date + " at " + dateFormater(ticket?.createdAt).time || "n/a"} </p>
-                    <h2 className="text-center  text-lg md:text-xl font-medium  "> price of the ticket</h2>
-                    <p className="text-center text-slate-500 " >{ticket?.price + "frs" || "n/a"} </p>
+                                                }</p>
+                                            </div>
+                                        </div>
+                                        <h2 className="text-center  text-lg md:text-xl font-medium  "> this ticket was created at </h2>
+                                        <p className="text-center text-slate-500 mb-10 ">{dateFormater(ticket?.createdAt).date + " at " + dateFormater(ticket?.createdAt).time || "n/a"} </p>
+                                        <h2 className="text-center  text-lg md:text-xl font-medium  "> price of the ticket</h2>
+                                        <p className="text-center text-slate-500 " >{ticket?.price + "frs" || "n/a"} </p>
+
+                                        <a
+                                            href={`${downloadbaseurl}/downloadticket/${ticket?._id}?payload=79873ghadsguy&requ`}
+                                            target="_blank"
+                                            className="inline---block 
+                        w-[min(300px,calc(100%-2.5rem))]
+                         bottom-0
+                         pb-2.5
+                         block
+                         min-h-[2rem]
+                         mx-auto
+                         pt-2
+                         text-center
+                        rounded bg-green-500   px-2 py-1 text-xs font-montserrat font-medium 
+leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
+transition duration-150 ease-in-out hover:bg-green-600
+hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:bg-green-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                                        >
+                                            Download ticket
+                                        </a>
+                                    </div>
+                                )
+
+                        )
+
+                    }
                 </div>
+
+
+
+
+
+
+
+
+
+
             </div>
 
             <div className={`fixed w-[40px] h-[40px] bottom-[5rem] bg-white right-[2rem] md:right-[4rem] 
@@ -262,8 +354,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                 initial={{ y: 30, opacity: 0 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
-
-                className="md:grid grid-cols-2 py-10 container mx-auto items-center">
+                className="md:grid grid-cols-2 space-y-8 py-10 container mx-auto items-center">
                 <div>
                     <img
                         className=""
@@ -295,15 +386,14 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
 
                         <AnimateText text="Check Ticket Status here" className='!text-lg' />
                         <form
-                            onSubmit={async (e) => {
-                                e.preventDefault();
-                                setIsOpen(true)
-                            }}
+                            onSubmit={handleSubmit}
                             className='px-5 pb-5'
                         >
                             <div className="relative mb-6" data-te-input-wrapper-init>
                                 <input
-                                    // ref={ticket_id}
+                                    value={id}
+                                    onChange={(e) => setId(e.target.value)}
+
                                     type="text"
                                     className="peer block min-h-[auto] w-full 
               rounded 
@@ -357,85 +447,9 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                                     Enter Ticket Id
                                 </label>
                             </div>
-                            <div className="relative mb-6" data-te-input-wrapper-init>
-                                <input
-                                    type="number"
-                                    className="peer block min-h-[auto] w-full 
-              rounded 
-              border-2
-              focus:border-2
-              focus:border-blue-400
-              valid:border-blue-400
-              bg-transparent
-              px-3 py-[0.32rem]
-              leading-[2.15] 
-              outline-none
-              transition-all 
-              duration-200
-              ease-linear
-              focus:placeholder:opacity-100
-              data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                                    id="ticket_id"
-                                    placeholder="Phone" required />
-                                <label
-                                    htmlFor="ticket_id"
-                                    className="pointer-events-none 
-              absolute left-3
-              top-0 mb-0
-              max-w-[90%]
-              origin-[0_0]
-              truncate 
-              pt-[0.37rem] 
-              leading-[2.15]
-              text-neutral-500
-              transition-all duration-200  
-              ease-out 
-              peer-focus:-translate-y-[1.15rem]
-              peer-focus:scale-[0.8]
-              peer-valid:scale-[0.8]
-              peer-valid:text-blue-400
-              peer-valid:-translate-y-[1.15rem]
-              peer-focus:text-blue-400
-              peer-focus:bg-white
-              peer-valid:bg-white
-              dark:peer-focus:bg-color_dark
-              dark:peer-valid:bg-color_dark
-              px-0
-              bg-transparent
-              peer-data-[te-input-state-active]:-translate-y-[1.15rem]
-               rounded-sm
-               peer-data-[te-input-state-active]:scale-[0.8]
-              motion-reduce:transition-none
-              dark:text-neutral-200
-              dark:peer-focus:text-primary"
-                                >
-                                    Enter Phone Number
-                                </label>
-                            </div>
+
                             <div className="grid grid-cols-2">
-                                <div>
-                                    <Heading text="From" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
 
-
-                                    <ToSelect
-
-                                        defaultOptions
-                                        catcheOptions
-                                        loadOptions={getCities}
-                                        required
-                                        styles={{
-                                            ...style,
-                                            wdith: "100%",
-                                            fontSize: 10 + "px"
-                                        }}
-                                        components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-                                        className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl "
-
-                                        onChange={evt => setToCities(evt.value)}
-                                    />
-
-                                </div>
 
 
                                 <div>
@@ -458,6 +472,29 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
 
                                         className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
                                         onChange={evt => setFromCities(evt.value)}
+                                    />
+
+                                </div>
+                                <div>
+                                    <Heading text="To" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
+
+
+                                    <ToSelect
+
+                                        defaultOptions
+                                        catcheOptions
+                                        loadOptions={getCities}
+                                        required
+                                        styles={{
+                                            ...style,
+                                            wdith: "100%",
+                                            fontSize: 10 + "px"
+                                        }}
+                                        components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+
+                                        className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl "
+
+                                        onChange={evt => setToCities(evt.value)}
                                     />
 
                                 </div>
