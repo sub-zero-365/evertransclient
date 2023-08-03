@@ -3,11 +3,12 @@ import image1 from './image (1).gif'
 import image2 from './image (2).gif'
 import image3 from './image (3).gif'
 import image4 from './image (4).gif'
-
+import hero from "./hero.svg"
 
 
 export {
 
     useravatar,
-    image1,image2,image3,image4
+    image1,image2,image3,image4,
+    hero
 }
