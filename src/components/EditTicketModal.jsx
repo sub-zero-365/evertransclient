@@ -32,7 +32,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import UiButton from './UiButton'
 import AnimatedText from './AnimateText'
 import { useSearchParams, useNavigate } from 'react-router-dom'
-const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
+const EditTicketModal = ({ isOpen, setIsOpen, ticket, className }) => {
     const token = localStorage.getItem("token");
     let [upgrade, setUpgrade] = useState(false)
     const [searchParams] = useSearchParams();
@@ -146,12 +146,12 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket }) => {
     return (
         <div
             onClick={() => setIsOpen(false)}
-            className={`fixed inset-0 z-[2] ${isOpen ? "visible pointer-events-auto" : "invisible pointer-events-none"}
+            className={`
+            ${className}
+            fixed inset-0 z-[2] ${isOpen ? "visible pointer-events-auto" : "invisible pointer-events-none"}
 w-screen h-screen 
 bg-slate-600/50 flex items-center justify-center`}>
-
             <motion.div
-
                 onClick={e => e.stopPropagation()}
                 className={`
 relative
@@ -234,14 +234,28 @@ shadow-slate-400
                                                                 <Scrollable
                                                                     className="!gap-x-1 !justify-center !mb-1
                                                             !gap-y-0.5 !flex-wrap px-2">
+                                                                    {console.log(seat_positions?.slice(
+                                                                        ...(
+                                                                            (((ticket?.seatposition + 1) <= 20) || upgrade) ? [0, 20] : [20]
+                                                                        )
+                                                                    )?.
+                                                                        filter(({ isTaken, isReserved }) => {
+                                                                            if (isReserved === false && isTaken == false) return true
+                                                                            // if (isTaken === false) return true
+                                                                            return false
+                                                                        }
+                                                                        ))}
                                                                     {
                                                                         seat_positions?.slice(
                                                                             ...(
                                                                                 (((ticket?.seatposition + 1) <= 20) || upgrade) ? [0, 20] : [20]
                                                                             )
-
                                                                         )?.
-                                                                            filter(({ isTaken, isReserved }) => (isTaken == false)
+                                                                            filter(({ isTaken, isReserved }) => {
+                                                                                if (isReserved === false && isTaken == false) return true
+                                                                                return false
+
+                                                                            }
                                                                             )
                                                                             ?.map(({ _id }) => (<
                                                                                 PanigationButton

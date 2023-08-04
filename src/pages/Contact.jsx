@@ -2,201 +2,203 @@ import { Footer } from '../components'
 import { NavLink } from 'react-router-dom'
 import Marquee from 'react-fast-marquee'
 import { Heading } from "../components"
+import { CiLocationOn } from 'react-icons/ci'
+import { BsTelephone, BsTelephoneForward } from 'react-icons/bs'
 const ContactUs = () => {
   return (
-    <div class="container   mt-10 md:px-6 mx-auto">
-      {/* <Alert toggle setToggle={()=>0} message={"Thanks for submitting your contact info"} /> */}
-      <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-3">
-          <li class="inline-flex items-center">
-            <NavLink to={"/"} href="#" class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <div class="flex items-center">
-              <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-              <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
-                <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Contact us</h1>
+    <>
 
-              </a>
-            </div>
-          </li>
+      <div class="container   mt-10 md:px-6 mx-auto">
+        {/* <Alert toggle setToggle={()=>0} message={"Thanks for submitting your contact info"} /> */}
+        <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
+          <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+              <NavLink to={"/"} href="#" class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                Home
+              </NavLink>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                  <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Contact us</h1>
 
-        </ol>
-      </nav>
+                </a>
+              </div>
+            </li>
+
+          </ol>
+        </nav>
 
 
-      <section
-        className="md:grid grid-cols-2 space-y-10 md:space-x-5
+        <section
+          className="md:grid grid-cols-2 space-y-10 md:space-x-5
         justify-start
         items-center px-4 container mx-auto pb-24 "
-      >
-        <div className="">
-          <img
-            src="http://afrique-con.com/images/bus.jpg"
-            className=""
-          />
-        </div>
-        <div>
-          <div>
-            <Heading text="For customers" className="!mb-2 !font-black !text-xl !pl-0 !text-center md:!text-start" />
-            <p className="text-sm ">
-              Customers and passengers can contact the national customer service centre for the country of departure by telephone or by sending an e-mail to support@afrique-con.com for any questions, lost items and ticket reservations.
-              You may also visit the local customer service desk located at our main terminals in Douala, Yaoundé, Buea and Ikom.
-            </p>
-
+        >
+          <div className="">
+            <img
+              src="http://afrique-con.com/images/bus.jpg"
+              className=""
+            />
           </div>
           <div>
-            <Heading text="For customers" className="!mb-2 !font-black !text-xl !pl-0 !text-center md:!text-start" />
-            <p className="text-sm ">
-              Customers and passengers can contact the national customer service centre for the country of departure by telephone or by sending an e-mail to support@afrique-con.com for any questions, lost items and ticket reservations.
-              You may also visit the local customer service desk located at our main terminals in Douala, Yaoundé, Buea and Ikom.
-            </p>
+            <div className='mb-5'>
+              <Heading text="For customers" className="!mb-2 !font-black !text-xl !pl-0 !text-center md:!text-start" />
+              <p className="text-sm ">
+                Customers and passengers can contact the national customer service centre for the country of departure by telephone or by sending an e-mail to support@afrique-con.com for any questions, lost items and ticket reservations.
+                You may also visit the local customer service desk located at our main terminals in Douala, Yaoundé, Buea and Ikom.
+              </p>
+
+            </div>
+            <div>
+              <Heading text="For Company" className="!mb-2 !font-black !text-xl !pl-0 !text-center md:!text-start" />
+              <p className="text-sm leading-[1.5rem]">
+                Corporate accounts can be obtained by contacting the local customer service located at our main terminals in Douala and Yaoundé or by sending an e-mail to support@afrique-con.com
+                For questions related to business with Afrique con group or for your advertisement on   </p>
+
+            </div>
 
           </div>
 
+        </section>
+
+
+        <div className="py-5 bg-slate-400 text-center  rounded-sm mb-10">
+          <Heading text="We are connecting Africa in comfort" className="!mb-0 !text-2xl" />
         </div>
 
-      </section>
-
-
-      <div className="py-5 bg-slate-400 text-center  rounded-sm mb-10">
-        <Heading text="We are connecting Africa in comfort" className="!mb-0 !text-2xl" />
-      </div>
-
-      <section
-        className="md:grid grid-cols-2  space-y-10 md:space-x-5
+        <section
+          className="md:grid grid-cols-2  space-y-10 md:space-x-5
         justify-start
         items-start px-4 container mx-auto pb-10"
-      >
-        <div className="order-last">
-          <img
-            src="http://afrique-con.com/images/bus.jpg"
-            className=""
-          />
-        </div>
-        <div>
+        >
+          <div className="order-last">
+            <img
+              src="http://afrique-con.com/images/bus.jpg"
+              className=""
+            />
+          </div>
           <div>
-            <Heading text="Buea" className="!mb-2 !font-black !text-xl !pl-0 !text-center md:!text-start" />
-            <p className="text-sm ">
-              Mile 17
-            </p>
-            <p className="text-sm ">
-              near WDC Aparthotel
-            </p>
-            <p className="text-sm ">
-              Buea.
-              +237 692830465 <br />
-              +237 678197346<br />
-              +237 678197353<br />
-            </p>
+            <div className='space-y-1'>
+              <Heading text="Buea" className="!mb-2 !font-black !text-xl !pl-0 !text-center md:!text-start" />
+              <p className="text-sm flex items-center">
+                <CiLocationOn />  <span className='ml-2'>Mile 17 </span>
+              </p>
+              <p className="text-sm ">
+                Near WDC Aparthotel
+              </p>
+              <p className="text-sm ">
+                Buea. <BsTelephoneForward className="inline-block ml-2 mb-2" /> <br />
+                <BsTelephoneForward className="inline-block ml-2 mb-2 mr-2" /> <a className='!font-bold text-blue-600 tracking-wide  underline underline-offset-4' href='tel:+237 692830465'>+237 692830465</a> <br />
+                <BsTelephoneForward className="inline-block ml-2 mb-2 mr-2" />  <a className='!font-bold text-blue-600 tracking-wide  underline underline-offset-4' href='tel:+237 678197346'>+237 678197346</a><br />
+                <BsTelephoneForward className="inline-block ml-2 mb-2 mr-2" /><a className='!font-bold text-blue-600 tracking-wide  underline underline-offset-4' href='tel: +237 678197353'> +237 678197353</a><br />
+              </p>
+
+            </div>
+
 
           </div>
 
-
-        </div>
-
-      </section>
-      <section
-        className="md:grid grid-cols-2  space-y-10 md:space-x-5
+        </section>
+        <section
+          className="md:grid grid-cols-2  space-y-10 md:space-x-5
         justify-start
         items-start px-4 container mx-auto pb-10"
-      >
-        <div className="">
-          <img
-            src="http://afrique-con.com/images/bus.jpg"
-            className=""
-          />
-        </div>
-        <div>
+        >
+          <div className="">
+            <img
+              src="http://afrique-con.com/images/bus.jpg"
+              className=""
+            />
+          </div>
           <div>
-            <Heading text="Buea" className="!mb-2 !font-black !text-xl !pl-0 !text-center md:!text-start" />
-            <p className="text-sm ">
-              Mile 17
-            </p>
-            <p className="text-sm ">
-              near WDC Aparthotel
-            </p>
-            <p className="text-sm ">
-              Buea.
-              +237 692830465 <br />
-              +237 678197346<br />
-              +237 678197353<br />
-            </p>
+            <div className='space-y-1'>
+              <Heading text="Yaounde" className="!mb-2 !font-black !text-xl !pl-0 !text-center md:!text-start" />
+              <p className="text-sm flex items-center">
+                <CiLocationOn />  <span className='ml-2'>Mile 17 </span>
+              </p>
+              <p className="text-sm ">
+                Near WDC Aparthotel
+              </p>
+              <p className="text-sm ">
+                Buea. <BsTelephoneForward className="inline-block ml-2 mb-2" /> <br />
+                <BsTelephoneForward className="inline-block ml-2 mb-2 mr-2" /> <a className='!font-bold text-blue-600 tracking-wide  underline underline-offset-4' href='tel:+237 692830465'>+237 692830465</a> <br />
+                <BsTelephoneForward className="inline-block ml-2 mb-2 mr-2" />  <a className='!font-bold text-blue-600 tracking-wide  underline underline-offset-4' href='tel:+237 678197346'>+237 678197346</a><br />
+                <BsTelephoneForward className="inline-block ml-2 mb-2 mr-2" /><a className='!font-bold text-blue-600 tracking-wide  underline underline-offset-4' href='tel: +237 678197353'> +237 678197353</a><br />
+              </p>
+
+            </div>
 
           </div>
 
+        </section>
 
-        </div>
+        {/* jiohfoiashdokfh ads f */}
+        {/* <section class="mb-5 text-gray-800 md:grid grid-cols-2">
+          <div>
 
-      </section>
+            <h1 class="mb-4 text-xl font-extrabold leading-none max-w-4xl tracking-tight px-5 text-gray-900 md:text-3xl lg:text-4xl dark:text-white">We wish to get back to  <span class="text-blue-600 dark:text-blue-500">you</span> </h1>
+            <p class="text-sm md:text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400 px-5 mb-6 max-w-2xl">Here at {process.env.REACT_APP_MY_APP_NAME} we focus on markets where technology, innovation, and capital can unlock long-term value and drive economic growth.</p>
 
-      {/* jiohfoiashdokfh ads f */}
-      <section class="mb-5 text-gray-800 md:grid grid-cols-2">
-        <div>
+            <h1 class="mb-4 px-5 text-xl font-extrabold text-gray-900 dark:text-white md:text-2xl lg:text-3xl max-w-4xl"><span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">Send An email or Click our Social Icons</span> to get to us</h1>
+            <div className="flex items-center gap-3 px-4 my-6 mb-5 justify-center md:justify-start  cursor:pointer">
 
-          <h1 class="mb-4 text-xl font-extrabold leading-none max-w-4xl tracking-tight px-5 text-gray-900 md:text-3xl lg:text-4xl dark:text-white">We wish to get back to  <span class="text-blue-600 dark:text-blue-500">you</span> </h1>
-          <p class="text-sm md:text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400 px-5 mb-6 max-w-2xl">Here at {process.env.REACT_APP_MY_APP_NAME} we focus on markets where technology, innovation, and capital can unlock long-term value and drive economic growth.</p>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-7 w-7"
+                fill="currentColor"
+                style={{ "color": "#128c7e" }}
 
-          <h1 class="mb-4 px-5 text-xl font-extrabold text-gray-900 dark:text-white md:text-2xl lg:text-3xl max-w-4xl"><span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">Send An email or Click our Social Icons</span> to get to us</h1>
-          <div className="flex items-center gap-3 px-4 my-6 mb-5 justify-center md:justify-start  cursor:pointer">
+                viewBox="0 0 24 24">
+                <path
+                  d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+              </svg>
 
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-7 w-7"
-              fill="currentColor"
-              style={{ "color": "#128c7e" }}
+              <svg
+                class="h-7 w-7"
+                fill="currentColor"
+                viewbox="0 0 24 24"
+                style={{ "color": " #0084ff" }}
+                xmlns="http://www.w3.org/2000/svg"
+                fill-rule="evenodd"
+                clip-rule="evenodd">
+                <path
+                  d="M12 0c-6.627 0-12 4.975-12 11.111 0 3.497 1.745 6.616 4.472 8.652v4.237l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.974 12-11.111 0-6.136-5.373-11.111-12-11.111zm1.193 14.963l-3.056-3.259-5.963 3.259 6.559-6.963 3.13 3.259 5.889-3.259-6.559 6.963z" />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-7 w-7"
+                fill="currentColor"
+                style={{ "color": "#333" }}
+                viewBox="0 0 24 24">
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
 
-              viewBox="0 0 24 24">
-              <path
-                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-            </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-7 w-7"
+                fill="currentColor"
+                style={{ "color": "#1877f2" }}
+                viewBox="0 0 24 24">
+                <path
+                  d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+              </svg>
 
-            <svg
-              class="h-7 w-7"
-              fill="currentColor"
-              viewbox="0 0 24 24"
-              style={{ "color": " #0084ff" }}
-              xmlns="http://www.w3.org/2000/svg"
-              fill-rule="evenodd"
-              clip-rule="evenodd">
-              <path
-                d="M12 0c-6.627 0-12 4.975-12 11.111 0 3.497 1.745 6.616 4.472 8.652v4.237l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.974 12-11.111 0-6.136-5.373-11.111-12-11.111zm1.193 14.963l-3.056-3.259-5.963 3.259 6.559-6.963 3.13 3.259 5.889-3.259-6.559 6.963z" />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-7 w-7"
-              fill="currentColor"
-              style={{ "color": "#333" }}
-              viewBox="0 0 24 24">
-              <path
-                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-            </svg>
 
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-7 w-7"
-              fill="currentColor"
-              style={{ "color": "#1877f2" }}
-              viewBox="0 0 24 24">
-              <path
-                d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-            </svg>
-
+            </div>
 
           </div>
 
-        </div>
-
-        <div class="container text-gray-800 px-4">
-          <div class="block rounded-lg shadow-lg py-10 md:py-12 px-2 md:px-6"
-            style={{ background: "hsla(0, 0%, 100%, 0.8)", backdropFilter: "blur(30px)" }}>
-            <div class="flex flex-wrap">
-              <div class="grow-0 shrink-0 basis-auto w-full xl:w-5/12 px-3 lg:px-6 mb-12 xl:mb-0">
-                <form>
-                  <div class="form-group mb-6">
-                    <input type="text" class="form-control block
+          <div class="container text-gray-800 px-4">
+            <div class="block rounded-lg shadow-lg py-10 md:py-12 px-2 md:px-6"
+              style={{ background: "hsla(0, 0%, 100%, 0.8)", backdropFilter: "blur(30px)" }}>
+              <div class="flex flex-wrap">
+                <div class="grow-0 shrink-0 basis-auto w-full xl:w-5/12 px-3 lg:px-6 mb-12 xl:mb-0">
+                  <form>
+                    <div class="form-group mb-6">
+                      <input type="text" class="form-control block
                       w-full
                       px-3
                       py-1.5
@@ -210,10 +212,10 @@ const ContactUs = () => {
                       ease-in-out
                       m-0
                       focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" id="exampleInput7"
-                      placeholder="Name" />
-                  </div>
-                  <div class="form-group mb-6">
-                    <input type="tel" class="form-control block
+                        placeholder="Name" />
+                    </div>
+                    <div class="form-group mb-6">
+                      <input type="tel" class="form-control block
                       w-full
                       px-3
                       py-1.5
@@ -227,10 +229,10 @@ const ContactUs = () => {
                       ease-in-out
                       m-0
                       focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" id="exampleInput7"
-                      placeholder="Phone Number" />
-                  </div>
-                  <div class="form-group mb-6">
-                    <input type="email" class="form-control block
+                        placeholder="Phone Number" />
+                    </div>
+                    <div class="form-group mb-6">
+                      <input type="email" class="form-control block
                       w-full
                       px-3
                       py-1.5
@@ -244,10 +246,10 @@ const ContactUs = () => {
                       ease-in-out
                       m-0
                       focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" id="exampleInput8"
-                      placeholder="Email address" />
-                  </div>
-                  <div class="form-group mb-6">
-                    <textarea class="
+                        placeholder="Email address" />
+                    </div>
+                    <div class="form-group mb-6">
+                      <textarea class="
                       form-control
                       block
                       w-full
@@ -264,15 +266,15 @@ const ContactUs = () => {
                       m-0
                       focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
                     " id="exampleFormControlTextarea13" rows="3" placeholder="Message"></textarea>
-                  </div>
-                  <div class="form-group form-check text-center mb-6">
-                    <input type="checkbox"
-                      class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mr-2 cursor-pointer"
-                      id="exampleCheck87" checked />
-                    <label class="form-check-label inline-block text-gray-800" for="exampleCheck87">Send me a copy of this
-                      message</label>
-                  </div>
-                  <button type="submit" class="
+                    </div>
+                    <div class="form-group form-check text-center mb-6">
+                      <input type="checkbox"
+                        class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mr-2 cursor-pointer"
+                        id="exampleCheck87" checked />
+                      <label class="form-check-label inline-block text-gray-800" for="exampleCheck87">Send me a copy of this
+                        message</label>
+                    </div>
+                    <button type="submit" class="
                     w-full
                     px-6
                     py-2.5
@@ -290,16 +292,16 @@ const ContactUs = () => {
                     transition
                     duration-150
                     ease-in-out">Send</button>
-                </form>
-              </div>
+                  </form>
+                </div>
 
+              </div>
             </div>
+
           </div>
 
-        </div>
-      
-      </section>
-      <div class="grow-0 shrink-0 basis-auto w-full xl:w-7/12">
+        </section> */}
+        <div class="grow-0 text-sm shrink-0 basis-auto w-full xl:w-7/12">
           <div class="flex flex-wrap">
             <div class="mb-12 grow-0 shrink-0 basis-auto w-full md:w-6/12 px-3 lg:px-6">
               <div class="flex items-start">
@@ -353,7 +355,7 @@ const ContactUs = () => {
                 </div>
                 <div class="grow ml-6">
                   <p class="font-bold mb-1">Socal Accounts</p>
-                  <p class="text-gray-500">googlemail</p>
+                  <p class="text-gray-500"><a href='www.facebook.com' className="">Facebook</a></p>
                   <p class="text-gray-500">{process.env.REACT_APP_MY_APP_NAME}@gmail.com</p>
                 </div>
               </div>
@@ -379,16 +381,16 @@ const ContactUs = () => {
             </div>
           </div>
         </div>
-      <div className="w-fit mx-auto">
+        <div className="w-fit mx-auto">
 
-        <Marquee play pauseOnClick pauseOnHover className=" text-blue-600 dark:text-blue-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5 text-gray-900- md:text-lg lg:text-xl dark:text-white- max-w-5xl">
-          thanks for contacting us we get back to you later or soonest
-        </Marquee>
+          <Marquee play pauseOnClick pauseOnHover className=" text-blue-600 dark:text-blue-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5 text-gray-900- md:text-lg lg:text-xl dark:text-white- max-w-5xl">
+            thanks for contacting us we get back to you later or soonest
+          </Marquee>
 
+        </div>
       </div>
-
       <Footer />
-    </div>
+    </>
 
   )
 

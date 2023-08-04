@@ -25,6 +25,7 @@ import { components, style } from "../utils/reactselectOptionsStyles"
 import DatePicker from 'react-datepicker';
 import { useInView } from 'framer-motion'
 import { PlaceHolderLoader } from '../components'
+import {Helmet} from 'react-helmet'
 const Seats = () => {
     let downloadbaseurl = null
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -100,6 +101,13 @@ const Seats = () => {
 
 
     return (
+    <>
+    <Helmet>
+    <title>
+    Borderaux
+    </title>
+    </Helmet>
+    
         <div className="h-[calc(100vh-60px)] container mx-auto !flex-1 w-full overflow-y-auto">
             <div className="flex
             flex-col lg:flex-row
@@ -328,6 +336,7 @@ const Seats = () => {
 
 
         </div>
+    </>
     )
 }
 

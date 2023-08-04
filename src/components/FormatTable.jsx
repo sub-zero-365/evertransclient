@@ -161,11 +161,10 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
                                         <Button admin state={ticket}
                                             href={`/${admin ? "dashboard" : "user"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
                                         />
-                                        {ticket?.active && (
+                                        {(ticket?.active && !admin) && (
                                             <button
                                                 onClick={
                                                     () => handleEditTicket(ticket)
-
                                                 }
 
                                                 className={`

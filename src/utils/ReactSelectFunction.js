@@ -10,7 +10,6 @@ export const getCities = async (inputValue = "") => {
         return res?.data?.cities
     } catch (err) {
         console.log(err)
-        alert("some error occurs")
     }
 
 }
@@ -31,8 +30,6 @@ export const getBuses = async (inputValue = "") => {
         }))
         return buses_name
     } catch (err) {
-        console.log("error : ", err)
-        alert("error" + err.response.data)
         return err.response.data
 
     }
