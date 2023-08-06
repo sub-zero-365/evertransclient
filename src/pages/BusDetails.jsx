@@ -64,9 +64,9 @@ const BusDetails = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         toast.promise(handleDeleteBus().
-        then((data) => {
-            navigate(-1)
-        }), {
+            then((data) => {
+                navigate(-1)
+            }), {
             pending: "please wait deleting...",
             success: " Done deleting",
             error: "Something went wrong ,try again later"
@@ -117,6 +117,27 @@ const BusDetails = () => {
     if (isLoading) return <div>Loading bus Details</div>
     return (
         <div className='!flex-1 h-[calc(100vh-60px)] container mx-auto overflow-y-auto pb-24'>
+        <nav class="flex mb-5 mt-5 px-5 " aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                        <li class="inline-flex items-center">
+                            <Link
+                                relative="path"
+                                to={"../"}
+                                href="#" class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                                bus
+                            </Link>
+                        </li>
+                        <li>
+                            <div class="flex items-center" >
+                                <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                                <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                                    <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Bus Details</h1>
+                                </a>
+                            </div>
+                        </li>
+
+                    </ol>
+                </nav>
             <div
                 className={`overlay ${isOpen && "active"} transition-[visible] duration-100
       group grid place-items-center `}
@@ -143,7 +164,7 @@ const BusDetails = () => {
           
             py-5 pb-10`}>
 
-                    <AnimatedText text="change password "
+                    <AnimatedText text="Delete Bus !!"
                         className='!mb-1 !text-lg !text-rose-600 !text-center capitalize' />
                     <p className="text-lsm !font-montserrat !text-center mb-6">Enter Bus name to delete Bus: <span className="!text-sm !text-rose-600">{bus?.bus?.name}</span></p>
                     <form
@@ -221,23 +242,23 @@ const BusDetails = () => {
                 </div>
             </div>
             <AnimatedText text={"Bus Details "} className='!text-3xl !text-center lg:!text-4xl w-full' />
-            <div className='flex flex-col lg:flex-row w-full'>
+            <div className='flex flex-col lg:flex-row justify-center w-full'>
                 <div className='mb-10 '>
                     <Heading text={"Properties"} className={"!font-black"} />
-                    <div className='px-5 space-y-2 lg:w-[40rem] p'>
-                        <div className="flex justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
+                    <div className='lg:w-[40rem] space-y-4'>
+                        <div className="flex px-4 justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
                             <Heading text={"Name "} className={"!font-black !pl-0 !mb-0  "} />
                             <p>{bus?.bus?.name || "n/a"}</p>
                         </div>
-                        <div className="flex justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
+                        <div className="flex px-4 justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
                             <Heading text={"Capacity"} className={"!font-black !pl-0 !mb-0  "} />
                             <p>{bus?.bus?.number_of_seats || "n/a"}</p>
                         </div>
-                        <div className="flex justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
+                        <div className="flex px-4 justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
                             <Heading text={"Plate Number"} className={"!font-black !pl-0 !mb-0  "} />
                             <p>{bus?.bus?.plate_number || "n/a"}</p>
                         </div>
-                        <div className="flex justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
+                        <div className="flex px-4 justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
                             <Heading text={"Trip Completed"} className={"!font-black !pl-0 !mb-0  "} />
                             <p>{bus?.seats || "n/a"}</p>
                         </div>
@@ -252,7 +273,7 @@ const BusDetails = () => {
                             className={"!scroll-px-10 !px-12"} />
                     </div>
                 </div>
-                <div className='lg:w-full mx-4 mb-10 shadow pb-10 lg:mr-5  bg-white dark:bg-slate-900 py-7 rounded-sm px-6'>
+                {/* <div className='lg:w-full mx-4 mb-10 shadow pb-10 lg:mr-5  bg-white dark:bg-slate-900 py-7 rounded-sm px-6'>
                     <div className="flex items-center">
                         <Heading text={"Bus Setting"} className={"!font-black mr-1 !mb-1"} />
                         <BsSliders2Vertical size={20} />
@@ -326,33 +347,6 @@ const BusDetails = () => {
                             >Phone Number
                             </label>
                         </div>
-                        <div className="grid grid-cols-2">
-                            <div className='flex flex-col space-y-2  items-start'>
-                                <Heading text={"Feature"}
-                                    className={"!font-medium !text-sm mr-1 !pl-0  !mb-0 !mt-2"} />
-                                <div className="relative mb-6 pt-2" data-te-input-wrapper-init>
-                                    <input
-                                        type="text"
-                                        className={`peer block min-h-[auto] w-full 
-              rounded 
-              border-2
-              focus:border-2
-              focus:border-blue-400
-              valid:border-blue-400
-              bg-transparent
-              px-3 py-[0.32rem]
-              leading-[2.15] 
-              outline-none
-              transition-all 
-              duration-200
-              ease-linear
-              focus:placeholder:opacity-100
-              data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0`}
-                                        id="exampleFormControlInput3"
-                                        placeholder="Phone Number" required />
-
-                                </div>
-                            </div>
                             <div className='flex flex-col space-y-2  items-start'>
                                 <Heading text={"Edit Plate Number"}
                                     className={"!font-medium !text-sm mr-1 !pl-0  !mb-0 !mt-2"} />
@@ -379,13 +373,11 @@ const BusDetails = () => {
 
                                 </div>
                             </div>
-                        </div>
-
                     </div>
                     <UiButton
                         name={"Submit !"}
                         className={"!block !text-lg !mx-auto  !mt-10 lg:!mt-20 !py-1 pb-1.5 !w-[min(calc(100%-40px),400px)]"} />
-                </div>
+                </div> */}
 
             </div>
 

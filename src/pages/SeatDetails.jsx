@@ -1,17 +1,14 @@
-// import { Document, Page } from 'react-pdf';
-// import "core-js/features/array/at";
-// import { pdfjs } from 'react-pdf';
+
 import AnimatedText from "../components/AnimateText"
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import {
     Heading,
-    // PrevButton,
-    // NextButton
 }
 
     from '../components'
 import { toast } from "react-toastify"
-
+import Marquee from 'react-fast-marquee'
+import dayjs from "dayjs"
 import { useSearchParams } from 'react-router-dom'
 import { getBuses } from '../utils/ReactSelectFunction'
 import { components, style } from "../utils/reactselectOptionsStyles"
@@ -22,8 +19,27 @@ import {
     useQuery,
 } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import {Helmet} from 'react-helmet'
+import { Helmet } from 'react-helmet'
+import { ToggleSwitch, DisplayUi } from "../components"
+import UiButton from "../components/UiButton"
 const SeatDetails = () => {
+    const token = localStorage.getItem("token");
+    const [isOpen, setIsOpen] = useState(false)
+    const [timer, setTimer] = useState(null)
+    const handleMouseDown = ({ _id }) => {
+        const _timer = setTimeout(() => {
+            window.navigator?.vibrate([100])
+            setIsOpen(true)
+            setPos(_id)
+            clearTimeout(timer)
+
+        }, 1000);
+        setTimer(_timer)
+    }
+    const handleMouseUp = () => {
+        clearTimeout(timer)
+    }
+
     const ref = useRef(null)
     let downloadbaseurl = null
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -41,6 +57,7 @@ const SeatDetails = () => {
             "behavior": "smooth"
         })
     }
+
     useEffect(() => {
         let timer = null
 
@@ -75,6 +92,7 @@ const SeatDetails = () => {
         }
         handleFilterChange(key, value);
     }
+    const [loadingError, setLoadingError] = useState("")
     const { data: ticketData, isLoading, error } = useQuery({
         queryKey: ['seatdetailstickets'],
         queryFn: async () => axios.get(`/seat/seatdetails/${id}`),
@@ -84,12 +102,23 @@ const SeatDetails = () => {
     const navigate = useNavigate()
 
 
+    const [state, setState] = useState(false);
+    const [seatposition, setPos] = useState(null)
+    const handleChange = () => {
+        setState(true)
+        return axios.post("ticket/removeticketfrombus", {
+            seat_id: id,
+            seatposition
+        }, {
 
+            headers: {
+                'Authorization': "makingmoney " + token
+            }
+        })
+
+    }
     const handleClick = async (index) => {
-
         return axios.get(`/seat/ticket/${id}/${index}`)
-
-
     }
     const getSeats = async () => {
         setLoading(true)
@@ -102,7 +131,8 @@ const SeatDetails = () => {
             }
         } catch (err) {
             console.log(err)
-            alert("fail to get seat" + err.response.data)
+            // alert("fail to get seat" + err.response.data)
+            setLoadingError(err.response.data)
         } finally {
             scrollElement()
 
@@ -113,8 +143,18 @@ const SeatDetails = () => {
         getSeats()
     }, [])
 
-    if (loading) return <div>Loading ....</div>
 
+    if (loading) return <div>Loading ....</div>
+    if (loadingError) return (<div className="h-[calc(100vh-60px)] !flex-1 w-full grid place-items-center">
+        <div>
+        <img src='https://c.tenor.com/4lA3ViMpstwAAAAj/wait-no.gif' id="no__message" alt='no messages'/>
+            <AnimatedText text={loadingError} className="!text-2xl md:!text-3xl" />
+            <Heading text="This is  happen because the booking was move " />
+        </div>
+        <UiButton name="Go Back"
+            className="w-[min(400px,calc(100%-40px))] !pb-2.5 !pt-1.5"
+            onClick={() => navigate(-1)} />
+    </div>)
     return (
         <>
             <Helmet>
@@ -123,7 +163,60 @@ const SeatDetails = () => {
                 </title>
             </Helmet>
             <div className="!flex-1 h-[calc(100vh-60px)] container mx-auto overflow-y-auto pb-24">
-                <nav class="flex mb-5 mt-5 px-5 lg:hidden" aria-label="Breadcrumb">
+                <div className={`overlay !h-[100%] group !bg-slate-200/25 !fixed inset-0  bottom-0 ${isOpen ? "active" : null}`} onClick={() => setIsOpen(false)}>
+
+                    <div className="absolute w-[min(400px,calc(100%-60px))]
+                    rounded-t-lg
+                    md:rounded-b-lg
+                    dark:bg-slate-800
+                    bg-white left-1/2 
+                    -translate-x-1/2 
+                    -bottom-full
+                    md:-top-full
+                    md:!bottom-auto
+                    md:group-[.active]:!top-10
+                    group-[.active]:bottom-0
+                    md:transition-[top] 
+                    transition-[bottom] 
+                    duration-500
+                    pb-10 px-5 pt-2
+                    min-h-[100px]"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <Heading text={"Action Box "} className="!text-center !font-black underline underline-offset-4 " />
+                        <div>
+                            <ToggleSwitch
+                                disabled={state}
+                                state={state}
+                                onChange={() => toast.promise(
+                                    handleChange().then(({ data }) => {
+                                        setIsOpen(false)
+                                        getSeats()
+                                    }).finally(() => {
+                                        setTimeout(() => {
+                                            setState(false)
+                                        }, 5000);
+                                    })
+                                    ,
+                                    {
+                                        pending: "loading",
+                                        success: "finish loading ...",
+                                        error: "Something went wrong ,try again later"
+                                    }
+
+                                )
+                                }
+
+                                initialMessage={"Remove this user from this seat ?"}
+                            />
+                            <Marquee play pauseOnClick pauseOnHover
+                                className=" text-rose-600  py-6 mb-4 text-xs font-extrabold leading-none  px-5  dark:text-white- max-w-5xl">
+                                remove this user from this seat position so you can place another user
+                            </Marquee>
+                        </div>
+                    </div>
+                </div>
+                <nav class="flex mb-5 mt-5 px-5 " aria-label="Breadcrumb">
                     <ol class="inline-flex items-center space-x-1 md:space-x-3">
                         <li class="inline-flex items-center">
                             <Link
@@ -236,6 +329,34 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                                                 ease: "easeInOut",
                                                 repeat: Infinity,
                                             }}
+                                            onTouchStart={() => {
+                                                if (isTaken === true || isReserved == true) {
+
+                                                    handleMouseDown({
+                                                        _id
+                                                    })
+                                                }
+                                            }}
+                                            onTouchEnd={() => {
+                                                if (isTaken === true || isReserved == true) {
+
+                                                    handleMouseUp()
+                                                }
+                                            }}
+                                            onMouseDown={() => {
+                                                if (isTaken === true || isReserved == true) {
+
+                                                    handleMouseDown({
+                                                        _id
+                                                    })
+                                                }
+                                            }}
+                                            onMouseUp={() => {
+                                                if (isTaken === true || isReserved == true) {
+
+                                                    handleMouseUp()
+                                                }
+                                            }}
                                             onClick={() => {
                                                 if (isTaken === true || isReserved == true) {
                                                     toast.promise(
@@ -278,6 +399,12 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
                         </div>
                         <AnimatedText text={"Passenger manifest"} className="!uppercase !text-3xl lg:!text-4xl !mb-2" />
+                        <Heading text={`${seats?.seat?.traveldate ? dayjs(seats?.seat?.traveldate).format("DD/MM/YYYY") : null} at ${seats?.seat?.traveltime}`}
+                            className={"!text-center !text-gray-950 dark:!text-white !mb-2"}
+                        />
+                        <div className="!max-w-sm mx-auto">
+                            <DisplayUi from={seats?.seat?.from} to={seats?.seat?.to} />
+                        </div>
                         <div className="lg:mx-2 shadow-sm rounded-sm  lg:mt-10 w-full">
                             <div className="relative max-w-full overflow-x-auto
                     bg-white

@@ -23,8 +23,8 @@ import "core-js/features/array/at";
 import {
   QueryClient,
   QueryClientProvider,
-  useQuery,
 } from '@tanstack/react-query'
+import ScrollTo from "./withRouter"
 
 const queryClient = new QueryClient()
 const ContactUs = lazy(() => import("./pages/Contact"));
@@ -44,13 +44,14 @@ const BusSits = lazy(() => import("./pages/BusSits"));
 const Cities = lazy(() => import("./pages/Cities"));
 const Users = lazy(() => import("./pages/Users"));
 const DashboardHome = lazy(() => import("./pages/DashBoardHome"));
-const AdminAssistant = lazy(() => import("./pages/AdminContact"));
+// const AdminAssistant = lazy(() => import("./pages/AdminContact"));
 const Details = lazy(() => import("./pages/userDetails"));
 const SeatDetails = lazy(() => import("./pages/SeatDetails"));
 const DashRegister = lazy(() => import("./pages/DashRegister"));
 const BusDetails = lazy(() => import("./pages/BusDetails"));
 const FindBus = lazy(() => import("./pages/FindBus"));
 const Assist = lazy(() => import("./pages/Assistant.user"));
+
 axios.defaults.withCredentials = true;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = process.env.REACT_APP_LOCAL_URL
@@ -65,15 +66,18 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 
 function App() {
   return (
-    <div className="bg-color_light  dark:bg-color_dark dark:text-white"
+    <div className=""
     >
       <BrowserRouter>
+      <ScrollTo />
+      
         <QueryClientProvider client={queryClient}>
           <Suspense fallback={<div className="h-screen w-full
           bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
               <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
           </div>}>
             <Routes>
+          
               <Route path="/" element={<UserLayout />}>
                 <Route index element={<Home />} />
                 <Route path="login" element={<Login />} />

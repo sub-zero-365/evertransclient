@@ -824,8 +824,14 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
       {
 
-        !isLoading && <FormatTable tickets={userData?.tickets} admin
-          currentPage={querySearch.get("page")} />
+        !isLoading && <FormatTable
+        ticketData={userData}
+        
+        // tickets={userData?.tickets} admin
+        //   currentPage={querySearch.get("page")} 
+          
+          
+          />
       }
 
       {
@@ -834,7 +840,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
         )
       }
       <div className='mt-10 ' />
-      <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
+      {/* <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
         {Array.from({
           length: userData?.numberOfPages
         }, (_, index) => {
@@ -847,7 +853,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
               checkPages(index + 1)
             }} />
         })}
-      </Scrollable>
+      </Scrollable> */}
 
     </motion.div>
   )

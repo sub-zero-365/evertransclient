@@ -174,9 +174,11 @@ const DashboardHome = () => {
 
             <Heading text="Recent Book Tickets" className="!font-black first-letter:!text-2xl !text-lg underline underline-offset-8 uppercase" />
 
-            <FormatTable tickets={ticketData.tickets}
-                skip={10}
-                currentPage={1}
+            <FormatTable 
+            ticketData={ticketData}
+            hidePanigation
+                // skip={10}
+                // currentPage={1}
                 admin />
 
 

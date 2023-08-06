@@ -42,9 +42,9 @@
   -webkit-text-fill-color: transparent;
 }
 
-body {
-  @apply font-poppins !font-light !text-xs lg:text-sm;
-  /* overscroll-behavior: contain; */
+body ,
+html{
+  @apply font-poppins !font-light !text-sm  bg-color_light  dark:bg-color_dark dark:text-white;
 }
 
 .links-item {
@@ -392,7 +392,7 @@ body {
   text-transform: uppercase;
 }
 .overlay {
-  @apply fixed w-full z-[50] h-full inset-0 bg-slate-600/75  opacity-0 pointer-events-none invisible duration-500  transition-all;
+  @apply fixed w-full z-[50] !h-full inset-0 bg-slate-600/75  opacity-0 pointer-events-none invisible duration-500  transition-all;
 }
 .overlay.active {
   @apply opacity-100 pointer-events-auto visible;

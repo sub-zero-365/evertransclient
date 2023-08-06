@@ -73,8 +73,8 @@ const Appointment = () => {
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
-    const [activeIndex, setActiveIndex] = useState((querySearch.get("page") - 1));
-    const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
+    // const [activeIndex, setActiveIndex] = useState((querySearch.get("page") - 1));
+    // const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
     const [loading, setLoading] = useState(false)
     const [userData, setUserData] = useState({})
 
@@ -142,10 +142,10 @@ const Appointment = () => {
         fetchData()
     }, [querySearch])
 
-    const checkPages = (index) => {
-        if (querySearch.get("page") == index) return
-        handleFilterChange("page", index)
-    }
+    // const checkPages = (index) => {
+    //     if (querySearch.get("page") == index) return
+    //     handleFilterChange("page", index)
+    // }
     const handleSortTime = (evt) => {
         if (querySearch.get("sort") == evt.value) return
         handleFilterChange("page", 1)
@@ -163,7 +163,7 @@ const Appointment = () => {
     }
     const [isOpen, setIsOpen] = useState(false);
     async function fetchData() {
-        setIsActiveIndexLoading(true);
+        // setIsActiveIndexLoading(true);
         try {
             const response = await axios.get(url, {
                 headers: {
@@ -177,7 +177,7 @@ const Appointment = () => {
             console.log(err);
         }
         finally {
-            setIsActiveIndexLoading(false)
+            // setIsActiveIndexLoading(false)
             if (loading) {
                 setLoading(false)
             }
@@ -384,7 +384,7 @@ z-10  "
                                     }
                                     components={components()}
                                     options={
-                                       timeOptions
+                                        timeOptions
                                     }
                                     defaultValue={{
                                         label: "select time",
@@ -414,7 +414,7 @@ z-10  "
                             </div>
 
                         </Scrollable>
-                            <ClearFilter keys={[
+                        <ClearFilter keys={[
                             "sort,newest"
                             ,
                             "ticketStatus,all",
@@ -424,8 +424,8 @@ z-10  "
                             "triptype,all",
                             "limit,100",
                             "traveltime,7487",
-                            ]} />
-                         
+                        ]} />
+
                     </div>
                     <div
                         onClick={() => setIsOpen(false)}
@@ -501,120 +501,120 @@ z-10  "
                                 <SwiperSlide className="group">
                                     <Heading text={"Query  Travel At"} className="!font-black !text-sm underline !underline-offset-4 !mb-2 !text-center" />
 
-                        
-                                        <div
-                                         
-                                            className="flex flex-col items-center w-full justify-center  group-[.swiper-slide-active]:!translate-y-0 
+
+                                    <div
+
+                                        className="flex flex-col items-center w-full justify-center  group-[.swiper-slide-active]:!translate-y-0 
                                             translate-y-[50px] ease duration-[1s] transition-all">
-                                            <DatePicker
-                                                wrapperClassName="!w-full !bg-orange !border-none !outline-none "
-                                                className="!w-full !bg-orange-500 !border-none !outline-none "
-                                                containerClassName="!w-full !border-none !outline-none !shadow-none"
-                                                selected={startDate}
-                                                onChange={onChange}
-                                                startDate={startDate}
-                                                endDate={endDate}
-                                                selectsRange
-                                                inline
-                                                rangeColors={['#f33e5b', '#3ecf8e', '#fed14c']}
-                                                containerStyle={{
-                                                    width: "100%"
-                                                }}
-                                            // maxDate={new Date()}
-                                            />
-                                            <button
-                                                data-te-ripple-init
-                                                data-te-ripple-color="light"
-                                                className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+                                        <DatePicker
+                                            wrapperClassName="!w-full !bg-orange !border-none !outline-none "
+                                            className="!w-full !bg-orange-500 !border-none !outline-none "
+                                            containerClassName="!w-full !border-none !outline-none !shadow-none"
+                                            selected={startDate}
+                                            onChange={onChange}
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            selectsRange
+                                            inline
+                                            rangeColors={['#f33e5b', '#3ecf8e', '#fed14c']}
+                                            containerStyle={{
+                                                width: "100%"
+                                            }}
+                                        // maxDate={new Date()}
+                                        />
+                                        <button
+                                            data-te-ripple-init
+                                            data-te-ripple-color="light"
+                                            className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
   transition duration-150 ease-in-out hover:bg-blue-600
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                                                onClick={handleBoardingRangeSearch}
+                                            onClick={handleBoardingRangeSearch}
 
-                                            >
-                                                {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
-                                            </button>
+                                        >
+                                            {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                                        </button>
 
-                                            {
-                                                querySearch.get("boardingRange") && <button
-                                                    data-te-ripple-init
-                                                    data-te-ripple-color="light"
-                                                    className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
+                                        {
+                                            querySearch.get("boardingRange") && <button
+                                                data-te-ripple-init
+                                                data-te-ripple-color="light"
+                                                className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
 leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
 transition duration-150 ease-in-out hover:bg-red-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                                                    onClick={() => {
+                                                onClick={() => {
 
-                                                        handleFilterChange("boardingRange")
-                                                    }}
-                                                >
-                                                    Clear Travel
-                                                </button>
-                                            }
-                                        </div>
-                            
+                                                    handleFilterChange("boardingRange")
+                                                }}
+                                            >
+                                                Clear Travel
+                                            </button>
+                                        }
+                                    </div>
+
 
                                 </SwiperSlide>
                                 <SwiperSlide className="group">
                                     <Heading text={"Query  Created At"}
                                         className="!font-black !text-sm underline !underline-offset-4 !mb-2 !text-center" />
 
-                     
-                                        <div
-                                          
-                                            exit={{ opacity: 0, duration: 2 }}
-                                            className="flex flex-col items-center w-full justify-center  group-[.swiper-slide-active]:!translate-y-0 
+
+                                    <div
+
+                                        exit={{ opacity: 0, duration: 2 }}
+                                        className="flex flex-col items-center w-full justify-center  group-[.swiper-slide-active]:!translate-y-0 
                                             translate-y-[50px] ease duration-[1s] transition-all">
-                                            <DatePicker
-                                                selected={startDate}
-                                                onChange={onChange}
-                                                startDate={startDate}
-                                                endDate={endDate}
-                                                selectsRange
-                                                inline
-                                                maxDate={new Date()}
-                                            />
-                                            <button
-                                                data-te-ripple-init
-                                                data-te-ripple-color="light"
-                                                className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+                                        <DatePicker
+                                            selected={startDate}
+                                            onChange={onChange}
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            selectsRange
+                                            inline
+                                            maxDate={new Date()}
+                                        />
+                                        <button
+                                            data-te-ripple-init
+                                            data-te-ripple-color="light"
+                                            className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
   transition duration-150 ease-in-out hover:bg-blue-600
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                                                onClick={handleFilterSearch}
+                                            onClick={handleFilterSearch}
 
-                                            >
-                                                {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
-                                            </button>
+                                        >
+                                            {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                                        </button>
 
-                                            {
-                                                querySearch.get("daterange") && <button
-                                                    data-te-ripple-init
-                                                    data-te-ripple-color="light"
-                                                    className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
+                                        {
+                                            querySearch.get("daterange") && <button
+                                                data-te-ripple-init
+                                                data-te-ripple-color="light"
+                                                className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
 leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
 transition duration-150 ease-in-out hover:bg-red-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                                                    onClick={() => {
-                                                        handleFilterChange("daterange")
-                                                    }}
-                                                >
-                                                    Clear Filter Query
-                                                </button>
-                                            }
-                                        </div>
-                           
+                                                onClick={() => {
+                                                    handleFilterChange("daterange")
+                                                }}
+                                            >
+                                                Clear Filter Query
+                                            </button>
+                                        }
+                                    </div>
+
 
                                 </SwiperSlide>
 
@@ -631,7 +631,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                                     </div>
                                 )
                             }
-                         
+
 
 
                         </div>
@@ -643,10 +643,13 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
             <Heading text={"Recent Regular Booking"} className="!mb-4 !text-center md:text-start first-letter:!text-4xl underline underline-offset-8" />
             {
                 isLoading ? (<PlaceHolderLoader />) : (
-                    <FormatTable tickets={ticketData?.tickets}
+                    <FormatTable
+                        tickets={ticketData?.tickets}
+                        ticketData={ticketData}
                         admin
-                        skip={querySearch.get("limit")}
-                        currentPage={querySearch.get("page")} />
+                    // skip={querySearch.get("limit")}
+                    // currentPage={querySearch.get("page")} 
+                    />
                 )
 
             }
@@ -657,7 +660,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto flex  md:gap-x-2"
 
             >
-                {Array.from({
+                {/* {Array.from({
                     length: ticketData?.numberOfPages
                 }, (text, index) => {
                     return <PanigationButton
@@ -670,7 +673,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                             setActiveIndex(index)
                             checkPages(index + 1)
                         }} />
-                })}
+                })} */}
             </div>
         </div>
     )

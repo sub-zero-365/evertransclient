@@ -488,8 +488,8 @@ const Details = () => {
               peer-focus:text-blue-400
               peer-focus:bg-white
               peer-valid:bg-white
-              dark:peer-focus:bg-color_dark
-              dark:peer-valid:bg-color_dark
+              dark:peer-focus:bg-slate-800
+              dark:peer-valid:bg-slate-800
               px-0
               bg-transparent
               peer-data-[te-input-state-active]:-translate-y-[1.15rem]
@@ -544,8 +544,8 @@ const Details = () => {
               peer-focus:text-blue-400
               peer-focus:bg-white
               peer-valid:bg-white
-              dark:peer-focus:bg-color_dark
-              dark:peer-valid:bg-color_dark
+              dark:peer-focus:bg-slate-800
+              dark:peer-valid:bg-slate-800
               px-0
               bg-transparent
               peer-data-[te-input-state-active]:-translate-y-[1.15rem]
@@ -600,8 +600,8 @@ const Details = () => {
               peer-focus:text-blue-400
               peer-focus:bg-white
               peer-valid:bg-white
-              dark:peer-focus:bg-color_dark
-              dark:peer-valid:bg-color_dark
+              dark:peer-focus:bg-slate-800
+              dark:peer-valid:bg-slate-800
               px-0
               bg-transparent
               peer-data-[te-input-state-active]:-translate-y-[1.15rem]
@@ -1090,7 +1090,7 @@ z-10  "
         transition-[right] shadow
         lg:shadow-none lg:max-w-sm lg:w-[22rem] 
         text-center bg-white
-        dark:bg-slate-800 rounded-sm right-0 top-12 h-fit
+        dark:bg-slate-800 rounded-sm right-0 top-0 h-fit
            w-[calc(100vw-3.5rem)] max-w-sm
            z-20 fixed   lg:static px-4 `}>
             <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
@@ -1126,16 +1126,15 @@ z-10  "
 
                 :
                 <div
-                  className=' overflow-y-auto max-h-[calc(100vh-5rem)] lg:max-h-fit overflow-x-hidden '
+                  className=' overflow-y-auto max-h-[calc(100vh-0px)] lg:max-h-fit overflow-x-hidden '
                 >
                   {querySearch.get("account_block") && "account restricted"}
-                  <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4  !text-lg first-letter:text-2xl" />
+                  <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4--  !text-lg first-letter:text-2xl" />
                   <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
                   <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.phone || "n/a"}</h4>
                   <UiButton
                     name="Update Password" className="!mx-auto !rounded-lg !mt-2"
                     onClick={() => {
-                      // if (toggle) setToggle(false)
                       setIsOpen(true)
                     }} />
                   <Swiper
@@ -1286,7 +1285,6 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
           duration-700
           ease 
           transition-all
-          opacity-60
           md:group-[.active]:translate-y-0
           group-[.active]:opacity-100
           bg-white
@@ -1345,8 +1343,8 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
               peer-focus:text-blue-400
               peer-focus:bg-white
               peer-valid:bg-white
-              dark:peer-focus:bg-color_dark
-              dark:peer-valid:bg-color_dark
+              dark:peer-focus:bg-slate-800
+              dark:peer-valid:bg-slate-800
               px-0
               bg-transparent
               peer-data-[te-input-state-active]:-translate-y-[1.15rem]
@@ -1506,9 +1504,11 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
         {
 
           !isLoading && (<FormatTable
-            tickets={userData?.tickets}
-            skip={querySearch.get("limit")}
-            currentPage={querySearch.get("page")} />)
+            ticketData={userData}
+            // skip={querySearch.get("limit")}
+            // currentPage={querySearch.get("page")} 
+            
+            />)
         }
 
         {
@@ -1517,7 +1517,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
           )
         }
         <div className='mt-10 ' />
-        <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
+        {/* <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
           {Array.from({
             length: userData?.numberOfPages
           }, (_, index) => {
@@ -1530,7 +1530,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 checkPages(index + 1)
               }} />
           })}
-        </Scrollable>
+        </Scrollable> */}
 
       </motion.div>
     </>

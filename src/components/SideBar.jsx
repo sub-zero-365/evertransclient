@@ -75,12 +75,7 @@ const SideBar = () => {
       icon: <FcAssistant size={20} />
       , to: "/dashboard/assistants"
 
-    }, {
-      name: "Contacts",
-      icon: <IoMdContacts size={20} />
-      , to: "/dashboard/contacts"
-
-    },
+    }, 
 
   ]
   const [view, setView] = useState(false)

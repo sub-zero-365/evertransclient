@@ -14,7 +14,7 @@ import Alert from '../components/Alert'
 import Categories from 'react-select'
 // import FromSelect from 'react-select/async'
 // import ToSelect from 'react-select/async'
-import { useNavigate, useSearchParams,Link } from 'react-router-dom'
+import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 // import DatePicker from 'react-datepicker'
 const token = localStorage.getItem("admin_token");
@@ -47,16 +47,15 @@ const Bus = () => {
         position: toast.POSITION.BOTTOM_CENTER
     })
     const [activeIndex, setActiveIndex] = useState(null)
-    const BusDetail = ({ number_of_seats, feature, name, _id, seat_positions, active, from, to,time }) => {
+    const BusDetail = ({ number_of_seats, feature, name, _id, seat_positions, active, from, to, time }) => {
         const counter = seat_positions?.filter((x) => x.isTaken == true)?.length
         return (
             <Link to={`${_id}`}
                 key={_id}
-                // onClick={() => navigate(`${_id}`)}
-                class={`max-w-sm border  border-gray-200 rounded-lg shadow  ${counter == number_of_seats ? "bg-slate-300" : "bg-white"} dark:bg-gray-800 dark:border-gray-700`}>
+                class={`max-w-sm border-b-2  border-gray-200 dark:border-gray-700 rounded-lg shadow  ${counter == number_of_seats ? "bg-slate-300" : "bg-white"} dark:bg-gray-800 dark:border-gray-700`}>
                 <div className="grid grid-cols-[1fr,auto] px-2 pt-3
     pb-2
-    items-center place-items-center border">
+    items-center place-items-center border-b ">
                     <Heading text="Bus Details"
                         className="!mb-0 !text-lg !text-start !mt-0 !pl-0 !ml-0 
     !font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
@@ -83,7 +82,7 @@ const Bus = () => {
                             <Heading text={"VIP Bus"}
                                 className="!mb-2 !text-sm" />
                         </div>
-                        
+
 
                     </div>
 
@@ -189,7 +188,7 @@ const Bus = () => {
         date: startDate
 
     })
-    
+
     const handleSetActive = async (id) => {
         setActiveIndex(id)
         try {
@@ -485,7 +484,7 @@ z-10  "
                             </label>
                         </div>
                         <div className="relative mb-6" data-te-input-wrapper-init>
-                            <input 
+                            <input
                                 value={(busDat?.plate_number || "")}
                                 onChange={e => setBusData((prev) => ({
                                     ...prev,
@@ -574,7 +573,7 @@ z-10  "
                                 flex-col items-center">
                                     <Heading text="Bus Type" className="!text-sm !text-slate-400  !mb-1" />
                                     <Features
-                                    className=" dark:text-white"
+                                        className=" dark:text-white"
                                         options={featureOptions}
                                         onChange={e => setBusData((prev) => ({
                                             ...prev,

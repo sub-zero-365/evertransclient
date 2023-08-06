@@ -1,7 +1,7 @@
-import { Form, Heading } from "./"
+import { Heading } from "./"
 const Footer = () => {
   return (
-    <footer class="bg-neutral-900 xl:container mx-auto dark:bg-slate-900 mt-10  text-center text-white py-20">
+    <footer class="bg-neutral-900 2xl:container mx-auto dark:bg-slate-900 mt-10  text-center text-white py-20">
       <div>
 
 

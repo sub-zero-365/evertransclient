@@ -377,7 +377,6 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
           duration-700
           ease 
           transition-all
-          opacity-60
           md:group-[.active]:translate-y-0
           group-[.active]:opacity-100
           bg-white
@@ -437,8 +436,8 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
               peer-focus:text-blue-400
               peer-focus:bg-white
               peer-valid:bg-white
-              dark:peer-focus:bg-color_dark
-              dark:peer-valid:bg-color_dark
+              dark:peer-focus:bg-slate-800
+              dark:peer-valid:bg-slate-800
               px-0
               bg-transparent
               peer-data-[te-input-state-active]:-translate-y-[1.15rem]
@@ -451,73 +450,6 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                                         Enter Ticket Id
                                     </label>
                                 </div>
-
-                                <div className="grid grid-cols-2">
-
-
-
-                                    <div>
-
-                                        <Heading text="From" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
-
-                                        <FromSelect
-                                            defaultOptions
-                                            catcheOptions
-                                            loadOptions={getCities}
-                                            required
-
-                                            styles={{
-                                                ...style,
-                                                wdith: "100%",
-                                                fontSize: 10 + "px"
-                                            }}
-
-                                            components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-                                            className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
-                                            onChange={evt => setFromCities(evt.value)}
-                                        />
-
-                                    </div>
-                                    <div>
-                                        <Heading text="To" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
-
-
-                                        <ToSelect
-
-                                            defaultOptions
-                                            catcheOptions
-                                            loadOptions={getCities}
-                                            required
-                                            styles={{
-                                                ...style,
-                                                wdith: "100%",
-                                                fontSize: 10 + "px"
-                                            }}
-                                            components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-                                            className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl "
-
-                                            onChange={evt => setToCities(evt.value)}
-                                        />
-
-                                    </div>
-                                </div>
-
-                                <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
-                                    <motion.h1
-                                        // animate={{
-                                        //     opacity: error ? 1 : 0,
-                                        //     y: error ? 0 : -40,
-                                        //     x: error ? 0 : -1000
-
-                                        // }}
-
-
-                                        className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> </motion.h1>
-                                </div>
-
-
                                 <button
                                     type="submit"
                                     className="inline-block bg-blue-400

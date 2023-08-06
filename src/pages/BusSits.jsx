@@ -171,7 +171,7 @@ const
                 </ol>
               </nav>
               <DisplayUi from={queryParameters.get("from")} to={queryParameters.get("to")} />
-              <DateUi dayOfeek={new Date().getDay()}
+              <DateUi 
                 date={queryParameters.get("date")}
                 time={queryParameters.get("time")} />
               <AnimateText text="Please Select Seat"
@@ -491,11 +491,12 @@ const
                         }}
                         required
                         menuPlacement="top"
+                        components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
                         styles={{
                           control: base => ({
                             ...base,
                             border: 0,
-                            borderBottom: "1px solid black",
+                            borderBottom: "0px solid black",
                             boxShadow: "none",
                             background: "transparent",
                             color: "red",
@@ -511,12 +512,10 @@ const
                             {
                               label: "male",
                               value: "male"
-
                             },
                             {
                               label: "female",
                               value: "female"
-
                             }
 
                           ]
@@ -525,50 +524,7 @@ const
 
 
                     </div>
-                    {/* <div className="px-2 w-fit mt-4 flex gap-2">
-                    <div className="flex items-center">
-
-                      <input
-                        className="pb-0"
-                        type="radio"
-                        value="male"
-                        id="male"
-                        name="gender"
-                        checked
-                        onChange={e => setUserInfo({
-                          ...userInfo,
-                          gender: e.target.value
-                        })}
-                      />
-                      <label
-                        className="inline-block  pl-[0.15rem] hover:cursor-pointer"
-                        htmlFor="gender">
-                        Male
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-
-                      <input
-                        type="radio"
-                        value="female"
-                        id="female"
-                        name="gender"
-                        // onChange={e=>setUserInfo(e.target.value)}
-                        onChange={e => setUserInfo({
-                          ...userInfo,
-                          gender: e.target.value
-                        })}
-
-                      />
-                      <label
-                        className="inline-block  pl-[0.15rem] hover:cursor-pointer"
-                        htmlFor="gender">
-                        female
-                      </label>
-                    </div> */}
-
-                    {/* </div> */}
-
+                   
                   </div>
 
                   <div className="relative w-[80px] flex-none" data-te-input-wrapper-init>

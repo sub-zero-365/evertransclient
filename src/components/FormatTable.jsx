@@ -1,9 +1,33 @@
 import { motion } from "framer-motion";
-import { Button, DeactiveStatusButton, ActiveStatusButton } from './'
+import { Button, DeactiveStatusButton, ActiveStatusButton, PanigationButton } from './'
 import { useState, useEffect } from 'react'
-
+import dateFormater from '../utils/DateFormater'
 import EditTicketModal from './EditTicketModal'
-const FormatTable = ({ tickets, currentPage, admin, skip }) => {
+import UiButton from "./UiButton";
+import { useSearchParams } from 'react-router-dom'
+
+const FormatTable = ({ticketData, admin ,hidePanigation}) => {
+    
+    const [querySearch, setQuerySearch] = useSearchParams();
+   const  skip=querySearch.get("limit") || 100
+   const currentPage=querySearch.get("page") || 1
+    const handleFilterChange = (key, value = null) => {
+        setQuerySearch(preParams => {
+            if (value == null) {
+                preParams.delete(key)
+            } else {
+                preParams.set(key, value)
+            }
+            return preParams
+        })
+
+    }
+    const [activeIndex, setActiveIndex] = useState((querySearch.get("page") - 1));
+    const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false);
+    const checkPages = (index) => {
+        if (querySearch.get("page") == index) return
+        handleFilterChange("page", index)
+    }
     const [ticket, setSelectTicket] = useState({})
     const [isOpen, setIsOpen] = useState(false);
     const handleEditTicket = async (ticket) => {
@@ -98,7 +122,7 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
 
                     >
                         {
-                            tickets?.map((ticket, index) => (
+                            ticketData?.tickets?.map((ticket, index) => (
                                 <tr key={index}
                                     className={` ${index % 2 == 0
                                         ? "bg-slate-100" : "bg-white"}
@@ -133,7 +157,7 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
                                     </td>
                                     <td className="px-3 py-2">
                                         {ticket?.traveldate ?
-                                            (new Date(ticket.traveldate).toLocaleDateString()) : "n/a"}
+                                            dateFormater(ticket?.traveldate).date : "n/a"}
                                     </td>
                                     <td className="px-3 py-2 hidden lg:block">
                                         {ticket?.traveltime ?
@@ -141,7 +165,7 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
                                     </td>
                                     <td className="px-3 py-2">
                                         {ticket?.createdAt ?
-                                            (new Date(ticket.createdAt).toLocaleDateString()) : "n/a"}
+                                            dateFormater(ticket?.createdAt).date : "n/a"}
                                     </td>
                                     <td className="px-3 py-2 cursor-pointer">
                                         {ticket?.email ?
@@ -162,40 +186,15 @@ const FormatTable = ({ tickets, currentPage, admin, skip }) => {
                                             href={`/${admin ? "dashboard" : "user"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
                                         />
                                         {(ticket?.active && !admin) && (
-                                            <button
+                                            <UiButton
+                                                name="Edit"
+                                                className={"!bg-blue-900"}
                                                 onClick={
                                                     () => handleEditTicket(ticket)
                                                 }
 
-                                                className={`
-font-medium
-shadow
-md:shadow-md
-shadow-blue-200
-dark:shadow-slate-800
-bg-blue-400
-dark:bg-gray-700
-pt-1
-mr-1
-rounded-sm
-text-white
-dark:font-semibold
-px-4
-pb-1.5
-place-items-center  
-hover:bg-blue-700
-ease 
-transition-colors
-duration-700
-hover:underline
-flex
-justify-center 
-items-center
-text-[0.7rem] 
-md:text-sm
-font-montserrat
-`}
-                                            >Edit</button>
+
+                                            >Edit</UiButton>
                                         )}
                                     </td>
                                 </tr>
@@ -205,6 +204,27 @@ font-montserrat
                     </motion.tbody>
                 </table>
             </div>
+            {
+            hidePanigation?null:<div 
+            className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto flex  md:gap-x-2"
+        >
+            {Array.from({
+                length: ticketData?.numberOfPages
+            }, (text, index) => {
+                return <PanigationButton
+                    text={index + 1}
+                    active={activeIndex}
+                    loading={isActiveIndexLoading}
+                    index={index}
+
+                    onClick={() => {
+                        setActiveIndex(index)
+                        checkPages(index + 1)
+                    }} />
+            })}
+        </div>
+            }
+            
         </>
     )
 }
