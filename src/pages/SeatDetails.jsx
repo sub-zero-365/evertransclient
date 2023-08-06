@@ -51,7 +51,9 @@ const SeatDetails = () => {
     const [querySearch, setQuerySearch] = useSearchParams();
     const isadminuser = querySearch.get("admin")
     let ticket_seat = querySearch.get("ticket_seat") || false;
-    const [activeSeat, setActiveSeat] = useState((ticket_seat || null));
+    const [activeSeat, setActiveSeat] = useState(null);
+    const [loading, setLoading] = useState(false)
+
     const scrollElement = () => {
         ref.current?.scrollIntoView({
             "behavior": "smooth"
@@ -62,19 +64,15 @@ const SeatDetails = () => {
         let timer = null
 
         if (activeSeat) {
-
             timer = setTimeout(() => {
                 setActiveSeat(null)
             }, 6000)
-
         }
-
         return () => {
             clearTimeout(timer)
         }
     }, [activeSeat])
 
-    const [loading, setLoading] = useState(false)
     const handleFilterChange = (key, value = null) => {
         setQuerySearch(preParams => {
             if (value == null) {
@@ -134,9 +132,11 @@ const SeatDetails = () => {
             // alert("fail to get seat" + err.response.data)
             setLoadingError(err.response.data)
         } finally {
-            scrollElement()
-
-            setLoading(false)
+                setActiveSeat(ticket_seat)
+                setLoading(false)
+                if (loading == false) {
+                    scrollElement()
+                }
         }
     }
     useEffect(() => {
@@ -144,10 +144,18 @@ const SeatDetails = () => {
     }, [])
 
 
-    if (loading) return <div>Loading ....</div>
+    if (loading) return <div
+        className="h-[calc(100vh-60px)] !flex-1 w-full grid place-items-center"
+    >
+        <img src="https://i.gifer.com/ZKZg.gif"
+
+            className="object-fit max-w-[100px]"
+        />
+
+    </div>
     if (loadingError) return (<div className="h-[calc(100vh-60px)] !flex-1 w-full grid place-items-center">
         <div>
-        <img src='https://c.tenor.com/4lA3ViMpstwAAAAj/wait-no.gif' id="no__message" alt='no messages'/>
+            <img src='https://c.tenor.com/4lA3ViMpstwAAAAj/wait-no.gif' id="no__message" alt='no messages' />
             <AnimatedText text={loadingError} className="!text-2xl md:!text-3xl" />
             <Heading text="This is  happen because the booking was move " />
         </div>

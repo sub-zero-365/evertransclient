@@ -217,7 +217,7 @@ const User = () => {
           Single Ticket
         </title>
       </Helmet>
-      <div className={`min-w-3xl flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-60px)] pb-64 overflow-y-auto ${!isadminuser && "container"}`}>
+      <div className={`max-w-3xl  flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-60px)] pb-64 overflow-y-auto ${!isadminuser && "container"}`}>
         {/* {
           (ticket && readonly == false) && (<EditTicketModal isOpen={isOpen_} setIsOpen={setIsOpen_} ticket={ticket} />)
         } */}
@@ -320,11 +320,17 @@ const User = () => {
 
             <h2 className="text-center  text-lg md:text-xl font-medium  "> Traveler Name</h2>
             <p className="text-center text-slate-500 mb-4 ">{ticket?.fullname || "n/a"}</p>
+            <div className="grid grid-cols-2">
+              <div>
+                <h2 className="text-center  text-lg md:text-xl font-medium  ">Travel Date </h2>
+                <p className="text-center text-slate-500 mb-4 "> {ticket?.traveldate ? dateFormater(ticket?.traveldate).date : "n/a"}</p>
+              </div>
+              <div>
+                <h2 className="text-center  text-lg md:text-xl font-medium  ">travel time </h2>
+                <p className="text-center text-slate-500 mb-4 "> {ticket?.traveltime || "n/a"}</p>
+              </div>
+            </div>
 
-            <h2 className="text-center  text-lg md:text-xl font-medium  ">Travel Date </h2>
-            <p className="text-center text-slate-500 mb-4 "> {ticket?.traveldate ? dateFormater(ticket?.traveldate).date : "n/a"}</p>
-            <h2 className="text-center  text-lg md:text-xl font-medium  ">travel time </h2>
-            <p className="text-center text-slate-500 mb-4 "> {ticket?.traveltime || "n/a"}</p>
             <div className="grid grid-cols-2">
 
               <div>
@@ -360,12 +366,21 @@ const User = () => {
                 }</p>
               </div>
             </div>
-            <h2 className="text-center  text-lg md:text-xl font-medium  "> this ticket was created at </h2>
+            <h2 className="text-center  text-lg md:text-xl font-medium  "> Created At </h2>
             <p className="text-center text-slate-500 mb-10 ">{dateFormater(ticket?.createdAt).date + " at " + dateFormater(ticket?.createdAt).time || "n/a"} </p>
+            <div className='grid  grid-cols-2'>
+              <div>
+                <h2 className="text-center  text-lg md:text-xl font-medium  "> Price</h2>
+                <p className="text-center text-slate-500 mb-10 " >{ticket?.price + "frs" || "n/a"} </p>
+              </div>
+              <div>
+                <h2 className="text-center  text-lg md:text-xl font-medium  ">Seat</h2>
+                <p className="text-center text-slate-500 mb-10 " >{ticket?.seatposition!==null?Number(ticket.seatposition) +1: "n/a"} </p>
+              </div>
+
+            </div>
 
 
-            <h2 className="text-center  text-lg md:text-xl font-medium  "> price of the ticket</h2>
-            <p className="text-center text-slate-500 mb-10 " >{ticket?.price + "frs" || "n/a"} </p>
             {
               (ticket) && (
                 <Link
