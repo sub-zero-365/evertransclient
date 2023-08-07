@@ -750,6 +750,9 @@ py-5 pb-10`}>
                       <p className="text-center text-slate-500 mb-10 ">{dateFormater(ticket?.createdAt).date + " at " + dateFormater(ticket?.createdAt).time || "n/a"} </p>
                       <h2 className="text-center  text-lg md:text-xl font-medium  "> price of the ticket</h2>
                       <p className="text-center text-slate-500 " >{ticket?.price + "frs" || "n/a"} </p>
+                     {
+                     
+                     ticket?.active&&(
                       <UiButton
                         name="Edit Ticket"
                         className="!block 
@@ -765,6 +768,9 @@ py-5 pb-10`}>
                           setIsOpen_(false)
                         }}
                       />
+                     
+                     )
+                     }
                       <a
                         href={`${downloadbaseurl}/downloadticket/${ticket?._id}?payload=79873ghadsguy&requ`}
                         target="_blank"
@@ -907,7 +913,7 @@ z-10  "
                         <div className='grid grid-cols-2 gap-x-1 place-items-center'>
 
                           <Button name="view"
-                            className={"!w-full"}
+                            className={"!inline-block !mx-0  !w-full"}
                             href={`${_id}`}
                           />
                           <a

@@ -22,6 +22,7 @@ import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet'
 import { ToggleSwitch, DisplayUi } from "../components"
 import UiButton from "../components/UiButton"
+import { AiOutlineWarning } from "react-icons/ai"
 const SeatDetails = () => {
     const token = localStorage.getItem("token");
     const [isOpen, setIsOpen] = useState(false)
@@ -119,7 +120,6 @@ const SeatDetails = () => {
         return axios.get(`/seat/ticket/${id}/${index}`)
     }
     const getSeats = async () => {
-        setLoading(true)
         try {
             const res = await axios.get("/seat/specific/" + id, {}, {});
             setSeats(res.data)
@@ -132,14 +132,15 @@ const SeatDetails = () => {
             // alert("fail to get seat" + err.response.data)
             setLoadingError(err.response.data)
         } finally {
-                setActiveSeat(ticket_seat)
-                setLoading(false)
-                if (loading == false) {
-                    scrollElement()
-                }
+            setActiveSeat((ticket_seat))
+            setLoading(false)
+            if (loading == false) {
+                scrollElement()
+            }
         }
     }
     useEffect(() => {
+        setLoading(true)
         getSeats()
     }, [])
 
@@ -157,7 +158,15 @@ const SeatDetails = () => {
         <div>
             <img src='https://c.tenor.com/4lA3ViMpstwAAAAj/wait-no.gif' id="no__message" alt='no messages' />
             <AnimatedText text={loadingError} className="!text-2xl md:!text-3xl" />
-            <Heading text="This is  happen because the booking was move " />
+            <Heading text="This   happen because the booking was move " />
+            {/* <Link
+                to={"/notseat?ticket_id="+querySearch.get("ticket_id")}
+            >
+
+                <UiButton name="Check Here"
+                    className="w-[min(400px,calc(100%-40px))] !bg-green-700 !pb-2.5 !pt-1.5"
+                    onClick={() => 0} />
+            </Link> */}
         </div>
         <UiButton name="Go Back"
             className="w-[min(400px,calc(100%-40px))] !pb-2.5 !pt-1.5"
@@ -191,7 +200,11 @@ const SeatDetails = () => {
                     min-h-[100px]"
                         onClick={e => e.stopPropagation()}
                     >
-                        <Heading text={"Action Box "} className="!text-center !font-black underline underline-offset-4 " />
+                        <div className="flex justify-center items-center">
+                            <Heading text={"Action Box "} className="!text-center !mb-0 !text-rose-600 !font-black underline underline-offset-4 " />
+                            <AiOutlineWarning className="text-rose-800 text-xl ml-2" />
+
+                        </div>
                         <div>
                             <ToggleSwitch
                                 disabled={state}

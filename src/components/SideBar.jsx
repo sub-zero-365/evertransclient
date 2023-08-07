@@ -43,7 +43,7 @@ const SideBar = () => {
       name: "Employees",
       icon: <BsPersonLinesFill size={20} />
 
-      , to: "/dashboard/users"
+      , to: "/dashboard/users?admin=true"
     },
 
     {
@@ -62,7 +62,6 @@ const SideBar = () => {
     },
 
     {
-
       name: "Borderaux",
       icon: <BsClipboardDataFill size={20} />
       , to: "/dashboard/seat?admin=true"

@@ -108,7 +108,11 @@ const Booking = () => {
         <div className="container mx-auto md:flex ">
           <div className="image flex-1 h-[200px] md:h-[calc(100vh-60px)]
         w-full rounded-b-[3rem] md:rounded-none  overflow-hidden">
-            <img src="https://th.bing.com/th/id/OIP.83QkNLDMdg1mZ1rn6bnx-gHaHa?pid=ImgDet&rs=1" className="h-full w-full" alt="bus pic" />
+            <img 
+            // src="https://th.bing.com/th/id/OIP.83QkNLDMdg1mZ1rn6bnx-gHaHa?pid=ImgDet&rs=1"
+            src="https://i.pinimg.com/originals/40/ef/a6/40efa606063d41c754b0a4a6c5de8df8.gif"
+            className="h-full w-full" alt="bus pic" />
+
           </div>
 
           <form onSubmit={loadDemoData} className="-mt-10 mx-4  md:pb-24

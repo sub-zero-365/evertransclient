@@ -6,7 +6,7 @@ import axios from 'axios';
 import AnimateText from '../components/AnimateText'
 import { MdOutlineClose } from 'react-icons/md'
 import { useravatar } from '../Assets/images';
-import { Loader, Button, Heading } from '../components';
+import { Loader, Button, Heading, DeleteModal } from '../components';
 import { AiOutlinePlus } from 'react-icons/ai'
 import { motion, AnimatePresence } from 'framer-motion'
 import AnimatedError from "../components/AnimateError"
@@ -23,7 +23,7 @@ const Appointment = () => {
     const [err, setErr] = useState("")
     const [activeIndex, setActiveIndex] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
-    const handleDeleteUser = async (_id, index=null) => {
+    const handleDeleteUser = async (_id, index = null) => {
         return axios.delete(`/assistant/${_id}`,
             {
                 headers: {
@@ -532,18 +532,13 @@ lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-g
                                                             disabled={activeIndex == index}
                                                             onClick={() => {
                                                                 setActiveIndex(_id)
-
                                                                 toast.promise(handleDeleteUser(_id, index).then((data) => {
-                                                                    
-                                                                    console.log(data)
                                                                     getData()
                                                                     setActiveIndex(null)
-
                                                                 }), {
                                                                     pending: "please wait deleting...",
                                                                     success: " Done deleting",
                                                                     error: "Something went wrong ,try again later"
-
                                                                 })
                                                             }}
                                                             name="delete " />

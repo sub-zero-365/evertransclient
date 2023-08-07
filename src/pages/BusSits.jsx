@@ -175,7 +175,7 @@ const
                 date={queryParameters.get("date")}
                 time={queryParameters.get("time")} />
               <AnimateText text="Please Select Seat"
-                className={"!text-sm md:!text-lg lg:!text-2xl !text-center"} />
+                className={"!text-lg md:!text-lg lg:!text-2xl !text-center"} />
               <div className="flex justify-between px-2 pb-2">
                 <h1 className="text-xs lg:text- shadom-lg lg flex-1">
                   <span className="w-[10px] mr-1 h-[10px] inline-block bg-green-400 rounded-full "></span>Available</h1>
@@ -203,7 +203,7 @@ const
                 <NextButton className="!right-1.5" />
 
                 <SwiperSlide className="group">
-                  <Heading text={"First Row"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
+                  <Heading text={"First Class"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
 
                   <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                     {
@@ -242,7 +242,7 @@ const
 
                 </SwiperSlide>
                 <SwiperSlide className="group">
-                  <Heading text={"Second Row"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
+                  <Heading text={"Second Class"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
 
                   <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                     {

@@ -24,31 +24,37 @@ const ProtectedRoute = () => {
     useEffect(() => {
         if (!token) return
         async function getData() {
-            const url =  "/auth/userinfo";
+            const url = "/auth/userinfo";
             try {
+            
                 const res = await axios.get(url, {
                     headers: {
                         'Authorization': "makingmoney " + token
                     }
                 })
-
+                console.log(res)
                 setuserName(res?.data?.user?.fullname);
                 return res.data.user
 
             } catch (err) {
-                navigate("/login?message=" + "something broke login again ")
+                console.log(err)
+                if (err.toJSON().message == "Network Error") {
+                    alert("no internt connections")
+                } else {
+                    navigate("/login?message=" + "something broke login again ")
+                }
             }
         }
-        getData().then(async({ _id }) => {
-                const url = `/restricted/${_id}`
-                try {
-                    const res = await axios.get(url);
-                    setToggle(true)
-                    setMessage(res.data.message)
-                } catch (err) {
+        getData().then(async ({ _id }) => {
+            const url = `/restricted/${_id}`
+            try {
+                const res = await axios.get(url);
+                setToggle(true)
+                setMessage(res.data.message)
+            } catch (err) {
 
-                }
-    
+            }
+
         })
     }, [location.pathname])
 
@@ -56,17 +62,17 @@ const ProtectedRoute = () => {
         return <Navigate to="/login?message=hello user please login to access this protected route" replace />
     }
     return (
-       <> 
-        <Alert message={message}
-        duration="30000"
-        className={`
+        <>
+            <Alert message={message}
+                duration="30000"
+                className={`
       ${toggle && "!top-1/2 -translate-y-1/2"}
       `}
-        toggle={toggle}
-        setToggle={()=>0}
-      />
-       
-       <Outlet /></>
+                toggle={toggle}
+                setToggle={() => 0}
+            />
+
+            <Outlet /></>
     )
 }
 export default ProtectedRoute
