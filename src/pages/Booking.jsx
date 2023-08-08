@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams, Link } from "react-router-dom"
 import {
-  Loader, Modal, PrevButton, NextButton, Heading,
+  Loader, Modal, Heading,
   AnimateError
 } from "../components"
 import { BiChevronDown } from 'react-icons/bi'
@@ -26,13 +26,12 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-import { getCities } from "../utils/ReactSelectFunction"
+import useCity,{ getCities } from "../utils/ReactSelectFunction";
+
 import { components, style } from "../utils/reactselectOptionsStyles"
 
 const Booking = () => {
-  // useEffect(()=>{
-
-  // },[])
+ 
   const [queryParams, setQueryParams] = useSearchParams()
   const [toggle, setToggle] = useState(false)
 

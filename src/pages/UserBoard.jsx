@@ -1,4 +1,6 @@
 import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
+import { timeOptions } from '../utils/sortedOptions'
+import TimeSelect from 'react-select'
 
 import { MdOutlineClose } from 'react-icons/md'
 import AnimateText from '../components/AnimateText'
@@ -26,7 +28,7 @@ import UiButton from '../components/UiButton'
 import { useSelector, useDispatch } from 'react-redux'
 // import {} from '../components'
 import EditTicketModal from '../components/EditTicketModal'
-
+// import {useFilter} 
 import { toast } from 'react-toastify'
 
 // import {}
@@ -44,25 +46,26 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import {
-
   useQuery,
 } from '@tanstack/react-query'
 import {
   AmountCount,
-  BarChart,
+  // BarChart,
   FormatTable,
   Heading
-  , PanigationButton, PieChart,
+  ,
+  // PanigationButton, PieChart,
   Scrollable, TicketCounts,
   Loadingbtn,
-  BoxModel,
-  DataDay
-  , Form,
+  // BoxModel,
+  // DataDay
+  // ,
+  Form,
   NextButton,
   PlaceHolderLoader,
   PrevButton,
   PercentageBar
-  , ToggleSwitch
+  // , ToggleSwitch
 } from '../components';
 import { components, style } from "../utils/reactselectOptionsStyles"
 
@@ -70,6 +73,7 @@ import { Helmet } from 'react-helmet'
 import { setUserData as setUserDataFunc } from '../actions/userData'
 
 import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
+import { useFilter } from '../Hooks/FilterHooks'
 const Details = () => {
   let downloadbaseurl = null
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -81,6 +85,10 @@ const Details = () => {
 
   }
   const isUserName = useSelector(state => state.username.username);
+
+  const [querySearch] = useSearchParams();
+
+  const { handleFilterChange, handleChange } = useFilter()
 
   const onPasswordSuccess = () => toast.success("Password Change Successfully!!", {
     position: toast.POSITION.BOTTOM_CENTER
@@ -94,7 +102,7 @@ const Details = () => {
   const [toggle_, setToggle_] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
-
+  const viewAll = querySearch.get("viewall")
   const handleChangePassWord = async (e) => {
     setLoading(true)
     e.preventDefault()
@@ -132,19 +140,6 @@ const Details = () => {
     dispatch(setUserDataFunc(data))
   }
 
-  const [querySearch, setQuerySearch] = useSearchParams();
-  const handleFilterChange = (key, value = null) => {
-    setQuerySearch(preParams => {
-      if (value == null) {
-        preParams.delete(key)
-      } else {
-        preParams.set(key, value)
-      }
-      return preParams
-    })
-
-  }
-
 
 
 
@@ -159,20 +154,7 @@ const Details = () => {
   const password1 = useRef(null);
   const password2 = useRef(null);
   const password3 = useRef(null);
-  // const [activeIndex, setActiveIndex] = useState(0);
   const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
-
-  // const style = {
-  //   control: base => ({
-  //     ...base,
-  //     border: 0,
-  //     boxShadow: "none",
-  //     background: "transparent",
-  //     color: "red"
-  //   }
-  //   )
-
-  // }
 
 
   const onChange = (dates) => {
@@ -183,10 +165,8 @@ const Details = () => {
   };
   useEffect(() => {
 
-    handleFilterChange("view", "all")
     if (!querySearch.get("page")) {
       handleFilterChange("page", 1)
-
     }
     async function getUserInfo() {
       const url = "/auth/userinfo";
@@ -252,18 +232,12 @@ const Details = () => {
     }
     handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
   }
-  const checkPages = (index) => {
-    if (querySearch.get("page") == index) return
-    handleFilterChange("page", index)
-  }
-  const handleSortTime = (evt) => {
-    if (querySearch.get("sort") == evt.value) return
-    handleFilterChange("sort", evt.value)
-  }
-  const handleChange = (evt) => {
-    if (querySearch.get("ticketStatus") == evt.value) return
-    handleFilterChange("ticketStatus", evt.value)
-  }
+
+
+  // const handleChange = ({ value, label }, text) => {
+  //   if (querySearch.get(text) == value) return
+  //   handleFilterChange(text, value)
+  // }
   const token = localStorage.getItem("token");
   const { loading: isLoading } = useSelector(state => state.userData)
 
@@ -285,10 +259,8 @@ const Details = () => {
 
     } catch (err) {
       setToggle_(true)
-      console.log(err)
       setMessage(err.response.data)
       console.log(err)
-      // alert(err.response.data)
     }
     setIsActiveIndexLoading(false)
 
@@ -752,27 +724,27 @@ py-5 pb-10`}>
                       <p className="text-center text-slate-500 mb-10 ">{dateFormater(ticket?.createdAt).date + " at " + dateFormater(ticket?.createdAt).time || "n/a"} </p>
                       <h2 className="text-center  text-lg md:text-xl font-medium  "> price of the ticket</h2>
                       <p className="text-center text-slate-500 " >{ticket?.price + "frs" || "n/a"} </p>
-                     {
-                     
-                     ticket?.active&&(
-                      <UiButton
-                        name="Edit Ticket"
-                        className="!block 
+                      {
+
+                        ticket?.active && (
+                          <UiButton
+                            name="Edit Ticket"
+                            className="!block 
                         w-[min(300px,calc(100%-2.5rem))]
                         !mx-auto
                         !pb-2.5
                         !pt-2
                         !mb-5
                         "
-                        onClick={() => {
-                          setToggle(false)
-                          setIsOpen__(true)
-                          setIsOpen_(false)
-                        }}
-                      />
-                     
-                     )
-                     }
+                            onClick={() => {
+                              setToggle(false)
+                              setIsOpen__(true)
+                              setIsOpen_(false)
+                            }}
+                          />
+
+                        )
+                      }
                       <a
                         href={`${downloadbaseurl}/downloadticket/${ticket?._id}?payload=79873ghadsguy&requ`}
                         target="_blank"
@@ -842,24 +814,42 @@ z-10  "
             <AiOutlineSetting size={20} color="#fff" className="" />
           </div>
         </motion.div>
-        <nav class="flex mb-5 mt-5 px-5 lg:hidden" aria-label="Breadcrumb">
-          <ol class="inline-flex items-center space-x-1 md:space-x-3">
-            <li class="inline-flex items-center">
-              <NavLink to={"/booking"} href="#" class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                Booking
-              </NavLink>
-            </li>
-            <li>
-              <div class="flex items-center" >
-                <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
-                  <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Employee Details</h1>
-                </a>
-              </div>
-            </li>
+        <div className='flex justify-between items-center px-5'>
+          <nav class="flex mb-5 mt-5 px-5 pl-0 lg:hidden" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+              <li class="inline-flex items-center">
+                <NavLink to={"/booking"} href="#" class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                  Booking
+                </NavLink>
+              </li>
+              <li>
+                <div class="flex items-center" >
+                  <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                  <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                    <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Employee Details</h1>
+                  </a>
+                </div>
+              </li>
 
-          </ol>
-        </nav>
+            </ol>
+          </nav>
+          <div>
+            <span
+              onClick={() => {
+                if (viewAll) {
+                  // code her
+                  handleFilterChange("viewall")
+                }
+                else {
+                  // code here
+                  handleFilterChange("viewall", "all")
+
+                }
+              }
+              }
+              className='lg:hidden text-blue-400 underline underline-offset-2 text-sm'>view {viewAll ? "all" : "less"}</span>
+          </div>
+        </div>
         <div className={`lg:flex ${__view && "lg:flex-row-reverse"}  items-start justify-start gap-4 `}>
           <div
             className="flex-none w-[18rem] hidden lg:block
@@ -998,7 +988,7 @@ z-10  "
                 >
                   <SwiperSlide>
                     <PercentageBar
-                      className={`${true && "!min-w-[8rem]"}`}
+                      className={`${viewAll && "!min-w-[8rem]"}`}
                       percent={userData?.percentageActive}
                       n={userData?.totalActiveTickets}
                       price={userData?.totalActivePrice}
@@ -1007,7 +997,7 @@ z-10  "
                   </SwiperSlide>
                   <SwiperSlide>
                     <PercentageBar
-                      className={`${true && "!min-w-[8rem]"}`}
+                      className={`${viewAll && "!min-w-[8rem]"}`}
                       stroke="red"
                       n={userData?.totalInActiveTickets}
                       price={userData?.totalInActivePrice}
@@ -1024,13 +1014,13 @@ z-10  "
             md:!grid-cols-2 gap-y-5 !transition-all 
             !duration-[1s]`}>
                 <PercentageBar
-                  className={`${true && "!min-w-[8rem]"}`}
+                  className={`${viewAll && "!min-w-[8rem]"}`}
                   percent={userData?.percentageActive}
                   n={userData?.totalActiveTickets}
                   price={userData?.totalActivePrice}
                   text="Active  Ratio" />
                 <PercentageBar
-                  className={`${true && "!min-w-[8rem]"}`}
+                  className={`${viewAll && "!min-w-[8rem]"}`}
                   stroke="red"
                   n={userData?.totalInActiveTickets}
                   price={userData?.totalInActivePrice}
@@ -1044,7 +1034,7 @@ z-10  "
                   :
                   <>
 
-                    <Scrollable className={`!px-5 ${true && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
+                    <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${viewAll && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
                       <TicketCounts counts={userData?.totalTickets}
                         text={"Total Number Of Tickets"}
                         icon={<AiOutlineSave />} />
@@ -1060,7 +1050,7 @@ z-10  "
                         text={"Total Edited  Tickets"}
                         icon={<AiOutlineSave />} />
                     </Scrollable>
-                    <Scrollable className={`!px-5 ${true && "!grid md:!grid-cols-2"}`}>
+                    <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${viewAll && "!grid md:!grid-cols-2"}`}>
                       <AmountCount
                         className="!bg-blue-400"
                         text="Total cost of all tickets"
@@ -1431,9 +1421,9 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
               }}
               ref={selectRef}
               isSearchable={false}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e, "ticketStatus")}
               components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-              
+
               className='!border-none !h-8 mt-0' />
           </div>
 
@@ -1442,12 +1432,8 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
           text-slate-300 dark:text-white uppercase
           text-center font-semibold mb-1 font-montserrat"> trip type </div>
             <SelectTrip
-              onChange={
-                evt => {
-                  if (querySearch.get("triptype") == evt.value) return
-                  handleFilterChange("triptype", evt.value)
-                }
-              }
+
+              onChange={(e) => handleChange(e, "triptype")}
 
               options={
 
@@ -1491,15 +1477,35 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
               components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
               isSearchable={false}
-              onChange={handleSortTime}
+              // onChange={handleSortTime}
+              onChange={(e) => handleChange(e, "sort")}
+
+              className='!border-none !h-8 mt-0' />
+          </div>
+          <div className='mt-0'>
+            <div className="text-[0.8rem]
+          text-slate-300 dark:text-white uppercase
+          text-center font-semibold mb-1 font-montserrat"> Travel Time </div>
+            <TimeSelect
+              options={timeOptions}
+              styles={style}
+              defaultValue={{
+                label: querySearch.get("traveltime") || "no time",
+                value: "no time"
+              }}
+              components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+
+              isSearchable={false}
+              // onChange={handleSortTime}
+              onChange={(e) => handleChange(e, "traveltime")}
+
               className='!border-none !h-8 mt-0' />
           </div>
 
 
         </div>
         <ClearFilter keys={[
-          "sort,newest"
-          ,
+          "sort,newest",
           "ticketStatus,all",
           "search,*",
           "daterange,*",
@@ -1508,6 +1514,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
           "limit,100",
           "sort,newest",
           "_id,xyx",
+          "traveltime,no time",
         ]} />
 
         <Form
@@ -1517,10 +1524,10 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
           !isLoading && (<FormatTable
             ticketData={userData}
-            // skip={querySearch.get("limit")}
-            // currentPage={querySearch.get("page")} 
-            
-            />)
+          // skip={querySearch.get("limit")}
+          // currentPage={querySearch.get("page")} 
+
+          />)
         }
 
         {

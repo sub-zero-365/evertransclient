@@ -23,7 +23,13 @@ import { Helmet } from 'react-helmet'
 import { ToggleSwitch, DisplayUi } from "../components"
 import UiButton from "../components/UiButton"
 import { AiOutlineWarning } from "react-icons/ai"
+// import customFetch from "../components/CusotomFetch"
+import { useFilter } from '../Hooks/FilterHooks'
+
 const SeatDetails = () => {
+    const { id } = useParams()
+
+    const { handleChange: onChange } = useFilter()
     const token = localStorage.getItem("token");
     const [isOpen, setIsOpen] = useState(false)
     const [timer, setTimer] = useState(null)
@@ -33,7 +39,6 @@ const SeatDetails = () => {
             setIsOpen(true)
             setPos(_id)
             clearTimeout(timer)
-
         }, 1000);
         setTimer(_timer)
     }
@@ -74,29 +79,20 @@ const SeatDetails = () => {
         }
     }, [activeSeat])
 
-    const handleFilterChange = (key, value = null) => {
-        setQuerySearch(preParams => {
-            if (value == null) {
-                preParams.delete(key)
-            } else {
-                preParams.set(key, value)
-            }
-            return preParams
-        })
 
-    }
-    const onChange = ({ value }, key) => {
-        if (querySearch.get(key) === value) {
-            return
-        }
-        handleFilterChange(key, value);
-    }
+    // const onChange = ({ value }, key) => {
+    //     if (querySearch.get(key) === value) {
+    //         return
+    //     }
+    //     handleFilterChange(key, value);
+    // }
     const [loadingError, setLoadingError] = useState("")
     const { data: ticketData, isLoading, error } = useQuery({
-        queryKey: ['seatdetailstickets'],
+        queryKey: ['seatdetailstickets', id],
         queryFn: async () => axios.get(`/seat/seatdetails/${id}`),
+        staleTime: 6 * 1000,
+        keepPreviousData: true
     });
-    const { id } = useParams()
     const [seats, setSeats] = useState({})
     const navigate = useNavigate()
 
@@ -127,6 +123,7 @@ const SeatDetails = () => {
             if (res.data?.seat?.bus?.bus !== "demobus") {
                 onChange({ value: res.data?.seat?.bus?._id }, "bus_id")
             }
+            // return res.data
         } catch (err) {
             console.log(err)
             // alert("fail to get seat" + err.response.data)
@@ -143,6 +140,7 @@ const SeatDetails = () => {
         setLoading(true)
         getSeats()
     }, [])
+
 
 
     if (loading) return <div
@@ -179,7 +177,7 @@ const SeatDetails = () => {
                     Borderaux Details
                 </title>
             </Helmet>
-            <div className="!flex-1 h-[calc(100vh-60px)] container mx-auto overflow-y-auto pb-24">
+            <div className="!flex-1 h-[calc(100vh-60px)] container mx-auto overflow-y-auto pb-24" >
                 <div className={`overlay !h-[100%] group !bg-slate-200/25 !fixed inset-0  bottom-0 ${isOpen ? "active" : null}`} onClick={() => setIsOpen(false)}>
 
                     <div className="absolute w-[min(400px,calc(100%-60px))]

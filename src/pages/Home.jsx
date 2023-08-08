@@ -65,9 +65,8 @@ const Home = () => {
     }
     useEffect(() => {
         var counter = 0
-
-        const children = [...testimonials.current.querySelectorAll(".testimonial")]
-        window.addEventListener("scroll", function () {
+        const children = [...testimonials?.current?.querySelectorAll(".testimonial")]
+        const someFunction =()=>{
             if (!children) return
             children.forEach((testimonial) => {
                 if (testimonial) {
@@ -78,7 +77,6 @@ const Home = () => {
                         }
                     } else {
                         testimonial.classList.remove("active")
-
                     }
                 }
             })
@@ -89,7 +87,11 @@ const Home = () => {
                 setUp(0)
             }
             counter = pageYOffset <= 0 ? 0 : pageYOffset
-        })
+        }
+        window.addEventListener("scroll", someFunction)
+        return () => {
+            window.addEventListener("scroll",someFunction)
+        }
     }, [])
 
     return (
@@ -743,7 +745,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                                 <div class="p-6">
                                     <h4 class="mb-4 text-2xl font-semibold">John Smith</h4>
 
-                                  
+
 
                                     <div class="flex items-center justify-center mb-1">
                                         <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">

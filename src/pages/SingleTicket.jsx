@@ -373,7 +373,7 @@ const User = () => {
               </div>
               <div>
                 <h2 className="text-center  text-lg md:text-xl font-medium  ">Seat</h2>
-                <p className="text-center text-slate-500 mb-10 " >{ticket?.seatposition !== null ? Number(ticket.seatposition) + 1 : "n/a"} </p>
+                <p className="text-center text-slate-500 mb-10 " >{ticket?.seatposition !== null ? Number(ticket?.seatposition) + 1 : "n/a"} </p>
               </div>
 
             </div>
@@ -722,7 +722,7 @@ focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-[0_8px_9px_-4p
               (ticket) && (
                 <Link
                   className="hidden lg:block"
-                  to={`/${isadminuser ? "dashboard/seat" : "seat"}/${ticket?.seat_id}?rd_from=assistant&ticket_seat=${ticket.seatposition}&${isadminuser ? "admin=true" : null}`}
+                  to={`/${isadminuser ? "dashboard/seat" : "seat"}/${ticket?.seat_id}?rd_from=assistant&ticket_seat=${ticket?.seatposition}&${isadminuser ? "admin=true" : null}`}
                 >
                   <UiButton
                     className="!bg-green-600 !mt-5 !text-sm !mx-auto !w-[min(100%,calc(100%-60px))]"

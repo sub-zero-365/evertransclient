@@ -1,4 +1,5 @@
 import axios from "axios"
+import { useQuery } from '@tanstack/react-query'
 export const getCities = async (inputValue = "") => {
     try {
         const res = await axios.get("/allcities", {
@@ -23,7 +24,7 @@ export const getBuses = async (inputValue = "") => {
             }
         )
         const { buses } = res.data;
-        
+
         const buses_name = buses.map(({ _id, name }) => ({
             label: name,
             value: _id,
@@ -33,5 +34,14 @@ export const getBuses = async (inputValue = "") => {
         return err.response.data
 
     }
+
+}
+export default function useCity() {
+
+    return useQuery({
+        queryKey: ["cities"],
+        queryFn: getBuses()
+    }
+    )
 
 }
