@@ -64,6 +64,8 @@ import {
   PercentageBar
   , ToggleSwitch
 } from '../components';
+import { components, style } from "../utils/reactselectOptionsStyles"
+
 import { Helmet } from 'react-helmet'
 import { setUserData as setUserDataFunc } from '../actions/userData'
 
@@ -157,20 +159,20 @@ const Details = () => {
   const password1 = useRef(null);
   const password2 = useRef(null);
   const password3 = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  // const [activeIndex, setActiveIndex] = useState(0);
   const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
 
-  const style = {
-    control: base => ({
-      ...base,
-      border: 0,
-      boxShadow: "none",
-      background: "transparent",
-      color: "red"
-    }
-    )
+  // const style = {
+  //   control: base => ({
+  //     ...base,
+  //     border: 0,
+  //     boxShadow: "none",
+  //     background: "transparent",
+  //     color: "red"
+  //   }
+  //   )
 
-  }
+  // }
 
 
   const onChange = (dates) => {
@@ -1430,6 +1432,8 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
               ref={selectRef}
               isSearchable={false}
               onChange={handleChange}
+              components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+              
               className='!border-none !h-8 mt-0' />
           </div>
 
@@ -1467,6 +1471,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 label: querySearch.get("triptype") || "all trip",
                 value: "all"
               }}
+              components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
               isSearchable={false}
               // onChange={handleSortTime}
@@ -1483,6 +1488,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 label: querySearch.get("sort") || "createdAt -",
                 value: "newest"
               }}
+              components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
               isSearchable={false}
               onChange={handleSortTime}

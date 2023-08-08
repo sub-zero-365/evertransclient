@@ -217,7 +217,7 @@ const User = () => {
           Single Ticket
         </title>
       </Helmet>
-      <div className={`max-w-3xl  flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-60px)] pb-64 overflow-y-auto ${!isadminuser && "container"}`}>
+      <div className={`max-w-3xl  justify-center  flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-60px)] pb-64 overflow-y-auto ${!isadminuser && "container"}`}>
         {/* {
           (ticket && readonly == false) && (<EditTicketModal isOpen={isOpen_} setIsOpen={setIsOpen_} ticket={ticket} />)
         } */}
@@ -226,7 +226,6 @@ const User = () => {
           className={`${redirect && "!top-1/2 -translate-y-1/2"}`}
           toggle={redirect}
           confirmFunc={() => 0}
-
           // navigate(`/user?assing_new_seat=true&_id=${id}&from=${ticket?.from}&fullname=${ticket?.fullname}&to=${ticket?.to}&type=${ticket?.type}`)
           setToggle={setRedirect}
           message={message} />
@@ -288,7 +287,7 @@ const User = () => {
 
           )
         }
-        <div className="lg:flex items-start !w-full  justify-center">
+        <div className="lg:flex flex flex-col lg:flex-row items-center lg:items-start !w-full  justify-center">
           <div className="flex-1 lg:flex-none w-full max-w-sm">
             <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
 
@@ -297,7 +296,6 @@ const User = () => {
                 size={400}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
                 value={`https://ntaribotaken.vercel.app/dashboard/${id}?admin=true`}
-                // value={`http://192.168.43.68:3000/dashboard/${id}?admin=true&sound=true&xyz=true`}
                 viewBox={`0 0 256 256`}
               />
             </div>

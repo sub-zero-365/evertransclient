@@ -8,38 +8,39 @@ import { useSelector, useDispatch } from 'react-redux'
 import { motion, useScroll } from "framer-motion";
 import { storeTicket, setLoading } from "../actions/userticket"
 import Alert from '../components/Alert'
-import Form from './Form';
-const Navbar = () => {
-    useEffect(() => {
-        if (localStorage.theme === 'white') {
-            setDarkTheme(false)
-            return
-        }
-        else if (localStorage.theme === 'dark' || (
-            window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark')
-            setDarkTheme(true)
+// import Form from './Form';
+import Rounded from './Rounded';
+const Navbar = ({darkTheme, toggleDarkTheme}) => {
+    // useEffect(() => {
+    //     if (localStorage.theme === 'white') {
+    //         setDarkTheme(false)
+    //         return
+    //     }
+    //     else if (localStorage.theme === 'dark' || (
+    //         window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    //         document.documentElement.classList.add('dark')
+    //         setDarkTheme(true)
 
-        } else {
-            document.documentElement.classList.remove('dark')
-            setDarkTheme(false)
+    //     } else {
+    //         document.documentElement.classList.remove('dark')
+    //         setDarkTheme(false)
 
-        }
-    }, [])
-    const [darkTheme, setDarkTheme] = useState(false)
-    const toggleDarkTheme = () => {
-        changeTheme()
+    //     }
+    // }, [])
+    // const [darkTheme, setDarkTheme] = useState(false)
+    // const toggleDarkTheme = () => {
+    //     changeTheme()
 
-    }
-    const changeTheme = () => {
-        if (!darkTheme) {
-            localStorage.setItem("theme", "dark")
-        } else {
-            localStorage.setItem("theme", "white")
-        }
-        document.documentElement.classList.toggle('dark')
-        setDarkTheme(c => !c)
-    }
+    // }
+    // const changeTheme = () => {
+    //     if (!darkTheme) {
+    //         localStorage.setItem("theme", "dark")
+    //     } else {
+    //         localStorage.setItem("theme", "white")
+    //     }
+    //     document.documentElement.classList.toggle('dark')
+    //     setDarkTheme(c => !c)
+    // }
     const [toggle, setToggle] = useState(false)
     const isUserName = useSelector(state => state.username.username);
     const dispatch = useDispatch()
@@ -105,7 +106,7 @@ const Navbar = () => {
     }
 
     return (
-        <div className="sticky top-0 left-0 shadow-lg dark:shadow-black select-none bg-color_light  dark:bg-color_dark dark:text-white z-20">
+        <div className="sticky top-0 left-0 shadow-lg dark:shadow-black dark:shadow-sm select-none bg-color_light  dark:bg-color_dark dark:text-white z-20">
             <Alert toggle={toggle} setToggle={setToggle}
 
                 duration="30000"
@@ -116,7 +117,7 @@ const Navbar = () => {
 ${toggle && "!top-1/2 -translate-y-1/2"}
 `}
             />
-            <div className="container mx-auto  h-[60px] items-center  px-4 flex justify-between relative  ">
+            <div className="lg:container mx-auto  h-[60px] items-center  px-4 flex justify-between relative  ">
                 <motion.div
 
                     className="h-[1px] absolute right-0 transform-origin-0 left-0 bottom-0 w-full- bg-slate-400"
@@ -298,11 +299,14 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
                 </motion.ul>
                 <div className='hidden md:flex gap-3 items-center'>
-                    <div className='hover:bg-slate-300  w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={toggleDarkTheme}>
+                    <Rounded
+                        onClick={toggleDarkTheme}
+                    >
                         {
                             darkTheme ? <BsMoonStars size={25} /> : <BsSun size={25} />
                         }
-                    </div>
+                    </Rounded>
+
 
 
                     {
@@ -311,7 +315,9 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
 
                                 <div className=" relative flex gap-4 items-center   rounded-full overflow-hidden- " >
+                                <Rounded>
                                     <img src={useravatar} alt="user " className='w-[40px] h-[40px] rounded-full shadow-2xl ' onClick={gotoUserPage} />
+                                </Rounded>
 
                                     <button
                                         type="button"

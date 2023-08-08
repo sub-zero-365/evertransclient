@@ -1,13 +1,15 @@
 import { AiOutlineArrowUp } from "react-icons/ai"
 import { Outlet, useNavigate, Navigate, useLocation, Link } from "react-router-dom"
-import { SideBar } from './'
+import { Rounded, SideBar } from './'
 import { useDispatch, useSelector } from "react-redux"
 import { actions } from '../actions/toggleSide'
 import { AiOutlineMenu } from 'react-icons/ai'
 import Alert from "./Alert"
 import { useState, useEffect } from 'react'
 import UiButton from "../components/UiButton"
-const DashBoardLayout = () => {
+import { BsMoonStars, BsSun } from 'react-icons/bs';
+
+const DashBoardLayout = ({darkTheme, toggleDarkTheme}) => {
     const token = localStorage.getItem("admin_token");
     const location = useLocation()
     useEffect(() => {
@@ -35,15 +37,15 @@ const DashBoardLayout = () => {
                     navigate("/auth");
 
                 }} />
-            <div className="min-h-[3rem] z-[0] 
+            <div className="min-h-[60px] z-[0] 
             relative border-5 justify-between flex items-center  
             bg-white dark:bg-color_dark shadow-sm shadow-slate-300 container-- mx-auto px-4" >
                 <div className='hover:bg-slate-300 md:hidden w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={toggleSideBar}>
                     <AiOutlineMenu size={25} />
                 </div>
                 <Link to="/dashboard" className="-auto">DashBoard </Link>
-                <div className="md:space-x-3">
-                    <UiButton name="Change view" className="hidden lg:!inline-block" onClick={() => setView(!view)} />
+                <div className="md:space-x-6 space-x-3 flex items-center">
+                    <UiButton name="Change view" className="hidden !text-xs lg:!inline-block !rounded-xl" onClick={() => setView(!view)} />
 
                     <button
                         data-te-ripple-init
@@ -61,6 +63,15 @@ const DashBoardLayout = () => {
                     >
                         view site
                     </button>
+                    <Rounded 
+                    className={"!w-[40px] !h-[40px]"}
+                        onClick={()=>toggleDarkTheme()}
+                    >
+                        {
+                            darkTheme ? <BsMoonStars size={25} /> : <BsSun size={25} />
+                        }
+                    </Rounded>
+
                     <button
                         data-te-ripple-init
                         data-te-ripple-color="light"

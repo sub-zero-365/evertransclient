@@ -78,3 +78,5 @@ export { default as DeleteModal }
 from './DeleteModal'
 export { default as CustomDatePicker }
 from './CustomDatePicker'
+export { default as Rounded }
+from './Rounded'

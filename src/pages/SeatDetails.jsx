@@ -154,7 +154,7 @@ const SeatDetails = () => {
         />
 
     </div>
-    if (loadingError) return (<div className="h-[calc(100vh-60px)] !flex-1 w-full grid place-items-center">
+    if (loadingError) return (<div className="h-[calc(100%-60px)] !flex-1 w-full grid place-items-center">
         <div>
             <img src='https://c.tenor.com/4lA3ViMpstwAAAAj/wait-no.gif' id="no__message" alt='no messages' />
             <AnimatedText text={loadingError} className="!text-2xl md:!text-3xl" />

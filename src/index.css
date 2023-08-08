@@ -34,7 +34,19 @@
 .react-datepicker__day--in-range {
   @apply !rounded-full  dark:!text-white !bg-green-500 !text-white;
 }
-
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  @apply dark:!text-white;
+}
+.css-1dimb5e-singleValue {
+  @apply dark:!text-white !text-sm;
+}
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  @apply dark:!text-white;
+}
 .gradient__text {
   background: var(--gradient-text);
   background-clip: text;
@@ -42,8 +54,8 @@
   -webkit-text-fill-color: transparent;
 }
 
-body ,
-html{
+body,
+html {
   @apply font-poppins !font-light !text-sm  bg-color_light  dark:bg-color_dark dark:text-white;
 }
 
@@ -338,7 +350,11 @@ html{
 .css-qbdosj-Input input,
 .css-60vmsc-control,
 .css-1fdsijx-ValueContainer {
-  @apply !bg-transparent !text-white;
+  @apply !bg-transparent dark:!text-white;
+}
+.css-qbdosj-Input::after{
+  @apply !bg-transparent dark:!text-white;
+  
 }
 .react-pdf__Page {
   @apply bg-white dark:!bg-slate-900;
@@ -392,7 +408,7 @@ html{
   text-transform: uppercase;
 }
 .overlay {
-  @apply fixed w-full z-[50] !h-full inset-0 bg-slate-600/75  opacity-0 pointer-events-none invisible duration-500  transition-all;
+  @apply fixed w-full z-[50] !h-full inset-0 bg-slate-600/25  opacity-0 pointer-events-none invisible duration-500  transition-all;
 }
 .overlay.active {
   @apply opacity-100 pointer-events-auto visible;

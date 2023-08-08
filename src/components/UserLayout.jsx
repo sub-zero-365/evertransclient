@@ -2,10 +2,13 @@
 import { Outlet } from "react-router-dom"
 import Navbar from "./Navbar"
 
-const UserLayout = () => {
+const UserLayout = ({darkTheme, toggleDarkTheme}) => {
   return (
     <>
-        <Navbar />
+        <Navbar 
+       toggleDarkTheme={ toggleDarkTheme}
+        darkTheme={darkTheme}
+        />
     
     <Outlet/>
     

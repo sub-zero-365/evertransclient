@@ -28,7 +28,7 @@ import Loader from '../components/Load'
 const
   BusSits = () => {
     const [seats, setSeats] = useState([])
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     const [queryParameters, setQueryString] = useSearchParams()
 

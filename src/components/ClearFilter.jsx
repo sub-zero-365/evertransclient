@@ -29,13 +29,21 @@ const ClearFilter = ({ keys }) => {
     return (
         <AnimatePresence>
             {
-                keys.map((key, index) => key.split(",")).map(([value, forbidden], index) => {
+                keys.map((key, index_) => key.split(",")).map(([value, forbidden], index) => {
                     return querySearch.get(value) && querySearch.get(value) !== forbidden && <motion.div
-                        key={index}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
-                        varaints={animateVariant}
+                        key={`${value+forbidden}--${index}`}
+                        // initial="initial"
+                        // animate="animate"
+                        // exit="exit"
+                        // varaints={animateVariant}
+                        initial={ {
+                            y: 400, 
+                            opacity: 0,
+                        }}
+                        animate={ {
+                            y: 0, opacity: 1
+                        }}
+                         exit={ { y: -40, opacity: 0 }}
                         className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
 font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
 

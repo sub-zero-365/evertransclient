@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import axios from "axios"
 import { UserLayout, DashboardLayout, ProtectedRoute } from "./components";
 import { Home, Auth, SingleTicket } from "./pages";
@@ -63,22 +63,55 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 }
 
 
-
 function App() {
+  const [darkTheme, setDarkTheme] = useState(false)
+  const changeTheme = () => {
+    if (!darkTheme) {
+      localStorage.setItem("theme", "dark")
+    } else {
+      localStorage.setItem("theme", "white")
+    }
+    document.documentElement.classList.toggle('dark')
+    setDarkTheme(c => !c)
+  }
+  const toggleDarkTheme = () => {
+    changeTheme()
+
+  }
+  useEffect(() => {
+    if (localStorage.theme === 'white') {
+      setDarkTheme(false)
+      return
+    }
+    else if (localStorage.theme === 'dark' || (
+      window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark')
+      setDarkTheme(true)
+
+    } else {
+      document.documentElement.classList.remove('dark')
+      setDarkTheme(false)
+
+    }
+  }, [])
   return (
     <div className=""
     >
       <BrowserRouter>
-      <ScrollTo />
-      
+        <ScrollTo />
+
         <QueryClientProvider client={queryClient}>
           <Suspense fallback={<div className="h-screen w-full
           bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
               <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
           </div>}>
             <Routes>
-          
-              <Route path="/" element={<UserLayout />}>
+
+              <Route path="/" element={<UserLayout
+
+toggleDarkTheme={toggleDarkTheme}
+ darkTheme={darkTheme}
+              />}>
                 <Route index element={<Home />} />
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
@@ -102,7 +135,13 @@ function App() {
                 <Route path="auth" element={<Auth />} />
               </Route>
               <Route path="/dashboard"
-                element={<DashboardLayout />} >
+            
+                element={<DashboardLayout
+                
+                  toggleDarkTheme={toggleDarkTheme}
+                   darkTheme={darkTheme}
+                
+                />} >
                 <Route index element={<DashboardHome />} />
                 <Route path="tickets" element={<Appointment />} />
                 <Route path=":id" element={<SingleTicket />} />
