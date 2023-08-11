@@ -53,7 +53,7 @@ const BusSits = () => {
       return seatnumber <= 20 ? 10000 : 6500
     }
     if (triptype == "round") {
-      return seatnumber <= 20 ? 20000 : 13000
+      return seatnumber <= 20 ? 20000 : 10000
     }
     return "invalid seatposition"
   }

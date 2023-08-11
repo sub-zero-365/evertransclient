@@ -18,6 +18,9 @@ import { BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { MdOutlinePriceChange } from 'react-icons/md'
 import { Autoplay, Navigation, Pagination } from 'swiper'
+import {
+  useQuery,
+} from '@tanstack/react-query'
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -159,9 +162,9 @@ const Details = () => {
     setEndDate(end);
     console.log(dates)
   };
-  useEffect(() => {
-    setIsLoading(true)
-  }, [])
+  // useEffect(() => {
+  //   setIsLoading(true)
+  // }, [])
   const [_userData, _setUserData] = useState({
     labels: ["active tickets", "inactive tickets"],
     datasets: [
@@ -232,12 +235,11 @@ const Details = () => {
     handleFilterChange("ticketStatus", evt.value)
   }
   // hiui
-  const [activeSlide, setctiveSlide] = useState(0);
   const token = localStorage.getItem("admin_token");
-  const [isLoading, setIsLoading] = useState(false)
+  // const [isLoading, setIsLoading] = useState(false)
 
   const [userInfo, setUserInfo] = useState({});
-  const [userData, setUserData] = useState({ test: 1 })
+  // const [userData, setUserData] = useState({ test: 1 })
   const config = {
     headers: {
       'Authorization': "makingmoney " + token
@@ -245,32 +247,43 @@ const Details = () => {
     params: formatQuery(querySearch.toString())
   }
   async function getData() {
-    const url =  "/admin/alltickets"
-    setIsActiveIndexLoading(true)
-
+    const url = "/admin/alltickets"
+    // setIsActiveIndexLoading(true)
+    // return axios.get(url, config).then((data)=>data)
     try {
       const res = await axios.get(url, config)
-      setUserData(res?.data || {})
-      _setUserData({
-        labels: ["active tickets", "inactive tickets"],
-        datasets: [
-          {
-            label: "ticket data",
-            data: [res?.data?.totalActiveTickets, res?.data?.tickets.length - res?.data?.totalActiveTickets],
-            backgroundColor: ["skyblue", "orange"]
-          }
-        ]
-      })
+
+      // setUserData(res?.data || {})
+      // _setUserData({
+      //   labels: ["active tickets", "inactive tickets"],
+      //   datasets: [
+      //     {
+      //       label: "ticket data",
+      //       data: [res?.data?.totalActiveTickets, res?.data?.tickets.length - res?.data?.totalActiveTickets],
+      //       backgroundColor: ["skyblue", "orange"]
+      //     }
+      //   ]
+      // })
+      return res.data
     } catch (err) {
       console.log(err)
     }
-    setIsLoading(false)
+    // setIsLoading(false)
     setIsActiveIndexLoading(false)
 
   }
+  const { data: userData, isLoading, loading, refetch } = useQuery({
 
+    queryKey: [
+      ["userdetails", querySearch.get("createdBy")]
+    ],
+    // queryFn:async () => axios.get(`/seat/seatdetails/${id}`)
+    queryFn: getData
+  })
+  // console.log("userdata ", data,loading ,isLoading)
   useEffect(() => {
-    getData();
+    // getData();
+    refetch()
   }, [querySearch]);
 
 
@@ -495,7 +508,7 @@ z-10  "
             <Heading text={"Full Name"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '
             >{userInfo?.fullname || "n/a"}</h4>
-      
+
             <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.phone || "n/a"}</h4>
             <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
@@ -642,7 +655,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
 
 
-          
+
 
           </div>
 
@@ -825,13 +838,13 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
       {
 
         !isLoading && <FormatTable
-        ticketData={userData}
-        admin
+          ticketData={userData}
+          admin
         // tickets={userData?.tickets} admin
         //   currentPage={querySearch.get("page")} 
-          
-          
-          />
+
+
+        />
       }
 
       {

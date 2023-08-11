@@ -6,11 +6,11 @@ import EditTicketModal from './EditTicketModal'
 import UiButton from "./UiButton";
 import { useSearchParams } from 'react-router-dom'
 
-const FormatTable = ({ticketData, admin ,hidePanigation}) => {
-    
+const FormatTable = ({ ticketData, admin, hidePanigation }) => {
+
     const [querySearch, setQuerySearch] = useSearchParams();
-   const  skip=querySearch.get("limit") || 100
-   const currentPage=querySearch.get("page") || 1
+    const skip = querySearch.get("limit") || 100
+    const currentPage = querySearch.get("page") || 1
     const handleFilterChange = (key, value = null) => {
         setQuerySearch(preParams => {
             if (value == null) {
@@ -177,7 +177,7 @@ const FormatTable = ({ticketData, admin ,hidePanigation}) => {
                                         <span className="font-medium ">{ticket?.type || "singletrip"}</span>
                                     </td>
                                     <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {ticket?.price || " 5000frs"}
+                                        {ticket?.price + (ticket.updatePrice ?? 0) || "n/a"}
                                     </th>
 
                                     <td className="py-0 text-xs flex items-center"
@@ -205,26 +205,26 @@ const FormatTable = ({ticketData, admin ,hidePanigation}) => {
                 </table>
             </div>
             {
-            hidePanigation?null:<div 
-            className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto flex  md:gap-x-2"
-        >
-            {Array.from({
-                length: ticketData?.numberOfPages
-            }, (text, index) => {
-                return <PanigationButton
-                    text={index + 1}
-                    active={activeIndex}
-                    loading={isActiveIndexLoading}
-                    index={index}
+                hidePanigation ? null : <div
+                    className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto flex  md:gap-x-2"
+                >
+                    {Array.from({
+                        length: ticketData?.numberOfPages
+                    }, (text, index) => {
+                        return <PanigationButton
+                            text={index + 1}
+                            active={activeIndex}
+                            loading={isActiveIndexLoading}
+                            index={index}
 
-                    onClick={() => {
-                        setActiveIndex(index)
-                        checkPages(index + 1)
-                    }} />
-            })}
-        </div>
+                            onClick={() => {
+                                setActiveIndex(index)
+                                checkPages(index + 1)
+                            }} />
+                    })}
+                </div>
             }
-            
+
         </>
     )
 }
