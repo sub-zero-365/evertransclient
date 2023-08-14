@@ -42,7 +42,8 @@ const Booking = () => {
   const [time, setTime] = useState("7am")
   const [isLine, setIsline] = useState(false)
   const navigate = useNavigate()
-  const gotoBusSits = () => navigate(`/bussits/68763?from=${fromCities}&to=${toCities}&date=${startDate.toLocaleDateString('en-ZA')}&triptype=${tripType}&time=${time}`)
+  // const gotoBusSits = () => navigate(`/bussits/68763?from=${fromCities}&to=${toCities}&date=${startDate.toLocaleDateString('en-ZA')}&triptype=${tripType}&time=${time}`)
+  const gotoBusSits = () => navigate(`/bus?from=${fromCities}&to=${toCities}&date=${startDate.toLocaleDateString('en-ZA')}&triptype=${tripType}&time=${time}`)
   const [demoFetch, setDemoFetch] = useState(false);
   const loadDemoData = (evt) => {
     evt.preventDefault()

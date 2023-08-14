@@ -209,6 +209,7 @@ const User = () => {
     redeemTicket()
   }, [params])
   const [isOpen, setIsOpen] = useState(false);
+  const isClassic = (ticket?.seatposition < 20 && ticket?.price <= 6500&&(!ticket?.updatePrice)  )
   if (isLoading) return <Loader toggle />
   return (
     <>
@@ -299,22 +300,14 @@ const User = () => {
                 viewBox={`0 0 256 256`}
               />
             </div>
-            {/* {
-              (ticket?.active && readonly == false) && (
-                <UiButton
-                  className="!mx-auto !mt-5"
-                  name="edit this ticket" onClick={() => setIsOpen_(true)} />
-
-              )
-
-            } */}
+          
 
             <Marquee play pauseOnClick pauseOnHover className="capitalize text-red-500 dark:text-red-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5 text-gray-900- md:text-lg lg:text-xl dark:text-white- w-full !max-w-2xl">
               this ticket is valid for a period of 1month
             </Marquee>
             <h1 className="text-center font-semibold  font-montserrat text-xl mt-4 md:text-2xl tracking-tighter leading-10 oblique text-blue-900">Ticket Details</h1>
             <h2 className="text-center  text-lg md:text-xl font-medium  "> Ticket id</h2>
-            <p className="text-center text-slate-500 mb-4 "> {id}</p>
+            <p className="text-center text-slate-500 mb-4 "> {(ticket?._id ?? id)}</p>
 
             <h2 className="text-center  text-lg md:text-xl font-medium  "> Traveler Name</h2>
             <p className="text-center text-slate-500 mb-4 ">{ticket?.fullname || "n/a"}</p>

@@ -6,10 +6,12 @@ import {
     , NextButton
 } from './'
 import emptybox from "../Assets/images/empty-box.gif"
+import { useQuery } from '@tanstack/react-query'
 import { useState, useEffect } from 'react'
 import { Heading, Scrollable, PanigationButton } from './'
 import axios from "axios"
-import { components, style } from "../utils/reactselectOptionsStyles"
+import { getCities } from "../utils/ReactSelectFunction";
+
 import { CustomDatePicker, ToggleSwitch } from './'
 import FromSelect from 'react-select/async'
 import ToSelect from 'react-select/async'
@@ -27,18 +29,21 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-import { getCities } from "../utils/ReactSelectFunction"
 import { motion, AnimatePresence } from 'framer-motion'
 import UiButton from './UiButton'
 import AnimatedText from './AnimateText'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import TimeSelect from 'react-select'
+import { timeWithClearOptions as timeOptions } from '../utils/sortedOptions'
+import { style, components } from '../utils/reactselectOptionsStyles'
 const EditTicketModal = ({ isOpen, setIsOpen, ticket, className }) => {
+   
     const token = localStorage.getItem("token");
     let [upgrade, setUpgrade] = useState(false)
     const [searchParams] = useSearchParams();
     const navigate = useNavigate()
     const goto = searchParams.get("admin") || false
-    let { from, to, type } = ticket
+    let { from, to, type, seat_id } = ticket
     if (type == "roundtrip") {
         const [first, second] = ticket?.doubletripdetails
         if (first.active == false && second.active == true && ticket.active == true) {
@@ -102,8 +107,10 @@ const EditTicketModal = ({ isOpen, setIsOpen, ticket, className }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         getData()
+
     }
     const [submitloading, setSubmitLoading] = useState(false)
+    const [time, setTime] = useState("")
     const handleEditMeta = async (seat__id, seatposition, traveltime, traveldate) => {
         console.log(seat__id, seatposition)
         setSubmitLoading(true)
@@ -158,7 +165,7 @@ relative
 flex-none
 transition-[opacity]
 z-50
-w-[min(calc(100%-2.5rem),25rem)]
+w-[min(calc(100%-2.5rem),30rem)]
 bg-white
 dark:bg-slate-800
 rounded-2xl
@@ -173,7 +180,6 @@ shadow-slate-400
                     {
                         next ? (
                             <motion.div
-
                                 initial={{ scale: "0", opacity: 0 }}
                                 animate={{ scale: "1", opacity: 1 }}
                                 exit={{ scale: "0", opacity: 0 }}
@@ -194,29 +200,46 @@ shadow-slate-400
 
 
                                 </div>
+                                <div className='w-[min(100px,calc(100%-20px))] mx-auto !text-xs relative z-[200]'>
+                                    <TimeSelect
+                                        options={timeOptions}
+                                        styles={style}
+                                        components={components()}
+                                        isSearchable={false}
+
+                                        onChange={(e) => {
+                                            setTime(e.value)
+                                        }}
+                                    // menuPlacement="top"
+
+                                    />
+
+                                </div>
                                 <Swiper
                                     slidesPerView={1}
                                     className="relative"
                                     modules={[Navigation]}
-
                                     navigation={{
                                         prevEl: ".arrow__left",
                                         nextEl: ".arrow__right",
                                     }}
                                 >
                                     <PrevButton className="!left-1.5 arrow__left" />
-                                    <NextButton className="!right-1.5 arrow__right" />
+                                    <NextButton className="!right-1.5  arrow__right" />
                                     {
                                         data?.seats.length >= 1 ?
-                                            data?.seats
+                                            data?.seats?.filter(({ traveltime }) => ((time == "") || traveltime == time))
                                                 ?.map(({ seat_positions,
                                                     traveltime,
-                                                    traveldate,
+                                                    traveldate, bus,
                                                     _id: seat__id }, index) => {
+                                                    const isClassic = (ticket?.seatposition < 20 && ticket?.price <= 6500&&(!ticket?.updatePrice) &&
+                                                        (bus?.feature == undefined || bus?.feature == null || bus?.feature == "vip")
+                                                    )
                                                     return (
                                                         <SwiperSlide key={index}>
                                                             {
-                                                                ticket?.seatposition > 19 && (
+                                                                (ticket?.seatposition > 19) && (
                                                                     <div className="">
                                                                         <div className="flex justify-center ">
                                                                             <Heading className="!mb-0 !text-sm !text-red-600 !text-semibold !text-center" text="Upgrade to Vip Seat!" />
@@ -230,21 +253,11 @@ shadow-slate-400
                                                                 )
                                                             }
                                                             <div>
+                                                                <Heading text={`Bus Name:   ${bus?.bus}`} className="!mb-1 !text-lg !text-center !text-gray-500 dark:!text-white" />
                                                                 <Heading text={`Departure time:   ${traveltime}`} className="!mb-1 !text-lg !text-center" />
                                                                 <Scrollable
                                                                     className="!gap-x-1 !justify-center !mb-1
                                                             !gap-y-0.5 !flex-wrap px-2">
-                                                                    {console.log(seat_positions?.slice(
-                                                                        ...(
-                                                                            (((ticket?.seatposition + 1) <= 20) || upgrade) ? [0, 20] : [20]
-                                                                        )
-                                                                    )?.
-                                                                        filter(({ isTaken, isReserved }) => {
-                                                                            if (isReserved === false && isTaken == false) return true
-                                                                            // if (isTaken === false) return true
-                                                                            return false
-                                                                        }
-                                                                        ))}
                                                                     {
                                                                         seat_positions?.slice(
                                                                             ...(
@@ -254,10 +267,9 @@ shadow-slate-400
                                                                             filter(({ isTaken, isReserved }) => {
                                                                                 if (isReserved === false && isTaken == false) return true
                                                                                 return false
-
                                                                             }
                                                                             )
-                                                                            ?.map(({ _id }) => (<
+                                                                            ?.map(({ _id, bus }) => (<
                                                                                 PanigationButton
                                                                                 className={`${(_id == selectseat) && "!border-2 !border-"}`}
                                                                                 onClick={() => setSelectseat(_id)}
@@ -271,14 +283,36 @@ shadow-slate-400
                                                                 <AnimateError
                                                                     error={err}
                                                                     errorMessage={err} />
-                                                                {selectseat !== null && (<UiButton
+                                                                {
+                                                                    isClassic && (
+                                                                        <motion.p
+                                                                            className='px-3 text-center text-rose-500 pb-1'
+                                                                            initial={{ y: 20 }}
+                                                                            animate={{ y: 0 }}
+                                                                        >
+                                                                            you need to collect money to upgrade ticket cause is a classic ticket
+                                                                        </motion.p>
+                                                                    )
+                                                                }
+                                                                {
+
+                                                                  isClassic&&<ToggleSwitch
+                                                                    initialMessage={"upgrade user"}
+                                                                    message={"caution you want to upgrade!"}
+                                                                    state={upgrade
+                                                                    }
+                                                                    onChange={() => setUpgrade(!upgrade)} />
+                                                                    
+                                                                }
+                                                                {selectseat !== null &&(isClassic==false || upgrade)&& (<UiButton
                                                                     disabled={submitloading}
                                                                     onClick={() => handleEditMeta(seat__id,
                                                                         selectseat, traveltime, traveldate)} name={
                                                                             submitloading ? "Please wait ..." : "Submit"
                                                                         }
-                                                                    className="!px-8 !mx-auto !mb-5 !bg-green-500" />
+                                                                    className="!px-10 !pb-2 !pt-1.5 !mx-auto !mb-5 !bg-green-500" />
                                                                 )}
+                                                                
                                                             </div>
                                                         </SwiperSlide>
                                                     )
@@ -292,6 +326,8 @@ shadow-slate-400
 
                                     }
                                 </Swiper>
+
+
                             </motion.div>
                         ) : (
                             isOpen && <motion.form

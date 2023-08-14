@@ -1,4 +1,4 @@
-import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
+import { AiOutlineArrowLeft, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import { timeOptions } from '../utils/sortedOptions'
 import TimeSelect from 'react-select'
 
@@ -13,7 +13,7 @@ import SelectSortDate from 'react-select';
 import { useState, useEffect, useRef } from 'react';
 import { AiOutlineSave } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io"
-import { NavLink, useSearchParams, useNavigate, json } from 'react-router-dom';
+import { NavLink, useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineSetting } from 'react-icons/ai';
 import formatQuery from "../utils/formatQueryStringParams"
@@ -27,14 +27,18 @@ import ClearFilter from '../components/ClearFilter'
 import UiButton from '../components/UiButton'
 import { useSelector, useDispatch } from 'react-redux'
 // import {} from '../components'
+import SelectTime from 'react-select'
 import EditTicketModal from '../components/EditTicketModal'
 // import {useFilter} 
 import { toast } from 'react-toastify'
-
+import { getBuses } from "../utils/ReactSelectFunction";
+import BusSelect from 'react-select/async'
 // import {}
 import Alert from '../components/Alert'
+import FromSelect from 'react-select/async'
+import ToSelect from 'react-select/async'
 
-import { Button } from '../components'
+import { Button, Rounded } from '../components'
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -45,36 +49,39 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-import {
-  useQuery,
-} from '@tanstack/react-query'
+
 import {
   AmountCount,
-  // BarChart,
   FormatTable,
   Heading
   ,
-  // PanigationButton, PieChart,
   Scrollable, TicketCounts,
   Loadingbtn,
-  // BoxModel,
-  // DataDay
-  // ,
   Form,
   NextButton,
   PlaceHolderLoader,
   PrevButton,
   PercentageBar
-  // , ToggleSwitch
+  , CustomDatePicker
 } from '../components';
 import { components, style } from "../utils/reactselectOptionsStyles"
 
+import dayjs from "dayjs"
 import { Helmet } from 'react-helmet'
 import { setUserData as setUserDataFunc } from '../actions/userData'
+import { getCities } from "../utils/ReactSelectFunction"
 
 import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
 import { useFilter } from '../Hooks/FilterHooks'
+import ShowBuses from './ShowBuses'
+import Marquee from 'react-fast-marquee'
+import {
+  useQuery, useMutation, useQueryClient
+} from '@tanstack/react-query'
 const Details = () => {
+  const queryClient = useQueryClient()
+  const [seatDate, setSeatDate] = useState(new Date())
+
   let downloadbaseurl = null
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     downloadbaseurl = process.env.REACT_APP_LOCAL_URL
@@ -84,6 +91,35 @@ const Details = () => {
     downloadbaseurl = process.env.REACT_APP_PROD_URL
 
   }
+
+
+
+  const getSeats = async () => {
+
+    try {
+      const res = await axios.get("/seat/getstatic", {
+        params: {
+          traveldate: dayjs(seatDate).format("YYYY/MM/DD")
+        }
+      })
+
+      return res.data
+
+    } catch (err) {
+    }
+
+
+  }
+
+  const { data, isError, refetch } = useQuery({
+    queryKey: ["findSeats", {
+      traveldate: dayjs(seatDate).format("YYYY-MM-DD")
+    }
+    ],
+    queryFn: getSeats,
+    enabled: false
+  })
+
   const isUserName = useSelector(state => state.username.username);
 
   const [querySearch] = useSearchParams();
@@ -93,9 +129,16 @@ const Details = () => {
   const onPasswordSuccess = () => toast.success("Password Change Successfully!!", {
     position: toast.POSITION.BOTTOM_CENTER
   })
+  const newSucces = () => toast.success("Add successfully  !", {
+    position: toast.POSITION.BOTTOM_CENTER
+  })
+  const newError = () => toast.error("fail to create seat", {
+    position: toast.POSITION.BOTTOM_CENTER
+  })
   const [isOpen, setIsOpen] = useState(false)
   const [isOpen_, setIsOpen_] = useState(false)
   const [isOpen__, setIsOpen__] = useState(false)
+  const [isOpen___, setIsOpen___] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [message, setMessage] = useState("")
@@ -140,14 +183,6 @@ const Details = () => {
     dispatch(setUserDataFunc(data))
   }
 
-
-
-
-
-
-
-
-
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
   const constraintsRef = useRef(null);
@@ -156,12 +191,16 @@ const Details = () => {
   const password3 = useRef(null);
   const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
 
+  const [selectedIds, setSelectedIds] = useState({
+    seat_id: null,
+    bus_id: null
+  })
 
   const onChange = (dates) => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
-    console.log(dates)
+    // console.log(dates)
   };
   useEffect(() => {
 
@@ -214,11 +253,34 @@ const Details = () => {
   }
   )
 
+  const [queryObj, setQueryObj] = useState({
+    from: null, to: null,
+    traveldate: dayjs(seatDate).format("YYYY/MM/DD"),
+    traveltime: null,
+    bus_id: null
 
+  })
+  const handleaddnewroute = () => {
+    return axios.post("/seat", {
+      ...queryObj
+    })
+  }
+  const { isLoading: loadingRoute, mutate } = useMutation(handleaddnewroute, {
+    onSuccess: data => {
+      refetch()
+      setShowAdd(false)
+      newSucces()
+    },
+    onError: error => {
+      newError()
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries("create")
+    }
+  })
   const handleChangeText = (e) => {
     handleFilterChange("search", e.target.value)
   }
-
 
   const handleBoardingRangeSearch = () => {
     if (querySearch.get("daterange")) {
@@ -233,11 +295,6 @@ const Details = () => {
     handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
   }
 
-
-  // const handleChange = ({ value, label }, text) => {
-  //   if (querySearch.get(text) == value) return
-  //   handleFilterChange(text, value)
-  // }
   const token = localStorage.getItem("token");
   const { loading: isLoading } = useSelector(state => state.userData)
 
@@ -265,10 +322,17 @@ const Details = () => {
     setIsActiveIndexLoading(false)
 
   }
-
+  useEffect(() => {
+    if (!isOpen___) setSlide(false)
+  }, [isOpen___])
   useEffect(() => {
     getData();
   }, [querySearch]);
+  const handleAddNewSeat = () => {
+    const { seat_id, bus_id } = selectedIds
+    return axios.post("/seat", { seat_id, bus_id })
+  }
+  const [showAdd, setShowAdd] = useState(false)
   const _view = JSON.parse(localStorage.getItem("__view")) == true ? true : false
   const [__view, __setView] = useState(_view)
   const [greetingtext, setGreetingText] = useState("GOOD MORNING")
@@ -288,11 +352,14 @@ const Details = () => {
       clearInterval(timer)
     }
   }, [])
-  // const [loading, setLoading] = useState(false)
+  const getCount = ({ from, to, traveltime, _id }, arr) => {
+    const count = arr?.filter((item) => item.from == from && item.to == to && item.traveltime == traveltime)
+    return count.length
+  }
   const [err, setErr] = useState("")
   const [id, setId] = useState("")
   const [ticket, setTicket] = useState({})
-
+  const [slide, setSlide] = useState(false)
   const handleSubmit = async (e) => {
 
     e.preventDefault();
@@ -304,21 +371,29 @@ const Details = () => {
         {
           id
           ,
-        })
+        }
+
+      )
       setTicket(ticket)
-      console.log("enter here ")
     } catch (err) {
-      console.log(err)
       setErr(err.response.data)
     } finally {
-      setTimeout(() => {
-        setLoading(false)
-      }, 2000)
+      setLoading(false)
     }
 
 
   }
+  const makeUnique = (array = [], keys = []) => {
+    if (!keys.length || !array.length) return [];
 
+    return array.reduce((list, item) => {
+      const hasItem = list.find(listItem =>
+        keys.every(key => listItem[key] === item[key])
+      );
+      if (!hasItem) list.push(item);
+      return list;
+    }, []);
+  };
 
   const [toggle, setToggle] = useState(false);
 
@@ -390,41 +465,371 @@ const Details = () => {
             setIsOpen={setIsOpen__}
             ticket={ticket} />)
         }
-        <div
-          className={`overlay ${isOpen && "active"} transition-[visible] duration-100
-      group grid place-items-center `}
-          onClick={() => setIsOpen(false)}
+        <ShowBuses isOpen={isOpen___}
+          className2="!w-[min(40rem,calc(100%-30px))]"
+          setIsOpen={setIsOpen___}
+          title={(slide ? "Select bus" : "Avalible Buses")}
         >
-          <div
-            onClick={e => e.stopPropagation()}
-            className={`
-          -translate-x-[50px]
-          md:translate-x-0
-          md:translate-y-[50px]
-          group-[.active]:translate-x-0
-          duration-700
-          ease 
-          transition-all
-          opacity-60
-          md:group-[.active]:translate-y-0
-          group-[.active]:opacity-100
-          bg-white
-          dark:bg-slate-800
-          shadow-sm
-          rounded-lg
-          w-[min(calc(100%-40px),400px)]
-          
-            py-5 pb-10`}>
+          <AnimatePresence >
+            {
+              slide ? (<div
+                key="ihsiadhfp"
+              // initial={{ opacity: 0 }}
+              // animate={{ y: 0, opacity: 1 }}
+              // exit={{ opacity: 0 }}
+              >
+                <Rounded
+                  className={`!w-8 !h-8 !ml-4`}
+                  onClick={() => setSlide(false)}>
+                  <AiOutlineArrowLeft size={20}
+                    className="flex-none pl-1 " />
+                </Rounded>
+                <form onSubmit={(e) => {
+                  e.preventDefault()
+                  return toast.promise(handleAddNewSeat().then(data => {
+                    getData()
+                    setIsOpen___(false)
+                  }), {
+                    pending: "loading please wait ",
+                    success: "done creating bus seat  ...",
+                    error: "oops Something went wrong ,try again later"
+                  })
+                }} >
+                  <div className='mx-auto mb-6 w-[min(300px,calc(100%-2.5rem))]'>
+                    <BusSelect
+                      defaultOptions
+                      catcheOptions
+                      loadOptions={
+                        async () => {
 
-            <AnimateText text="change password " className='!text-lg' />
-            <form
-              onSubmit={handleChangePassWord}
-              className='px-5'
-            >
-              <div className="relative mb-6" data-te-input-wrapper-init>
-                <input ref={password1}
-                  type="text"
-                  className="peer block min-h-[auto] w-full 
+                          const data = await getBuses()
+                          const formateddata = data?.map(({ label, value, feature }) => {
+                            return ({
+                              label: `Name : ${label}----Feature: ${feature}`,
+                              value: value,
+                            })
+
+                          })
+                          return formateddata
+
+                        }
+
+                      }
+                      required
+                      isSearchable={false}
+                      onChange={(e) => {
+                        setSelectedIds((pre) => {
+                          return ({
+                            ...pre,
+                            bus_id: e.value
+
+                          })
+
+                        })
+                      }}
+
+                      className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
+                    />
+
+
+                  </div>
+                  <Marquee play pauseOnClick pauseOnHover className="italic text-blue-600 dark:text-blue-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5   max-w-5xl">
+                    go to bus detail page to check bus specification
+                  </Marquee>
+                  <UiButton name={"Select "}
+                    className="!block !bg-purple-900
+                        w-[min(200px,calc(100%-2.5rem))]
+                        !mx-auto
+                        !pb-2.5
+                        !pt-2
+                        !mb-5
+                        "
+                  />
+                </form>
+              </div>) : (
+                <div
+                  key="jiofhsa f"
+                  // initial={{ opacity: 0.2 }}
+                  // animate={{ y: 0, opacity: 1 }}
+                  // exit={{ opacity: 0 }}
+
+                  className={` `}>
+
+                  <div>
+
+                    {
+
+
+                      makeUnique(data?.seats, ["traveltime", "from", "to"])?.map(({ traveltime, from, to, _id: seat_id }, idx) => {
+                        const count = getCount({
+                          from, to, traveltime
+
+                        }, data?.seats)
+                        return (
+                          <div className='flex justify-between  flex-col  md:flex-row px-4 space-x-6 items-center border-b border-slate-200 pb-2 mb-1'>
+                            <div className='flex-none flex space-x-5 space-y-2 items-center'>
+                              <div className="flex-none">
+                                {from}
+                              </div>
+                              <div className="flex-none">
+                                {to}
+                              </div>
+                              <div className="flex-none">
+                                {traveltime}
+                              </div>
+                            </div>
+                            <div className="flex-1 flex  space-x-2 items-center">
+                              {
+                                Array.from({ length: count }, (arr, index) => {
+                                  return (
+                                    <Link to={`/seat/${seat_id}?from=`}
+
+                                      className='h-10 w-10 border border-green-900 grid 
+                        place-items-center rounded-md shadow-lg text-sm 
+                        ml-4 hover:bg-green-800
+                        
+                        '
+                                    >
+                                      {index + 1}
+                                    </Link>
+                                  )
+
+                                }
+                                )
+
+                              }
+                              <div
+                                onClick={() => {
+
+                                  setSlide(true)
+                                  setSelectedIds((pre) => {
+                                    return ({
+                                      ...pre,
+                                      seat_id: seat_id
+
+                                    })
+
+                                  })
+                                }
+                                }
+                                className='h-10 w-10 border border-gray-50 grid 
+                        place-items-center rounded-md shadow-lg text-sm
+                        ml-4 hover:bg-slate-500
+                        
+                        '
+
+                              >+</div>
+                            </div>
+                          </div>
+
+                        )
+                      })
+                    }
+                    <form onSubmit={e => {
+                      e.preventDefault()
+                      mutate()
+                      // toast.promise(handleaddnewroute().then(data => {
+                      //   alert("added success")
+                      //   refetch()
+                      // }), {
+                      //   pending: "loading please wait ",
+                      //   success: "done creating bus seat  ...",
+                      //   error: "oops Something went wrong ,try again later"
+                      // })
+                    }}>
+                      {
+
+                        showAdd && (
+
+                          <>
+
+
+                            <Scrollable className="!overflow-visible !justify-center !items-center">
+                              <div>
+                                <Heading text="From" className={"!mb-1 !mt-2 !text-sm first-letter:text-2xl first-letter:font-black"} />
+                                <FromSelect
+
+                                  onChange={(e) => {
+                                    setQueryObj(
+                                      (prev) => {
+                                        return ({
+                                          ...prev, from: e.value
+
+                                        })
+                                      }
+                                    )
+                                  }}
+                                  menuPlacement='top'
+                                  defaultOptions
+                                  catcheOptions
+                                  loadOptions={getCities}
+                                  required
+
+                                  styles={{
+                                    ...style,
+                                    wdith: "100%",
+                                    fontSize: 10 + "px"
+                                  }}
+
+                                  components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+
+                                  className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
+                                // onChange={evt => setFromCities(evt.value)}
+                                />
+
+                              </div>
+                              <div>
+                                <Heading text="To" className={"!mb-1 !mt-2 !text-sm first-letter:text-2xl first-letter:font-black"} />
+                                <ToSelect
+                                  onChange={(e) => {
+                                    setQueryObj(
+                                      (prev) => {
+                                        return ({
+                                          ...prev, to: e.value
+
+                                        })
+                                      }
+                                    )
+                                  }}
+                                  defaultOptions
+                                  catcheOptions
+                                  loadOptions={getCities}
+                                  required
+
+                                  styles={{
+                                    ...style,
+                                    wdith: "100%",
+                                    fontSize: 10 + "px"
+                                  }}
+
+                                  components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+
+                                  className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
+                                />
+
+                              </div>
+                              <div>
+                                <Heading text="time" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
+                                <div className='mt-0'>
+
+                                  <SelectTime
+                                    options={timeOptions}
+                                    styles={style}
+                                    defaultValue={{
+                                      label: querySearch.get("traveltime") || "no time",
+                                      value: "no time"
+                                    }}
+                                    components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+
+                                    isSearchable={false}
+
+                                    onChange={(e) => {
+                                      setQueryObj(
+                                        (prev) => {
+                                          return ({
+                                            ...prev, traveltime: e.value
+
+                                          })
+                                        }
+                                      )
+                                    }}
+
+                                    className='!border-none !h-8 mt-0' />
+                                </div>
+
+                              </div>
+
+                            </Scrollable>
+                            <div className='mx-auto mb-6 w-[min(300px,calc(100%-2.5rem))] mt-4'>
+                              <BusSelect
+                                defaultOptions
+                                catcheOptions
+                                loadOptions={
+                                  async () => {
+                                    const data = await getBuses()
+                                    const formateddata = data?.map(({ label, value, feature }) => {
+                                      return ({
+                                        label: `Name : ${label}----Feature: ${feature}`,
+                                        value: value,
+                                      })
+
+                                    })
+                                    return formateddata
+
+                                  }
+
+                                }
+                                required
+                                isSearchable={false}
+
+                                onChange={(e) => {
+                                  setQueryObj(
+                                    (prev) => {
+                                      return ({
+                                        ...prev,
+                                        bus_id: e.value
+
+                                      })
+                                    }
+                                  )
+                                }}
+                                className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
+                              />
+
+
+                            </div>
+                          </>
+                        )
+                      }
+                      {
+
+                        showAdd && <>
+                          <UiButton name={loadingRoute ? "please wait " : "continue "} disabled={loadingRoute}
+                            className={"!w-[min(400px,calc(100%-30px))] !mx-auto !pb-2 pt-1.5 !mt-5 !bg-green-900"}
+                          />
+                          <p
+
+                            className='text-blue-700 px-10 text-center !text-sm pt-2'
+                            onClick={() => setShowAdd(false)}> go back </p>
+                        </>
+
+                      }
+
+
+                    </form>
+                    {!showAdd && <>
+                      <UiButton
+                        type="button"
+
+                        name="choose another route " onClick={() => setShowAdd(!showAdd)}
+                        className={"!w-[min(400px,calc(100%-30px))] !mx-auto !pb-2 pt-1.5 !mt-5 !bg-blue-900"}
+                      />
+                    </>}
+                  </div>
+
+                </div>
+              )
+            }
+
+
+          </AnimatePresence>
+
+
+
+        </ShowBuses>
+        <ShowBuses isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          title="Change Password"
+        >
+
+          <form
+            onSubmit={handleChangePassWord}
+            className='px-5'
+          >
+            <div className="relative mb-6" data-te-input-wrapper-init>
+              <input ref={password1}
+                type="text"
+                className="peer block min-h-[auto] w-full 
               rounded 
               border-2
               focus:border-2
@@ -439,11 +844,11 @@ const Details = () => {
               ease-linear
               focus:placeholder:opacity-100
               data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                  id="password1"
-                  placeholder="Password" required />
-                <label
-                  htmlFor="password1"
-                  className="pointer-events-none 
+                id="password1"
+                placeholder="Password" required />
+              <label
+                htmlFor="password1"
+                className="pointer-events-none 
               absolute left-3
               top-0 mb-0
               max-w-[90%]
@@ -473,14 +878,14 @@ const Details = () => {
               dark:text-neutral-200
               dark:peer-focus:text-primary"
 
-                >
-                  Old Passowrd
-                </label>
-              </div>
-              <div className="relative mb-6" data-te-input-wrapper-init>
-                <input ref={password2}
-                  type="password"
-                  className="peer block min-h-[auto] w-full 
+              >
+                Old Passowrd
+              </label>
+            </div>
+            <div className="relative mb-6" data-te-input-wrapper-init>
+              <input ref={password2}
+                type="password"
+                className="peer block min-h-[auto] w-full 
               rounded 
               border-2
               focus:border-2
@@ -495,11 +900,68 @@ const Details = () => {
               ease-linear
               focus:placeholder:opacity-100
               data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                  id="password2"
-                  placeholder="New Password" required />
-                <label
-                  htmlFor="password2"
-                  className="pointer-events-none 
+                id="password2"
+                placeholder="New Password" required />
+              <label
+                htmlFor="password2"
+                className="pointer-events-none 
+              absolute left-3
+              top-0 mb-0
+              max-w-[90%]
+              origin-[0_0]
+              truncate 
+              pt-[0.37rem] 
+              leading-[2.15]
+              text-neutral-500
+              transition-all duration-200  
+              
+              ease-out 
+              peer-focus:-translate-y-[1.15rem]
+              peer-focus:scale-[0.8]
+              peer-valid:scale-[0.8]
+              peer-valid:text-blue-400
+              peer-valid:-translate-y-[1.15rem]
+              peer-focus:text-blue-400
+              peer-focus:bg-white
+              peer-valid:bg-white
+              dark:peer-focus:bg-slate-800
+              dark:peer-valid:bg-slate-800
+              px-0
+              bg-transparent
+              peer-data-[te-input-state-active]:-translate-y-[1.15rem]
+               rounded-sm
+               peer-data-[te-input-state-active]:scale-[0.8]
+              motion-reduce:transition-none
+              dark:text-neutral-200
+              dark:peer-focus:text-primary"
+
+              >
+                New Password
+              </label>
+            </div>
+            <div className="relative mb-6" data-te-input-wrapper-init>
+              <input ref={password3}
+                type="password"
+                className="peer block min-h-[auto] w-full 
+              rounded 
+              border-2
+              focus:border-2
+              focus:border-blue-400
+              valid:border-blue-400
+              bg-transparent
+              px-3 py-[0.32rem]
+              leading-[2.15] 
+              outline-none
+              transition-all 
+              duration-200
+              ease-linear
+              focus:placeholder:opacity-100
+              data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                id="password3"
+                placeholder="Email address" required />
+              <label
+                htmlFor="password3"
+                className="pointer-events-none 
               absolute left-3
               top-0 mb-0
               max-w-[90%]
@@ -529,84 +991,28 @@ const Details = () => {
               dark:text-neutral-200
               dark:peer-focus:text-primary"
 
-                >
-                  New Password
-                </label>
-              </div>
-              <div className="relative mb-6" data-te-input-wrapper-init>
-                <input ref={password3}
-                  type="password"
-                  className="peer block min-h-[auto] w-full 
-              rounded 
-              border-2
-              focus:border-2
-              focus:border-blue-400
-              valid:border-blue-400
-              bg-transparent
-              px-3 py-[0.32rem]
-              leading-[2.15] 
-              outline-none
-              transition-all 
-              duration-200
-              ease-linear
-              focus:placeholder:opacity-100
-              data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                  id="password3"
-                  placeholder="Email address" required />
-                <label
-                  htmlFor="password3"
-                  className="pointer-events-none 
-              absolute left-3
-              top-0 mb-0
-              max-w-[90%]
-              origin-[0_0]
-              truncate 
-              pt-[0.37rem] 
-              leading-[2.15]
-              text-neutral-500
-              transition-all duration-200  
-              ease-out 
-              peer-focus:-translate-y-[1.15rem]
-              peer-focus:scale-[0.8]
-              peer-valid:scale-[0.8]
-              peer-valid:text-blue-400
-              peer-valid:-translate-y-[1.15rem]
-              peer-focus:text-blue-400
-              peer-focus:bg-white
-              peer-valid:bg-white
-              dark:peer-focus:bg-slate-800
-              dark:peer-valid:bg-slate-800
-              px-0
-              bg-transparent
-              peer-data-[te-input-state-active]:-translate-y-[1.15rem]
-               rounded-sm
-               peer-data-[te-input-state-active]:scale-[0.8]
-              motion-reduce:transition-none
-              dark:text-neutral-200
-              dark:peer-focus:text-primary"
-
-                >Confirm Password
-                </label>
-              </div>
+              >Confirm Password
+              </label>
+            </div>
 
 
-              <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
-                <motion.h1
-                  animate={{
-                    opacity: error ? 1 : 0,
-                    y: error ? 0 : -40,
-                    x: error ? 0 : -1000
+            <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
+              <motion.h1
+                animate={{
+                  opacity: error ? 1 : 0,
+                  y: error ? 0 : -40,
+                  x: error ? 0 : -1000
 
-                  }}
-
-
-                  className="w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
-              </div>
+                }}
 
 
-              <button
-                type="submit"
-                className="inline-block bg-blue-400
+                className="w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
+            </div>
+
+
+            <button
+              type="submit"
+              className="inline-block bg-blue-400
             w-full rounded bg-primary px-7
             pb-2.5 pt-3 text-sm font-medium
             uppercase leading-normal
@@ -623,132 +1029,104 @@ const Details = () => {
             dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
             dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
             dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                disabled={isLoading}
-                data-te-ripple-init
-                data-te-ripple-color="light">
-                {loading ? <Loadingbtn /> : "Change Password"}
-              </button>
+              disabled={isLoading}
+              data-te-ripple-init
+              data-te-ripple-color="light">
+              {loading ? <Loadingbtn /> : "Change Password"}
+            </button>
 
 
-            </form>
-          </div>
-        </div>
-        {/* ticket modal */}
-        <div
-          className={`overlay
-                !fixed
-                ${isOpen_ && "active"} transition-[visible] duration-100
-      group grid place-items-center `}
-          onClick={() => setIsOpen_(false)}
-        >
+          </form>
 
-          <div
-            onClick={e => e.stopPropagation()}
-            className={`
-    lg:max-h-[calc(100%-100px)]
-    max-h-[calc(100%-60px)]
-    overflow-auto
--translate-x-[50px]
-md:translate-x-0
-md:translate-y-[50px]
-group-[.active]:translate-x-0
-duration-700
-ease 
-transition-all
-opacity-60
-md:group-[.active]:translate-y-0
-group-[.active]:opacity-100
-bg-white
-dark:bg-slate-800
-shadow-sm
-rounded-lg
-w-[min(calc(100%-40px),400px)]
+        </ShowBuses>
+        <ShowBuses
+          // title="Ticket"
+          isOpen={isOpen_}
+          setIsOpen={setIsOpen_}>
+          {
+            loading ? <AnimateText text="loading please wait ..." className="!text-2xl" /> : (
+              err ? <>
+                <Heading text={err} className="!text-rose-600" />
+                <p className="mb-4 px-4 text-center lg:text-start text-sm">contact customer service if something is wrong </p>
+                <UiButton name="Contact Customer Services" className="!pb-2.5 !pt-1.5 w-[min(400px,calc(100%-60px))] !mx-auto" />
+              </>
+                : (
+                  <div>
+                    <h1 className="text-center font-semibold  font-montserrat text-xl mt-4 md:text-2xl tracking-tighter leading-10 oblique text-blue-900">Ticket Details</h1>
+                    <h2 className="text-center  text-lg md:text-xl font-medium  "> Ticket id</h2>
+                    <p className="text-center text-slate-500 mb-4 "> {ticket?._id}</p>
 
-py-5 pb-10`}>
-            {
-              loading ? <AnimateText text="loading please wait ..." className="!text-2xl" /> : (
-                err ? <>
-                  <Heading text={err} className="!text-rose-600" />
-                  <p className="mb-4 px-4 text-center lg:text-start text-sm">contact customer service if something is wrong </p>
-                  <UiButton name="Contact Customer Services" className="!pb-2.5 !pt-1.5 w-[min(400px,calc(100%-60px))] !mx-auto" />
-                </>
-                  : (
-                    <div>
-                      <h1 className="text-center font-semibold  font-montserrat text-xl mt-4 md:text-2xl tracking-tighter leading-10 oblique text-blue-900">Ticket Details</h1>
-                      <h2 className="text-center  text-lg md:text-xl font-medium  "> Ticket id</h2>
-                      <p className="text-center text-slate-500 mb-4 "> {ticket?._id}</p>
+                    <h2 className="text-center  text-lg md:text-xl font-medium  "> Traveler Name</h2>
+                    <p className="text-center text-slate-500 mb-4 ">{ticket?.fullname || "n/a"}</p>
 
-                      <h2 className="text-center  text-lg md:text-xl font-medium  "> Traveler Name</h2>
-                      <p className="text-center text-slate-500 mb-4 ">{ticket?.fullname || "n/a"}</p>
+                    <h2 className="text-center  text-lg md:text-xl font-medium  ">Travel Date </h2>
+                    <p className="text-center text-slate-500 mb-4 "> {ticket?.traveldate ? dateFormater(ticket?.traveldate).date : "n/a"}</p>
+                    <h2 className="text-center  text-lg md:text-xl font-medium  ">travel time </h2>
+                    <p className="text-center text-slate-500 mb-4 "> {ticket?.traveltime || "n/a"}</p>
+                    <div className="grid grid-cols-2">
 
-                      <h2 className="text-center  text-lg md:text-xl font-medium  ">Travel Date </h2>
-                      <p className="text-center text-slate-500 mb-4 "> {ticket?.traveldate ? dateFormater(ticket?.traveldate).date : "n/a"}</p>
-                      <h2 className="text-center  text-lg md:text-xl font-medium  ">travel time </h2>
-                      <p className="text-center text-slate-500 mb-4 "> {ticket?.traveltime || "n/a"}</p>
-                      <div className="grid grid-cols-2">
+                      <div>
+                        <h2 className="text-center  text-lg md:text-xl font-medium  "> From</h2>
+                        <p className="text-center text-slate-500 mb-4 ">{ticket?.from || "n/a"} </p>
 
-                        <div>
-                          <h2 className="text-center  text-lg md:text-xl font-medium  "> From</h2>
-                          <p className="text-center text-slate-500 mb-4 ">{ticket?.from || "n/a"} </p>
-
-                        </div>
-                        <div>
-                          <h2 className="text-center  text-lg md:text-xl font-medium  "> To</h2>
-                          <p className="text-center text-slate-500 mb-4 ">{ticket?.to || "n/a"}</p>
-                        </div>
                       </div>
-                      <div className="grid grid-cols-2">
-
-                        <div>
-
-                          <h2 className="text-center  text-lg md:text-xl font-medium  "> sex</h2>
-                          <p className="text-center text-slate-500 mb-4 ">{ticket?.sex || "n/a"} </p>
-                        </div>
-                        <div>
-                          <h2 className="text-center  text-lg md:text-xl font-medium  "> status</h2>
-                          <p className="text-center sidebar text-slate-500 mb-4 grid place-items-center"> {ticket?.active ?
-
-
-                            ticket?.type == "roundtrip" ? <div className="flex gap-x-1">
-                              {ticket?.doubletripdetails[0]?.active ? <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span> : <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>}
-                              {ticket?.doubletripdetails[1]?.active ? <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span> : <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>}
-                            </div> : <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span>
-
-                            :
-                            <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>
-
-                          }</p>
-                        </div>
+                      <div>
+                        <h2 className="text-center  text-lg md:text-xl font-medium  "> To</h2>
+                        <p className="text-center text-slate-500 mb-4 ">{ticket?.to || "n/a"}</p>
                       </div>
-                      <h2 className="text-center  text-lg md:text-xl font-medium  "> this ticket was created at </h2>
-                      <p className="text-center text-slate-500 mb-10 ">{dateFormater(ticket?.createdAt).date + " at " + dateFormater(ticket?.createdAt).time || "n/a"} </p>
-                      <h2 className="text-center  text-lg md:text-xl font-medium  "> price of the ticket</h2>
-                      <p className="text-center text-slate-500 " >{ticket?.price + "frs" || "n/a"} </p>
-                      {
+                    </div>
+                    <div className="grid grid-cols-2">
 
-                        ticket?.active && (
-                          <UiButton
-                            name="Edit Ticket"
-                            className="!block 
+                      <div>
+
+                        <h2 className="text-center  text-lg md:text-xl font-medium  "> sex</h2>
+                        <p className="text-center text-slate-500 mb-4 ">{ticket?.sex || "n/a"} </p>
+                      </div>
+                      <div>
+                        <h2 className="text-center  text-lg md:text-xl font-medium  "> status</h2>
+                        <p className="text-center sidebar text-slate-500 mb-4 grid place-items-center"> {ticket?.active ?
+
+
+                          ticket?.type == "roundtrip" ? <div className="flex gap-x-1">
+                            {ticket?.doubletripdetails[0]?.active ? <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span> : <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>}
+                            {ticket?.doubletripdetails[1]?.active ? <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span> : <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>}
+                          </div> : <span className='w-6 h-6  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span>
+
+                          :
+                          <span className='w-6 h-6  bg-red-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineClose /></span>
+
+                        }</p>
+                      </div>
+                    </div>
+                    <h2 className="text-center  text-lg md:text-xl font-medium  "> this ticket was created at </h2>
+                    <p className="text-center text-slate-500 mb-10 ">{dateFormater(ticket?.createdAt).date + " at " + dateFormater(ticket?.createdAt).time || "n/a"} </p>
+                    <h2 className="text-center  text-lg md:text-xl font-medium  "> price of the ticket</h2>
+                    <p className="text-center text-slate-500 " >{ticket?.price + "frs" || "n/a"} </p>
+                    {
+
+                      ticket?.active && (
+                        <UiButton
+                          name="Edit Ticket"
+                          className="!block 
                         w-[min(300px,calc(100%-2.5rem))]
                         !mx-auto
                         !pb-2.5
                         !pt-2
                         !mb-5
                         "
-                            onClick={() => {
-                              setToggle(false)
-                              setIsOpen__(true)
-                              setIsOpen_(false)
-                            }}
-                          />
+                          onClick={() => {
+                            setToggle(false)
+                            setIsOpen__(true)
+                            setIsOpen_(false)
+                          }}
+                        />
 
-                        )
-                      }
-                      <a
-                        href={`${downloadbaseurl}/downloadticket/${ticket?._id}?payload=79873ghadsguy&requ`}
-                        target="_blank"
-                        className="inline---block 
+                      )
+                    }
+                    <a
+                      href={`${downloadbaseurl}/downloadticket/${ticket?._id}?payload=79873ghadsguy&requ`}
+                      target="_blank"
+                      className="inline---block 
                         w-[min(300px,calc(100%-2.5rem))]
                          bottom-0
                          pb-2.5
@@ -763,18 +1141,19 @@ transition duration-150 ease-in-out hover:bg-green-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:bg-green-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                      >
-                        Download ticket
-                      </a>
-                    </div>
-                  )
+                    >
+                      Download ticket
+                    </a>
+                  </div>
+                )
 
-              )
+            )
+          }
 
-            }
-          </div>
+        </ShowBuses>
 
-        </div>
+        {/* ticket modal */}
+
 
         <Alert message={message}
           duration="30000"
@@ -1144,7 +1523,7 @@ z-10  "
                           
                             '
                     slidesPerView={1}
-                    onSlideChange={(e) => console.log(e)}
+                    // onSlideChange={(e) => console.log(e)}
                     modules={[Autoplay, Navigation]}
                     navigation={{
                       prevEl: ".arrow__left",
@@ -1272,7 +1651,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
                   </Swiper>
 
-                  <div className="mt-10 mb-10 md:mb-5">
+                  <div className="mt-10  md:mb-5">
 
                     <div
                       onClick={e => e.stopPropagation()}
@@ -1291,12 +1670,12 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
           rounded-lg
           w-[min(calc(100%-40px),400px)]
           
-            py-5 pb-10`}>
+            py-5 `}>
 
                       <AnimateText text="Please enter ticket id to get and edit tickett" className='!text-lg' />
                       <form
                         onSubmit={handleSubmit}
-                        className='px-5 pb-5'
+                        className='px-5 '
                       >
                         <div className="relative mb-6" data-te-input-wrapper-init>
                           <input
@@ -1394,8 +1773,29 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                     </div>
 
                   </div>
+                  <div>
+                    <form onSubmit={e => {
+                      e.preventDefault()
+                      setIsOpen___(true)
+                      refetch()
+                    }}>
+                      <CustomDatePicker
+                        startDate={seatDate}
+                        setStartDate={setSeatDate}
+                      />
 
+
+                      <UiButton
+                        type="submit"
+                        className={"!bg-green-800 w-[min(300px,calc(100%-40px))] !mx-auto px-8 !mb-10 pb-2.5 pt-1.5"}
+                        name={"Show buses"}
+                        onClick={() => 0}
+                      />
+                    </form>
+
+                  </div>
                 </div>
+
             }
 
           </div>
@@ -1524,8 +1924,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
           !isLoading && (<FormatTable
             ticketData={userData}
-          // skip={querySearch.get("limit")}
-          // currentPage={querySearch.get("page")} 
+
 
           />)
         }
@@ -1551,7 +1950,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
           })}
         </Scrollable> */}
 
-      </motion.div>
+      </motion.div >
     </>
   )
 }

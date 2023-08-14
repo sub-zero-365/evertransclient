@@ -80,12 +80,7 @@ const SeatDetails = () => {
     }, [activeSeat])
 
 
-    // const onChange = ({ value }, key) => {
-    //     if (querySearch.get(key) === value) {
-    //         return
-    //     }
-    //     handleFilterChange(key, value);
-    // }
+ 
     const [loadingError, setLoadingError] = useState("")
     const { data: ticketData, isLoading, error } = useQuery({
         queryKey: ['seatdetailstickets', id],

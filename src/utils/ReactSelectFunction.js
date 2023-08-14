@@ -25,9 +25,11 @@ export const getBuses = async (inputValue = "") => {
         )
         const { buses } = res.data;
 
-        const buses_name = buses.map(({ _id, name }) => ({
+        const buses_name = buses.map(({ _id, name,feature }) => ({
             label: name,
             value: _id,
+            feature:feature || "vip bus"
+            
         }))
         return buses_name
     } catch (err) {

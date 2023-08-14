@@ -36,18 +36,18 @@ const BusSits = () => {
     setToggle(true)
   }
   const [message, setMessage] = useState("")
-  // const Header = ({ name }) => <h1 className="dark:text-white  font-black text-center text-slate-900 mb-4 tracking-tighter  underline underline-offset-8 text-lg">{name || "no name was passed"}</h1>
 
 
   const url = "/ticket"
-  // const handleMarkSeatConSumeSeat = async () => {
-  //   return
 
-  // }
   const formatPrice = (triptype, seatposition) => {
-    // if (Number(seat))
     const seatnumber = Number(seatposition) + 1;
-
+    if (queryParameters.get("flag") == "classic") {
+      if (triptype == "round") {
+        return 10000
+      }
+      return 6500
+    }
     if (!seatnumber) alert("invalid seat number")
     if (triptype == "null" || triptype == "single") {
       return seatnumber <= 20 ? 10000 : 6500
@@ -55,7 +55,7 @@ const BusSits = () => {
     if (triptype == "round") {
       return seatnumber <= 20 ? 20000 : 10000
     }
-    return "invalid seatposition"
+    return "invalid seatposition or price "
   }
   console.log(dayjs(queryParameters.get("date")).format("YYYY-MM-DD"), queryParameters.get("date"))
 
@@ -64,7 +64,6 @@ const BusSits = () => {
       from: queryParameters.get("from"),
       to: queryParameters.get("to"),
       traveldate: dayjs(`${queryParameters.get("date")}`).format("YYYY-MM-DD"),
-      // traveldate: dayjs(queryParameters.get("date")).format("YYYY-MM-DD"),
       traveltime: queryParameters.get("time") || "n/a",
       price: formatPrice(queryParameters.get("triptype"), queryParameters.get("sitpos")),
       sex: queryParameters.get("gender"),
@@ -73,7 +72,9 @@ const BusSits = () => {
       phone: queryParameters.get("phone"),
       fullname: queryParameters.get("name"),
       seat_id: queryParameters.get("seat_id"),
-      seatposition: Number(queryParameters.get("sitpos"))
+      seatposition: Number(queryParameters.get("sitpos")),
+      paymenttype: queryParameters.get("paymenttype"),
+      busType: queryParameters.get("flag")
     }
     if (queryParameters.get("triptype") !== "null") {
       submitdata = {
@@ -230,7 +231,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
 
                 <li className="inline-flex items-center">
                   <svg aria-hidden="true" className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                  <NavLink to={"/bussits/7847/?" + queryParameters?.toString()} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                  <NavLink to={`/bussits/${queryParameters.get("seat_id")}?` + queryParameters?.toString()} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     BusSeat
                   </NavLink>
                 </li>
@@ -247,7 +248,6 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             </nav>
             <AnimateText text="User Information"
               className={"!text-sm md:!text-lg lg:!text-2xl !text-center"} />
-            {/* <Heading text="User Information" className="!text-center !text-2xl !font-black !mb-14 !text-slate-900 underline underline-offset-8" /> */}
 
             <div className="border-2 pr-4  bg-white
           dark:bg-slate-800  shadow-xl 
@@ -303,6 +303,15 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Travel Time" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
                 <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("time")}</div>
+              </div>
+              <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                <Heading text="Payment type" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("paymenttype")}</div>
+              </div>
+              <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                <Heading text="Bus type" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("flag")}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Travel Cost" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />

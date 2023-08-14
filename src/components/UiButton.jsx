@@ -1,13 +1,13 @@
 
 
 
-export const UiButtonDanger = ({ className, onClick,disabled, name }) => {
+export const UiButtonDanger = ({ className, onClick, disabled, name }) => {
     return (
         <button
             onClick={onClick}
             disabled={disabled}
             className={` ${className}
-            ${disabled&&"!cursor-wait !bg-gray-800"}
+            ${disabled && "!cursor-wait !bg-gray-800"}
 font-medium
 shadow
 md:shadow-md
@@ -39,14 +39,14 @@ font-montserrat
 
 }
 
-const UiButton = ({ className, onClick, name, disabled }) => {
+const UiButton = ({ className, onClick, name, disabled, type }) => {
     return (
         <button
             onClick={onClick}
             disabled={disabled}
-            
+            type={type}
             className={` ${className}
-            ${disabled&&"!cursor-wait !bg-gray-800"}
+            ${disabled && "!cursor-wait !bg-gray-800"}
 font-medium
 shadow
 md:shadow-md

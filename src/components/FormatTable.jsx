@@ -107,6 +107,9 @@ const FormatTable = ({ ticketData, admin, hidePanigation }) => {
                                 type
                             </th>
                             <th scope="col" className="px-3 py-3">
+                             payment type
+                            </th>
+                            <th scope="col" className="px-3 py-3">
                                 price
                             </th>
                             <th scope="col" className="px-3 py-3">
@@ -176,6 +179,9 @@ const FormatTable = ({ ticketData, admin, hidePanigation }) => {
                                     <td className="px-3 py-2">
                                         <span className="font-medium ">{ticket?.type || "singletrip"}</span>
                                     </td>
+                                    <td className="px-3 py-2">
+                                        <span className="font-medium ">{ticket?.paymenttype || "Cash In"}</span>
+                                    </td>
                                     <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {ticket?.price + (ticket.updatePrice ?? 0) || "n/a"}
                                     </th>
@@ -192,8 +198,6 @@ const FormatTable = ({ ticketData, admin, hidePanigation }) => {
                                                 onClick={
                                                     () => handleEditTicket(ticket)
                                                 }
-
-
                                             >Edit</UiButton>
                                         )}
                                     </td>

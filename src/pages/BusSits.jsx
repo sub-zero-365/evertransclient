@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Modal, DisplayUi, DateUi, PrevButton, NextButton, Heading } from "../components"
 import { useNavigate } from "react-router-dom"
-import { NavLink, useSearchParams } from 'react-router-dom'
+import { NavLink, useSearchParams, useParams } from 'react-router-dom'
 import { motion } from "framer-motion"
 import { TbArmchair2, TbArmchairOff } from 'react-icons/tb'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -12,6 +12,7 @@ import axios from 'axios'
 import GenderSelect from 'react-select'
 import Marquee from 'react-fast-marquee'
 import AnimateText from '../components/AnimateText'
+import PaymentType from 'react-select'
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -23,6 +24,7 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import formatQuery from "../utils/formatQueryStringParams"
+import { paymentOptions } from '../utils/sortedOptions'
 
 import Loader from '../components/Load'
 const
@@ -37,26 +39,21 @@ const
     const to = queryParameters.get("to")
     const date = queryParameters.get("date")
 
+    const { id } = useParams()
+
     const getSeats = async () => {
       setLoading(true)
-      // const traveldate = decodeURIComponent(date)?.
-      //   split("+")?.join(" ").trim()
+
       try {
-        const res = await axios.get("/seat/getstatic", {
-          params: {
-            from,
-            traveldate: date,
-            to,
-            traveltime: time
-          }
-        })
-        setSeats(res.data.seats[0])
+        const res = await axios.get("/seat/specific/" + id, {}, {})
+        setSeats(res.data.seat)
         setUserInfo(pre => (
           {
-            ...pre, seat_id: res.data.seats[0]?._id
+            ...pre,
+            seat_id: res.data.seat?._id
           }
         ))
-        console.log(res.data.seats)
+        console.log(res.data)
       } catch (err) {
         console.log(err.response.data)
         setToggle(true)
@@ -83,13 +80,15 @@ const
 
     const navigate = useNavigate()
     const [selected, setSelected] = useState(queryParameters.get("sitpos"))
+    const [flag, setFlag] = useState((queryParameters.get("flag") || "vip"))
     const [error, setError] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
 
     const toggleModal = () => {
       setError(!error)
     }
-    const checkBusAvailabity = (isTaken, isReserved, id) => {
+    const checkBusAvailabity = (isTaken, isReserved, id, flag = null) => {
+      if (flag) setFlag("classic")
       if (0 == id && isTaken == false && isReserved == false) {
         setSelected(0)
         return
@@ -100,6 +99,7 @@ const
         return
       } else {
         setSelected(id)
+
         return
       }
     }
@@ -117,7 +117,7 @@ const
       gotoCheckOut()
     }
     const gotoCheckOut = () =>
-      navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}&triptype=${userInfo.triptype}&seat_id=${userInfo?.seat_id}`)
+      navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}&triptype=${userInfo.triptype}&seat_id=${userInfo?.seat_id}&paymenttype=${(userInfo?.paymenttype ?? "Cash In")}&flag=${flag}`)
     if (!from || !to || !time || !date) {
       return <div>missing parameters </div>
     }
@@ -155,8 +155,8 @@ const
                   </li>
                   <li className="inline-flex items-center">
                     <svg aria-hidden="true" className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                    <NavLink to={"/booking?" + queryParameters?.toString()} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                      Booking
+                    <NavLink to={"/bus?" + queryParameters?.toString()} href="#" className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                      FindBus
                     </NavLink>
                   </li>
                   <li>
@@ -171,7 +171,7 @@ const
                 </ol>
               </nav>
               <DisplayUi from={queryParameters.get("from")} to={queryParameters.get("to")} />
-              <DateUi 
+              <DateUi
                 date={queryParameters.get("date")}
                 time={queryParameters.get("time")} />
               <AnimateText text="Please Select Seat"
@@ -199,85 +199,133 @@ const
                   nextEl: ".arrow__right",
                 }}
               >
-                <PrevButton className="!left-1.5" />
-                <NextButton className="!right-1.5" />
+                {console.log("seat feature ", seats?.bus?.feature)}
 
-                <SwiperSlide className="group">
-                  <Heading text={"First Class"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
+                {
 
-                  <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
-                    {
-                      seats?.seat_positions?.slice(0, 20)?.map(({ isTaken, _id, isReserved }, i) => {
-                        return (
-                          <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
-                            key={_id}
-                            onClick={() => checkBusAvailabity(isTaken, isReserved, _id)}>
-                            <motion.div
-                              initial={false}
-                              animate={{ scale: selected == i ? [0.8, 1, 0.9] : null }}
-                              transition={{
-                                duration: 1,
-                                ease: "easeInOut",
-                                repeat: Infinity,
-                              }
 
-                              }
+                  (seats?.bus?.feature == undefined || seats?.bus?.feature == null || seats?.bus?.feature == "vip") ? (
+                    <>
+                      <PrevButton className="!left-1.5" />
+                      <NextButton className="!right-1.5" />
+                      <SwiperSlide className="group">
+                        <Heading text={"First Class"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
 
-                              className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
+                        <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
+                          {
+                            seats?.seat_positions?.slice(0, 20)?.map(({ isTaken, _id, isReserved }, i) => {
+                              return (
+                                <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
+                                  key={_id}
+                                  onClick={() => checkBusAvailabity(isTaken, isReserved, _id)}>
+                                  <motion.div
+                                    initial={false}
+                                    animate={{ scale: selected == i ? [0.8, 1, 0.9] : null }}
+                                    transition={{
+                                      duration: 1,
+                                      ease: "easeInOut",
+                                      repeat: Infinity,
+                                    }
+
+                                    }
+
+                                    className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
                 ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
                 rounded-lg flex items-center justify-center`}>
-                              <motion.div
-                                initial={false}
-                                animate={{ y: selected == _id ? "1.3rem" : 0 }}
-                                className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
+                                    <motion.div
+                                      initial={false}
+                                      animate={{ y: selected == _id ? "1.3rem" : 0 }}
+                                      className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
                 px-2 rounded-sm `}>{_id + 1}</motion.div>
-                              {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
-                            </motion.div>
-                          </div>
-                        )
-                      })
-                    }
-                  </motion.div>
+                                    {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
+                                  </motion.div>
+                                </div>
+                              )
+                            })
+                          }
+                        </motion.div>
 
 
-                </SwiperSlide>
-                <SwiperSlide className="group">
-                  <Heading text={"Second Class"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
-
-                  <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
-                    {
-                      seats?.seat_positions?.slice(20)?.map(({ isTaken, isReserved, _id }, i) => {
-                        return (
-                          <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
-                            key={_id}
-                            onClick={() => checkBusAvailabity(isTaken, isReserved, _id)}>
-                            <motion.div
-                              initial={false}
-                              animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
-                              transition={{
-                                duration: 1,
-                                ease: "easeInOut",
-                                repeat: Infinity,
-                              }
-                              }
-                              className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
+                      </SwiperSlide>
+                      <SwiperSlide className="group">
+                        <Heading text={"Second Class"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
+                        <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
+                          {
+                            seats?.seat_positions?.slice(20)?.map(({ isTaken, isReserved, _id }, i) => {
+                              return (
+                                <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
+                                  key={_id}
+                                  onClick={() => checkBusAvailabity(isTaken, isReserved, _id)}>
+                                  <motion.div
+                                    initial={false}
+                                    animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
+                                    transition={{
+                                      duration: 1,
+                                      ease: "easeInOut",
+                                      repeat: Infinity,
+                                    }
+                                    }
+                                    className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
                 ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
                 rounded-lg flex items-center justify-center`}>
-                              <motion.div
-                                initial={false}
-                                animate={{ y: selected == _id ? "1.3rem" : 0 }}
-                                className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
+                                    <motion.div
+                                      initial={false}
+                                      animate={{ y: selected == _id ? "1.3rem" : 0 }}
+                                      className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
                 px-2 rounded-sm `}>{_id + 1}</motion.div>
-                              {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
-                            </motion.div>
-                          </div>
-                        )
-                      })
-                    }
-                  </motion.div>
+                                    {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
+                                  </motion.div>
+                                </div>
+                              )
+                            })
+                          }
+                        </motion.div>
+                      </SwiperSlide>
+                    </>
+
+                  ) : <>
+                    <SwiperSlide className="group">
 
 
-                </SwiperSlide>
+                      <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
+                        {
+                          seats?.seat_positions?.map(({ isTaken, isReserved, _id }, i) => {
+                            return (
+                              <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
+                                key={_id}
+                                onClick={() => checkBusAvailabity(isTaken, isReserved, _id, true)}>
+                                <motion.div
+                                  initial={false}
+                                  animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
+                                  transition={{
+                                    duration: 1,
+                                    ease: "easeInOut",
+                                    repeat: Infinity,
+                                  }
+                                  }
+                                  className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
+                ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
+                rounded-lg flex items-center justify-center`}>
+                                  <motion.div
+                                    initial={false}
+                                    animate={{ y: selected == _id ? "1.3rem" : 0 }}
+                                    className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
+                px-2 rounded-sm `}>{_id + 1}</motion.div>
+                                  {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
+                                </motion.div>
+                              </div>
+                            )
+                          })
+                        }
+                      </motion.div>
+
+                    </SwiperSlide>
+
+
+                  </>
+
+                }
+
 
 
 
@@ -524,7 +572,52 @@ const
 
 
                     </div>
-                   
+
+                  </div>
+                  <div className="mb-[0.125rem] pb-0
+                                block min-h-[50px]  border-2 mr-4  relative pl-[1.5rem] flex-1">
+                    <span className="absolute left-[15px] px-2
+                                    rounded-sm h-[30px] bg-color_light
+                                dark:bg-color_dark top-[-15px]">
+                      Payment type
+                    </span>
+                    <div className="z-[100] max-w-[14rem]">
+                      <PaymentType
+                        onChange={e => {
+                          setUserInfo({ ...userInfo, paymenttype: e.value })
+                          console.log(e.value)
+
+                        }}
+                        defaultValue={{
+                          label: "Cash In",
+                          value: "Cash In"
+                        }}
+                        required
+                        menuPlacement="top"
+                        components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                        styles={{
+                          control: base => ({
+                            ...base,
+                            border: 0,
+                            borderBottom: "0px solid black",
+                            boxShadow: "none",
+                            background: "transparent",
+                            color: "red",
+                            borderRadius: 0,
+                            fontSize: 1 + "rem",
+                            zIndex: 1000
+                          }
+                          )
+
+                        }}
+                        options={
+                          paymentOptions
+                        }
+                      />
+
+
+                    </div>
+
                   </div>
 
                   <div className="relative w-[80px] flex-none" data-te-input-wrapper-init>
