@@ -43,6 +43,7 @@ const Booking = lazy(() => import("./pages/Booking"));
 const BusSits = lazy(() => import("./pages/BusSits"));
 const Cities = lazy(() => import("./pages/Cities"));
 const Users = lazy(() => import("./pages/Users"));
+const Security = lazy(() => import("./pages/SecurityPage"))
 const DashboardHome = lazy(() => import("./pages/DashBoardHome"));
 // const AdminAssistant = lazy(() => import("./pages/AdminContact"));
 const Details = lazy(() => import("./pages/userDetails"));
@@ -109,8 +110,8 @@ function App() {
 
               <Route path="/" element={<UserLayout
 
-toggleDarkTheme={toggleDarkTheme}
- darkTheme={darkTheme}
+                toggleDarkTheme={toggleDarkTheme}
+                darkTheme={darkTheme}
               />}>
                 <Route index element={<Home />} />
                 <Route path="login" element={<Login />} />
@@ -135,12 +136,12 @@ toggleDarkTheme={toggleDarkTheme}
                 <Route path="auth" element={<Auth />} />
               </Route>
               <Route path="/dashboard"
-            
+
                 element={<DashboardLayout
-                
+
                   toggleDarkTheme={toggleDarkTheme}
-                   darkTheme={darkTheme}
-                
+                  darkTheme={darkTheme}
+
                 />} >
                 <Route index element={<DashboardHome />} />
                 <Route path="tickets" element={<Appointment />} />
@@ -158,6 +159,8 @@ toggleDarkTheme={toggleDarkTheme}
                 <Route path="assistants" element={<Assistant />} />
                 <Route path="contacts" element={<ContactLayout />}>
                 </Route>
+                <Route path='security' element={<Security />} />
+                
               </Route>
               <Route path="assistant"
                 element={<Assist />}>

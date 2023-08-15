@@ -9,7 +9,7 @@ const ShowBuses = ({ isOpen, setIsOpen, children, title ,className,className2}) 
                 }
             </Helmet>
             <div
-                className={`overlay  ${isOpen && "active"} !fixed !inset-0 h-screen transition-[visible] duration-100
+                className={`overlay ${className}  ${isOpen && "active"} !fixed !inset-0 h-screen transition-[visible] duration-100
 group grid place-items-center `}
                 onClick={() => setIsOpen(false)}
             >

@@ -209,7 +209,7 @@ const User = () => {
     redeemTicket()
   }, [params])
   const [isOpen, setIsOpen] = useState(false);
-  const isClassic = (ticket?.seatposition < 20 && ticket?.price <= 6500&&(!ticket?.updatePrice)  )
+  const isClassic = (ticket?.seatposition < 20 && ticket?.price <= 6500 && (!ticket?.updatePrice))
   if (isLoading) return <Loader toggle />
   return (
     <>
@@ -300,7 +300,7 @@ const User = () => {
                 viewBox={`0 0 256 256`}
               />
             </div>
-          
+
 
             <Marquee play pauseOnClick pauseOnHover className="capitalize text-red-500 dark:text-red-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5 text-gray-900- md:text-lg lg:text-xl dark:text-white- w-full !max-w-2xl">
               this ticket is valid for a period of 1month
@@ -367,6 +367,20 @@ const User = () => {
               <div>
                 <h2 className="text-center  text-lg md:text-xl font-medium  ">Seat</h2>
                 <p className="text-center text-slate-500 mb-10 " >{ticket?.seatposition !== null ? Number(ticket?.seatposition) + 1 : "n/a"} </p>
+              </div>
+
+            </div>
+            <Heading text="Bus Details" className={"!text-center !font-bold italic"} />
+            <div className='grid  grid-cols-2'>
+              <div>
+                <h2 className="text-center  text-lg md:text-xl font-medium  ">Name</h2>
+                <p className="text-center text-slate-500 mb-10 " >{ticket?.busdetails?.bus || "n/a"} </p>
+              </div>
+              <div>
+                <h2 className="text-center  text-lg md:text-xl font-medium  ">feature</h2>
+                <p className="text-center text-slate-500 mb-10 " >{ticket?.busdetails?.feature || "n/a"} </p>
+
+                {/* <p className="text-center text-slate-500 mb-10 " >{ticket?.seatposition !== null ? Number(ticket?.seatposition) + 1 : "n/a"} </p> */}
               </div>
 
             </div>

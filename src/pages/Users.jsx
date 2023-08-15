@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { LineChart, Number } from '../components';
+import { LineChart, Number, PanigationButton } from '../components';
 import AnimateText from '../components/AnimateText'
 import { MdOutlineClose } from 'react-icons/md'
 import { useravatar } from '../Assets/images';
@@ -14,9 +14,16 @@ import { motion } from 'framer-motion'
 import { UserData } from '../Assets/userdata';
 import { setUserName } from "../actions/userName"
 import { Loadingbtn } from "../components";
+import InputBox from '../components/InputBox';
+import UiButton from '../components/UiButton';
+import dateFormater from '../utils/DateFormater';
+import { SlOptions } from 'react-icons/sl';
+import ShowBuses from './ShowBuses';
+const Appointment = ({ skip, currentPage }) => {
+    const data = {}
+    const [selected, setSelected] = useState(null)
+    const setSelectedNull = () => setSelected(null)
 
-const Appointment = () => {
- 
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
     const setuserName = (username) => {
@@ -27,13 +34,14 @@ const Appointment = () => {
     const phone = useRef(null)
     const fullnames = useRef(null)
     const email = useRef(null)
-let [t,setT]=useState(false)
+    let [t, setT] = useState(false)
     // var [m,setM]=useState("")
+
     const handleSubmit = async (e) => {
-    
+
         e.preventDefault()
         setIsLoading(true)
-        const url =  "/auth/register"
+        const url = "/auth/register"
         try {
             const res = await axios.post(
                 url, {
@@ -80,12 +88,16 @@ let [t,setT]=useState(false)
         return dispatch(setUsers(payload))
     }
     const [text, setText] = useState("")
-
+    //     <Button
+    //     className={"!max-w-[14rem] !w-full"}
+    //     name="Check User"
+    //     href={`/dashboard/details/${user?._id || index}?admin=true&createdBy=${user?._id}`}
+    // ></Button>
     async function fetchData() {
         const url = "/admin/userticketlength"
-    
+
         if (token == null) {
-          navigate("/auth?message=please login again ")
+            navigate("/auth?message=please login again ")
         }
         try {
             const response = await axios.get(url, {
@@ -120,7 +132,7 @@ let [t,setT]=useState(false)
 
     useEffect(() => {
 
-     
+
         fetchData()
 
 
@@ -155,11 +167,26 @@ let [t,setT]=useState(false)
     })
     return (
         <motion.div
-    
+
             className="max-w-full !flex-1 w-full   overflow-auto max-h-[calc(100vh-3rem)] pt-10 " >
-            <Alert toggle={t} message="Created successfully" setToggle={setT}/>
+            <Alert toggle={t} message="Created successfully" setToggle={setT} />
+            <ShowBuses
+                isOpen={selected ? true : false}
+                setIsOpen={setSelectedNull}
+            >
+                <form className='px-5'>
+                    <InputBox
+                        name={"Phone"}
+                    />
+                    <InputBox
+                        name={"password"}
+                        type={"text"}
+                    />
+                </form>
+
+            </ShowBuses>
             <div className="flex gap-x-1 items-center">
-            <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users_?.length }</h2>
+                <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users_?.length}</h2>
             </div>
             <div className="lg:flex lg:mb-14 w-full  lg:px-10">
                 <div className={` flex-1 relative  text-xs mx-0   rounded-lg `}
@@ -248,7 +275,16 @@ z-10  "
                         onSubmit={handleSubmit}
                         className='px-5'
                     >
-                        <div className="relative mb-6" data-te-input-wrapper-init>
+                        <InputBox
+                            inputRef={fullnames}
+                            name={"Full Names"}
+                        />
+                        <InputBox
+                            inputRef={phone}
+                            type={"tel"}
+                            name={"Phone Number"}
+                        />
+                        {/* <div className="relative mb-6" data-te-input-wrapper-init>
                             <input ref={fullnames}
                                 type="text"
                                 className="peer block min-h-[auto] w-full 
@@ -303,8 +339,8 @@ z-10  "
                             >
                                 Full Names
                             </label>
-                        </div>
-                        <div className="relative mb-6" data-te-input-wrapper-init>
+                        </div> */}
+                        {/* <div className="relative mb-6" data-te-input-wrapper-init>
                             <input ref={phone}
                                 type="tel"
                                 className="peer block min-h-[auto] w-full 
@@ -364,8 +400,13 @@ z-10  "
                             >
                                 Phone Number
                             </label>
-                        </div>
-                        <div className="relative mb-6" data-te-input-wrapper-init>
+                        </div> */}
+                        <InputBox
+                            inputRef={email}
+                            type={"email"}
+                            name={"Email Address"}
+                        />
+                        {/* <div className="relative mb-6" data-te-input-wrapper-init>
                             <input ref={email}
                                 type="email"
                                 className="peer block min-h-[auto] w-full 
@@ -424,9 +465,13 @@ z-10  "
 
                             >Email address
                             </label>
-                        </div>
-
-                        <div className="relative mb-6" data-te-input-wrapper-init>
+                        </div> */}
+                        <InputBox
+                            inputRef={password}
+                            type={"password"}
+                            name={"Password"}
+                        />
+                        {/* <div className="relative mb-6" data-te-input-wrapper-init>
                             <input ref={password}
                                 type="password"
                                 className="
@@ -476,23 +521,28 @@ z-10  "
               dark:peer-focus:text-primary"
                             >Password
                             </label>
-                        </div>
+                        </div> */}
 
                         <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
+
+
                             <motion.h1
                                 animate={{
                                     opacity: error ? 1 : 0,
                                     y: error ? 0 : -40,
                                     x: error ? 0 : -1000
-
                                 }}
-
 
                                 className="w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
                         </div>
+                        <UiButton
+                            type="submit"
+                            className={"!text-lg !bg-blue-800 !w-[min(300px,calc(100%-30px))] !mx-auto pb-2 pt-1.5"}
+                            disabled={isLoading}
+                            name={isLoading ? <Loadingbtn /> : "Create Account"}
+                        />
 
-
-                        <button
+                        {/* <button
                             type="submit"
                             className="inline-block bg-blue-400
             w-full rounded bg-primary px-7
@@ -516,16 +566,16 @@ z-10  "
 
                             data-te-ripple-color="light">
                             {isLoading ? <Loadingbtn /> : "Create Account"}
-                        </button>
+                        </button> */}
 
 
                     </form>
                 </div>
 
-         
+
 
             </div>
-           
+
 
 
             <form className="px-4 md:px-6 my-5 max-w-2xl mx-auto"
@@ -546,84 +596,134 @@ z-10  "
 
 
 
+            {/* table here */}
+            <>
+
+                <div className="relative mt-10 lg:max-w-6xl xl:container  mx-auto overflow-x-auto
+bg-white
+shadow-md sm:rounded-lg w-full mb-6 ">
+                    <table className="w-full text-sm text-left text-gray-500 
+dark:text-gray-400 transition-colors duration-[2s]">
+                        <thead className="text-xs text-gray-700 dark:bg-slate-800 uppercase dark:text-gray-400">
+                            <tr>
+                                <th scope="col" className="px-2 py-3">
+                                    Index
+                                </th>
+                                <th scope="col" className="px-3 py-3">
+                                    Full Name
+                                </th>
+                                <th scope="col" className="px-3 py-3">
+                                    Phone Number
+                                </th>
+                                <th scope="col" className="px-3 py-3">
+                                    CreatedAt
+                                </th>
+
+                                <th scope="col" className="px-3 py-3">
+                                    N_Prints
+                                </th>
+                                {/* <th scope="col" className="px-3 py-3">
+                                        N_created
+                                    </th> */}
+
+                                <th scope="col" className="px-3 py-3">
+                                    Action
+                                </th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody
+                            className="pt-4 pb-12 text-xs md:text-sm"
+
+                        >
+                            {
+                                users_.map(({ user, nHits }, index) => {
+                                    const { fullname, phone, createdAt, _id } = user
+                                    return (
+                                        <tr key={index}
+                                            className={` ${index % 2 == 0
+                                                ? "bg-slate-100" : "bg-white"}
+hover:bg-slate-300
+dark:hover:bg-slate-500
+border-slate-100  text-xs
+border-b-2
+dark:bg-gray-900
+dark:border-gray-600
+
+`}
+                                        >
+                                            <th className="px-2 py-4  flex items-center justify-center">
+                                                {
+
+                                                    (index + 1) + (skip ?? 2) * ((currentPage ?? 2) - 1)
+
+                                                }
+                                            </th>
 
 
-            <div class="w-full  lg:p-4
-lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                <Heading text="Recent Employees" className="!font-black first-letter:!text-4xl !text-xl underline underline-offset-8 uppercase" />
+                                            <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {fullname || "fred morgan rose babell34"}
+                                            </th>
 
 
-                        <div class="w-full max-w-2xl-- mx-auto bg-white dark:bg-slate-900 shadow-lg rounded-sm ">
-                                <div class="overflow-x-auto">
-                                    <table class="table-auto w-full text-black dark:text-white">
-                                        <thead class="text-xs font-semibold uppercase text-gray-400 dark:bg-gray-800 bg-gray-50">
-                                            <tr>
-                                                <th class="p-2 whitespace-nowrap">
-                                                    <div class="font-semibold text-left">index</div>
-                                                </th>
-                                                <th class="p-2 whitespace-nowrap">
-                                                    <div class="font-semibold text-left">Full Name</div>
-                                                </th>
-                                                <th class="p-2 whitespace-nowrap">
-                                                    <div class="font-semibold text-left">Phone Number</div>
-                                                </th>
-                                                <th class="p-2 whitespace-nowrap">
-                                                    <div class="font-semibold text-left">CreaedAt</div>
-                                                </th>
-                                                <th class="p-2 whitespace-nowrap">
-                                                    <div class="font-semibold text-left">N_Prints</div>
-                                                </th>
-                                                <th class="p-2 whitespace-nowrap">
-                                                    <div class="font-semibold text-center">action</div>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-sm divide-y divide-gray-100">
-                                            {
+                                            <td className="px-3 py-4">
+                                                <span className="font-medium
+">{phone || "n/a"}</span>
+                                            </td>
 
-                                                users_.map(({ user, nHits }, index) => {
-                                                    return (
-                                                        <tr key={index}>
-                                                            <td class="p-2 whitespace-nowrap">
-                                                                <div class="text-left pl-1">{(index + 1) || "n/a"}</div>
-                                                            </td>
-                                                            <td class="p-2 whitespace-nowrap">
-                                                                <div class="flex items-center">
-                                                                    <div class="w-10 h-10 flex-shrink-0 mr-2 sm:mr-3">
-                                                                        <img class="rounded-full"
-                                                                            src={useravatar}
-                                                                        />
-                                                                    </div>
-                                                                    <div class="font-medium text-gray-800 dark:text-white">{user?.fullname}</div>
-                                                                </div>
-                                                            </td>
-                                                            <td class="p-2 whitespace-nowrap">
-                                                                <div class="text-left">{user?.phone || "n/a"}</div>
-                                                            </td>
-                                                            <td class="p-2 whitespace-nowrap">
-                                                                <div class="text-left font-medium text-green-500">{(new Date(user?.createdAt).toDateString())}</div>
-                                                            </td>
-                                                            <td class="p-2 whitespace-nowrap">
-                                                                <div class="text-left font-medium text-green-500">{nHits}</div>
-                                                            </td>
-                                                            <td class="p-2 whitespace-nowrap">
-                                                                <Button
-                                                                    className={"!max-w-[14rem] !w-full"}
-                                                                    name="Check User"
-                                                                    href={`/dashboard/details/${user?._id || index}?admin=true&createdBy=${user?._id}`}
-                                                                ></Button>
-                                                            </td>
-                                                        </tr>
+                                            <td className="px-3 py-2">
+                                                {dateFormater(createdAt).date}
+                                            </td>
 
-                                                    )
-                                                })}
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                    </div>
+                                            <td className="px-3 py-2">
+                                                {nHits}
+                                            </td>
 
-            </div>
+                                            <td className="py-0 text-xs cursor-pointer hover:scale-110 transition-all duration-500 flex items-center justify-center"
+                                            >
+                                                <SlOptions
+                                                    onClick={() => setSelected(_id)}
+                                                    size={20}
+                                                />
+                                                <Button
+                                                    className={"!max-w-[14rem] !w-full"}
+                                                    name="Check User"
+                                                    href={`/dashboard/details/${_id || index}?admin=true&createdBy=${_id}`}
+                                                ></Button>
+
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <div
+                    className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto flex  md:gap-x-2"
+                >
+                    {Array.from({
+                        length: data?.numberOfPages
+                    }, (text, index) => {
+                        return <PanigationButton
+                            text={index + 1}
+                            active={index + 1}
+                            // loading={isActiveIndexLoading}
+                            index={index}
+
+                            onClick={() => {
+                                // setActiveIndex(index)
+                                // checkPages(index + 1)
+                            }} />
+                    })}
+                </div>
+            </>
+            {/* table ends here */}
+
 
         </motion.div>
     )

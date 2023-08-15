@@ -1,7 +1,7 @@
 import { AiOutlineArrowLeft, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import { timeOptions } from '../utils/sortedOptions'
 import TimeSelect from 'react-select'
-
+import { onSuccessToast, onErrorToast, onWarningToast } from '../utils/toastpopup'
 import { MdOutlineClose } from 'react-icons/md'
 import AnimateText from '../components/AnimateText'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -26,18 +26,14 @@ import { Autoplay, Navigation, Pagination } from 'swiper'
 import ClearFilter from '../components/ClearFilter'
 import UiButton from '../components/UiButton'
 import { useSelector, useDispatch } from 'react-redux'
-// import {} from '../components'
 import SelectTime from 'react-select'
 import EditTicketModal from '../components/EditTicketModal'
-// import {useFilter} 
 import { toast } from 'react-toastify'
 import { getBuses } from "../utils/ReactSelectFunction";
 import BusSelect from 'react-select/async'
-// import {}
 import Alert from '../components/Alert'
 import FromSelect from 'react-select/async'
 import ToSelect from 'react-select/async'
-
 import { Button, Rounded } from '../components'
 import "swiper/css"
 import "swiper/css/navigation"
@@ -252,7 +248,10 @@ const Details = () => {
 
   }
   )
-
+  useEffect(() => {
+    console.log("this is the seat date here ", seatDate)
+    queryObj.traveldate = dayjs(seatDate).format("YYYY/MM/DD")
+  }, [seatDate])
   const [queryObj, setQueryObj] = useState({
     from: null, to: null,
     traveldate: dayjs(seatDate).format("YYYY/MM/DD"),
@@ -261,18 +260,40 @@ const Details = () => {
 
   })
   const handleaddnewroute = () => {
+    console.log(queryObj, "this is the query object here ")
     return axios.post("/seat", {
       ...queryObj
     })
   }
+  const handleAddNewSeat = () => {
+    const { seat_id, bus_id } = selectedIds
+    return axios.post("/seat", { seat_id, bus_id })
+  }
+  const Demoadd = useMutation(handleAddNewSeat, {
+    onSuccess: data => {
+      refetch()
+      setShowAdd(false)
+      if (showAdd) setShowAdd(false)
+      if (slide) setSlide(false)
+      onSuccessToast("successfully added new bus to the routes!")
+    },
+    onError: error => {
+      onErrorToast((error.response.data ?? "Oops something bad happen try again later !!"))
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries("create")
+    }
+  })
   const { isLoading: loadingRoute, mutate } = useMutation(handleaddnewroute, {
     onSuccess: data => {
       refetch()
       setShowAdd(false)
-      newSucces()
+      onSuccessToast("successfully added new bus to the routes!")
+      if (showAdd) setShowAdd(false)
     },
     onError: error => {
-      newError()
+      onErrorToast((error.response.data ?? "something went wrong try again later "))
+      console.log("this is the error from the server here ", error)
     },
     onSettled: () => {
       queryClient.invalidateQueries("create")
@@ -328,10 +349,7 @@ const Details = () => {
   useEffect(() => {
     getData();
   }, [querySearch]);
-  const handleAddNewSeat = () => {
-    const { seat_id, bus_id } = selectedIds
-    return axios.post("/seat", { seat_id, bus_id })
-  }
+
   const [showAdd, setShowAdd] = useState(false)
   const _view = JSON.parse(localStorage.getItem("__view")) == true ? true : false
   const [__view, __setView] = useState(_view)
@@ -470,13 +488,11 @@ const Details = () => {
           setIsOpen={setIsOpen___}
           title={(slide ? "Select bus" : "Avalible Buses")}
         >
-          <AnimatePresence >
+          < >
             {
               slide ? (<div
                 key="ihsiadhfp"
-              // initial={{ opacity: 0 }}
-              // animate={{ y: 0, opacity: 1 }}
-              // exit={{ opacity: 0 }}
+
               >
                 <Rounded
                   className={`!w-8 !h-8 !ml-4`}
@@ -486,14 +502,8 @@ const Details = () => {
                 </Rounded>
                 <form onSubmit={(e) => {
                   e.preventDefault()
-                  return toast.promise(handleAddNewSeat().then(data => {
-                    getData()
-                    setIsOpen___(false)
-                  }), {
-                    pending: "loading please wait ",
-                    success: "done creating bus seat  ...",
-                    error: "oops Something went wrong ,try again later"
-                  })
+                  Demoadd.mutate()
+
                 }} >
                   <div className='mx-auto mb-6 w-[min(300px,calc(100%-2.5rem))]'>
                     <BusSelect
@@ -536,34 +546,27 @@ const Details = () => {
                   <Marquee play pauseOnClick pauseOnHover className="italic text-blue-600 dark:text-blue-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5   max-w-5xl">
                     go to bus detail page to check bus specification
                   </Marquee>
-                  <UiButton name={"Select "}
-                    className="!block !bg-purple-900
-                        w-[min(200px,calc(100%-2.5rem))]
-                        !mx-auto
-                        !pb-2.5
-                        !pt-2
-                        !mb-5
-                        "
+                  <UiButton
+                    disabled={Demoadd.isLoading}
+                    name={Demoadd.isLoading ? "creating ..." : "Submit  "}
+                    className={`!block !bg-purple-900 ${Demoadd.isLoading && "!bg-black !text-white"}
+                    w-[min(200px,calc(100%-2.5rem))]
+                    !mx-auto
+                    !pb-2.5
+                    !pt-2
+                    !mb-5`}
+
                   />
                 </form>
               </div>) : (
                 <div
                   key="jiofhsa f"
-                  // initial={{ opacity: 0.2 }}
-                  // animate={{ y: 0, opacity: 1 }}
-                  // exit={{ opacity: 0 }}
-
                   className={` `}>
-
                   <div>
-
                     {
-
-
                       makeUnique(data?.seats, ["traveltime", "from", "to"])?.map(({ traveltime, from, to, _id: seat_id }, idx) => {
                         const count = getCount({
                           from, to, traveltime
-
                         }, data?.seats)
                         return (
                           <div className='flex justify-between  flex-col  md:flex-row px-4 space-x-6 items-center border-b border-slate-200 pb-2 mb-1'>
@@ -587,13 +590,11 @@ const Details = () => {
                                       className='h-10 w-10 border border-green-900 grid 
                         place-items-center rounded-md shadow-lg text-sm 
                         ml-4 hover:bg-green-800
-                        
                         '
                                     >
                                       {index + 1}
                                     </Link>
                                   )
-
                                 }
                                 )
 
@@ -812,7 +813,7 @@ const Details = () => {
             }
 
 
-          </AnimatePresence>
+          </>
 
 
 
@@ -1510,7 +1511,7 @@ z-10  "
                   <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
                   <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.phone || "n/a"}</h4>
                   <UiButton
-                    name="Update Password" className="!mx-auto !rounded-lg !mt-2"
+                    name="Update Password" className="!mx-auto !rounded-lg !mt-2 !bg-blue-700"
                     onClick={() => {
                       setIsOpen(true)
                     }} />

@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const adminDataSlice = createSlice({
   name: "admindata",
   initialState: {
+    user: {},
     users: [],
     ticketdata: {},
     cities: [],
@@ -19,13 +20,13 @@ const adminDataSlice = createSlice({
       } catch (err) {
         state.users = [];
       }
-      finally{
+      finally {
         state.loading.users = false;
       }
     },
     setTicketData(state, { payload }) {
       try {
-        state.ticketdata = {...payload};
+        state.ticketdata = { ...payload };
       } catch (err) {
         state.ticketdata = {};
       }
@@ -39,7 +40,12 @@ const adminDataSlice = createSlice({
       }
       state.loading.cities = false;
     },
+    setUser(state, { payload }) {
+      state.user = {
+        ...payload
+      }
+    }
   },
 });
-export const { setUsers, setTicketData,setCities } = adminDataSlice.actions;
+export const { setUsers, setTicketData, setCities,setUser } = adminDataSlice.actions;
 export default adminDataSlice.reducer;

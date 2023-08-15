@@ -2,16 +2,22 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Loadingbtn, Alert } from "../components";
+import { useDispatch } from 'react-redux';
 import { motion } from "framer-motion"
+import { setUser } from '../actions/adminData';
 const AdminLogin = () => {
+  const dispatch = useDispatch()
+  const setUserFunction = (user) => {
+    return dispatch(setUser({ ...user }))
+  }
 
   const [isLoading, setIsLoading] = useState(false);
-  const url ="/auth/admin"
+  const url = "/auth/admin/login"
   const [number, setNumber] = useState(null)
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false);
   const [qs] = useSearchParams();
- 
+
   const message = qs.get("message")
   const navigate = useNavigate();
   const handeSubmit = async (e) => {
@@ -26,6 +32,7 @@ const AdminLogin = () => {
         }
       )
       localStorage.setItem("admin_token", res?.data?.token);
+      setUserFunction(res.data.user)
       navigate("/dashboard", { replace: true })
     } catch (err) {
       console.log(err?.response);

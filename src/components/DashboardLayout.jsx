@@ -8,20 +8,44 @@ import Alert from "./Alert"
 import { useState, useEffect } from 'react'
 import UiButton from "../components/UiButton"
 import { BsMoonStars, BsSun } from 'react-icons/bs';
+import { useravatar } from '../Assets/images';
+import { motion } from 'framer-motion'
+import axios from 'axios'
+// import { useDispatch } from "react-redux"
+import { useQuery } from "@tanstack/react-query"
+import { setUser } from '../actions/adminData';
 
-const DashBoardLayout = ({darkTheme, toggleDarkTheme}) => {
+const DashBoardLayout = ({ darkTheme, toggleDarkTheme }) => {
     const token = localStorage.getItem("admin_token");
-    const location = useLocation()
-    useEffect(() => {
+    const dispatch = useDispatch()
+    const setUserInfoFunction = payload => dispatch(setUser(user))
+    const user = useSelector(state => state.setAdminData.user);
 
+    const { data, isLoading, loading, refetch, isError, error } = useQuery({
+        queryKey: ["currentadmin"],
+        queryFn: async () => axios.get("/admin/user", {
+            headers: {
+                'Authorization': "makingmoney " + token
+            },
+        })
+
+    })
+    if (!isError) {
+        // setUserInfoFunction(data?.data)
     }
-        , [location.pathname])
+    // console.log(error)
+    // console.log("this is the data here", data)
+    // console.log("this is the admin user", user)
+    // const location = useLocation()
+    // useEffect(() => {
+
+    // }
+    //     , [location.pathname])
     const navigate = useNavigate()
 
     const [view, setView] = useState(false)
 
     const [toggle, setToggle] = useState(false);
-    const dispatch = useDispatch();
     const toggleSideBar = () => dispatch(actions.toggleSideBar())
 
     if (!token) {
@@ -29,7 +53,7 @@ const DashBoardLayout = ({darkTheme, toggleDarkTheme}) => {
     }
     return (
         <div className="overflow-x-hidden xl:container mx-auto">
-        
+
             <Alert toggle={toggle}
                 setToggle={setToggle} message={"Do you want to log out ?"}
                 confirmFunc={() => {
@@ -42,6 +66,20 @@ const DashBoardLayout = ({darkTheme, toggleDarkTheme}) => {
             bg-white dark:bg-color_dark shadow-sm shadow-slate-300 container-- mx-auto px-4" >
                 <div className='hover:bg-slate-300 md:hidden w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={toggleSideBar}>
                     <AiOutlineMenu size={25} />
+                </div>
+
+                <div className="flex gap-x-5">
+
+                    <div className="hidden md:block gap-x-4">
+                        <motion.div
+                            initial={false}
+                            className="h-[30px] w-[30px]   mx-auto shadow-2xl border-2 overflow-hidden  rounded-full mt- p-0 ">
+                            <img src={useravatar} alt="user "
+                                onClick={() => 0} className='w-full h-full m-0  object-cover scale-[1.3]' />
+                        </motion.div>
+                        <p className="w-fit mx-auto ">{data?.data?.user?.fullname || "loading"}</p>
+
+                    </div>
                 </div>
                 <Link to="/dashboard" className="-auto">DashBoard </Link>
                 <div className="md:space-x-6 space-x-3 flex items-center">
@@ -63,9 +101,9 @@ const DashBoardLayout = ({darkTheme, toggleDarkTheme}) => {
                     >
                         view site
                     </button>
-                    <Rounded 
-                    className={"!w-[40px] !h-[40px]"}
-                        onClick={()=>toggleDarkTheme()}
+                    <Rounded
+                        className={"!w-[40px] !h-[40px]"}
+                        onClick={() => toggleDarkTheme()}
                     >
                         {
                             darkTheme ? <BsMoonStars size={25} /> : <BsSun size={25} />
@@ -89,7 +127,9 @@ const DashBoardLayout = ({darkTheme, toggleDarkTheme}) => {
                 </div>
             </div>
             <div className={`flex ${view && "lg:flex-row-reverse"} ease duration-500 transition-all`}>
-                <SideBar />
+                <SideBar
+                    user={data?.data?.user}
+                />
                 <Outlet />
             </div>
         </div>

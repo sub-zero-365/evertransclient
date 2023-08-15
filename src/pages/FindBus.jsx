@@ -82,16 +82,17 @@ const FindBus = () => {
                     if (selected == _id) return setSelected(null)
                     setSelected(_id)
                 }}
-                className={`${selected === _id ? "bg-blue-200 py-10 dark:bg-slate-950" : busType ? "bg-rose-100 dark:bg-slate-600" : "bg-white dark:bg-slate-800"} dark:text-white w-full mx-1 ease duration-700 transition-colors rounded-lg mb-4 dark:shadow-sm dark:shadow-black shadow-lg shadow-white pb-5   min-h-[3rem]`}>
-
+                className={`${selected === _id ? "bg-blue-200  dark:bg-slate-950" : busType ? "bg-rose-100 dark:bg-slate-600" : "bg-white dark:bg-slate-800"} dark:text-white pt-5 w-full mx-1 ease duration-700 transition-colors rounded-lg mb-4 dark:shadow-sm dark:shadow-black shadow-lg shadow-white pb-5   min-h-[3rem]`}>
                 {
-
                     (selected === _id) && (
-                        <Marquee>
-                            select seat
+                        <Marquee >
+                            <p
+                            className='text-rose-700'
+                            
+                            >{busType?"this is a classic bus all seat prices are thesame ":"this is a vip bus  prices ranges from seats to seats"}</p>
                         </Marquee>
                     )}
-                <div className="flex justify-between pt-0.5 px-4 border-b pb-1 ">
+                <div className="flex hidden justify-between pt-0.5 px-4 border-b pb-1 ">
                     <p>Plate Number</p>
                     <p>{_id}</p>
                 </div>
