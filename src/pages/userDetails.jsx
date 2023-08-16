@@ -272,13 +272,18 @@ const Details = () => {
     setIsActiveIndexLoading(false)
 
   }
-  const { data: userData, isLoading, loading, refetch } = useQuery({
+  const { data: userData, isLoading, loading, refetch, isPreviousData } = useQuery({
 
     queryKey: [
-      ["userdetails", querySearch.get("createdBy")]
+      ["userdetails",
+        {
+        ...formatQuery(querySearch.toString())
+        }
+      ]
     ],
     // queryFn:async () => axios.get(`/seat/seatdetails/${id}`)
-    queryFn: getData
+    queryFn: getData,
+    keepPreviousData: true
   })
   // console.log("userdata ", data,loading ,isLoading)
   useEffect(() => {
@@ -838,6 +843,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
       {
 
         !isLoading && <FormatTable
+          isPreviousData={isPreviousData}
           ticketData={userData}
           admin
         // tickets={userData?.tickets} admin

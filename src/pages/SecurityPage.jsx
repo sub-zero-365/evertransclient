@@ -8,14 +8,12 @@ import InputForm from '../components/InputForm'
 import UiButton, { UiButtonDanger } from '../components/UiButton'
 import GreetingText from '../components/GreetingText'
 import { SlOptions } from 'react-icons/sl'
-// import formatDate from '../utils/DateFormater'
 import dateFormater from '../utils/DateFormater'
 import ShowBuses from './ShowBuses'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 const SecurityPage = ({ currentPage, skip }) => {
     const queryClient = useQueryClient()
-
     const token = localStorage.getItem("admin_token");
     const [isOpen, setIsOpen] = useState(false)
     const [selected, setSelected] = useState(null)
@@ -30,14 +28,16 @@ const SecurityPage = ({ currentPage, skip }) => {
             headers: {
                 'Authorization': "makingmoney " + token
             },
-        })
+        }),
+
 
     })
     const handleCreateNewAdmin = async () => {
         return axios.post("/auth/admin/register", {
             phone: phone.current?.value,
             fullname: fullname.current?.value,
-            password: password.current?.value
+            password: password.current?.value,
+            password2: password2.current?.value
         },
             {
                 headers: {
@@ -60,9 +60,7 @@ const SecurityPage = ({ currentPage, skip }) => {
         }
     })
     if (isLoading) return <div>loading</div>
-    if (isError) {
-        return <div>some error occurs</div>
-    }
+    if (isError) return <div>some error occurs :{error?.response?.data}</div>
 
     return (
         <>
@@ -77,19 +75,21 @@ const SecurityPage = ({ currentPage, skip }) => {
                     className2={"!z-[200]"}
                     isOpen={selected ? true : false}
                     setIsOpen={setSelectedNull}
+                    title={"Settings!"}
                 >
-
-                    hello options modal here
+                    <div>
+                        <UiButton name="Button"
+                            className={"!w-[min(300px,calc(100%-30px))] !mx-auto !bg-green-800 !pb-2.5 pt-1.5"}
+                        />
+                    </div>
                 </ShowBuses>
                 <Heading text={"Security"} className={""} />
-
                 <div className='flex items-start justify-between'>
                     <div className="flex-1">
-
-                        <GreetingText heading={"Super,Add new Addmin"}
+                        <GreetingText heading={"Super,Add new Admin"}
                             setIsOpen={setIsOpen}
                             text={`
-                        Employees added help to book ticket and give more data
+                        Admin added help to create new employees
                         `}
                         />
                         some data for the ui

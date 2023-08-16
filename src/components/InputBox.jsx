@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import generateRandonNumber from '../utils/generateRandonCharacters'
 const InputBox = ({ inputRef, value, onChange, name,type }) => {
     const [inputid, setInputId] = useState(null)
+    
     useEffect(() => {
         setInputId(generateRandonNumber())
     }, [])

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Button, DeactiveStatusButton, ActiveStatusButton, PanigationButton } from './'
 import { useState, useEffect } from 'react'
 import dateFormater from '../utils/DateFormater'
@@ -6,7 +6,7 @@ import EditTicketModal from './EditTicketModal'
 import UiButton from "./UiButton";
 import { useSearchParams } from 'react-router-dom'
 
-const FormatTable = ({ ticketData, admin, hidePanigation }) => {
+const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
 
     const [querySearch, setQuerySearch] = useSearchParams();
     const skip = querySearch.get("limit") || 100
@@ -65,9 +65,25 @@ const FormatTable = ({ ticketData, admin, hidePanigation }) => {
                 ticket={ticket}
                 isOpen={isOpen}
                 setIsOpen={setIsOpen} />
-            <div className="relative max-w-full overflow-x-auto
+            <AnimatePresence>
+
+                {
+                    isPreviousData && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 100 }}
+                            exit={{ opacity: 0 }}
+                            className=""
+                            key="y89yuiasdyfasddaiofiosahdiofhadsoiphiosd"
+
+                        >refetching please wait </motion.div>
+
+                    )
+                }
+            </AnimatePresence>
+            <div className={`relative max-w-full overflow-x-auto
                     bg-white
-    shadow-md sm:rounded-lg w-full mb-6 ">
+    shadow-md sm:rounded-lg w-full mb-6 ${isPreviousData && "opacity-60"} `}>
                 <table className="w-full text-sm text-left text-gray-500 
               dark:text-gray-400 transition-colors duration-[2s]">
                     <thead className="text-xs text-gray-700 dark:bg-slate-800 uppercase dark:text-gray-400">
@@ -107,7 +123,7 @@ const FormatTable = ({ ticketData, admin, hidePanigation }) => {
                                 type
                             </th>
                             <th scope="col" className="px-3 py-3">
-                             payment type
+                                payment type
                             </th>
                             <th scope="col" className="px-3 py-3">
                                 price

@@ -17,6 +17,7 @@ import formatQuery from "../utils/formatQueryStringParams"
 import { components, style } from "../utils/reactselectOptionsStyles"
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation } from 'swiper'
+import { useQuery } from "@tanstack/react-query"
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -73,12 +74,26 @@ const Appointment = () => {
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
-    // const [activeIndex, setActiveIndex] = useState((querySearch.get("page") - 1));
-    // const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
+
     const [loading, setLoading] = useState(false)
     const [userData, setUserData] = useState({})
+    const { data: ticketData,
+        isLoading: loading_,
+        isPreviousData } = useQuery({
+            queryKey: [
+                ["allticket",
+                    {
+                        ...formatQuery(querySearch.toString())
+                    }
+                ]
+            ],
+            // queryFn:async () => axios.get(`/seat/seatdetails/${id}`)
+            queryFn: fetchData,
+            keepPreviousData: true
 
-    const ticketData = useSelector(state => state.setAdminData.ticketdata);
+        })
+    console.log("this is the fetch data  here ", ticketData)
+    // const ticketData = useSelector(state => state.setAdminData.ticketdata);
 
     const isLoading = useSelector(state => state.setAdminData.loading.tickets)
     const viewAll = querySearch.get("view");
@@ -142,10 +157,7 @@ const Appointment = () => {
         fetchData()
     }, [querySearch])
 
-    // const checkPages = (index) => {
-    //     if (querySearch.get("page") == index) return
-    //     handleFilterChange("page", index)
-    // }
+
     const handleSortTime = (evt) => {
         if (querySearch.get("sort") == evt.value) return
         handleFilterChange("page", 1)
@@ -173,6 +185,7 @@ const Appointment = () => {
             })
             setTicketDataFunction({ ...response?.data })
             setUserData(response?.data)
+            return response.data
         } catch (err) {
             console.log(err);
         }
@@ -644,6 +657,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
             {
                 isLoading ? (<PlaceHolderLoader />) : (
                     <FormatTable
+                        isPreviousData={isPreviousData}
                         tickets={ticketData?.tickets}
                         ticketData={ticketData}
                         admin

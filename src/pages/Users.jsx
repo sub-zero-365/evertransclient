@@ -19,11 +19,12 @@ import UiButton from '../components/UiButton';
 import dateFormater from '../utils/DateFormater';
 import { SlOptions } from 'react-icons/sl';
 import ShowBuses from './ShowBuses';
+
 const Appointment = ({ skip, currentPage }) => {
+    const token = localStorage.getItem("admin_token");
     const data = {}
     const [selected, setSelected] = useState(null)
     const setSelectedNull = () => setSelected(null)
-
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
     const setuserName = (username) => {
@@ -49,14 +50,13 @@ const Appointment = ({ skip, currentPage }) => {
                 phone: phone.current.value,
                 fullname: fullnames.current.value,
                 email: email.current.value,
+            }, {
+                headers: {
+                    'Authorization': "makingmoney " + token
+                }
             }
             )
-            const { data: { fullname, token } } = res
-            setuserName(fullname)
-            localStorage.removeItem("token");
-            localStorage.setItem("token", res.data.token)
-            // navigate("/user")
-            // return res
+
             setIsOpen(false)
             setT(true)
             fetchData()
@@ -64,9 +64,7 @@ const Appointment = ({ skip, currentPage }) => {
         } catch (err) {
             console.log(err)
             setIsLoading(false)
-            // setError("registration fail");
             setError(err.response.data);
-
             const timer = setTimeout(() => {
                 clearTimeout(timer)
                 setError("")
@@ -77,7 +75,6 @@ const Appointment = ({ skip, currentPage }) => {
     }
 
     // 
-    const token = localStorage.getItem("admin_token");
 
     const users_ = useSelector(state => state.setAdminData.users);
     const _isLoading = useSelector(state => state.setAdminData.loading.users)
@@ -88,11 +85,7 @@ const Appointment = ({ skip, currentPage }) => {
         return dispatch(setUsers(payload))
     }
     const [text, setText] = useState("")
-    //     <Button
-    //     className={"!max-w-[14rem] !w-full"}
-    //     name="Check User"
-    //     href={`/dashboard/details/${user?._id || index}?admin=true&createdBy=${user?._id}`}
-    // ></Button>
+
     async function fetchData() {
         const url = "/admin/userticketlength"
 
@@ -542,32 +535,6 @@ z-10  "
                             name={isLoading ? <Loadingbtn /> : "Create Account"}
                         />
 
-                        {/* <button
-                            type="submit"
-                            className="inline-block bg-blue-400
-            w-full rounded bg-primary px-7
-            pb-2.5 pt-3 text-sm font-medium
-            uppercase leading-normal
-            text-white
-            shadow-[0_4px_9px_-4px_#3b71ca]
-            transition duration-150
-            ease-in-out hover:bg-primary-600
-            hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            focus:bg-primary-600 
-            focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-            focus:outline-none focus:ring-0 active:bg-primary-700 
-            active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
-            dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                            disabled={isLoading}
-                            data-te-ripple-init
-
-                            data-te-ripple-color="light">
-                            {isLoading ? <Loadingbtn /> : "Create Account"}
-                        </button> */}
-
 
                     </form>
                 </div>
@@ -684,6 +651,7 @@ dark:border-gray-600
                                             <td className="py-0 text-xs cursor-pointer hover:scale-110 transition-all duration-500 flex items-center justify-center"
                                             >
                                                 <SlOptions
+                                                    className="hidden"
                                                     onClick={() => setSelected(_id)}
                                                     size={20}
                                                 />
