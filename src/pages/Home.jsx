@@ -15,7 +15,7 @@ import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import dateFormater from '../utils/DateFormater'
 import axios from "axios"
 import { components, style } from "../utils/reactselectOptionsStyles"
-// import UiButton from '../components/UiButton'
+import busimages from '../Assets/images/mainbusimage.png'
 import { Helmet } from 'react-helmet'
 const Home = () => {
     let downloadbaseurl = null
@@ -250,9 +250,9 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
 
 
                 <section class="bg-white dark:bg-gray-900">
-                    <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
+                    <div class="grid items-center max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
                         <div class="mr-auto place-self-center lg:col-span-7">
-                            <AnimateText text="Find cheap bus tickets for your next trip" className="!text-3xl md:!text-4xl lg:!text-6xl  !font-poppins !uppercase !max-w-xl !text-start " />
+                            <AnimateText text="Find cheap bus tickets for your next trip" className="!text-4xl md:!text-5xl lg:!text-7xl  !font-sans !uppercase !max-w-2xl !text-start " />
                             <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">Easily compare and book your next trip with {process.env.REACT_APP_APP_NAME} </p>
                             <Link href="#" to={"/booking"} class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
                                 Get started
@@ -263,7 +263,9 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                             </Link>
                         </div>
                         <div class="hidden- mt-2 lg:mt-0 lg:col-span-5 lg:flex group relative">
-                            <img src="https://clipart-library.com/img/133458.png"
+                            <img
+                            src={busimages}
+                            // src="https://clipart-library.com/img/133458.png"
                                 alt="bus"
                                 className="md:hover:scale-[1.2]  md:hover:scale-x-[1.2]  hover:-translate-x-10
                         duration-300 ease transition-all" />
@@ -294,9 +296,9 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1 }}
 
-                            className="text-2xl mt-5 mb-2 uppercase font-[500] text-center md:text-left">Why Choose us</motion.h1>
+                            className="text-3xl md:text-4xl lg:text-5xl mt-5 mb-2 uppercase font-black text-center md:text-left">Why Choose us</motion.h1>
                         <span className="w-[90px] block rounded-md h-[5px] mx-auto md:mx-0 hover:bg-red-200 transiton-bg-color bg-red-500"></span>
-                        <div className="md:flex flex-wrap  mt-10">
+                        <div className=" md:flex space-y-10 gag-x-10 flex-wrap  mt-10">
                             <div className="md:w-1/2  items-start flex my-4 gap-2 relative">
                                 <img src={image1 ||
                                     "https://th.bing.com/th?id=OIP.JmPqYEw8hQz6yvtJhbfA3wHaJ4&w=216&h=288&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"}
@@ -490,14 +492,14 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
 
                 {/* testimonails */}
 
-                <section class="text-neutral-700 dark:text-neutral-300 container mx-auto mb-10" ref={testimonials}>
+                <section class="text-neutral-700 dark:text-neutral-300 container mx-auto mb-10 px-4" ref={testimonials}>
                     <div class="mx-auto text-center md:max-w-xl lg:max-w-3xl">
                         <h3 class="mb-6 text-3xl font-bold">People from around the world trust {process.env.REACT_APP_APP_NAME}</h3>
-                        <p class="mb-6 pb-2 md:mb-12 md:pb-0">
+                        {/* <p class="mb-6 pb-2 md:mb-12 md:pb-0">
                             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit,
                             error amet numquam iure provident voluptate esse quasi, veritatis
                             totam voluptas nostrum quisquam eum porro a pariatur veniam.
-                        </p>
+                        </p> */}
                     </div>
 
                     <div class="grid gap-6 text-center md:grid-cols-3">

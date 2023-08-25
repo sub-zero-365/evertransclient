@@ -104,11 +104,11 @@ const Appointment = ({ skip, currentPage }) => {
             setUsers_([...response?.data?.userdetails]);
             setUserData({
                 ...{
-                    labels: [...response?.data?.userdetails].map((v) => v.user.fullname),
+                    labels: [...response?.data?.userdetails].map((v) => v.fullname),
                     datasets: [
                         {
                             label: "ticket vs user data",
-                            data: [...response?.data?.userdetails].map((v) => v.nHits)
+                            data: [...response?.data?.userdetails].map((v) => v.total)
 
                         },
                     ]
@@ -605,8 +605,8 @@ dark:text-gray-400 transition-colors duration-[2s]">
 
                         >
                             {
-                                users_.map(({ user, nHits }, index) => {
-                                    const { fullname, phone, createdAt, _id } = user
+                                users_?.map((user, index) => {
+                                    const { fullname, phone, createdAt, _id, total } = user
                                     return (
                                         <tr key={index}
                                             className={` ${index % 2 == 0
@@ -645,14 +645,14 @@ dark:border-gray-600
 
 
                                             <td className="px-3 py-2">
-                                                {nHits}
+                                                {total}
                                             </td>
 
                                             <td className="py-0 text-xs cursor-pointer hover:scale-110 transition-all duration-500 flex items-center justify-center"
                                             >
                                                 <SlOptions
                                                     className="hidden"
-                                                    onClick={() => setSelected(_id)}
+                                                    onClick={() => setSelected(user)}
                                                     size={20}
                                                 />
                                                 <Button

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { onSuccessToast, onErrorToast, onWarningToast } from '../utils/toastpopup'
-
+import { LineChart, NextButton, PieChart, PrevButton, ToggleSwitch } from '../components'
 import { Helmet } from 'react-helmet'
 import InputBox from '../components/InputBox'
 import { Heading, PanigationButton } from '../components'
@@ -12,6 +12,9 @@ import dateFormater from '../utils/DateFormater'
 import ShowBuses from './ShowBuses'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
+import { Swiper } from 'swiper/react'
+import { SwiperSlide } from 'swiper/react'
+import { Autoplay, Navigation } from 'swiper'
 const SecurityPage = ({ currentPage, skip }) => {
     const queryClient = useQueryClient()
     const token = localStorage.getItem("admin_token");
@@ -61,7 +64,6 @@ const SecurityPage = ({ currentPage, skip }) => {
     })
     if (isLoading) return <div>loading</div>
     if (isError) return <div>some error occurs :{error?.response?.data}</div>
-
     return (
         <>
             <Helmet>
@@ -78,7 +80,15 @@ const SecurityPage = ({ currentPage, skip }) => {
                     title={"Settings!"}
                 >
                     <div>
-                        <UiButton name="Button"
+                        <Heading text="Account Actions" className="!mb-0 !text-sm  !text-center" />
+                        <Heading text={`${selected?.fullname ?? ""}`} className="!mb-3  !text-lg !font-black uppercase !text-center" />
+                        <ToggleSwitch state
+                            disabled
+                            message="account is frozen"
+                            initialMessage="Freeze User Account"
+                        />
+                        <div className="mb-5" />
+                        <UiButton name="Confirm"
                             className={"!w-[min(300px,calc(100%-30px))] !mx-auto !bg-green-800 !pb-2.5 pt-1.5"}
                         />
                     </div>
@@ -92,7 +102,75 @@ const SecurityPage = ({ currentPage, skip }) => {
                         Admin added help to create new employees
                         `}
                         />
-                        some data for the ui
+
+                        <div className='w-[30rem] max-w-[calc(100%-2.5rem)]'>
+                            {
+                                data && (
+
+                                    <Swiper
+                                        className='md:hidden mx-auto  w-full lg:max-w-2xl border '
+                                        slidesPerView={1}
+                                        modules={[Autoplay, Navigation]}
+                                        autoplay={{
+                                            delay: 20000,
+                                            disableOnInteraction: false
+                                        }}
+                                        navigation={{
+                                            prevEl: ".arrow__left",
+                                            nextEl: ".arrow__right",
+                                        }}
+                                    >
+                                        <PrevButton className="!left-1.5" />
+                                        <NextButton className="!right-1.5" />
+                                        <SwiperSlide>
+                                            <PieChart
+
+                                                chartData={
+                                                    {
+                                                        labels: [...data.data?.users].map((v) => v.fullname),
+                                                        datasets: [
+                                                            {
+                                                                label: "user vs admin data",
+                                                                data: [...data.data?.users].map((v) => v.total)
+
+                                                            },
+                                                        ]
+
+                                                    }
+
+
+                                                } />
+                                        </SwiperSlide>
+                                        {/* <SwiperSlide className='w-full'>
+                                            <LineChart
+
+                                                chartData={
+                                                    {
+                                                        labels: [...data.data?.users].map((v) => v.fullname),
+                                                        datasets: [
+                                                            {
+                                                                label: "user vs admin data",
+                                                                data: [...data.data?.users].map((v) => v.total)
+
+                                                            },
+                                                        ]
+
+                                                    }
+
+
+                                                } />
+                                        </SwiperSlide> */}
+
+                                    </Swiper>
+
+
+
+                                )
+                            }
+
+                        </div>
+
+
                     </div>
                     <InputForm
                         onSubmit={(e) => {
@@ -178,15 +256,18 @@ dark:text-gray-400 transition-colors duration-[2s]">
 
                             >
                                 {
-                                    data?.data?.users.map(({ fullname,
-                                        phone,
-                                        _id,
-                                        createdAt
-                                    }, index) => (
-                                        <tr key={index}
-                                            className={` ${index % 2 == 0
-                                                ? "bg-slate-100" : "bg-white"}
-            hover:bg-slate-300
+                                    data?.data?.users.map((user, index) => {
+                                        const { fullname,
+                                            phone,
+                                            _id,
+                                            total,
+                                            createdAt } = user
+
+                                        return (
+                                            <tr key={index}
+                                                className={` ${index % 2 == 0
+                                                    ? "bg-slate-100" : "bg-white"}
+        hover:bg-slate-300
 dark:hover:bg-slate-500
 border-slate-100  text-xs
 border-b-2
@@ -194,49 +275,50 @@ dark:bg-gray-900
 dark:border-gray-600
 
 `}
-                                        >
-                                            <th className="px-2 py-4  flex items-center justify-center">
-                                                {
-
-                                                    (index + 1) + (skip ?? 2) * ((currentPage ?? 2) - 1)
-
-                                                }
-                                            </th>
-
-
-                                            <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {fullname || "n/a"}
-                                            </th>
-
-
-                                            <td className="px-3 py-4">
-                                                <span className="font-medium
-  ">{phone || "n/a"}</span>
-                                            </td>
-
-                                            <td className="px-3 py-2">
-                                                {createdAt ?
-                                                    dateFormater(createdAt).date : "n/a"}
-                                            </td>
-                                            {/* <td className="px-3 py-2 ">
-                                                {traveltime ?
-                                                    traveltime : "bateemma14@gmail.com"}
-                                            </td> */}
-
-                                            <td className="px-3 py-2">
-                                                {"10"}
-                                            </td>
-
-                                            <td className="py-0 text-xs cursor-pointer hover:scale-110 transition-all duration-500 flex items-center justify-center"
-                                                onClick={() => setSelected(true)}
                                             >
-                                                <SlOptions
-                                                    size={20}
-                                                />
+                                                <th className="px-2 py-4  flex items-center justify-center">
+                                                    {
 
-                                            </td>
-                                        </tr>
-                                    ))
+                                                        // (index + 1) + (skip ?? 2) * ((currentPage ?? 2) - 1)
+                                                        index + 1
+
+                                                    }
+                                                </th>
+
+
+                                                <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    {fullname || "n/a"}
+                                                </th>
+
+
+                                                <td className="px-3 py-4">
+                                                    <span className="font-medium
+">{phone || "n/a"}</span>
+                                                </td>
+
+                                                <td className="px-3 py-2">
+                                                    {createdAt ?
+                                                        dateFormater(createdAt).date : "n/a"}
+                                                </td>
+
+
+                                                <td className="px-3 py-2">
+                                                    {total || "0"}
+                                                </td>
+
+                                                <td className="py-0 text-xs cursor-pointer hover:scale-110 transition-all duration-500 flex items-center justify-center"
+                                                    onClick={() => setSelected({ ...user, testing: "some data" })}
+                                                >
+                                                    <SlOptions
+                                                        size={20}
+                                                    />
+
+                                                </td>
+                                            </tr>
+
+                                        )
+                                    }
+                                    )
                                 }
 
                             </tbody>

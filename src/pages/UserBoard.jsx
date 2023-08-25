@@ -269,7 +269,9 @@ const Details = () => {
     const { seat_id, bus_id } = selectedIds
     return axios.post("/seat", { seat_id, bus_id })
   }
-  const Demoadd = useMutation(handleAddNewSeat, {
+  const Demoadd = useMutation(handleAddNewSeat,
+  
+  {
     onSuccess: data => {
       refetch()
       setShowAdd(false)
@@ -281,7 +283,7 @@ const Details = () => {
       onErrorToast((error.response.data ?? "Oops something bad happen try again later !!"))
     },
     onSettled: () => {
-      queryClient.invalidateQueries("create")
+      queryClient.invalidateQueries(["create"])
     }
   })
   const { isLoading: loadingRoute, mutate } = useMutation(handleaddnewroute, {

@@ -13,7 +13,9 @@ import AnimatedError from "../components/AnimateError"
 import { Loadingbtn } from "../components";
 import { UiButtonDanger } from '../components/UiButton'
 import { toast } from 'react-toastify'
-
+// import FormatTable from '../components';
+import ShowBuses from './ShowBuses';
+import InputBox from '../components/InputBox';
 const Appointment = () => {
     const constraintsRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
@@ -23,7 +25,9 @@ const Appointment = () => {
     const [err, setErr] = useState("")
     const [activeIndex, setActiveIndex] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
-    const handleDeleteUser = async (_id, index = null) => {
+    const handleDeleteUser = async (id, index = null) => {
+        const { _id } = id
+        console.log("this is the sent id here", _id)
         return axios.delete(`/assistant/${_id}`,
             {
                 headers: {
@@ -98,18 +102,46 @@ const Appointment = () => {
         getData()
         setLoading(false)
     }, [])
-
+    const [toggle, setToggle] = useState(null)
 
     const token = localStorage.getItem("admin_token");
 
     const [text, setText] = useState("")
-
+    const [phoneNumber, setPhoneNumber] = useState(null)
     if (loading) return <div>Loading</div>
     return (
         <motion.div
             className="max-w-full !flex-1 w-full   overflow-auto h-[calc(100vh-3rem)] pt-10 "
             ref={constraintsRef}
         >
+            <ShowBuses
+                isOpen={toggle}
+                setIsOpen={setToggle}
+            >
+                <div className='px-5 py-2 pb-4'>
+                    <Heading text={`Pleas enter phone Number to delete user account :`} className={"!text-sm !text-rose-500 !pl-0 !text-center lg:text-start"} />
+                    <InputBox
+                        name={"Phone Number"}
+                        type={"tel"}
+                        onChange={e => setPhoneNumber(e.target.value)}
+                    />
+                    <UiButtonDanger name="Delete"
+                        disabled={(phoneNumber === toggle?.phone && phoneNumber != null) ? false : true}
+                        className={"w-[min(400px,calc(100%-30px))] pb-2.5 pt-1.5 mx-auto"}
+                        onClick={() => toast.promise(handleDeleteUser(toggle).then((data) => {
+                            getData()
+                            setActiveIndex(null)
+                            setToggle(null)
+                        }), {
+                            pending: "please wait deleting...",
+                            success: " Done deleting",
+                            error: "Something went wrong ,try again later"
+                        })}
+                    />
+
+                </div>
+
+            </ShowBuses>
             <motion.div
                 drag
                 dragConstraints={constraintsRef}
@@ -143,10 +175,7 @@ z-10  "
                 </div>
             </motion.div>
 
-            <div className="flex gap-x-1  items-center" onClick={() => {
-
-                console.log("click here")
-            }}>
+            <div className="flex gap-x-1  items-center">
                 <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400"></h2>
             </div>
             <div className="lg:flex flex-row-reverse lg:mb-14 w-full  lg:px-10">
@@ -491,10 +520,11 @@ lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-g
                                 <tbody class="text-sm divide-y divide-gray-100">
                                     {
 
-                                        data?.assistants?.map(({ fullname,
-                                            phone, createdAt,
-                                            numberOfTicketScan
-                                            , _id }, index) => {
+                                        data?.assistants?.map((user, index) => {
+                                            const { fullname,
+                                                phone, createdAt,
+                                                numberOfTicketScan
+                                                , _id } = user
                                             return (
                                                 <motion.tr
                                                     key={_id}
@@ -531,15 +561,10 @@ lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-g
                                                         <UiButtonDanger
                                                             disabled={activeIndex == index}
                                                             onClick={() => {
+                                                                setToggle(user)
+                                                                return
                                                                 setActiveIndex(_id)
-                                                                toast.promise(handleDeleteUser(_id, index).then((data) => {
-                                                                    getData()
-                                                                    setActiveIndex(null)
-                                                                }), {
-                                                                    pending: "please wait deleting...",
-                                                                    success: " Done deleting",
-                                                                    error: "Something went wrong ,try again later"
-                                                                })
+
                                                             }}
                                                             name="delete " />
                                                     </td>

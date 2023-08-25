@@ -123,7 +123,7 @@ ${toggle && "!top-1/2 -translate-y-1/2"}
                     className="h-[1px] absolute right-0 transform-origin-0 left-0 bottom-0 w-full- bg-slate-400"
                     style={{ scaleX: scrollYProgress }}
                 />
-                <div className="text-2xl font-montserrat cursor-pointer hover:text-slate-950 dark:hover:text-white duration-300 hover:font-light transition-[color] " onClick={navigateToHome}>Afri-Con</div>
+                <div className="text-2xl font-montserrat cursor-pointer font-black hover:text-slate-950 dark:hover:text-white duration-300 hover:font-light transition-[color] " onClick={navigateToHome}>{process.env.REACT_APP_APP_NAME ||"Afrique-Con"}</div>
                 <ul className="hidden flex-col md:flex-row  md:flex items-center">
                     <motion.li
 

@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react"
+// import React, { useEffect } from "react"
 import { Bar,Line,Pie, Chart } from "react-chartjs-2"
 import {
     Chart as ChartJS,
@@ -20,17 +20,9 @@ ChartJS.register(
 
 )
 const PieChart = ({ chartData }) => {
-    
-    useEffect(() => {
-
-
-        return () => {
-        }
-    }, [])
 
     return (
         <Pie  data={chartData} />
-
     )
 }
 

@@ -27,14 +27,14 @@ export default function OurServices() {
 
     <div className="container mt-24 mb-10 px-6 mx-auto text-lg md:text-xl lg:text-xl" id="#ourservices">
       <section className="mb-20 text-gray-800 dark:text-white text-center icons-container" ref={icons}>
-        <h2 className="text-2xl
-        md:text-3xl
-        lg:text-5xl
+        <h2 className="text-3xl
+        md:text-4xl
+        lg:text-7xl
         font-montserrat 
         leading-6  
         !font-black
         mb-12
-        gradient__text">Our Services </h2>
+        gradient__text-">Our Services </h2>
         <div className="grid md:grid-cols-3 lg:gap-x-12">
           <div className="mb-12 md:mb-0">
             <motion.div whileHover={{ scale: 1.2, rotate: 90 }}

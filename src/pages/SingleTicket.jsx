@@ -64,7 +64,6 @@ const User = () => {
   })
   const [toggle, setToggle] = useState(false)
   const showDeactivateButton = queryParameters.get("xyz") ? true : false
-  // const showDeactivateButton = true
   var token = undefined, url = ""
   const isadminuser = queryParameters.get("admin");
   const audio = new Audio(succcesssound);

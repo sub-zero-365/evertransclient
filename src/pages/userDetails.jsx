@@ -86,7 +86,6 @@ const Details = () => {
         handleRestrictUserAdd(querySearch.get("createdBy"))
         , options
       )
-      // handleRestrictUserAdd(querySearch.get("createdBy"))
     }
   }
   const handleRemoveBlockuser = async () => {
@@ -114,14 +113,11 @@ const Details = () => {
       }
     }())
 
-
-
   }, [querySearch.get("account_block")])
 
   const handleRestrictUserAdd = async (user_id, url = `/restricted`) => {
-
     try {
-      const res = await axios.post(url, {
+    await axios.post(url, {
         user_id: user_id,
         name: "testuser4"
       })
@@ -137,8 +133,8 @@ const Details = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
   const constraintsRef = useRef(null)
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
+  // const [activeIndex, setActiveIndex] = useState(0);
+  // const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
   const id = useParams().id;
 
   const style = {
@@ -152,9 +148,6 @@ const Details = () => {
     )
 
   }
-  // useEffect(() => {
-  //   handleFilterChange("createdBy", id)
-  // }, [])
 
   const onChange = (dates) => {
     const [start, end] = dates;
@@ -162,9 +155,7 @@ const Details = () => {
     setEndDate(end);
     console.log(dates)
   };
-  // useEffect(() => {
-  //   setIsLoading(true)
-  // }, [])
+
   const [_userData, _setUserData] = useState({
     labels: ["active tickets", "inactive tickets"],
     datasets: [
@@ -193,17 +184,10 @@ const Details = () => {
 
   }
   )
-  // hjio
 
   const viewAll = querySearch.get("view");
 
-  const handleSkipChange = (evt) => {
-    if (querySearch.get("limit") === evt.value) {
-      return
-    }
-    handleFilterChange("limit", evt.value)
-    window.navigator.vibrate([100])
-  }
+ 
   const handleChangeText = (e) => {
 
     handleFilterChange("search", e.target.value)
@@ -234,42 +218,27 @@ const Details = () => {
     if (querySearch.get("ticketStatus") == evt.value) return
     handleFilterChange("ticketStatus", evt.value)
   }
-  // hiui
   const token = localStorage.getItem("admin_token");
-  // const [isLoading, setIsLoading] = useState(false)
 
   const [userInfo, setUserInfo] = useState({});
-  // const [userData, setUserData] = useState({ test: 1 })
   const config = {
     headers: {
       'Authorization': "makingmoney " + token
     },
-    params: formatQuery(querySearch.toString())
+    params: {
+      ...formatQuery(querySearch.toString()),
+      createdBy: id
+    }
   }
   async function getData() {
     const url = "/admin/alltickets"
-    // setIsActiveIndexLoading(true)
-    // return axios.get(url, config).then((data)=>data)
     try {
       const res = await axios.get(url, config)
-
-      // setUserData(res?.data || {})
-      // _setUserData({
-      //   labels: ["active tickets", "inactive tickets"],
-      //   datasets: [
-      //     {
-      //       label: "ticket data",
-      //       data: [res?.data?.totalActiveTickets, res?.data?.tickets.length - res?.data?.totalActiveTickets],
-      //       backgroundColor: ["skyblue", "orange"]
-      //     }
-      //   ]
-      // })
       return res.data
     } catch (err) {
       console.log(err)
     }
-    // setIsLoading(false)
-    setIsActiveIndexLoading(false)
+    // setIsActiveIndexLoading(false)
 
   }
   const { data: userData, isLoading, loading, refetch, isPreviousData } = useQuery({
@@ -277,17 +246,15 @@ const Details = () => {
     queryKey: [
       ["userdetails",
         {
-        ...formatQuery(querySearch.toString())
+          ...formatQuery(querySearch.toString()),
+          createdBy: id
         }
       ]
     ],
-    // queryFn:async () => axios.get(`/seat/seatdetails/${id}`)
     queryFn: getData,
     keepPreviousData: true
   })
-  // console.log("userdata ", data,loading ,isLoading)
   useEffect(() => {
-    // getData();
     refetch()
   }, [querySearch]);
 
