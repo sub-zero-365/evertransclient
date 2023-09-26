@@ -1,48 +1,234 @@
+import { Link } from 'react-router-dom'
+import UiButton from './UiButton';
 import { Heading } from "./"
+import footerbg from '../Assets/images/fooote-bg.jpg'
+import logo from "../Assets/images/logo.png"
+
 const Footer = () => {
   return (
-    <footer class="bg-neutral-900 2xl:container mx-auto dark:bg-slate-900 mt-10  text-center text-white py-20">
-      <div>
+    <footer
+
+      className=" relative"
+
+    >
+      <img className="absolute -z-0  inset-0 w-full h-full "
+        src={footerbg}
+      />
+
+      <div className="h-full 
+       bg-opacity-80 px-5 lg:p-20 sm:px-10  py-10 relative z-1 bg-[#1a1f6f]">
+
+        <div
+          className="grid grid-cols-12 gap-x-4"
+        >
+          <div className="col-span-12  lg:col-span-4">
+            <img
+              className="w-full max-w-[12rem] h-16"
+              src={logo}
+              // src="https://web.moxcreative.com/bigtranz/wp-content/uploads/sites/19/2023/03/Logo_bigtranz_1.png"
+            />
+            <p
+              className="my-5 text-lg text-white leading-[1.4rem] tracking-loose"
+            >Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni doloremque itaque reprehenderit incidunt ut tempore quo. Aspernatur inventore perferendis aperiam.</p>
+            <UiButton
+              className="!bg-[#ffae02] !my-10 !py-2.5
+                    !px-8 !text-lg hover:!bg-purple-600 
+                    transition duration-500 cursor-pointer
+                    "
+            >
+              <a
+                className='w-full h-full'
+                href='tel:672301714'>672301714</a>
+            </UiButton>
+
+          </div>
+          <ul className="pb-4 col-span-6 md:col-span-4 lg:col-span-2">
+
+            <li>
+              <h1
+                className="text-white font-bold text-xl pb-6 tracking-wide"
+              >Company</h1>
+            </li>
+
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                About us
+              </Link>
 
 
+            </li>
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                About us
+              </Link>
+
+
+            </li>
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                About us
+              </Link>
+
+
+            </li>
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                About us
+              </Link>
+
+
+            </li>
+          </ul>
+          <ul className="pb-4 col-span-6 md:col-span-4 lg:col-span-2">
+
+            <li>
+              <h1
+                className="text-white font-bold text-xl pb-6 tracking-wide"
+              >Services</h1>
+            </li>
+
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                Safety Guarantee
+              </Link>
+
+
+            </li>
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                About us
+              </Link>
+
+
+            </li>
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                About us
+              </Link>
+
+
+            </li>
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                About us
+              </Link>
+
+
+            </li>
+          </ul>
+          <ul className="pb-4 col-span-12 md:col-span-4 lg:col-span-4">
+
+            <li>
+              <h1
+                className="text-white font-bold text-xl pb-6 tracking-wide"
+              >Get In Touch</h1>
+            </li>
+
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                <div>
+
+                  <p>Jl Cempaka Wangi No 22 Jakarta - Indonesia</p>
+                </div>
+              </Link>
+
+
+            </li>
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                About us
+              </Link>
+
+
+            </li>
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                About us
+              </Link>
+
+
+            </li>
+            <li className="pb-2 lg:pb-3">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                About us
+              </Link>
+
+
+            </li>
+          </ul>
+        </div>
+
+
+        <div
+          className="h-[1px] my-5 mt-2 w-full  bg-gray-600"
+
+        />
+        <p
+
+          className="text-center text-lg text-white"
+        >Copyright © 2023 Bigtranz, All rights reserved. Powered by MoxCreative</p>
       </div>
-      <div className="mb-12 px-6 t grid grid-cols-2 md:grid-cols-3 text-white lg:grid-cols-4">
-
-        {
-          Array.from({ length: 10 }, (arr, index) => {
-            return (
-              <div>
-                <Heading text="Contact us"
-                  className="!text-blue-500
-                !font-black  !text-start !text-xl !mb-4 !pl-0 " />
-                <ul className="pl-2 space-y-2 mb-6 ">
-                  <li className="text-white text-start">
-                    Middle Farms Limbe
-                  </li>
-                  <li className="text-white text-start">
-                    Middle Farms Limbe
-                  </li>
-                </ul>
-
-              </div>
-            )
-          })
-        }
-
-
-      </div>
-      <div >
-        <img
-          className="mx-auto"
-          src="https://afrique-con.com/templates/curb_appeal/images/s5_logo.png" />
-      </div>
-      <div
-        class="p-4 text-center"
-      >
-        © 2023 Copyright:
-        <a class="text-white" href="https://tailwind-elements.com/">{process.env.REACT_APP_APP_NAME}</a>
-      </div>
-    </footer>
+    </footer >
   )
 }
 

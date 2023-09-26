@@ -1,82 +1,83 @@
 export { default as Navbar }
-from './Navbar'
+    from './Navbar'
 export { default as Footer }
-from './Footer'
+    from './Footer'
 export { default as Loader }
-from './Load'
+    from './Load'
 export { default as Modal }
-from './Modal'
+    from './Modal'
 export { default as OurServices }
-from './OurServices'
+    from './OurServices'
 export { default as SideBar }
-from './SideBar'
+    from './SideBar'
 export { default as UserLayout }
-from './UserLayout'
+    from './UserLayout'
 export { default as DashboardLayout }
-from './DashboardLayout'
+    from './DashboardLayout'
 export { default as Loadingbtn }
-from './Loadingbtn'
+    from './Loadingbtn'
 export { default as DashItem }
-from './DashItem'
+    from './DashItem'
 export { default as AddCities }
-from './AddCities'
+    from './AddCities'
 export { default as BarChart }
-from './BarChart'
+    from './BarChart'
 export { default as Scrollable }
-from './Scrollable'
+    from './Scrollable'
 export { default as AmountCount }
-from './AmountCount'
+    from './AmountCount'
 export { default as FormatTable }
-from './FormatTable'
+    from './FormatTable'
 export { default as PieChart }
-from './PieChart'
+    from './PieChart'
 export { default as LineChart }
-from './LineChart'
+    from './LineChart'
 export { default as TicketCounts }
-from './ticketCounts'
+    from './ticketCounts'
 export { default as Button }
-from './Button'
+    from './Button'
 export { default as DeactiveStatusButton }
-from './DeactiveStatusButton'
+    from './DeactiveStatusButton'
 export { default as ActiveStatusButton }
-from './ActiveStatusButton'
+    from './ActiveStatusButton'
 export { default as PanigationButton }
-from './PanigationButton'
+    from './PanigationButton'
 export { default as Number }
-from './Number'
+    from './Number'
 export { default as AnimatePercent }
-from './AnimatePercent'
+    from './AnimatePercent'
 export { default as BoxModel }
-from './BoxModel'
+    from './BoxModel'
 export { default as Form }
-from './Form'
+    from './Form'
 export { default as PlaceHolderLoader }
-from './PlaceHolderLoader'
+    from './PlaceHolderLoader'
 export { default as NextButton }
-from './NextButton'
+    from './NextButton'
 export { default as PrevButton }
-from './PrevButton'
+    from './PrevButton'
 export { default as DisplayUi }
-from './DisplayUi'
+    from './DisplayUi'
 export { default as DateUi }
-from './DateUi'
+    from './DateUi'
 export { default as Heading }
-from './Headings'
+    from './Headings'
 export { default as UserRanking }
-from './UserRanking'
+    from './UserRanking'
 export { default as PercentageBar }
-from './PercentageBar'
+    from './PercentageBar'
 export { default as ProtectedRoute }
-from './ProtectedRoute'
+    from './ProtectedRoute'
 export { default as DataDay }
-from './DataDay'
+    from './DataDay'
 export { default as ToggleSwitch }
-from './ToggleSwitch'
+    from './ToggleSwitch'
 export { default as AnimateError }
-from './AnimateError'
+    from './AnimateError'
 export { default as DeleteModal }
-from './DeleteModal'
+    from './DeleteModal'
 export { default as CustomDatePicker }
-from './CustomDatePicker'
+    from './CustomDatePicker'
 export { default as Rounded }
-from './Rounded'
+    from './Rounded'
+export { default as ErrorElement } from "./ErrorElement"

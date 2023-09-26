@@ -8,7 +8,7 @@ import SelectSortDate from 'react-select';
 import { useState, useEffect, useRef } from 'react';
 import { AiOutlineSave } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io"
-import { useParams, NavLink, useSearchParams } from 'react-router-dom';
+import { useParams, NavLink, useSearchParams, useLoaderData, redirect } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineSetting } from 'react-icons/ai';
 import formatQuery from "../utils/formatQueryStringParams"
@@ -48,8 +48,38 @@ import {
   PercentageBar
   , ToggleSwitch
 } from '../components';
+import customFetch from "../utils/customFetch"
 import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
+const singleUserQuery = (id) => {
+  return ({
+    queryKey: ["user", id],
+    queryFn: async () => {
+      const res = await customFetch.get("/admin/alltickets?createdBy=" + id)
+      return res.data
+    }
+  })
+}
+
+export const loader = (queryClient) => async ({ params: P, request }) => {
+  const params = Object.fromEntries([
+    ...new URL(request.url).searchParams.entries(),
+  ]);
+  try {
+
+    await queryClient.ensureQueryData(singleUserQuery(P.id))
+    return ({
+      id: P.id,
+      searchValues: params
+    })
+  } catch (error) {
+    toast.error("something went wrong")
+    return redirect("/dashboard/users");
+  }
+}
+
 const Details = () => {
+  const { id, searchValues } = useLoaderData()
+  const userData = useQuery(singleUserQuery(id)).data || {}
   const [querySearch, setQuerySearch] = useSearchParams();
   const handleFilterChange = (key, value = null) => {
     setQuerySearch(preParams => {
@@ -62,81 +92,9 @@ const Details = () => {
     })
 
   }
-
-  const handleBlockChange = () => {
-    if (querySearch.get("account_block")) {
-      const options = {
-        pending: "started",
-        success: "done",
-        error: "oops something broke"
-      }
-      toast.promise(
-        handleRemoveBlockuser()
-        , options
-      )
-
-    } else {
-
-      const options = {
-        pending: "started restricting user",
-        success: "done !",
-        error: "oops something broke"
-      }
-      toast.promise(
-        handleRestrictUserAdd(querySearch.get("createdBy"))
-        , options
-      )
-    }
-  }
-  const handleRemoveBlockuser = async () => {
-    const url = `/restricted/${querySearch.get("createdBy")}`
-    try {
-      const res = await axios.delete(url)
-      handleFilterChange("account_block")
-      return res
-    } catch (err) {
-      return err
-
-    }
-  }
-
-  useEffect(() => {
-    (async function () {
-      const url = `/restricted/${querySearch.get("createdBy")}`
-      try {
-        const res = await axios.get(url)
-        handleFilterChange("account_block", true)
-      } catch (err) {
-
-        // alert("something went wrong")
-        handleFilterChange("account_block")
-      }
-    }())
-
-  }, [querySearch.get("account_block")])
-
-  const handleRestrictUserAdd = async (user_id, url = `/restricted`) => {
-    try {
-    await axios.post(url, {
-        user_id: user_id,
-        name: "testuser4"
-      })
-
-    } catch (err) {
-      handleFilterChange("account_block", true)
-    }
-  }
-
-
-
-
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
   const constraintsRef = useRef(null)
-  // const [activeIndex, setActiveIndex] = useState(0);
-  // const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
-  const id = useParams().id;
-
   const style = {
     control: base => ({
       ...base,
@@ -187,7 +145,7 @@ const Details = () => {
 
   const viewAll = querySearch.get("view");
 
- 
+
   const handleChangeText = (e) => {
 
     handleFilterChange("search", e.target.value)
@@ -241,43 +199,30 @@ const Details = () => {
     // setIsActiveIndexLoading(false)
 
   }
-  const { data: userData, isLoading, loading, refetch, isPreviousData } = useQuery({
 
-    queryKey: [
-      ["userdetails",
-        {
-          ...formatQuery(querySearch.toString()),
-          createdBy: id
-        }
-      ]
-    ],
-    queryFn: getData,
-    keepPreviousData: true
-  })
-  useEffect(() => {
-    refetch()
-  }, [querySearch]);
+  // const userData = {}
 
 
 
-  useEffect(() => {
-    async function getUserInfo() {
-      const url = "/admin/staticuser/" + `${id}`;
 
-      try {
-        const { data } = await axios.get(url, config);
-        setUserInfo(data?.user)
+  // useEffect(() => {
+  //   async function getUserInfo() {
+  //     const url = "/admin/staticuser/" + `${id}`;
 
-      } catch (err) {
-        console.log(err)
-      }
+  //     try {
+  //       const { data } = await axios.get(url, config);
+  //       setUserInfo(data?.user)
 
-    }
+  //     } catch (err) {
+  //       console.log(err)
+  //     }
+
+  //   }
 
 
-    getData()
-    getUserInfo()
-  }, [window.location.href])
+  //   getData()
+  //   getUserInfo()
+  // }, [window.location.href])
 
   const [toggle, setToggle] = useState(false);
 
@@ -335,68 +280,7 @@ z-10  "
       <div className="lg:flex items-start justify-start gap-4">
         <div className="flex-1   mb-6">
           <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
-            {/* <div>
-              <Swiper
-                className='my-6 px-4 max-w-sm lg:max-w-lg relative'
-                slidesPerView={1}
-                onSlideChange={(e) => setctiveSlide(e.activeIndex)}
-                modules={[Autoplay, Pagination, Navigation]}
-                navigation={{
-                  prevEl: ".arrow__left",
-                  nextEl: ".arrow__right",
-                }}
-                pagination={{ clickable: true }}
-                autoplay={{
-                  delay: 25000,
-                  disableOnInteraction: false
-                }}
-              >
-                <PrevButton className="!left-1.5" />
-                <NextButton className="!right-1.5" />
 
-                <SwiperSlide >
-                  <motion.div
-                    className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
-                  >
-
-                    <h1 className="text-xl mb-4 text-montserrat font-medium text-center uppercase mt-2">Active to Inactive ticket ratio</h1>
-                    <PieChart chartData={_userData} />
-                  </motion.div>
-                </SwiperSlide>
-                <SwiperSlide >
-                  <motion.div
-                    className={`min-h-[12.5rem]-- relative  text-xs mx-0   rounded-lg `}
-                  >
-                    <div className="mb-10 md:mb-5">
-
-                      <h2 className="text-start 
-                        text-color_dark  mt-2 ml-1
-                         tracking-tight text-lg
-                        font-medium">User Book Vs System Book </h2>
-                      <span className="mb-5 w-14 ml-2 h-1 bg-blue-700 block rounded-lg"></span>
-
-                      <PercentageBar className="!min-w-[8rem]"
-                        percent={39}
-                        text="percentage print by user"
-                      />
-
-                      <BoxModel activeCount={7476}
-                        className="!bg-white"
-                        inActiveCount={62549}
-                        text1="User"
-                        text2="System"
-                        text={""}
-                      />
-
-
-
-                    </div>
-                  </motion.div>
-                </SwiperSlide>
-
-
-              </Swiper>
-            </div> */}
             <Scrollable className={`!mb-10 !justify-center ${viewAll && "!grid md:!grid-cols-2 gap-y-5"} !transition-all !duration-[1s]`}>
               <PercentageBar
                 className={`${viewAll && "!min-w-[8rem]"}`}
@@ -407,7 +291,7 @@ z-10  "
                 percent={userData?.percentageInActive} text="InActive Ticket Ratio" />
             </Scrollable>
             {
-              isLoading ?
+              false ?
                 <PlaceHolderLoader />
 
                 :
@@ -486,7 +370,7 @@ z-10  "
             <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.createdAt && (dateFormater().date) || "n/a"}</h4>
             <ToggleSwitch
-              onChange={handleBlockChange}
+              onChange={() => 0}
               message={"User is block from printing tickets"}
               state={querySearch.get("account_block") ? true : false}
             />
@@ -536,7 +420,7 @@ z-10  "
                       onClick={handleBoardingRangeSearch}
 
                     >
-                      {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                      {false ? <Loadingbtn toggle /> : "Filter Tickets"}
                     </button>
 
                     {
@@ -594,7 +478,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                       onClick={handleFilterSearch}
 
                     >
-                      {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                      {false ? <Loadingbtn toggle /> : "Filter Tickets"}
                     </button>
 
                     {
@@ -809,19 +693,17 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
       {
 
-        !isLoading && <FormatTable
-          isPreviousData={isPreviousData}
+        !false && <FormatTable
+          isPreviousData={false}
           ticketData={userData}
           admin
-        // tickets={userData?.tickets} admin
-        //   currentPage={querySearch.get("page")} 
 
 
         />
       }
 
       {
-        isLoading && (
+        false && (
           <PlaceHolderLoader />
         )
       }

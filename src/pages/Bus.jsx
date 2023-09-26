@@ -14,20 +14,47 @@ import Alert from '../components/Alert'
 import Categories from 'react-select'
 // import FromSelect from 'react-select/async'
 // import ToSelect from 'react-select/async'
-import { useNavigate, useSearchParams, Link } from 'react-router-dom'
+import { useNavigate, useSearchParams, Link, useLoaderData } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import customFetch from "../utils/customFetch"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+
 // import DatePicker from 'react-datepicker'
 const token = localStorage.getItem("admin_token");
+const allBusQuery = (params = {}) => {
+    return ({
+        queryKey: ["buses", params],
+        queryFn: async () => {
+            const res = await customFetch.get("/bus", {
+                params: params
 
+            })
+
+            return res.data
+
+        }
+    })
+}
+
+export const loader = (queryClient) => async ({ request }) => {
+    const params = Object.fromEntries([
+        ...new URL(request.url).searchParams.entries(),
+    ]);
+    try {
+        await queryClient.ensureQueryData(allBusQuery(params))
+        return ({
+            searchValues: params ?? {}
+        })
+
+    } catch (err) {
+        console.log("this is the error that causes the crases", err)
+        return err
+    }
+}
 const Bus = () => {
-
-    const [startDate, setStartDate] = useState(new Date());
-
-
     const newbustoast = () => toast.success("Add bus successfully  !", {
         position: toast.POSITION.BOTTOM_CENTER
     })
-    const [activeIndex, setActiveIndex] = useState(null)
     const BusDetail = ({ number_of_seats, feature, name, _id, seat_positions, active, from, to, time }) => {
         const counter = seat_positions?.filter((x) => x.isTaken == true)?.length
         return (
@@ -82,21 +109,9 @@ const Bus = () => {
     const constraintsRef = useRef(null)
     const [toggle, setToggle] = useState(false)
     const [message, setMessage] = useState("")
-    const [selected, setSelected] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
-    const [querySearch, setQuerySearch] = useSearchParams();
 
-    const handleFilterChange = (key, value = null) => {
-        setQuerySearch(preParams => {
-            if (value == null) {
-                preParams.delete(key)
-            } else {
-                preParams.set(key, value)
-            }
-            return preParams
-        })
 
-    }
 
     const catOptions = [
 
@@ -121,7 +136,7 @@ const Bus = () => {
     const [isDisable, setIsAble] = useState(false)
     const [isOpen, setIsOpen] = useState(false);
     const [err, setErr] = useState(null)
-    const [buses, setBuses] = useState([])
+    // const [buses, setBuses] = useState([])
     const [cat, setCat] = useState("all")
     const handleChangeCat = (e) => {
         if (e.value === cat) return
@@ -129,38 +144,10 @@ const Bus = () => {
 
     }
 
-    // const [cities, setCities] = useState([])
-
-    const getBuses = async () => {
-        setIsLoading(true)
-        try {
-            const res = await axios.get("/bus",
-                {
-                    headers: {
-                        'Authorization': "makingmoney " + token
-                    }, params: {
-                        search: searchText,
-                        feature: cat
-                    }
-                }
-            )
-            setBuses(res.data?.buses)
-            console.log(res.data)
-
-        } catch (err) {
-            console.log("error : ", err)
-
-        }
-        finally {
-            setIsLoading(false)
-        }
-
-    }
+    const { searchValues } = useLoaderData()
+    const { buses } = useQuery(allBusQuery(searchValues))?.data || []
 
 
-    useEffect(() => {
-        getBuses()
-    }, [searchText, cat])
 
     const [busDat, setBusData] = useState({
         name: null,
@@ -169,7 +156,7 @@ const Bus = () => {
 
     })
 
-    
+
     const handleAddNewBus = async (e) => {
         e.preventDefault()
         setIsAble(true)
@@ -192,7 +179,7 @@ const Bus = () => {
                 feature: "classic",
             })
             newbustoast()
-            getBuses()
+            // getBuses()
 
         } catch (err) {
             setErr(err.response.data)
@@ -255,9 +242,9 @@ const Bus = () => {
             <motion.div
                 drag
                 dragConstraints={constraintsRef}
-                onClick={() => getBuses()
+                // onClick={() => getBuses()
 
-                }
+                // }
                 animate={{
                     scale: [0.7, 1.2, 0.8],
                     rotate: isLoading ? [0, 360] : null
@@ -581,8 +568,7 @@ z-10  "
                 </div>
 
             </div>
-            <Form handleChangeText={(e) => setSearchText(e.target.value)} />
-            {/* new content here  */}
+            
             <div className='max-w-[15rem] mx-auto w-full'>
 
                 <Categories

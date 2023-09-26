@@ -9,7 +9,7 @@ export const useFilter = () => {
                 preParams.set(key, value)
             }
             return preParams
-        })
+        }, { replace: true })
 
     }
     const handleChange = ({ value, label }, text) => {

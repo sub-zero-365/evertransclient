@@ -1,89 +1,87 @@
-import { Outlet, Navigate, useNavigate, useLocation } from 'react-router-dom'
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-
+import { Outlet, Navigate, useNavigate, useLocation, redirect, useNavigation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { setUserName } from "../actions/userName"
 import Alert from '../components/Alert'
-import AnimatedText from './AnimateText';
 import OnlineDetector from './OnlineDetector';
+import customFetch from '../utils/customFetch';
+import { toast } from "react-toastify"
+import { createContext, useContext } from 'react';
+import { useQueries, useQuery } from '@tanstack/react-query';
+import logo from "../Assets/images/logo.png"
+import { useUserLayoutContext } from "./UserLayout"
+import AppSpinner from './AppSpinner'
+const ProtectedContext = createContext()
 
-const ProtectedRoute = () => {
-    // const [isOnline, setIsOnline] = useState(navigator.onLine);
-    const [toggle, setToggle] = useState(false)
-    const [message, setMessage] = useState("")
-    const location = useLocation()
+const userQuery = {
+    queryKey: ['user'],
+    queryFn: async () => {
+        const { data } = await customFetch.get('/users/current-user');
+        return data;
+    },
+};
+
+export const loader = (queryClient) => async () => {
+    try {
+        const wait = () => new Promise(r => setTimeout(() => r(), 5000))
+        // await wait()
+        return await queryClient.ensureQueryData(userQuery);
+    } catch (error) {
+        console.log(error.response)
+        toast.error('please loggin to continue')
+        return redirect('/login?message=something went wrong try again?');
+    }
+};
+
+const ProtectedRoute = (queryClient) => {
+    const { setUserDetails, logoutUser } = useUserLayoutContext()
+    const { user } = useQuery(userQuery).data
+    setUserDetails(user)
     const navigate = useNavigate()
+    const [isAuthError, setIsAuthError] = useState(false);
+    const navigation = useNavigation();
+    const isPageLoading = navigation.state === 'loading'
+   
 
-    const setuserName = (username) => {
-        dispatch(setUserName(username))
-
-    }
-
-    const dispatch = useDispatch();
-    const token = localStorage.getItem("token") || localStorage.getItem("assistant_token")
-
-    // || localStorage.getItem("admin_token")
-    useEffect(() => {
-        if (!token) return
-        async function getData() {
-            const url = "/auth/userinfo";
-            try {
-
-                const res = await axios.get(url, {
-                    headers: {
-                        'Authorization': "makingmoney " + token
-                    }
-                })
-                console.log(res)
-                setuserName(res?.data?.user?.fullname);
-                return res.data.user
-
-            } catch (err) {
-                console.log(err)
-                if (err.toJSON().message == "Network Error") {
-                    // alert("no internt connections")
-                } else {
-                    navigate("/login?message=" + "something broke login again ")
-                }
+    customFetch.interceptors.response.use(
+        (response) => {
+            console.log("this is the response before the request is being sent ", response)
+            return response;
+        },
+        (error) => {
+            if (error?.response?.status === 401) {
+                setIsAuthError(true);
             }
+            return Promise.reject(error);
         }
-        getData().then(async ({ _id }) => {
-            const url = `/restricted/${_id}`
-            try {
-                const res = await axios.get(url);
-                setToggle(true)
-                setMessage(res.data.message)
-            } catch (err) {
-
-            }
-
-        })
-    }, [location.pathname])
-
-
-    if (!token) {
-        return <Navigate to="/login?message=hello user please login to access this protected route" replace />
-    }
+    );
+    useEffect(() => {
+        if (!isAuthError) return;
+        logoutUser();
+    }, [isAuthError]);
     return (
-        <>
-            <Alert message={message}
-                duration="30000"
-                className={`
-      ${toggle && "!top-1/2 -translate-y-1/2"}
-      `}
-                toggle={toggle}
-                setToggle={() => 0}
-            />
+        <ProtectedContext.Provider
+            value={{
+                logoutUser,
+
+            }}
+        >
+
             <div className='flex flex-col h-screen'>
-             <OnlineDetector/>
+                <OnlineDetector />
                 <div className='flex-1'>
-                <Outlet />
+          
+
+                    {
+                        isPageLoading ? <AppSpinner/> : <Outlet
+                            context={{ user }}
+                        />
+                    }
+
                 </div>
 
             </div>
 
-        </>
+        </ProtectedContext.Provider>
     )
 }
 export default ProtectedRoute

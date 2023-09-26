@@ -21,9 +21,32 @@ import QRCode from "react-qr-code";
 import { BsChevronCompactUp } from 'react-icons/bs'
 import succcesssound from '../utils/successsound.mp3'
 import { Helmet } from 'react-helmet'
+import customFetch from '../utils/customFetch'
+const singleTicket = (id) => {
+  return ({
+    queryKey: ["ticket", id],
+    queryFn: async () => {
+      const res = await customFetch.get(`/ticket/${id}`)
+      return res.data
+    }
+
+  })
+
+}
+export const loader = (queryClient) => async ({ request, params }) => {
+  try {
+    // try to get the previous page from user being
+    console.log(window.location.pathname)
+    await queryClient.ensureQueryData(singleTicket(params.id))
+    return params.id
+  } catch (err) {
+    throw err
+  }
+
+}
+
 const User = () => {
   const ref = useRef(null);
-  const [isOpen_, setIsOpen_] = useState(false);
   const location = useLocation();
   const loadState = location?.state?._id
   const isInView = useInView(ref)
@@ -37,9 +60,7 @@ const User = () => {
     }
 
   }, [isInView])
-  // const getStatus = (obj, value = "roundtrip") => {
-  //   return obj?.type === value && obj?.doubletripdetails?.some(x => x.active == true)
-  // }
+
   const [redirect, setRedirect] = useState(false);
   let downloadbaseurl = null
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -168,17 +189,15 @@ const User = () => {
         params
       }
       )
-      console.log(res)
-      setTicket(res.data?.updateTicket)
-      setTicketData(res.data?.updateTicket)
-      setMessage("successfull edited ticket")
+      // setTicket(res.data?.updateTicket)
+      // setTicketData(res.data?.updateTicket)
     } catch (err) {
-      setMessage(err.response.data);
+      // setMessage(err.response.data);
       setLoadbtn(false)
     }
     finally {
-      setToggle(true)
-      setIsloading(false)
+      // setToggle(true)
+      // setIsloading(false)
 
     }
   }
@@ -218,27 +237,8 @@ const User = () => {
         </title>
       </Helmet>
       <div className={`max-w-3xl  justify-center  flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-60px)] pb-64 overflow-y-auto ${!isadminuser && "container"}`}>
-        {/* {
-          (ticket && readonly == false) && (<EditTicketModal isOpen={isOpen_} setIsOpen={setIsOpen_} ticket={ticket} />)
-        } */}
-        <ReOrderBooking
-          duration="30000"
-          className={`${redirect && "!top-1/2 -translate-y-1/2"}`}
-          toggle={redirect}
-          confirmFunc={() => 0}
-          // navigate(`/user?assing_new_seat=true&_id=${id}&from=${ticket?.from}&fullname=${ticket?.fullname}&to=${ticket?.to}&type=${ticket?.type}`)
-          setToggle={setRedirect}
-          message={message} />
-        <Alert message={message}
-          duration="30000"
-          className={`
-      ${toggle && "!top-1/2 -translate-y-1/2"}
-      `}
-          toggle={toggle}
-          confirmFunc={() => setToggle(false)}
-          setToggle={setToggle}
-
-        />
+     
+      
         {
           isadminuser ? (
             <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">

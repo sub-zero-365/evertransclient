@@ -1,20 +1,18 @@
 import {
-    DashItem, Button,
+    DashItem,
     Heading, FormatTable
     ,
     PieChart
 
 } from '../components'
-// import { GrStackOverflow } from 'react-icons/gr'
-// import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
-// import { storeCities } from "../actions/userCity"
-import { motion } from 'framer-motion'
 import { useSelector, useDispatch } from 'react-redux';
 import { setTicketData } from '../actions/adminData';
 import { BsTicketPerforated } from 'react-icons/bs'
 import { BiBus } from 'react-icons/bi'
 import { useState, useEffect, useRef } from 'react'
 import axios from "axios"
+
+
 const DashboardHome = () => {
     const [users, setUsers] = useState([])
     const token = localStorage.getItem("admin_token");
@@ -174,9 +172,9 @@ const DashboardHome = () => {
 
             <Heading text="Recent Book Tickets" className="!font-black first-letter:!text-2xl !text-lg underline underline-offset-8 uppercase" />
 
-            <FormatTable 
-            ticketData={ticketData}
-            hidePanigation
+            <FormatTable
+                ticketData={ticketData}
+                hidePanigation
                 // skip={10}
                 // currentPage={1}
                 admin />

@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams, Link } from "react-router-dom"
+import { useNavigate, useSearchParams, Link, useNavigation } from "react-router-dom"
 import {
   Loader, Modal, Heading,
   AnimateError
@@ -26,15 +26,20 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-import useCity,{ getCities } from "../utils/ReactSelectFunction";
+import { getCities } from "../utils/ReactSelectFunction";
 
-import { components, style } from "../utils/reactselectOptionsStyles"
+import { style } from "../utils/reactselectOptionsStyles"
+import UiButton from "../components/UiButton"
+import LoadingButton from '../components/LoadingButton'
+
+
 
 const Booking = () => {
- 
-  const [queryParams, setQueryParams] = useSearchParams()
-  const [toggle, setToggle] = useState(false)
 
+  const [queryParams] = useSearchParams()
+  const [toggle, setToggle] = useState(false)
+  const navigation = useNavigation()
+  const isPageLoading = navigation.state == "loading"
   const tripType = queryParams.get("triptype");
 
   const [fromCities, setFromCities] = useState(queryParams.get("from"))
@@ -42,7 +47,6 @@ const Booking = () => {
   const [time, setTime] = useState("7am")
   const [isLine, setIsline] = useState(false)
   const navigate = useNavigate()
-  // const gotoBusSits = () => navigate(`/bussits/68763?from=${fromCities}&to=${toCities}&date=${startDate.toLocaleDateString('en-ZA')}&triptype=${tripType}&time=${time}`)
   const gotoBusSits = () => navigate(`/bus?from=${fromCities}&to=${toCities}&date=${startDate.toLocaleDateString('en-ZA')}&triptype=${tripType}&time=${time}`)
   const [demoFetch, setDemoFetch] = useState(false);
   const loadDemoData = (evt) => {
@@ -58,7 +62,6 @@ const Booking = () => {
   }
   const [startDate, setStartDate] = useState(new Date());
 
-  const Header = ({ name }) => <h1 className="font-black text-center text-slate-900 dark:text-white mb-4 tracking-tighter  underline underline-offset-8 text-sm">{name || "no name was passed"}</h1>
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
     <div
       className="w-full
@@ -108,22 +111,26 @@ const Booking = () => {
         <div className="container mx-auto md:flex ">
           <div className="image flex-1 h-[200px] md:h-[calc(100vh-60px)]
         w-full rounded-b-[3rem] md:rounded-none  overflow-hidden">
-            <img 
-            // src="https://th.bing.com/th/id/OIP.83QkNLDMdg1mZ1rn6bnx-gHaHa?pid=ImgDet&rs=1"
-            src="https://i.pinimg.com/originals/40/ef/a6/40efa606063d41c754b0a4a6c5de8df8.gif"
-            className="h-full w-full" alt="bus pic" />
+            <img
+              // src="https://th.bing.com/th/id/OIP.83QkNLDMdg1mZ1rn6bnx-gHaHa?pid=ImgDet&rs=1"
+              src="https://i.pinimg.com/originals/40/ef/a6/40efa606063d41c754b0a4a6c5de8df8.gif"
+              className="h-full w-full" alt="bus pic" />
 
           </div>
 
-          <form onSubmit={loadDemoData} className="-mt-10 mx-4  md:pb-24
+          <form onSubmit={loadDemoData} className="-mt-10 mx-4   md:pb-24
         md:mt-0 pt-10  md:w-[25rem]  lg:w-[30rem]
         md:max-w-[calc(100vw-2.5rem)] md:max-h-[calc(100vh-60px)]  md:overflow-y-auto">
 
             <div className="shadow-lg mx-4 min-h-[3rem]
           -mt-[25px] bg-white dark:bg-slate-700
           dark:text-white rounded-lg flex p-1 ">
-              <Link to=".?triptype=single" className={`w-1/2 ${(tripType === "single" || !tripType) ? "bg-blue-400" : "bg-orange-400"} text-center text-white flex items-center justify-center rounded-sm `}>One Way</Link>
-              <Link to=".?triptype=round" className={`w-1/2 ${tripType === "round" ? "bg-blue-400" : "bg-orange-400"} text-center text-black flex items-center justify-center
+              <Link to=".?triptype=single"
+                replace
+                className={`w-1/2 ${(tripType === "single" || !tripType) ? "bg-blue-400" : "bg-orange-400"} text-center text-white flex items-center justify-center rounded-sm `}>One Way</Link>
+              <Link
+                replace
+                to=".?triptype=round" className={`w-1/2 ${tripType === "round" ? "bg-blue-400" : "bg-orange-400"} text-center text-black flex items-center justify-center
           rounded-sm `}>Round Trip</Link>
             </div>
 
@@ -131,9 +138,19 @@ const Booking = () => {
 
             <div className="flex flex-col justify-center items-center mt-4">
               <div className="flex gap-2 dark:!text-white justify-center items-center">
-                {tripType == "round" ? <Header className="dark:!text-white" name="RoundTrip" /> : <Header className="dark:!text-white" name="SingleTrip" />}
+                <motion.div
+                  initial={{ y: 30 }}
+                  animate={{ y: 0 }}
+                  key={(tripType)}
+                >
+                  <Heading className="dark:!text-white !p-0 "
+                    text={tripType == "round" ? "Round Trip" : "Single Trip"}
+                  />
+                </motion.div>
                 <span className="!w-5 !h-5 grid items-center rounded-sm justify-center mb-0.5" onClick={() => setIsline(!isLine)} >
-                  <BiChevronDown className="text-sm" />
+                  <BiChevronDown
+                    size={20}
+                    className="text-sm" />
                 </span>
               </div>
               <DatePicker
@@ -204,35 +221,21 @@ const Booking = () => {
               options={timeOptions} />
 
             <div className="hidden min-h-8 md:flex items-center justify-center mt-auto">
-              <button
-                type="submit"
-                data-te-ripple-init
-                data-te-ripple-color="light"
-                className="inline-block  rounded bg-blue-500 cal-width  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
-  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-  transition duration-150 ease-in-out hover:bg-primary-600
-  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+              <LoadingButton
+                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
               >
-                FindBus <AiOutlineArrowRight className="!inline-block " />
-              </button>
+                <>FindBus <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
+              </LoadingButton>
+
             </div>
             <div className="md:hidden min-h-8
-           flex items-center justify-center mt-5 fixed left-0 bottom-8 w-full">
-              <button
-                data-te-ripple-init
-                data-te-ripple-color="light"
-                class="inline-block  rounded bg-blue-500 cal-width [--w:400px]  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
-  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-  transition duration-150 ease-in-out hover:bg-primary-600
-  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-
+           flex items-center justify-center mt-5 sticky left-0 bottom-8 w-full">
+              <LoadingButton
+                className="!w-[min(30rem,calc(100%-1.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
               >
-                FindBus <AiOutlineArrowRight className="!inline-block " />
-              </button>
+                <>FindBus <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
+              </LoadingButton>
+
 
             </div>
           </form>

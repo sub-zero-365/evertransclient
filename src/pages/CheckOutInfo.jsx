@@ -1,11 +1,8 @@
 import dayjs from "dayjs"
 import { useState, useEffect, useRef } from "react"
-import { NavLink, useSearchParams, useNavigate, Link } from "react-router-dom"
-import Alert from '../components/Alert'
+import { NavLink, useSearchParams, useNavigate, Link, useLoaderData, Form, useNavigation, redirect } from "react-router-dom"
 import AlertBox from '../components/Alert'
 import { motion } from 'framer-motion'
-import axios from 'axios'
-import { Loadingbtn } from "../components"
 import { Heading } from "../components"
 import { BiCategory } from 'react-icons/bi'
 import "swiper/css"
@@ -21,24 +18,57 @@ import "swiper/css/thumbs";
 import AnimateText from '../components/AnimateText'
 import busimage from '../Assets/images/busimage.jpg'
 import { Helmet } from 'react-helmet'
+import UiButton from "../components/UiButton"
+import { AiOutlineArrowRight } from "react-icons/ai"
+import { toast } from 'react-toastify'
+import customFetch from "../utils/customFetch"
+
+const errorToast = (msg = "Please select a seat and continue !!!") => toast.error(msg)
+
+export const loader = ({ request }) => {
+  const params = Object.fromEntries([
+    ...new URL(request.url).searchParams.entries(),
+  ]);
+  return { userInformation: params }
+}
+
+export const action =(queryClient)=> async ({ request }) => {
+  const params = Object.fromEntries([
+    ...new URL(request.url).searchParams.entries(),
+  ]);
+  console.log("this is the data in action", params)
+  const wait = () => new Promise(r => setTimeout(() => {
+    r()
+  }, 2000))
+  await wait()
+  try {
+    await customFetch.post("/ticket",
+      params
+    )
+    await queryClient.invalidateQueries({
+      queryKey: ["tickets"],
+      exact: true,
+    })
+
+    return null
+
+  } catch (err) {
+    errorToast(err.response?.data || " something went wrong try again later")
+    return null
+
+  }
+}
+
 const BusSits = () => {
+  const navigation = useNavigation()
+  const { userInformation } = useLoaderData()
   const constraintsRef = useRef(null);
 
-
   const [view, setView] = useState(false)
-  const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
+  // const navigate = useNavigate()
   const [error, setError] = useState(false)
   const [queryParameters] = useSearchParams()
-  const [toggle, setToggle] = useState(false)
-  useEffect(() => { window.scrollTo(0, 0) }, [])
-  const proccedCheckout = () => {
-    setToggle(true)
-  }
-  const [message, setMessage] = useState("")
-
-
-  const url = "/ticket"
+  const [message] = useState("")
 
   const formatPrice = (triptype, seatposition) => {
     const seatnumber = Number(seatposition) + 1;
@@ -57,64 +87,29 @@ const BusSits = () => {
     }
     return "invalid seatposition or price "
   }
-  console.log(dayjs(queryParameters.get("date")).format("YYYY-MM-DD"), queryParameters.get("date"))
 
-  const handleSubmit = async () => {
-    var submitdata = {
-      from: queryParameters.get("from"),
-      to: queryParameters.get("to"),
-      traveldate: dayjs(`${queryParameters.get("date")}`).format("YYYY-MM-DD"),
-      traveltime: queryParameters.get("time") || "n/a",
-      price: formatPrice(queryParameters.get("triptype"), queryParameters.get("sitpos")),
-      sex: queryParameters.get("gender"),
-      email: queryParameters.get("email"),
-      age: queryParameters.get("age"),
-      phone: queryParameters.get("phone"),
-      fullname: queryParameters.get("name"),
-      seat_id: queryParameters.get("seat_id"),
-      seatposition: Number(queryParameters.get("sitpos")),
-      paymenttype: queryParameters.get("paymenttype"),
-      busType: queryParameters.get("flag")
-    }
-    if (queryParameters.get("triptype") !== "null") {
-      submitdata = {
-        ...submitdata,
-        type: queryParameters.get("triptype") + "trip",
-      }
-    }
-    setIsLoading(true)
-    const token = localStorage.token
-    // if (!token) return navigate("/login")
-    try {
-      const busId = queryParameters.get("bus");
-      const sitpos = queryParameters.get("sitpos")
-      if (!busId && !sitpos) {
-        alert("fail to get ids")
-        return
-      }
-      // const r = await axios.put(`/bus/${busId}/${sitpos}`)
-      const res = await axios.post(url, {
-        ...submitdata
-      }, {
+  // const handleSubmit = async () => {
+  //   // var submitdata = {
+  //   //   from: queryParameters.get("from"),
+  //   //   to: queryParameters.get("to"),
+  //   //   traveldate: dayjs(`${queryParameters.get("date")}`).format("YYYY-MM-DD"),
+  //   //   traveltime: queryParameters.get("time") || "n/a",
+  //   //   price: formatPrice(queryParameters.get("triptype"), queryParameters.get("sitpos")),
+  //   //   sex: queryParameters.get("gender"),
+  //   //   email: queryParameters.get("email"),
+  //   //   age: queryParameters.get("age"),
+  //   //   phone: queryParameters.get("phone"),
+  //   //   fullname: queryParameters.get("name"),
+  //   //   seat_id: queryParameters.get("seat_id"),
+  //   //   seatposition: Number(queryParameters.get("sitpos")),
+  //   //   paymenttype: queryParameters.get("paymenttype"),
+  //   //   busType: queryParameters.get("flag")
+  //   // }
 
-        headers: {
-          "Authorization": "makingmoney " + token
+  //   setIsLoading(true)
 
-        }
 
-      })
-      setTimeout(() => {
-        navigate("/user")
-      }, 4000)
-      proccedCheckout()
-    } catch (err) {
-      console.log(err)
-      setIsLoading(false)
-      setMessage(err.response.data)
-      setError(true)
-    }
-
-  }
+  // }
   return (
     <>
       <Helmet>
@@ -172,43 +167,8 @@ z-10  "
           setToggle={setError}
 
         />
-        <Alert
-          toggle={toggle}
-          setToggle={setToggle}
-          confirmFunc={() => navigate("/user")}
-          message={"successfully book the ticket"} />
-        <div className="md:hidden z-10 h-[50px] flex items-center justify-center mt-5 fixed bottom-8 w-full">
-          {
 
-            isLoading ? <button
-              type="button"
-              data-te-ripple-init
-              data-te-ripple-color="light"
-              class="inline-block  rounded bg-blue-500 cal-width  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
-leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-transition duration-150 ease-in-out hover:bg-primary-600
-hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-            >
-              <Loadingbtn />
-            </button> : <button
-              onClick={handleSubmit}
-              type="button"
-              data-te-ripple-init
-              data-te-ripple-color="light"
-              class="inline-block  rounded bg-blue-500 cal-width  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
-leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-transition duration-150 ease-in-out hover:bg-primary-600
-hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-            >
-              Validate Ticket
-            </button>
 
-          }
-        </div>
         <div className="lg:flex md:container mx-auto">
           <div className="flex-1 hidden lg:block">
             <img
@@ -216,7 +176,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
               className="w-full h-[calc(100vh-50px)] object-cover" alt="booking " />
 
           </div>
-          <div className="flex-none px-2 w-full pb-24 lg:w-[35rem] lg:px-4
+          <Form method="post" className="flex-none px-2 w-full pb-24 lg:w-[35rem] lg:px-4
         dark:bg-slate-900 
         mx-auto max-h-[calc(100vh-50px)] overflow-y-auto lg:shadow-lg mt-6 py-6 pt-0"
             ref={constraintsRef}
@@ -249,7 +209,7 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             <AnimateText text="User Information"
               className={"!text-sm md:!text-lg lg:!text-2xl !text-center"} />
 
-            <div className="border-2 pr-4  bg-white
+            <div method="post" className="border-2 pr-4  bg-white
           dark:bg-slate-800  shadow-xl 
           
           py-5 pt-8 rounded-lg mt-5 relative">
@@ -322,40 +282,35 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
             </div>
 
             <div className="hidden h-[80px] md:flex items-center justify-center mt-auto">
-              {
+              <UiButton
+                disabled={(navigation.state == "submitting" ? true : false)}
+                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
+              >
+                {
+                  navigation.state == "submitting" ? "Loading please wait !!" : <> Book Ticket <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
 
-                isLoading ? <button
-                  type="button"
-                  data-te-ripple-init
-                  data-te-ripple-color="light"
-                  class="inline-block  rounded bg-blue-500 cal-width  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
-leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-transition duration-150 ease-in-out hover:bg-primary-600
-hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                >
-                  <Loadingbtn />
-                </button> : <button
-                  onClick={handleSubmit}
-                  type="button"
-                  data-te-ripple-init
-                  data-te-ripple-color="light"
-                  class="inline-block  rounded bg-blue-500 cal-width  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
-  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-  transition duration-150 ease-in-out hover:bg-primary-600
-  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                >
-                  Validate Ticket
-                </button>
+                }
 
-              }
+              </UiButton>
 
 
             </div>
-          </div>
+            <div className="md:hidden z-10 h-[50px] flex items-center justify-center mt-5 fixed bottom-8 w-full">
+              <UiButton
+                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
+                disabled={(navigation.state == "submitting" ? true : false)}
+
+              >
+                {
+                  navigation.state == "submitting" ? "Loading please wait !!" : <> Book Ticket <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
+
+                }
+
+
+              </UiButton>
+
+            </div>
+          </Form>
         </div>
         <div className="mb-24 md:hidden" />
       </motion.div>

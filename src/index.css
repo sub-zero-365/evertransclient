@@ -78,6 +78,17 @@ html {
   display: grid;
   gap: 0.4rem;
 }
+.ping {
+  animation: ping 1s infinite;
+}
+@keyframes ping {
+  from {
+    scale: 0.8;
+  }
+  to {
+    scale: 1.2;
+  }
+}
 
 @keyframes scaleanimation {
   from {
@@ -352,9 +363,8 @@ html {
 .css-1fdsijx-ValueContainer {
   @apply !bg-transparent dark:!text-white;
 }
-.css-qbdosj-Input::after{
+.css-qbdosj-Input::after {
   @apply !bg-transparent dark:!text-white;
-  
 }
 .react-pdf__Page {
   @apply bg-white dark:!bg-slate-900;

@@ -5,13 +5,13 @@ import UiButton,
 { UiButtonDanger } from "../components/UiButton"
 import { useState, useEffect, useRef } from "react"
 import axios from 'axios'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLoaderData } from 'react-router-dom'
 import { Heading } from '../components'
 import { useSearchParams } from 'react-router-dom'
 import {
     timeOptions
 } from "../utils/sortedOptions"
-import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai"
+// import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai"
 import dateFormater from '../utils/DateFormater'
 import ClearFilter from '../components/ClearFilter'
 import formatQuery from "../utils/formatQueryStringParams"
@@ -26,7 +26,32 @@ import DatePicker from 'react-datepicker';
 import { useInView } from 'framer-motion'
 import { PlaceHolderLoader } from '../components'
 import { Helmet } from 'react-helmet'
+import customFetch from '../utils/customFetch'
+import {
+    useQuery,
+} from '@tanstack/react-query'
+const seatsQuery = (params = {}) => ({
+    queryKey: ["seats"],
+    queryFn: async () => {
+        const res = await customFetch.get("/seat", {
+            params: {
+                ...params
+            }
+        })
+        return res.data
+    }
+})
+export const loader = (queryClient) => async ({ request }) => {
+    const params = Object.fromEntries([
+        ...new URL(request.url).searchParams.entries(),
+    ]);
+    await queryClient.ensureQueryData(seatsQuery(params))
+    return { searchValues: params }
+}
+
 const Seats = () => {
+    const { searchValues } = useLoaderData()
+    const { seats, nHits, numberOfPages, routes_count } = useQuery(seatsQuery(searchValues)).data
     let downloadbaseurl = null
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
         downloadbaseurl = process.env.REACT_APP_LOCAL_URL
@@ -39,12 +64,9 @@ const Seats = () => {
     const ref = useRef(null);
 
     // const isInView = useInView(ref)
-    const { loading, seats: data } = useSelector(state => state.seatData);
 
-    const dispatch = useDispatch()
-    const setData = (payload) => {
-        return dispatch(setSeats(payload))
-    }
+   
+  
     const [querySearch, setQuerySearch] = useSearchParams();
     const isadminuser = querySearch.get("admin")
     const handleFilterChange = (key, value = null) => {
@@ -76,30 +98,12 @@ const Seats = () => {
         setStartDate(start);
         setEndDate(end);
     };
-
+    // const 
     const navigate = useNavigate()
-    const getData = async () => {
-        try {
-            const res = await axios.get("/seat",
-                {
-                    params: formatQuery(querySearch.toString())
 
-                })
-            console.log(res.data)
-            console.log(res.data.routes)
-            setData(res.data)
-        } catch (err) {
-            console.log("err", err)
-        } finally {
-            console.log("done!")
-        }
-    }
-    useEffect(() => {
-        getData()
-    }, [querySearch])
 
-    const  skip=querySearch.get("limit") || 100
-    const currentPage=querySearch.get("page") || 1
+    const skip = querySearch.get("limit") || 100
+    const currentPage = querySearch.get("page") || 1
     const [activeIndex, setActiveIndex] = useState((querySearch.get("page") - 1));
     const checkPages = (index) => {
         if (querySearch.get("page") == index) return
@@ -130,10 +134,10 @@ const Seats = () => {
                     !grid-cols-1 gh
                     !transition-all 
                     !duration-[1s]`}>
-                            <TicketCounts counts={data?.nHits || 0 === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
+                            <TicketCounts counts={nHits || 0 === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
                                 text={"Total Travels"}
                                 icon={<AiOutlineSave />} />
-                            <TicketCounts counts={data?.routes_count || 0 === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
+                            <TicketCounts counts={routes_count || 0 === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
                                 text={"Total Routes"}
                                 icon={<VscFolderActive />}
                             />
@@ -229,8 +233,8 @@ const Seats = () => {
                     "limit,100",
                 ]} />
                 {
-                    loading ? <PlaceHolderLoader /> : (
-                  
+                    false ? <PlaceHolderLoader /> : (
+
                         <>
 
                             <div className="relative xl:container 4xlmax-w- mx-auto overflow-x-auto
@@ -272,7 +276,7 @@ const Seats = () => {
 
                                     >
                                         {
-                                            data?.seats?.map(({ from,
+                                            seats?.map(({ from,
                                                 to,
                                                 bus,
                                                 traveldate,
@@ -325,9 +329,9 @@ const Seats = () => {
 
                                                     <td className="py-0 text-xs flex items-center"
                                                     >
-                                                         <UiButton
-                                                         className={"!bg-green-800"}
-                                                        onClick={() => navigate(`${_id}?${isadminuser && "admin=true"}`)} name="details" />
+                                                        <UiButton
+                                                            className={"!bg-green-800"}
+                                                            onClick={() => navigate(`${_id}?${isadminuser && "admin=true"}`)} name="details" />
 
                                                     </td>
                                                 </tr>
@@ -342,7 +346,7 @@ const Seats = () => {
                                 className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto flex  md:gap-x-2"
                             >
                                 {Array.from({
-                                    length: data?.numberOfPages
+                                    length: numberOfPages
                                 }, (text, index) => {
                                     return <PanigationButton
                                         text={index + 1}

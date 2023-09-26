@@ -1,7 +1,7 @@
 
 
 
-export const UiButtonDanger = ({ className, onClick, disabled, name }) => {
+export const UiButtonDanger = ({ className, onClick, disabled, name, children }) => {
     return (
         <button
             onClick={onClick}
@@ -34,12 +34,12 @@ text-[0.7rem]
 md:text-sm
 font-montserrat
 `}
-        >{name || "Button"}</button>
+        >{name || children || "Button"}</button>
     )
 
 }
 
-const UiButton = ({ className, onClick, name, disabled, type }) => {
+const UiButton = ({ className, onClick, name, disabled, type, children }) => {
     return (
         <button
             onClick={onClick}
@@ -72,7 +72,7 @@ text-[0.7rem]
 md:text-sm
 font-montserrat
 `}
-        >{name || "Button"}</button>
+        >{name || children || "Button"}</button>
     )
 
 

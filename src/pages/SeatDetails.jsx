@@ -1,6 +1,6 @@
 
 import AnimatedText from "../components/AnimateText"
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { Link, useParams, useNavigate, redirect, useLoaderData } from 'react-router-dom'
 import {
     Heading,
 }
@@ -25,14 +25,38 @@ import UiButton from "../components/UiButton"
 import { AiOutlineWarning } from "react-icons/ai"
 // import customFetch from "../components/CusotomFetch"
 import { useFilter } from '../Hooks/FilterHooks'
+import customFetch from "../utils/customFetch"
+
+const singleSeat = (id) => {
+    return ({
+        queryKey: ["seat", id],
+        queryFn: async () => {
+            const res = await customFetch.get(`/seat/seatdetails/${id}`)
+            return res.data
+        }
+    })
+}
+
+
+export const loader = (queryClient) => async ({ params }) => {
+    try {
+        await queryClient.ensureQueryData(singleSeat(params.id))
+        return params.id
+    } catch (err) {
+        throw err
+    }
+
+}
+
 
 const SeatDetails = () => {
-    const { id } = useParams()
+    const id = useLoaderData()
 
     const { handleChange: onChange } = useFilter()
     const token = localStorage.getItem("token");
     const [isOpen, setIsOpen] = useState(false)
     const [timer, setTimer] = useState(null)
+
     const handleMouseDown = ({ _id }) => {
         const _timer = setTimeout(() => {
             window.navigator?.vibrate([100])
@@ -80,14 +104,7 @@ const SeatDetails = () => {
     }, [activeSeat])
 
 
- 
-    const [loadingError, setLoadingError] = useState("")
-    const { data: ticketData, isLoading, error } = useQuery({
-        queryKey: ['seatdetailstickets', id],
-        queryFn: async () => axios.get(`/seat/seatdetails/${id}`),
-        staleTime: 6 * 1000,
-        keepPreviousData: true
-    });
+    const {ticketData} = useQuery(singleSeat(id)).data;
     const [seats, setSeats] = useState({})
     const navigate = useNavigate()
 
@@ -122,7 +139,7 @@ const SeatDetails = () => {
         } catch (err) {
             console.log(err)
             // alert("fail to get seat" + err.response.data)
-            setLoadingError(err.response.data)
+            // setLoadingError(err.response.data)
         } finally {
             setActiveSeat((ticket_seat))
             setLoading(false)
@@ -138,33 +155,7 @@ const SeatDetails = () => {
 
 
 
-    if (loading) return <div
-        className="h-[calc(100vh-60px)] !flex-1 w-full grid place-items-center"
-    >
-        <img src="https://i.gifer.com/ZKZg.gif"
-
-            className="object-fit max-w-[100px]"
-        />
-
-    </div>
-    if (loadingError) return (<div className="h-[calc(100%-60px)] !flex-1 w-full grid place-items-center">
-        <div>
-            <img src='https://c.tenor.com/4lA3ViMpstwAAAAj/wait-no.gif' id="no__message" alt='no messages' />
-            <AnimatedText text={loadingError} className="!text-2xl md:!text-3xl" />
-            <Heading text="This   happen because the booking was move " />
-            {/* <Link
-                to={"/notseat?ticket_id="+querySearch.get("ticket_id")}
-            >
-
-                <UiButton name="Check Here"
-                    className="w-[min(400px,calc(100%-40px))] !bg-green-700 !pb-2.5 !pt-1.5"
-                    onClick={() => 0} />
-            </Link> */}
-        </div>
-        <UiButton name="Go Back"
-            className="w-[min(400px,calc(100%-40px))] !pb-2.5 !pt-1.5"
-            onClick={() => navigate(-1)} />
-    </div>)
+    
     return (
         <>
             <Helmet>
@@ -408,7 +399,7 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
                     </div>
                     <div className="flex-1 lg:max-h-[calc(100vh-60px)] overflow-y-auto px-5">
-                        {error ? "some error occurs" : null}
+                      
                         <div>
 
                         </div>

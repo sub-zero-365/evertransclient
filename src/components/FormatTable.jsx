@@ -207,7 +207,12 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                                         <Button admin state={ticket}
                                             href={`/${admin ? "dashboard" : "user"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
                                         />
-                                        {(ticket?.active && !admin) && (
+                                        <Button admin state={ticket}
+                                            name={"edit"}
+                                            className="!bg-blue-800"
+                                            href={`/${admin ? "dashboard/edit" : "user/edit"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
+                                        />
+                                        {/* {(ticket?.active && !admin) && (
                                             <UiButton
                                                 name="Edit"
                                                 className={"!bg-blue-900"}
@@ -215,7 +220,7 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                                                     () => handleEditTicket(ticket)
                                                 }
                                             >Edit</UiButton>
-                                        )}
+                                        )} */}
                                     </td>
                                 </tr>
                             ))

@@ -23,16 +23,11 @@ const AdminLogin = () => {
   const handeSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
-
     try {
       const res = await axios.post(url,
         { phone: number, password },
-        {
-          withCredentials: "include"
-        }
+       
       )
-      localStorage.setItem("admin_token", res?.data?.token);
-      setUserFunction(res.data.user)
       navigate("/dashboard", { replace: true })
     } catch (err) {
       console.log(err?.response);
@@ -43,7 +38,6 @@ const AdminLogin = () => {
       }, 5000);
     }
     finally {
-
       setIsLoading(false)
 
     }

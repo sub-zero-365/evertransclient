@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Modal, DisplayUi, DateUi, PrevButton, NextButton, Heading } from "../components"
-import { useNavigate } from "react-router-dom"
+import { useLoaderData, useNavigate } from "react-router-dom"
 import { NavLink, useSearchParams, useParams } from 'react-router-dom'
 import { motion } from "framer-motion"
 import { TbArmchair2, TbArmchairOff } from 'react-icons/tb'
@@ -25,68 +25,50 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import formatQuery from "../utils/formatQueryStringParams"
 import { paymentOptions } from '../utils/sortedOptions'
-
 import Loader from '../components/Load'
+import customFetch from "../utils/customFetch"
+import { useQuery } from "@tanstack/react-query"
+import { toast } from "react-toastify"
+const singleSeat = (id) => {
+  return ({
+    queryKey: ["seat", id],
+    queryFn: async () => {
+      const res = await customFetch.get("/seat/specific/" + id, {
+
+      })
+      return res.data
+    }
+  })
+}
+const errorToast = (msg = "Please select a seat and continue !!!") => toast.warning(msg)
+
+export const loader = (queryClient) => async ({ params }) => {
+  const id = params.id;
+  console.log("seat id here", id)
+  await queryClient.ensureQueryData(singleSeat(id))
+  return id
+
+}
+
 const
   BusSits = () => {
-    const [seats, setSeats] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [swiper, setSwiper] = useState(null)
+    const [queryParameters] = useSearchParams()
 
-    const [queryParameters, setQueryString] = useSearchParams()
+    const id = useLoaderData()
 
-    const time = queryParameters.get("time")
-    const from = queryParameters.get("from")
-    const to = queryParameters.get("to")
-    const date = queryParameters.get("date")
-
-    const { id } = useParams()
-
-    const getSeats = async () => {
-      setLoading(true)
-
-      try {
-        const res = await axios.get("/seat/specific/" + id, {}, {})
-        setSeats(res.data.seat)
-        setUserInfo(pre => (
-          {
-            ...pre,
-            seat_id: res.data.seat?._id
-          }
-        ))
-        console.log(res.data)
-      } catch (err) {
-        console.log(err.response.data)
-        setToggle(true)
-        setMessage(err.response.data)
-      } finally {
-
-        setLoading(false)
-
-      }
-
-    }
-    useEffect(() => {
-      getSeats()
-
-    }, [])
-
+    const { seat } = useQuery(singleSeat(id)).data;
     const [userInfo, setUserInfo] = useState({
       ...formatQuery(queryParameters.toString()),
       gender: (formatQuery(queryParameters.toString()).gender || "male"),
       triptype: (formatQuery(queryParameters.toString()).triptype || "singletrip"),
     })
-    const [toggle, setToggle] = useState(false)
-    const [message, setMessage] = useState(false)
+    console.log(userInfo)
 
     const navigate = useNavigate()
     const [selected, setSelected] = useState(queryParameters.get("sitpos"))
     const [flag, setFlag] = useState((queryParameters.get("flag") || "vip"))
-    const [error, setError] = useState(false)
-    const [errorMessage, setErrorMessage] = useState("")
 
-    const toggleModal = () => {
-      setError(!error)
-    }
     const checkBusAvailabity = (isTaken, isReserved, id, flag = null) => {
       if (flag) setFlag("classic")
       if (0 == id && isTaken == false && isReserved == false) {
@@ -94,8 +76,7 @@ const
         return
       }
       if (isTaken == true || isReserved == true) {
-        setError(true)
-        setErrorMessage(`Seat has been ${isTaken ? "Taken" : "Reserved"} please choose another one thanks`)
+        errorToast()
         return
       } else {
         setSelected(id)
@@ -110,20 +91,14 @@ const
         return
       }
       if (!selected) {
-        setError(true)
-        setErrorMessage("please select a sit and procced thanks")
+        errorToast()
         return
       }
       gotoCheckOut()
     }
     const gotoCheckOut = () =>
-      navigate(`/information?sitpos=${selected}&name=${userInfo.name}&age=${userInfo.age}&gender=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&date=${userInfo.date}&time=${userInfo.time}&triptype=${userInfo.triptype}&seat_id=${userInfo?.seat_id}&paymenttype=${(userInfo?.paymenttype ?? "Cash In")}&flag=${flag}`)
-    if (!from || !to || !time || !date) {
-      return <div>missing parameters </div>
-    }
-    if (loading) {
-      return <Loader toggle />
-    }
+      navigate(`/information?seatposition=${selected}&fullname=${userInfo.name}&age=${userInfo.age}&sex=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&traveldate=${userInfo.date}&traveltime=${userInfo.time}&triptype=${userInfo.triptype}&seat_id=${id}&paymenttype=${(userInfo?.paymenttype ?? "Cash In")}&flag=${flag}`)
+
     return (
       <>
         <Helmet>
@@ -134,11 +109,7 @@ const
         <div
           className="min-h-screen"
         >
-          <Alert toggle={toggle}
-            duration="30000"
-            message={message}
-            setToggle={setToggle} />
-          <Modal toggle={error} toggleModal={toggleModal} information={errorMessage}  ></Modal>
+
           <div className="flex container mx-auto">
             <div className="flex-1 hidden lg:block max-h-[calc(100vh-60px)]">
               <img src="https://img.freepik.com/free-vector/turn-people-transport-flat-illustration_1284-58398.jpg?size=626&ext=jpg&ga=GA1.2.848633073.1641348984&semt=ais" alt="bus " className="h-full w-full object-cover" />
@@ -188,6 +159,7 @@ const
                 </h1>
               </div>
               <Swiper
+                onSwiper={setSwiper}
                 className="relative"
                 modules={[Pagination, Navigation]}
                 pagination={{
@@ -199,21 +171,17 @@ const
                   nextEl: ".arrow__right",
                 }}
               >
-                {console.log("seat feature ", seats?.bus?.feature)}
 
                 {
 
 
-                  (seats?.bus?.feature == undefined || seats?.bus?.feature == null || seats?.bus?.feature == "vip") ? (
+                  (seat?.bus?.feature == undefined || seat?.bus?.feature == null || seat?.bus?.feature == "vip") ? (
                     <>
-                      <PrevButton className="!left-1.5" />
-                      <NextButton className="!right-1.5" />
                       <SwiperSlide className="group">
                         <Heading text={"First Class"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
-
                         <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                           {
-                            seats?.seat_positions?.slice(0, 20)?.map(({ isTaken, _id, isReserved }, i) => {
+                            seat?.seat_positions?.slice(0, 20)?.map(({ isTaken, _id, isReserved }, i) => {
                               return (
                                 <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
                                   key={_id}
@@ -251,7 +219,7 @@ const
                         <Heading text={"Second Class"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
                         <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                           {
-                            seats?.seat_positions?.slice(20)?.map(({ isTaken, isReserved, _id }, i) => {
+                            seat?.seat_positions?.slice(20)?.map(({ isTaken, isReserved, _id }, i) => {
                               return (
                                 <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
                                   key={_id}
@@ -289,7 +257,7 @@ const
 
                       <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                         {
-                          seats?.seat_positions?.map(({ isTaken, isReserved, _id }, i) => {
+                          seat?.seat_positions?.map(({ isTaken, isReserved, _id }, i) => {
                             return (
                               <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
                                 key={_id}

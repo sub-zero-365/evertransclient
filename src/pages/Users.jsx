@@ -19,24 +19,37 @@ import UiButton from '../components/UiButton';
 import dateFormater from '../utils/DateFormater';
 import { SlOptions } from 'react-icons/sl';
 import ShowBuses from './ShowBuses';
+import customFetch from '../utils/customFetch'
+import { useQuery } from "@tanstack/react-query"
+
+const usersQuery = {
+    querKey: ["user"],
+    queryFn: async () => {
+        const res = await customFetch.get(
+            "/admin/userticketlength"
+        )
+        return res.data
+
+    }
+}
+export const loader = (queryClient) => async ({ params }) => {
+    return await queryClient.ensureQueryData(usersQuery)
+}
 
 const Appointment = ({ skip, currentPage }) => {
-    const token = localStorage.getItem("admin_token");
+
+    const { userdetails: users } = useQuery(usersQuery)?.data || {}
     const data = {}
     const [selected, setSelected] = useState(null)
     const setSelectedNull = () => setSelected(null)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
-    const setuserName = (username) => {
-        dispatch(setUserName(username))
 
-    }
     const password = useRef(null)
     const phone = useRef(null)
     const fullnames = useRef(null)
     const email = useRef(null)
     let [t, setT] = useState(false)
-    // var [m,setM]=useState("")
 
     const handleSubmit = async (e) => {
 
@@ -50,16 +63,13 @@ const Appointment = ({ skip, currentPage }) => {
                 phone: phone.current.value,
                 fullname: fullnames.current.value,
                 email: email.current.value,
-            }, {
-                headers: {
-                    'Authorization': "makingmoney " + token
-                }
-            }
+            },
+
             )
 
             setIsOpen(false)
             setT(true)
-            fetchData()
+            // fetchData()
             setIsLoading(false)
         } catch (err) {
             console.log(err)
@@ -76,62 +86,31 @@ const Appointment = ({ skip, currentPage }) => {
 
     // 
 
-    const users_ = useSelector(state => state.setAdminData.users);
-    const _isLoading = useSelector(state => state.setAdminData.loading.users)
+    // const users_ = useSelector(state => state.setAdminData.users);
     const navigate = useNavigate()
 
-    const dispatch = useDispatch();
-    const setUsers_ = (payload) => {
-        return dispatch(setUsers(payload))
-    }
+    // const dispatch = useDispatch();
+    // const setUsers_ = (payload) => {
+    //     return dispatch(setUsers(payload))
+    // }
     const [text, setText] = useState("")
 
-    async function fetchData() {
-        const url = "/admin/userticketlength"
-
-        if (token == null) {
-            navigate("/auth?message=please login again ")
-        }
-        try {
-            const response = await axios.get(url, {
-                headers: {
-                    'Authorization': "makingmoney " + token
-                },
-                params: {
-                    search: text
-                }
-            })
-            setUsers_([...response?.data?.userdetails]);
-            setUserData({
-                ...{
-                    labels: [...response?.data?.userdetails].map((v) => v.fullname),
-                    datasets: [
-                        {
-                            label: "ticket vs user data",
-                            data: [...response?.data?.userdetails].map((v) => v.total)
-
-                        },
-                    ]
-
-                }
-
-            })
-        } catch (err) {
-            setUsers_([])
-            alert("fail to get users")
-            console.log(err)
-        }
-    }
-
     useEffect(() => {
+        setUserData({
+            ...{
+                labels: users?.map((v) => v.fullname),
+                datasets: [
+                    {
+                        label: "ticket vs user data",
+                        data: users?.map((v) => v.total)
 
+                    },
+                ]
 
-        fetchData()
+            }
 
-
-
-    }, [text])
-
+        })
+    }, [users])
 
 
 
@@ -179,7 +158,7 @@ const Appointment = ({ skip, currentPage }) => {
 
             </ShowBuses>
             <div className="flex gap-x-1 items-center">
-                <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users_?.length}</h2>
+                <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users?.length}</h2>
             </div>
             <div className="lg:flex lg:mb-14 w-full  lg:px-10">
                 <div className={` flex-1 relative  text-xs mx-0   rounded-lg `}
@@ -277,244 +256,19 @@ z-10  "
                             type={"tel"}
                             name={"Phone Number"}
                         />
-                        {/* <div className="relative mb-6" data-te-input-wrapper-init>
-                            <input ref={fullnames}
-                                type="text"
-                                className="peer block min-h-[auto] w-full 
-              rounded 
-              border-2
-              focus:border-2
-              focus:border-blue-400
-              valid:border-blue-400
-              bg-transparent
-              px-3 py-[0.32rem]
-              leading-[2.15] 
-              outline-none
-              transition-all 
-              duration-200
-              ease-linear
-              focus:placeholder:opacity-100
-              data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                                id="fullname"
-                                placeholder="Full Names" required />
-                            <label
-                                htmlFor="fullname"
-                                className="pointer-events-none 
-              absolute left-3
-              top-0 mb-0
-              max-w-[90%]
-              origin-[0_0]
-              truncate 
-              pt-[0.37rem] 
-              leading-[2.15]
-              text-neutral-500
-              transition-all duration-200  
-              ease-out 
-              peer-focus:-translate-y-[1.15rem]
-              peer-focus:scale-[0.8]
-              peer-valid:scale-[0.8]
-              peer-valid:text-blue-400
-              peer-valid:-translate-y-[1.15rem]
-              peer-focus:text-blue-400
-              peer-focus:bg-white
-              peer-valid:bg-white
-              dark:peer-focus:bg-color_dark
-              dark:peer-valid:bg-color_dark
-              px-0
-              bg-transparent
-              peer-data-[te-input-state-active]:-translate-y-[1.15rem]
-               rounded-sm
-               peer-data-[te-input-state-active]:scale-[0.8]
-              motion-reduce:transition-none
-              dark:text-neutral-200
-              dark:peer-focus:text-primary"
 
-                            >
-                                Full Names
-                            </label>
-                        </div> */}
-                        {/* <div className="relative mb-6" data-te-input-wrapper-init>
-                            <input ref={phone}
-                                type="tel"
-                                className="peer block min-h-[auto] w-full 
-              rounded 
-              border-2
-              focus:border-2
-              focus:border-blue-400
-              valid:border-blue-400
-              bg-transparent
-              px-3 py-[0.32rem]
-              leading-[2.15] 
-              outline-none
-              transition-all 
-              duration-200
-              ease-linear
-              focus:placeholder:opacity-100
-              data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                                id="phonenumber"
-                                placeholder="Phone number" required />
-                            <label
-                                htmlFor="phonenumber"
-                                // className="
-                                // pointer-events-none 
-                                // absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0]
-                                // truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200
-                                // ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-                                className="pointer-events-none 
-              absolute left-3
-              top-0 mb-0
-              max-w-[90%]
-              origin-[0_0]
-              truncate 
-              pt-[0.37rem] 
-              leading-[2.15]
-              text-neutral-500
-              transition-all duration-200  
-              ease-out 
-              peer-focus:-translate-y-[1.15rem]
-              peer-focus:scale-[0.8]
-              peer-valid:scale-[0.8]
-              peer-valid:text-blue-400
-              peer-valid:-translate-y-[1.15rem]
-              peer-focus:text-blue-400
-              peer-focus:bg-white
-              peer-valid:bg-white
-              dark:peer-focus:bg-color_dark
-              dark:peer-valid:bg-color_dark
-              px-0
-              bg-transparent
-              peer-data-[te-input-state-active]:-translate-y-[1.15rem]
-               rounded-sm
-               peer-data-[te-input-state-active]:scale-[0.8]
-              motion-reduce:transition-none
-              dark:text-neutral-200
-              dark:peer-focus:text-primary"
-
-                            >
-                                Phone Number
-                            </label>
-                        </div> */}
                         <InputBox
                             inputRef={email}
                             type={"email"}
                             name={"Email Address"}
                         />
-                        {/* <div className="relative mb-6" data-te-input-wrapper-init>
-                            <input ref={email}
-                                type="email"
-                                className="peer block min-h-[auto] w-full 
-              rounded 
-              border-2
-              focus:border-2
-              focus:border-blue-400
-              valid:border-blue-400
-              bg-transparent
-              px-3 py-[0.32rem]
-              leading-[2.15] 
-              outline-none
-              transition-all 
-              duration-200
-              ease-linear
-              focus:placeholder:opacity-100
-              data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                                id="exampleFormControlInput3"
-                                placeholder="Email address" required />
-                            <label
-                                htmlFor="exampleFormControlInput3"
-                                // className="
-                                // pointer-events-none 
-                                // absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0]
-                                // truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200
-                                // ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-                                className="pointer-events-none 
-              absolute left-3
-              top-0 mb-0
-              max-w-[90%]
-              origin-[0_0]
-              truncate 
-              pt-[0.37rem] 
-              leading-[2.15]
-              text-neutral-500
-              transition-all duration-200  
-              ease-out 
-              peer-focus:-translate-y-[1.15rem]
-              peer-focus:scale-[0.8]
-              peer-valid:scale-[0.8]
-              peer-valid:text-blue-400
-              peer-valid:-translate-y-[1.15rem]
-              peer-focus:text-blue-400
-              peer-focus:bg-white
-              peer-valid:bg-white
-              dark:peer-focus:bg-color_dark
-              dark:peer-valid:bg-color_dark
-              px-0
-              bg-transparent
-              peer-data-[te-input-state-active]:-translate-y-[1.15rem]
-               rounded-sm
-               peer-data-[te-input-state-active]:scale-[0.8]
-              motion-reduce:transition-none
-              dark:text-neutral-200
-              dark:peer-focus:text-primary"
 
-                            >Email address
-                            </label>
-                        </div> */}
                         <InputBox
                             inputRef={password}
                             type={"password"}
                             name={"Password"}
                         />
-                        {/* <div className="relative mb-6" data-te-input-wrapper-init>
-                            <input ref={password}
-                                type="password"
-                                className="
-              peer block min-h-[auto] border-2 w-full rounded shadow-none
-              focus:border-2
-              focus:border-blue-400
-              valid:border-blue-400
-              bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none
-              transition-all duration-200 ease-linear
-              focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100
-              motion-reduce:transition-none
-              dark:text-neutral-200
-              dark:placeholder:text-neutral-200
-              [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                                id="exampleFormControlInput33"
-                                placeholder="Password" required />
-                            <label
-                                htmlFor="exampleFormControlInput33"
-                                className="pointer-events-none 
-              absolute left-3
-              top-0 mb-0
-              max-w-[90%]
-              origin-[0_0]
-              truncate 
-              pt-[0.37rem] 
-              leading-[2.15]
-              text-neutral-500
-              transition-all duration-200  
-              ease-out 
-              peer-focus:-translate-y-[1.15rem]
-              peer-focus:scale-[0.8]
-              peer-valid:scale-[0.8]
-              peer-valid:text-blue-400
-              peer-valid:-translate-y-[1.15rem]
-              peer-focus:text-blue-400
-              peer-focus:bg-white
-              peer-valid:bg-white
-              dark:peer-focus:bg-color_dark
-              dark:peer-valid:bg-color_dark
-              px-0
-              bg-transparent
-              peer-data-[te-input-state-active]:-translate-y-[1.15rem]
-               rounded-sm
-               peer-data-[te-input-state-active]:scale-[0.8]
-              motion-reduce:transition-none
-              dark:text-neutral-200
-              dark:peer-focus:text-primary"
-                            >Password
-                            </label>
-                        </div> */}
+
 
                         <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
 
@@ -605,7 +359,7 @@ dark:text-gray-400 transition-colors duration-[2s]">
 
                         >
                             {
-                                users_?.map((user, index) => {
+                                users?.map((user, index) => {
                                     const { fullname, phone, createdAt, _id, total } = user
                                     return (
                                         <tr key={index}

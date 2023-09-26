@@ -4,11 +4,13 @@ import {
 } from '@tanstack/react-query'
 import {
     Link,
-    useSearchParams, useNavigate
+    useSearchParams, useNavigate, useLoaderData
 } from "react-router-dom"
 import { useEffect, useState } from 'react'
 import { Heading } from '../components'
 import AnimateText from '../components/AnimateText'
+import LoadingButton from '../components/LoadingButton'
+
 import {
     motion,
     AnimatePresence
@@ -17,61 +19,47 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import Marquee from 'react-fast-marquee'
 import { useFilter } from '../Hooks/FilterHooks'
+import customFetch from "../utils/customFetch"
+import UiButton from '../components/UiButton'
+const busQuery = params => ({
+    queryKey: ["buses", { params }],
+    queryFn: async () => {
+        const { data } = await customFetch.get('/seat/getstatic', {
+            params: {
+                ...params
+            },
+        });
+        return data;
+    },
+
+})
+export const loader = (queryClient) => async ({ request }) => {
+    const params = Object.fromEntries([
+        ...new URL(request.url).searchParams.entries(),
+    ]);
+    console.log(params)
+    await queryClient.ensureQueryData(busQuery(params));
+    return { searchValues: { ...params } }
+}
+
 const FindBus = () => {
     const { handleFilterChange } = useFilter()
-    // const [isLoading, setIsLoading] = useState(true)
     const [querySearch] = useSearchParams();
     const [selected, setSelected] = useState(querySearch.get("bus"));
-    const from = querySearch.get("from")
-    const to = querySearch.get("to")
-    const date = querySearch.get("date")
-    const time = querySearch.get("time")
-
-    const getBuses = async () => {
-
-        try {
-            const res = await axios.get("/seat/getstatic", {
-                params: {
-                    from,
-                    traveldate: date,
-                    to,
-                    traveltime: time
-                }
-            })
-            console.log(res.data)
-            return res.data
-
-        } catch (err) {
-            console.log("error : ", err)
-        }
-
-
-    }
-
-    const { loading, data, error, isError, isLoading } = useQuery({
-        queryKey: ["findbus", {
-            from, to, date
-        }
-        ],
-        queryFn: getBuses
-    })
-
+    const { searchValues } = useLoaderData()
+    const { data } = useQuery(busQuery(searchValues))
     const [bus, setBus] = useState({})
-
     useEffect(() => {
-
         if (selected) {
             const currentbus = data?.seats?.find(({ _id }) => _id === selected)
-            handleFilterChange("bus", selected)
-            setBus(currentbus)
+            // handleFilterChange("bus", selected)
+            // setBus(currentbus)
+            return 
         }
-
     }, [selected])
     const navigate = useNavigate()
     const Next = async () => {
-        if (selected == null) return alert("please selected a bus")
         return navigate(`/bussits/${selected}?${querySearch.toString()}`)
-
     }
     const BusDetail = ({ _id, number_of_seats, seat_positions, from, to, bus }) => {
         const busType = bus?.feature && bus.feature == "Normal Bus" || bus?.feature == "classic"
@@ -87,15 +75,12 @@ const FindBus = () => {
                     (selected === _id) && (
                         <Marquee >
                             <p
-                            className='text-rose-700'
-                            
-                            >{busType?"this is a classic bus all seat prices are thesame ":"this is a vip bus  prices ranges from seats to seats"}</p>
+                                className='text-rose-700'
+
+                            >{busType ? "this is a classic bus all seat prices are thesame " : "this is a vip bus  prices ranges from seats to seats"}</p>
                         </Marquee>
                     )}
-                <div className="flex hidden justify-between pt-0.5 px-4 border-b pb-1 ">
-                    <p>Plate Number</p>
-                    <p>{_id}</p>
-                </div>
+
                 <div className="grid grid-cols-2 mb-2">
                     <Heading text={"From"} className="!mb-0 !text-sm !font-semibold" />
                     <Heading text={"Destination"} className="!mb-0 !text-sm !font-semibold" />
@@ -116,14 +101,6 @@ const FindBus = () => {
                 </div>
             </div>
         )
-    }
-    if (isLoading) {
-        return <div className="min-h-screen bg-slate-50 grid items-center text-3xl lg:text-4xl text-center"
-        >Loading buses </div>
-    }
-    if (isError) {
-        return <div className="min-h-screen bg-slate-50 grid items-center text-3xl lg:text-4xl text-center"
-        >Oops Something Went wrong </div>
     }
 
 
@@ -196,20 +173,12 @@ const FindBus = () => {
 
                                     className="lg:hidden min-h-8
     flex items-center justify-center mt-5 fixed left-0 bottom-8 w-full">
-                                    <button
-
-                                        onClick={Next}
-                                        data-te-ripple-init
-                                        data-te-ripple-color="light"
-                                        class="inline-block  rounded bg-blue-500 cal-width [--w:400px]  pb-2 pt-2.5 text-sm font-montserrat font-medium uppercase
-leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-transition duration-150 ease-in-out hover:bg-primary-600
-hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                                    <LoadingButton onClick={Next}
+                                        className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
                                     >
-                                        Next <AiOutlineArrowRight className="!inline-block " />
-                                    </button>
+                                        Next <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " />
+                                    </LoadingButton>
+
                                 </motion.div>
                             )
                         }
@@ -226,31 +195,11 @@ focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-
                         <BusDetail {...bus} />
 
                     </motion.div>
-                    <button
-                        type="submit"
-                        className="hidden lg:inline-block bg-blue-400 
-              w-full rounded bg-primary px-7
-              pb-2.5 pt-3 text-sm font-medium
-              uppercase leading-normal
-              text-white
-              shadow-[0_4px_9px_-4px_#3b71ca]
-              transition duration-150
-              ease-in-out hover:bg-primary-600
-              hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-              focus:bg-primary-600 
-              focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-              focus:outline-none focus:ring-0 active:bg-primary-700 
-              active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-              dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
-              dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-              dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-              dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                        data-te-ripple-init
-                        data-te-ripple-color="light"
-                        onClick={Next}
+                    <LoadingButton onClick={Next}
+                        className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
                     >
-                        Next <AiOutlineArrowRight className="!inline-block " />
-                    </button>
+                        Next <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " />
+                    </LoadingButton>
                 </div>
             </div>
 

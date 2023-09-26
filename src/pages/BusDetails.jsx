@@ -1,143 +1,84 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { Heading, Form, NextButton, PrevButton } from '../components'
+import { Heading } from '../components'
 import { useEffect, useState, useRef } from 'react';
-import axios from 'axios'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { useSearchParams } from 'react-router-dom'
+import {  useLoaderData, Form, useNavigation, redirect } from 'react-router-dom'
 import formatQuery from "../utils/formatQueryStringParams"
-import { AnimateError } from '../components'
-// import { toast } from 'react-toastify'
 import { motion } from 'framer-motion'
-// import { FiRefreshCcw } from 'react-icons/fi'
-import { components, style } from "../utils/reactselectOptionsStyles"
 import { toast } from 'react-toastify'
-import { BsSliders2Vertical } from 'react-icons/bs'
-import { ToggleSwitch } from '../components'
-import "swiper/css"
-import "swiper/css/navigation"
-import "swiper/css/pagination"
-import "swiper/css/autoplay"
-import "swiper/css/a11y"
-import "swiper/css/scrollbar"
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
 
 import UiButton, { UiButtonDanger } from '../components/UiButton';
 import AnimatedText from '../components/AnimateText';
+import { useQuery } from "@tanstack/react-query"
+import customFetch from '../utils/customFetch'
+const singleBusQuery = (id) => {
+    return ({
+        queryKey: ["bus", id],
+        queryFn: async () => {
+            const res = await customFetch.get(`/bus/${id}`)
+            return res.data
+        }
+    })
+}
 
-const token = localStorage.getItem("admin_token");
+export const action = (queryClient) => async ({ request }) => {
+    try {
+        const form = await request.formData()
+        const  id  = form.get("id")
+        await customFetch.delete("/bus/" + id)
+        queryClient.invalidateQueries({
+            queryKey: ["buses"]
+        })
+        return redirect("/bus")
+    }
+    catch (err) {
+        console.log(err)
+        toast.warning("something went wrong try again")
+        return err
+    }
+
+}
+
+export const loader = (queryClient) => async ({ params }) => {
+    try {
+        await queryClient.ensureQueryData(singleBusQuery(params.id))
+        return params.id
+    } catch (err) {
+        throw err
+    }
+}
 
 const BusDetails = () => {
-    const navigate = useNavigate()
-
-    const [querySearch, setQuerySearch] = useSearchParams();
-    // const [tracking_id, setTracking_id] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
+    const navigation = useNavigation()
+    const isSubmitting = navigation.state === "submitting"
+    const id = useLoaderData()
     const [isOpen, setIsOpen] = useState(false);
-    const [err, setErr] = useState(null)
-    const [currentOpt, setCurrentOption] = useState([])
-    const handleFilterChange = (key, value = null) => {
-        setQuerySearch(preParams => {
-            if (value == null) {
-                preParams.delete(key)
-            } else {
-                preParams.set(key, value)
-            }
-            return preParams
-        })
-
-    }
-
-    const { id } = useParams();
-    const [bus, setBus] = useState([])
-    // toast.promise(handleDeleteBus().then((data) => {
-    //     navigate(-1)
-    // }), {
-    //     pending: "please wait deleting...",
-    //     success: " Done deleting",
-    //     error: "Something went wrong ,try again later"
-
-    // })
+    const { bus } = useQuery(singleBusQuery(id)).data ?? {}
     const [text, setText] = useState("")
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        toast.promise(handleDeleteBus().
-            then((data) => {
-                navigate(-1)
-            }), {
-            pending: "please wait deleting...",
-            success: " Done deleting",
-            error: "Something went wrong ,try again later"
+   
 
-        })
-    }
-    const handleDeleteBus = async () => {
-        return axios.delete("/bus/" + id, {
-            headers: {
-                'Authorization': "makingmoney " + token
-            },
-        })
-
-    }
-    const getBus = async () => {
-        setIsLoading(true)
-        try {
-            const res = await axios.get("/bus/" + id,
-                {
-                    headers: {
-                        'Authorization': "makingmoney " + token
-                    },
-                    // params: formatQuery(querySearch.toString())
-                }
-            )
-
-            // setCurrentOption(__)
-            setBus(res.data)
-            // setTickets(res.data?.tickets)
-            console.log(res.data)
-
-        } catch (err) {
-            console.log("error : ", err)
-
-        }
-        finally {
-            setIsLoading(false)
-        }
-
-    }
-
-
-    const [togglename, setToggleName] = useState(true);
-
-    useEffect(() => {
-        getBus()
-    }, [querySearch])
-    if (isLoading) return <div>Loading bus Details</div>
     return (
         <div className='!flex-1 h-[calc(100vh-60px)] container mx-auto overflow-y-auto pb-24'>
-        <nav class="flex mb-5 mt-5 px-5 " aria-label="Breadcrumb">
-                    <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                        <li class="inline-flex items-center">
-                            <Link
-                                relative="path"
-                                to={"../"}
-                                href="#" class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                                bus
-                            </Link>
-                        </li>
-                        <li>
-                            <div class="flex items-center" >
-                                <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                                <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
-                                    <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Bus Details</h1>
-                                </a>
-                            </div>
-                        </li>
+            <nav class="flex mb-5 mt-5 px-5 " aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <Link
+                            relative="path"
+                            to={"../"}
+                            href="#" class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                            bus
+                        </Link>
+                    </li>
+                    <li>
+                        <div class="flex items-center" >
+                            <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                            <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                                <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Bus Details</h1>
+                            </a>
+                        </div>
+                    </li>
 
-                    </ol>
-                </nav>
+                </ol>
+            </nav>
             <div
                 className={`overlay ${isOpen && "active"} transition-[visible] duration-100
       group grid place-items-center `}
@@ -166,13 +107,19 @@ const BusDetails = () => {
 
                     <AnimatedText text="Delete Bus !!"
                         className='!mb-1 !text-lg !text-rose-600 !text-center capitalize' />
-                    <p className="text-lsm !font-montserrat !text-center mb-6">Enter Bus name to delete Bus: <span className="!text-sm !text-rose-600">{bus?.bus?.name}</span></p>
-                    <form
-                        onSubmit={handleSubmit}
+                    <p className="text-lsm !font-montserrat !text-center mb-6">Enter Bus name to delete Bus: <span className="!text-sm !text-rose-600">{bus?.name}</span></p>
+                    <Form
+                        method="post"
                         className='px-5'
                     >
 
                         <div className="relative mb-6" data-te-input-wrapper-init>
+
+                            <input
+                                type="hidden"
+                                name="id"
+                                value={id}
+                            />
                             <input
                                 value={text}
                                 onChange={e => setText(e.target.value)}
@@ -230,15 +177,22 @@ const BusDetails = () => {
                                 Enter Bus Name
                             </label>
                         </div>
-                        <UiButtonDanger
-                            disabled={
-                                (text !== bus?.bus?.name)
-                            }
-                            name="DELETE BUS" className="" />
+                        {
+                            isSubmitting ? <UiButton
+                                type="button"
+                                name="loading please wait"
+                            /> : <UiButtonDanger
+                                disabled={
+                                    (text !== bus?.name)
+                                }
+                                type="submit"
+                                name="DELETE BUS" className="" />
+                        }
 
 
 
-                    </form>
+
+                    </Form>
                 </div>
             </div>
             <AnimatedText text={"Bus Details "} className='!text-3xl !text-center lg:!text-4xl w-full' />
@@ -248,15 +202,15 @@ const BusDetails = () => {
                     <div className='lg:w-[40rem] space-y-4'>
                         <div className="flex px-4 justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
                             <Heading text={"Name "} className={"!font-black !pl-0 !mb-0  "} />
-                            <p>{bus?.bus?.name || "n/a"}</p>
+                            <p>{bus?.name || "n/a"}</p>
                         </div>
                         <div className="flex px-4 justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
                             <Heading text={"Capacity"} className={"!font-black !pl-0 !mb-0  "} />
-                            <p>{bus?.bus?.number_of_seats || "n/a"}</p>
+                            <p>{bus?.number_of_seats || "n/a"}</p>
                         </div>
                         <div className="flex px-4 justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
                             <Heading text={"Plate Number"} className={"!font-black !pl-0 !mb-0  "} />
-                            <p>{bus?.bus?.plate_number || "n/a"}</p>
+                            <p>{bus?.plate_number || "n/a"}</p>
                         </div>
                         <div className="flex px-4 justify-between items-center  flex-wrap pb-0.5 dark:border-slate-400 border-b-2">
                             <Heading text={"Trip Completed"} className={"!font-black !pl-0 !mb-0  "} />

@@ -1,92 +1,50 @@
-import { useRef, useState, useEffect } from "react"
-import axios from 'axios'
-import { useDispatch } from 'react-redux';
-import { setUserName } from "../actions/userName"
-import { useNavigate, useSearchParams } from "react-router-dom"
-import { Loadingbtn } from "../components";
-import { motion } from "framer-motion"
-import Alert from '../components/Alert'
+
+
+import { useNavigate, useSearchParams, Form, useNavigation, redirect, useLoaderData, useActionData } from "react-router-dom"
+import UiButton from "../components/UiButton";
+import { toast } from "react-toastify"
+import customFetch from "../utils/customFetch";
+import { useState, useEffect } from "react"
+export const loader = async ({ request }) => {
+  const params = Object.fromEntries([
+    ...new URL(request.url).searchParams.entries(),
+  ]);
+  return (params?.message || null)
+}
+export const action = (queryClient) => async ({ request }) => {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  try {
+    await customFetch.post('/auth/login', data);
+    queryClient.invalidateQueries();
+
+    toast.success('Login successful');
+    return redirect("/user", { replace: true })
+  } catch (error) {
+    console.log("logging error", error?.response?.data)
+    toast.error(error?.response?.data);
+    return error?.response?.data;
+  }
+}
+
 const Login = () => {
-  const [qs] = useSearchParams()
-  const message = qs.get("message")
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("")
-  const [toggle, setToggle] = useState(false)
+  const navigation = useNavigation()
+  const isSubmitting = navigation.state == "submitting"
+  const errorMessageFromLoader = useLoaderData()
+  var errorMessageFromAction = useActionData()
+  const [err, setError] = useState(null)
   useEffect(() => {
-    if (message) {
-      setToggle(true)
-    }
-
-  }, [])
-  const navigate = useNavigate();
-  const password = useRef(null)
-  const phone = useRef(null)
-  const dispatch = useDispatch();
-  const setuserName = (username) => {
-
-    dispatch(setUserName(username))
-
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsLoading(true)
-
-
-    const url ="/auth/login"
-    try {
-      const res = await axios.post(
-        url, {
-        password: password.current.value,
-        phone: phone.current.value,
-      }
-      )
-      // const { data:
-      //   { user: {
-      //     fullname
-      //   },
-      //     token }
-      // } = res
-      setuserName(res.data?.user?.fullname)
-
-      if ("redirect" in res.data?.user) {
-        localStorage.setItem("assist_token", res.data.token);
-        console.log("token when loading as assistant",res)
-        navigate("/assistant")
-        return
-      }
-      localStorage.removeItem("token");
-      localStorage.setItem("token", res.data.token)
-      navigate("/user")
-      console.log(res.data)
-
-    } catch (err) {
-      console.log(err)
-      setIsLoading(false)
-      setError(err.response.data);
+    if (errorMessageFromAction) {
+      setError(errorMessageFromAction)
       const timer = setTimeout(() => {
+        setError(null)
         clearTimeout(timer)
-        setError("")
-      }, 5000);
-
-
+      }, 3000)
     }
-
-  }
-
-
-
+  }, [errorMessageFromAction, err])
   return (
     <section className="h-screen">
-      <Alert toggle={toggle} setToggle={setToggle}
 
-        duration="30000"
-        confirmFunc={() => setToggle(false)}
-        message={message}
-        className={`
-      ${toggle && "!top-1/2 -translate-y-1/2"}
-      `}
-      />
       <div className="container h-full px-6 py-24">
         <div
           className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
@@ -98,10 +56,14 @@ const Login = () => {
           </div>
 
           <div className="md:w-8/12 lg:ml-6 lg:w-5/12">
-            <form onSubmit={handleSubmit}>
+            <Form method="post">
+              {errorMessageFromLoader && <p
+                className="text-rose-600 text-center "
+              >{errorMessageFromLoader}</p>}
               <div className="relative mb-6" data-te-input-wrapper-init>
-                <input ref={phone}
+                <input
                   type="tel"
+                  name="phone"
                   className="peer block min-h-[auto] w-full 
               rounded 
               border-2
@@ -156,7 +118,8 @@ const Login = () => {
               </div>
 
               <div className="relative mb-6" data-te-input-wrapper-init>
-                <input ref={password}
+                <input
+                  name="password"
                   type="password"
                   className="
               peer block min-h-[auto] border-2 w-full rounded shadow-none
@@ -207,48 +170,24 @@ const Login = () => {
                 </label>
               </div>
 
-              <div className="mb-6 flex items-center justify-between  text-lg font-medium md:text-xl text-orange-600">
-                <motion.h1
-                  animate={{
-                    opacity: error ? 1 : 0,
-                    //  y:error?0:-40,
-                    x: error ? [-100, 100, 0, -100, 100, 0] : null
+              {err && <p
 
-                  }}
-                  transition={{ duration: 0.3 }}
+                className="text-rose-600 "
+              >{err}</p>}
 
+              <UiButton
+                disabled={isSubmitting}
+                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-sm"
 
-                  className="text-center w-fit flex-none mx-auto tracking-[0.4rem]  ">  {error}</motion.h1>
-              </div>
-
-              <button
                 type="submit"
-                className="inline-block bg-blue-400
-            w-full rounded bg-primary px-7
-            pb-2.5 pt-3 text-sm font-medium
-            uppercase leading-normal
-            text-white
-            shadow-[0_4px_9px_-4px_#3b71ca]
-            transition duration-150
-            ease-in-out hover:bg-primary-600
-            hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            focus:bg-primary-600 
-            focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-            focus:outline-none focus:ring-0 active:bg-primary-700 
-            active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
-            dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                data-te-ripple-init
-                data-te-ripple-color="light">
-                {isLoading ? <Loadingbtn /> : "Sign In"}
+              >
+                {isSubmitting ? "please wait " : "Login"}
 
-              </button>
+              </UiButton>
 
-        
 
-            </form>
+
+            </Form>
           </div>
         </div>
       </div>

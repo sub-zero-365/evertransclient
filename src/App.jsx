@@ -1,13 +1,24 @@
 import { lazy, Suspense } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
+import {
+  ToastContainer
+} from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
 import { useEffect, useState } from 'react'
 import axios from "axios"
 import { UserLayout, DashboardLayout, ProtectedRoute } from "./components";
 import { Home, Auth, SingleTicket } from "./pages";
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import ContactLayout from "./pages/ContactLayout"
+import {
+  BrowserRouter,
+  Routes, Route
+  , RouterProvider,
+  createBrowserRouter
+}
+  from 'react-router-dom'
 
+import { ErrorElement } from './components'
+
+
+import ContactLayout from "./pages/ContactLayout"
 import 'react-datepicker/dist/react-datepicker.css'
 import "swiper/css"
 import "swiper/css/navigation"
@@ -25,9 +36,34 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import ScrollTo from "./withRouter"
+import { loader as findBusLoader } from "./pages/FindBus"
+import { loader as busSitLoader } from "./pages/BusSits"
+import { loader as checkOutLoader, action as checkOutAction } from './pages/CheckOutInfo'
+import { loader as loginLoader, action as loginAction } from './pages/Login'
+import { loader as protectLoader } from "./components/ProtectedRoute"
+import { loader as singleTicketLOader } from "./pages/SingleTicket"
+import { loader as singleSeatLoader } from "./pages/SeatDetails"
+import { loader as dashboardLayoutLoader } from "./components/DashboardLayout"
+import { loader as ticketsloader } from "./pages/Appointment"
+import { loader as usersLoader } from "./pages/Users"
+import { loader as userLoader } from "./pages/userDetails"
+import { loader as seatsLoader } from "./pages/Seats"
+import { loader as ticketsLoader } from "./pages/UserBoard"
+import { loader as busLoader } from "./pages/Bus"
+import { loader as singleBusLoader, action as singleBusAction } from "./pages/BusDetails"
 
+import SingleTicketErrorElement from './components/SingleTicketErrorElement'
+import EditSingleTicket from './pages/EditSingleTicket'
+import DashboardHome from "./pages/DashBoardHome"
+
+const FallBack = () => (<div className="h-screen w-full
+bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</div>)
 const queryClient = new QueryClient()
 const ContactUs = lazy(() => import("./pages/Contact"));
+const FindBusSingle = lazy(() => import("./pages/FindBusSingle"))
+const BusesSingle = lazy(() => import("./pages/BusesSingle"))
 const Seat = lazy(() => import("./pages/Seats"));
 const Assistant = lazy(() => import("./pages/Assistant"));
 const Bus = lazy(() => import("./pages/Bus"));
@@ -44,7 +80,6 @@ const BusSits = lazy(() => import("./pages/BusSits"));
 const Cities = lazy(() => import("./pages/Cities"));
 const Users = lazy(() => import("./pages/Users"));
 const Security = lazy(() => import("./pages/SecurityPage"))
-const DashboardHome = lazy(() => import("./pages/DashBoardHome"));
 // const AdminAssistant = lazy(() => import("./pages/AdminContact"));
 const Details = lazy(() => import("./pages/userDetails"));
 const SeatDetails = lazy(() => import("./pages/SeatDetails"));
@@ -52,7 +87,6 @@ const DashRegister = lazy(() => import("./pages/DashRegister"));
 const BusDetails = lazy(() => import("./pages/BusDetails"));
 const FindBus = lazy(() => import("./pages/FindBus"));
 const Assist = lazy(() => import("./pages/Assistant.user"));
-
 axios.defaults.withCredentials = true;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = process.env.REACT_APP_LOCAL_URL
@@ -62,54 +96,304 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = process.env.REACT_APP_PROD_URL
 
 }
+const checkDefaultTheme = () => {
+
+  if (localStorage.theme === 'dark' || (
+    window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark')
+    return true
+  } else {
+    document.documentElement.classList.remove('dark')
+    return true
+  }
+
+};
+const isDarkThemeEnabled = checkDefaultTheme();
+const router = createBrowserRouter([
+  {
+    element:
+      <UserLayout
+        isDarkThemeEnabled={isDarkThemeEnabled}
+
+      />
+    ,
+    errorElement: <ErrorElement
+
+    />,
+
+    children: [
+      {
+        element: <Home
+
+        />,
+        index: true,
+      },
+
+      {
+        element:
+          <Suspense fallback={<FallBack />}>
+            <Login />
+          </Suspense>
+        ,
+        path: "login",
+        loader: loginLoader,
+        action: loginAction(queryClient)
+      }
+      ,
+      {
+        element:
+          <Suspense fallback={<FallBack />}>
+            <Auth />
+          </Suspense>
+        ,
+        path: "auth",
+        loader: loginLoader,
+        action: loginAction(queryClient)
+      }
+      ,
+      {
+        element: <ProtectedRoute
+          queryClient={queryClient}
+          isDarkThemeEnabled={isDarkThemeEnabled}
+        />,
+        loader: protectLoader(queryClient),
+        children: [
+
+          {
+            element:
+              <Suspense fallback={<FallBack />}>
+                <Booking />
+              </Suspense>
+            ,
+            path: "booking"
+
+          },
+          {
+            element:
+
+              <Suspense fallback={<FallBack />}>
+                <FindBus />
+              </Suspense>
+            ,
+            path: "bus",
+            loader: findBusLoader(queryClient)
+          },
+          {
+            element:
+              <Suspense fallback={<FallBack />}>
+                <BusSits />
+              </Suspense>
+            ,
+            path: "bussits/:id",
+            loader: busSitLoader(queryClient)
+          },
+          {
+            element:
+              <Suspense fallback={<FallBack />}>
+                <CheckOutInfo />
+              </Suspense>
+            ,
+            path: "information",
+            loader: checkOutLoader,
+            action: checkOutAction(queryClient)
+          },
+          {
+            element:
+              <Suspense fallback={<FallBack />}>
+                <UserBoard />
+              </Suspense>
+
+            ,
+            loader: ticketsLoader(queryClient),
+            path: "user",
+
+          },
+          {
+            element:
+              <Suspense fallback={<FallBack />}>
+                <SingleTicket />
+              </Suspense>
+            ,
+            path: "user/:id",
+            loader: singleTicketLOader(queryClient),
+            errorElement: <SingleTicketErrorElement />
+
+          },
+          {
+            element:
+              <Suspense fallback={<FallBack />}>
+                <EditSingleTicket />
+              </Suspense>
+            ,
+            path: "user/edit/:id",
+            loader: singleTicketLOader(queryClient),
+            errorElement: <SingleTicketErrorElement />,
+            children: [
+              {
+                index: true,
+                element: <Suspense>
+                  <FindBusSingle />
+                </Suspense>
+              },
+              {
+                path: "buses",
+                element: <Suspense>
+                  <BusesSingle />
+                </Suspense>
+              },
+            ]
+
+          },
+          {
+            element:
+              <Suspense fallback={<FallBack />}>
+                <Seat />
+              </Suspense>
+            ,
+            path: "seat",
+            loader: seatsLoader(queryClient),
+            errorElement: <SingleTicketErrorElement />
+
+          },
+          {
+            element:
+              <Suspense fallback={<FallBack />}>
+                <SeatDetails />
+              </Suspense>
+            ,
+            path: "seat/:id",
+            loader: singleSeatLoader(queryClient),
+            errorElement: <SingleTicketErrorElement />
+
+          },
 
 
+
+        ]
+      }
+
+      ,
+      {
+        path: "about",
+        element: <Suspense fallback={<FallBack />}>
+          <Aboutus />
+        </Suspense>
+      }
+      ,
+      {
+        path: "contact-us",
+        element: <Suspense fallback={<FallBack />}>
+          <ContactUs />
+        </Suspense>
+      }
+      ,
+      {
+        path: "*",
+        element:
+          <Suspense fallback={<FallBack />}>
+            <NotFound />
+          </Suspense>
+      }
+    ]
+  },
+  {
+
+    path: "dashboard",
+    element: <DashboardLayout
+      isDarkThemeEnabled={isDarkThemeEnabled}
+    />,
+    children: [
+      {
+        index: true,
+        element:
+          <DashboardHome />,
+        loader: dashboardLayoutLoader(queryClient),
+      },
+      {
+        path: "tickets",
+        element: <Suspense>
+          <Appointment />
+        </Suspense>,
+        loader: ticketsloader(queryClient),
+      },
+      {
+        path: "users",
+        element: <Suspense>
+          <Users />
+        </Suspense>,
+        loader: usersLoader(queryClient),
+      },
+      {
+        path: "details/:id",
+        element: <Suspense>
+          <Details />
+        </Suspense>,
+        loader: userLoader(queryClient),
+      },
+      {
+        path: "bus",
+        element: <Suspense>
+          <Bus />
+        </Suspense>,
+        loader: busLoader(queryClient),
+      },
+      {
+        path: "bus/:id",
+        element: <Suspense>
+          <BusDetails />
+        </Suspense>,
+        loader: singleBusLoader(queryClient),
+        action: singleBusAction(queryClient),
+        errorElement: <SingleTicketErrorElement />
+
+      },
+      {
+        path: "assistants",
+        element: <Suspense>
+          <Assistant />
+        </Suspense>,
+        loader: singleBusLoader(queryClient),
+        action: singleBusAction(queryClient),
+        errorElement: <SingleTicketErrorElement />
+
+      },
+    ]
+
+  }, {
+    path: "assistant",
+    element: <Assist />,
+    children: [
+      {
+        index: true,
+        element: <SingleTicket />,
+      }
+
+    ]
+
+
+  }
+
+]
+)
 function App() {
-  const [darkTheme, setDarkTheme] = useState(false)
-  const changeTheme = () => {
-    if (!darkTheme) {
-      localStorage.setItem("theme", "dark")
-    } else {
-      localStorage.setItem("theme", "white")
-    }
-    document.documentElement.classList.toggle('dark')
-    setDarkTheme(c => !c)
-  }
-  const toggleDarkTheme = () => {
-    changeTheme()
 
-  }
-  useEffect(() => {
-    if (localStorage.theme === 'white') {
-      setDarkTheme(false)
-      return
-    }
-    else if (localStorage.theme === 'dark' || (
-      window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark')
-      setDarkTheme(true)
-
-    } else {
-      document.documentElement.classList.remove('dark')
-      setDarkTheme(false)
-
-    }
-  }, [])
   return (
     <div className=""
     >
-      <BrowserRouter>
-        <ScrollTo />
+      {/* <BrowserRouter> */}
+      {/* <ScrollTo /> */}
 
-        <QueryClientProvider client={queryClient}>
-          <Suspense fallback={<div className="h-screen w-full
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider
+          router={router}
+
+        />
+        {/* <Suspense fallback={<div className="h-screen w-full
           bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
               <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
           </div>}>
             <Routes>
-
               <Route path="/" element={<UserLayout
-
                 toggleDarkTheme={toggleDarkTheme}
                 darkTheme={darkTheme}
               />}>
@@ -126,11 +410,7 @@ function App() {
                   <Route path="user" element={<UserBoard />} />
                   <Route path="seat" element={<Seat />} />
                   <Route path="seat/:id" element={<SeatDetails />} />
-
-
                 </Route>
-
-
                 <Route path="contact-us" element={<ContactUs />} />
                 <Route path="about-us" element={<Aboutus />} />
                 <Route path="auth" element={<Auth />} />
@@ -150,7 +430,6 @@ function App() {
                 <Route path="users" element={<Users />} />
                 <Route path="bus" element={<Bus />} />
                 <Route path="details/:id" element={<Details />} />
-                {/* <Route path="assistant" element={<AdminAssistant />} /> */}
                 <Route path="bus/:id" element={<BusDetails />} />
                 <Route path="seat/:id" element={<SeatDetails />} />
                 <Route path="seat" element={<Seat />} />
@@ -160,7 +439,7 @@ function App() {
                 <Route path="contacts" element={<ContactLayout />}>
                 </Route>
                 <Route path='security' element={<Security />} />
-                
+
               </Route>
               <Route path="assistant"
                 element={<Assist />}>
@@ -171,9 +450,9 @@ function App() {
                 path="*"
                 element={<NotFound />} />
             </Routes>
-          </Suspense>
-        </QueryClientProvider>
-      </BrowserRouter>
+          </Suspense> */}
+      </QueryClientProvider>
+      {/* </BrowserRouter> */}
       <ToastContainer />
     </div>
 

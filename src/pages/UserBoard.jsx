@@ -13,7 +13,7 @@ import SelectSortDate from 'react-select';
 import { useState, useEffect, useRef } from 'react';
 import { AiOutlineSave } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io"
-import { NavLink, useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { NavLink, useSearchParams, useNavigate, Link, useOutletContext, useLoaderData } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineSetting } from 'react-icons/ai';
 import formatQuery from "../utils/formatQueryStringParams"
@@ -74,8 +74,42 @@ import Marquee from 'react-fast-marquee'
 import {
   useQuery, useMutation, useQueryClient
 } from '@tanstack/react-query'
+import customFetch from '../utils/customFetch'
+
+const allTicketsQuery = (params) => {
+  const { search, sort, page } = params;
+  return {
+    queryKey: [
+      'tickets',
+      { search: search ?? "", page: page ?? 1, sort: sort ?? "newest" }
+    ],
+    queryFn: async () => {
+      const { data } = await customFetch.get('/ticket', {
+        params,
+      });
+      return data;
+    },
+  };
+};
+
+export const loader =
+  (queryClient) =>
+    async ({ request }) => {
+      const params = Object.fromEntries([
+        ...new URL(request.url).searchParams.entries(),
+      ]);
+      await queryClient.ensureQueryData(allTicketsQuery(params));
+      return { searchValues: { ...params } };
+    };
+
 const Details = () => {
+  const [querySearch] = useSearchParams();
+  const { handleFilterChange, handleChange } = useFilter()
   const queryClient = useQueryClient()
+  const { searchValues } = useLoaderData()
+  const userData = useQuery(allTicketsQuery(searchValues))?.data
+  // console.log(data__)
+
   const [seatDate, setSeatDate] = useState(new Date())
 
   let downloadbaseurl = null
@@ -90,47 +124,42 @@ const Details = () => {
 
 
 
-  const getSeats = async () => {
+  // const getSeats = async () => {
 
-    try {
-      const res = await axios.get("/seat/getstatic", {
-        params: {
-          traveldate: dayjs(seatDate).format("YYYY/MM/DD")
-        }
-      })
+  //   try {
+  //     const res = await axios.get("/seat/getstatic", {
+  //       params: {
+  //         traveldate: dayjs(seatDate).format("YYYY/MM/DD")
+  //       }
+  //     })
 
-      return res.data
+  //     return res.data
 
-    } catch (err) {
-    }
+  //   } catch (err) {
+  //   }
 
 
-  }
+  // }
 
-  const { data, isError, refetch } = useQuery({
-    queryKey: ["findSeats", {
-      traveldate: dayjs(seatDate).format("YYYY-MM-DD")
-    }
-    ],
-    queryFn: getSeats,
-    enabled: false
-  })
+  // const { data, refetch } = useQuery({
+  //   queryKey: ["findSeats", {
+  //     traveldate: dayjs(seatDate).format("YYYY-MM-DD")
+  //   }
+  //   ],
+  //   queryFn: getSeats,
+  //   enabled: false
+  // })
+  // 
+  // const {user}=useDispatch
+  const { user } = useOutletContext();
 
-  const isUserName = useSelector(state => state.username.username);
 
-  const [querySearch] = useSearchParams();
 
-  const { handleFilterChange, handleChange } = useFilter()
 
   const onPasswordSuccess = () => toast.success("Password Change Successfully!!", {
     position: toast.POSITION.BOTTOM_CENTER
   })
-  const newSucces = () => toast.success("Add successfully  !", {
-    position: toast.POSITION.BOTTOM_CENTER
-  })
-  const newError = () => toast.error("fail to create seat", {
-    position: toast.POSITION.BOTTOM_CENTER
-  })
+
   const [isOpen, setIsOpen] = useState(false)
   const [isOpen_, setIsOpen_] = useState(false)
   const [isOpen__, setIsOpen__] = useState(false)
@@ -172,12 +201,9 @@ const Details = () => {
 
 
   }
-  const { userData } = useSelector(state => state.userData);
+  // const { userData } = useSelector(state => state.userData);
 
 
-  const setUserData = (data) => {
-    dispatch(setUserDataFunc(data))
-  }
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
@@ -185,7 +211,7 @@ const Details = () => {
   const password1 = useRef(null);
   const password2 = useRef(null);
   const password3 = useRef(null);
-  const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
+  // const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
 
   const [selectedIds, setSelectedIds] = useState({
     seat_id: null,
@@ -196,30 +222,8 @@ const Details = () => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
-    // console.log(dates)
   };
-  useEffect(() => {
 
-    if (!querySearch.get("page")) {
-      handleFilterChange("page", 1)
-    }
-    async function getUserInfo() {
-      const url = "/auth/userinfo";
-      try {
-        const res = await axios.get(url, {
-          headers: {
-            'Authorization': "makingmoney " + token
-          }
-        })
-        setUserInfo(res.data?.user)
-
-
-      } catch (err) {
-        navigate("/login?message=" + err.response.data)
-      }
-    }
-    getUserInfo()
-  }, [])
   const [_userData, _setUserData] = useState({
     labels: ["active tickets", "inactive tickets"],
     datasets: [
@@ -260,7 +264,6 @@ const Details = () => {
 
   })
   const handleaddnewroute = () => {
-    console.log(queryObj, "this is the query object here ")
     return axios.post("/seat", {
       ...queryObj
     })
@@ -270,25 +273,25 @@ const Details = () => {
     return axios.post("/seat", { seat_id, bus_id })
   }
   const Demoadd = useMutation(handleAddNewSeat,
-  
-  {
-    onSuccess: data => {
-      refetch()
-      setShowAdd(false)
-      if (showAdd) setShowAdd(false)
-      if (slide) setSlide(false)
-      onSuccessToast("successfully added new bus to the routes!")
-    },
-    onError: error => {
-      onErrorToast((error.response.data ?? "Oops something bad happen try again later !!"))
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(["create"])
-    }
-  })
+
+    {
+      onSuccess: data => {
+        // refetch()
+        setShowAdd(false)
+        if (showAdd) setShowAdd(false)
+        if (slide) setSlide(false)
+        onSuccessToast("successfully added new bus to the routes!")
+      },
+      onError: error => {
+        onErrorToast((error.response.data ?? "Oops something bad happen try again later !!"))
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries(["create"])
+      }
+    })
   const { isLoading: loadingRoute, mutate } = useMutation(handleaddnewroute, {
     onSuccess: data => {
-      refetch()
+      // refetch()
       setShowAdd(false)
       onSuccessToast("successfully added new bus to the routes!")
       if (showAdd) setShowAdd(false)
@@ -319,59 +322,59 @@ const Details = () => {
   }
 
   const token = localStorage.getItem("token");
-  const { loading: isLoading } = useSelector(state => state.userData)
-
+  // const { loading: isLoading } = useSelector(state => state.userData)
+  const isLoading = false
   const [userInfo, setUserInfo] = useState({});
-  const config = {
-    headers: {
-      'Authorization': "makingmoney " + token
-    },
-    params: formatQuery(querySearch.toString())
-  }
-  async function getData() {
+  // const config = {
+  //   headers: {
+  //     'Authorization': "makingmoney " + token
+  //   },
+  //   params: formatQuery(querySearch.toString())
+  // }
+  // async function getData() {
 
-    const url = "/ticket"
-    setIsActiveIndexLoading(true)
+  //   const url = "/ticket"
+  //   setIsActiveIndexLoading(true)
 
-    try {
-      const res = await axios.get(url, config)
-      setUserData(res.data)
+  //   try {
+  //     const res = await axios.get(url, config)
+  //     setUserData(res.data)
 
-    } catch (err) {
-      setToggle_(true)
-      setMessage(err.response.data)
-      console.log(err)
-    }
-    setIsActiveIndexLoading(false)
+  //   } catch (err) {
+  //     setToggle_(true)
+  //     setMessage(err.response.data)
+  //     console.log(err)
+  //   }
+  //   setIsActiveIndexLoading(false)
 
-  }
+  // }
   useEffect(() => {
     if (!isOpen___) setSlide(false)
   }, [isOpen___])
-  useEffect(() => {
-    getData();
-  }, [querySearch]);
-
+  // useEffect(() => {
+  //   getData();
+  // }, [querySearch]);
+  const data = {}
   const [showAdd, setShowAdd] = useState(false)
   const _view = JSON.parse(localStorage.getItem("__view")) == true ? true : false
   const [__view, __setView] = useState(_view)
   const [greetingtext, setGreetingText] = useState("GOOD MORNING")
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const hour = new Date().getHours()
-      if (hour < 13) {
-        setGreetingText("GOOD MORNING")
-      } else if (hour < 17) {
-        setGreetingText("GOOD AFTERNOON")
-      } else {
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     const hour = new Date().getHours()
+  //     if (hour < 13) {
+  //       setGreetingText("GOOD MORNING")
+  //     } else if (hour < 17) {
+  //       setGreetingText("GOOD AFTERNOON")
+  //     } else {
 
-        setGreetingText("GOOD EVENING")
-      }
-    }, 1000);
-    return () => {
-      clearInterval(timer)
-    }
-  }, [])
+  //       setGreetingText("GOOD EVENING")
+  //     }
+  //   }, 1000);
+  //   return () => {
+  //     clearInterval(timer)
+  //   }
+  // }, [])
   const getCount = ({ from, to, traveltime, _id }, arr) => {
     const count = arr?.filter((item) => item.from == from && item.to == to && item.traveltime == traveltime)
     return count.length
@@ -1338,7 +1341,7 @@ z-10  "
         py-2 mx-auto mt-5 max-w-sm rounded-xl shadow bg-white dark:bg-slate-950 px-6 ">
               <div className="flex-1">
                 <Heading text={greetingtext} className="!mb-1 !font-black mt-0 !italic" />
-                <p className="mb-3 text-sm font-montserrat px-6 uppercase italic !font-light">{(isUserName || "loading")} </p>
+                <p className="mb-3 text-sm font-montserrat px-6 uppercase italic !font-light">{(user?.fullname || "loading")} </p>
               </div>
 
               <UiButton
@@ -1780,7 +1783,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                     <form onSubmit={e => {
                       e.preventDefault()
                       setIsOpen___(true)
-                      refetch()
+                      // refetch()
                     }}>
                       <CustomDatePicker
                         startDate={seatDate}
@@ -1938,20 +1941,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
           )
         }
         <div className='mt-10 ' />
-        {/* <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
-          {Array.from({
-            length: userData?.numberOfPages
-          }, (_, index) => {
-            return <PanigationButton
-              text={index + 1}
-              active={activeIndex}
-              loading={isActiveIndexLoading}
-              index={index} onClick={() => {
-                setActiveIndex(index)
-                checkPages(index + 1)
-              }} />
-          })}
-        </Scrollable> */}
+
 
       </motion.div >
     </>

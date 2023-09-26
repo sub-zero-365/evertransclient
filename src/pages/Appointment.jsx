@@ -1,19 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
-import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useLoaderData } from 'react-router-dom'
 import DatePicker from 'react-datepicker';
 import { AnimatePresence, motion } from 'framer-motion'
 import SkipSelect from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
-import { setTicketData } from '../actions/adminData';
 import Select from 'react-select';
 import Triptype from 'react-select';
 import ClearFilter from '../components/ClearFilter'
 import SelectSortDate from 'react-select';
 import TimeSelect from 'react-select';
 import { AiOutlineSetting } from 'react-icons/ai';
-import formatQuery from "../utils/formatQueryStringParams"
+// import formatQuery from "../utils/formatQueryStringParams"
 import { components, style } from "../utils/reactselectOptionsStyles"
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation } from 'swiper'
@@ -47,55 +45,42 @@ import { VscFolderActive } from 'react-icons/vsc';
 import { BiCategory } from 'react-icons/bi';
 import { MdOutlinePriceChange } from 'react-icons/md';
 import { sortedDateOptions, sortTicketStatusOptions, skipOptions, timeOptions } from "../utils/sortedOptions"
+import customFetch from '../utils/customFetch'
+
+const ticketsQuery = (params = {}) => {
+    return ({
+        queryKey: ["tickets", { ...params }],
+        queryFn: async () => {
+            const res = await customFetch.get("/admin/alltickets")
+            return res.data
+        },
+        keepPreviousData: true
+    })
+}
+export const loader = (queryClient) => async ({ request }) => {
+    const params = Object.fromEntries([
+        ...new URL(request.url).searchParams.entries(),
+    ]);
+    await queryClient.ensureQueryData(ticketsQuery(params))
+    return ({ searchValues: params })
+
+}
 
 const Appointment = () => {
     const ref = useRef(null);
 
-    useEffect(() => {
-        if (!querySearch.get("limit")) {
-            handleFilterChange("limit", 100)
-        }
-        if (!querySearch.get("page")) {
-            handleFilterChange("page", 1)
-
-        }
-
-        if (!querySearch.get("view")) {
-            handleFilterChange("view", "all")
-        }
-        if (ref && ref.current) {
-            ref.current.scrollLeft = querySearch.get("page") * 30
-        }
-    }, [])
-
+  
 
     const [querySearch, setQuerySearch] = useSearchParams();
 
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
-
-    const [loading, setLoading] = useState(false)
-    const [userData, setUserData] = useState({})
+  
+    const { searchValues } = useLoaderData()
     const { data: ticketData,
-        isLoading: loading_,
-        isPreviousData } = useQuery({
-            queryKey: [
-                ["allticket",
-                    {
-                        ...formatQuery(querySearch.toString())
-                    }
-                ]
-            ],
-            // queryFn:async () => axios.get(`/seat/seatdetails/${id}`)
-            queryFn: fetchData,
-            keepPreviousData: true
-
-        })
-    console.log("this is the fetch data  here ", ticketData)
-    // const ticketData = useSelector(state => state.setAdminData.ticketdata);
-
-    const isLoading = useSelector(state => state.setAdminData.loading.tickets)
+        isPreviousData } = useQuery(ticketsQuery(searchValues))
+   
     const viewAll = querySearch.get("view");
 
     const handleSkipChange = (evt) => {
@@ -117,7 +102,7 @@ const Appointment = () => {
                 preParams.set(key, value)
             }
             return preParams
-        })
+        }, { replace: true })
 
     }
 
@@ -144,18 +129,6 @@ const Appointment = () => {
         console.log(dates)
     };
 
-    const dispatch = useDispatch();
-    const setTicketDataFunction = (payload) => {
-        return dispatch(setTicketData(payload))
-    }
-
-    const token = localStorage.getItem("admin_token");
-
-    const url = `/admin/alltickets`
-
-    useEffect(() => {
-        fetchData()
-    }, [querySearch])
 
 
     const handleSortTime = (evt) => {
@@ -168,36 +141,9 @@ const Appointment = () => {
         handleFilterChange("page", 1)
         handleFilterChange("ticketStatus", evt.value)
     }
-    const handleTimeChange = (evt) => {
-        if (querySearch.get("traveltime") == evt.value) return
-        handleFilterChange("page", 1)
-        handleFilterChange("traveltime", evt.value)
-    }
+  
     const [isOpen, setIsOpen] = useState(false);
-    async function fetchData() {
-        // setIsActiveIndexLoading(true);
-        try {
-            const response = await axios.get(url, {
-                headers: {
-                    'Authorization': "makingmoney " + token
-                },
-                params: formatQuery(querySearch.toString())
-            })
-            setTicketDataFunction({ ...response?.data })
-            setUserData(response?.data)
-            return response.data
-        } catch (err) {
-            console.log(err);
-        }
-        finally {
-            // setIsActiveIndexLoading(false)
-            if (loading) {
-                setLoading(false)
-            }
-            if (isOpen) setIsOpen(false)
-        }
-
-    }
+   
 
     return (
         <div className="pt-4 px-2 max-w-full overflow-x-auto select-none
@@ -548,7 +494,7 @@ z-10  "
                                             onClick={handleBoardingRangeSearch}
 
                                         >
-                                            {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                                            {false ? <Loadingbtn toggle /> : "Filter Tickets"}
                                         </button>
 
                                         {
@@ -606,7 +552,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                                             onClick={handleFilterSearch}
 
                                         >
-                                            {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
+                                            {false ? <Loadingbtn toggle /> : "Filter Tickets"}
                                         </button>
 
                                         {
@@ -655,7 +601,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
             <Form handleChangeText={handleChangeText} params={querySearch} />
             <Heading text={"Recent Regular Booking"} className="!mb-4 !text-center md:text-start first-letter:!text-4xl underline underline-offset-8" />
             {
-                isLoading ? (<PlaceHolderLoader />) : (
+                false ? (<PlaceHolderLoader />) : (
                     <FormatTable
                         isPreviousData={isPreviousData}
                         tickets={ticketData?.tickets}
