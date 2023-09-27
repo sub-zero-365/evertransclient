@@ -1,8 +1,8 @@
-import axios from "axios"
 import { useQuery } from '@tanstack/react-query'
+import customFetch from "./customFetch"
 export const getCities = async (inputValue = "") => {
     try {
-        const res = await axios.get("/allcities", {
+        const res = await customFetch.get("/allcities", {
             params: {
                 search: (inputValue || "")
             }
@@ -16,7 +16,7 @@ export const getCities = async (inputValue = "") => {
 }
 export const getBuses = async (inputValue = "") => {
     try {
-        const res = await axios.get("/bus",
+        const res = await customFetch.get("/bus",
             {
                 params: {
                     search: inputValue || "",
