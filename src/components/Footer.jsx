@@ -3,7 +3,9 @@ import UiButton from './UiButton';
 import { Heading } from "./"
 import footerbg from '../Assets/images/fooote-bg.jpg'
 import logo from "../Assets/images/logo.png"
+import { motion } from 'framer-motion';
 
+import { FiFacebook } from "react-icons/fi"
 const Footer = () => {
   return (
     <footer
@@ -25,7 +27,7 @@ const Footer = () => {
             <img
               className="w-full max-w-[12rem] h-16"
               src={logo}
-              // src="https://web.moxcreative.com/bigtranz/wp-content/uploads/sites/19/2023/03/Logo_bigtranz_1.png"
+            // src="https://web.moxcreative.com/bigtranz/wp-content/uploads/sites/19/2023/03/Logo_bigtranz_1.png"
             />
             <p
               className="my-5 text-lg text-white leading-[1.4rem] tracking-loose"
@@ -50,7 +52,7 @@ const Footer = () => {
               >Company</h1>
             </li>
 
-            <li className="pb-2 lg:pb-3">
+            <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
                 className="text-lg 
@@ -62,7 +64,19 @@ const Footer = () => {
 
 
             </li>
-            <li className="pb-2 lg:pb-3">
+            <li className="pb-1.5 lg:pb-2.5">
+              <Link
+                to="/about"
+                className="text-lg 
+                  ease tracking-[0.5] hover:font-medium
+                  text-white hover:text-[#ffae02] transition duration-700"
+              >
+                Leader ship
+              </Link>
+
+
+            </li>
+            <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
                 className="text-lg 
@@ -74,19 +88,7 @@ const Footer = () => {
 
 
             </li>
-            <li className="pb-2 lg:pb-3">
-              <Link
-                to="/about"
-                className="text-lg 
-                  ease tracking-[0.5] hover:font-medium
-                  text-white hover:text-[#ffae02] transition duration-700"
-              >
-                About us
-              </Link>
-
-
-            </li>
-            <li className="pb-2 lg:pb-3">
+            <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
                 className="text-lg 
@@ -107,7 +109,7 @@ const Footer = () => {
               >Services</h1>
             </li>
 
-            <li className="pb-2 lg:pb-3">
+            <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
                 className="text-lg 
@@ -119,7 +121,7 @@ const Footer = () => {
 
 
             </li>
-            <li className="pb-2 lg:pb-3">
+            <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
                 className="text-lg 
@@ -131,7 +133,7 @@ const Footer = () => {
 
 
             </li>
-            <li className="pb-2 lg:pb-3">
+            <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
                 className="text-lg 
@@ -143,7 +145,7 @@ const Footer = () => {
 
 
             </li>
-            <li className="pb-2 lg:pb-3">
+            <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
                 className="text-lg 
@@ -164,7 +166,7 @@ const Footer = () => {
               >Get In Touch</h1>
             </li>
 
-            <li className="pb-2 lg:pb-3">
+            <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
                 className="text-lg 
@@ -179,7 +181,7 @@ const Footer = () => {
 
 
             </li>
-            <li className="pb-2 lg:pb-3">
+            <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
                 className="text-lg 
@@ -191,7 +193,7 @@ const Footer = () => {
 
 
             </li>
-            <li className="pb-2 lg:pb-3">
+            <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
                 className="text-lg 
@@ -203,7 +205,7 @@ const Footer = () => {
 
 
             </li>
-            <li className="pb-2 lg:pb-3">
+            <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
                 className="text-lg 
@@ -213,6 +215,25 @@ const Footer = () => {
                 About us
               </Link>
 
+
+            </li>
+            <li className="pb-1.5 pt-2.5 lg:pb-2.5 flex  items-center ">
+
+              <h1
+                className='font-bold 
+              text-[1rem]
+              text-white
+              
+              '
+              >Follow Us</h1>
+
+              <motion.span
+                className='text-[#ffae02]'
+              >
+                <FiFacebook
+                  size={20}
+                />
+              </motion.span>
 
             </li>
           </ul>
@@ -223,11 +244,42 @@ const Footer = () => {
           className="h-[1px] my-5 mt-2 w-full  bg-gray-600"
 
         />
-        <p
+        <div className='flex flex-col md:flex-row justify-between gap-y-2'>
+          <p
 
-          className="text-center text-lg text-white"
-        >Copyright © 2023 Bigtranz, All rights reserved. Powered by MoxCreative</p>
+            className="text-center text-lg text-white"
+          >Copyright © 2023 Bigtranz, All rights reserved. Powered by MoxCreative</p>
+          <div>
+            <ul className='flex pt-3 items-center gap-x-4 mt-2 mb-5 text-white text-[1rem]'>
+              <li className='
+              flex gap-x-4  items-stretch hover:text-orange-500 transitio duration-300
+              '>
+                <p>Terms of Use</p>
+                <span
+                  className='p-[1px] flex-none   bg-orange-400'
+                />
+              </li>
+              <li className='
+              flex gap-x-3  items-stretch hover:text-orange-500 transitio duration-300
+              '>
+                <p>Privacy Policy</p>
+                <span
+                  className='p-[1px] flex-none   bg-orange-400'
+                />
+              </li>
+              <li className='
+              flex gap-x-4  items-stretch hover:text-orange-500 transitio duration-300
+              '>
+                <p>Cookie Policy</p>
+                {/* <span
+                  className='p-[1px] flex-none   bg-orange-400'
+                /> */}
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
+
     </footer >
   )
 }

@@ -1,10 +1,7 @@
 
 import UiButton from '../components/UiButton'
-import EditTicketModal from '../components/EditTicketModal'
-import { useSearchParams, useParams, NavLink, Link, useNavigate, useLocation } from "react-router-dom"
+import { useSearchParams, useParams, NavLink, Link, useNavigate, useLocation, useLoaderData } from "react-router-dom"
 import { useEffect, useState, useRef } from "react"
-import Alert from '../components/Alert'
-import ReOrderBooking from '../components/Alert'
 import {
   Loader, Heading, ActiveStatusButton,
   DeactiveStatusButton
@@ -21,7 +18,9 @@ import QRCode from "react-qr-code";
 import { BsChevronCompactUp } from 'react-icons/bs'
 import succcesssound from '../utils/successsound.mp3'
 import { Helmet } from 'react-helmet'
+import { useQuery } from "@tanstack/react-query"
 import customFetch from '../utils/customFetch'
+
 const singleTicket = (id) => {
   return ({
     queryKey: ["ticket", id],
@@ -36,8 +35,11 @@ const singleTicket = (id) => {
 export const loader = (queryClient) => async ({ request, params }) => {
   try {
     // try to get the previous page from user being
-    console.log(window.location.pathname)
-    await queryClient.ensureQueryData(singleTicket(params.id))
+    const { ticket: { active } } = await queryClient.ensureQueryData(singleTicket(params.id));
+    const audio = new Audio(succcesssound)
+    if (active) {
+      audio.play()
+    }
     return params.id
   } catch (err) {
     throw err
@@ -47,9 +49,9 @@ export const loader = (queryClient) => async ({ request, params }) => {
 
 const User = () => {
   const ref = useRef(null);
-  const location = useLocation();
-  const loadState = location?.state?._id
   const isInView = useInView(ref)
+  const id = useLoaderData()
+  const { ticket } = useQuery(singleTicket(id)).data
   useEffect(() => {
     if (isInView) {
       setIsOpen(true)
@@ -72,92 +74,17 @@ const User = () => {
 
   }
   const navigate = useNavigate();
-  const previousPage = () => navigate(-1)
+  // const previousPage = () => navigate(-1)
   const [active, setActive] = useState(null);
   const [queryParameters] = useSearchParams()
-  const [ticket, setTicket] = useState(location.state)
-  const [isLoading, setIsloading] = useState(loadState ? false : true);
+  const [isLoading, setIsloading] = useState(false);
   const [loadbtn, setLoadbtn] = useState(false)
-  const [message, setMessage] = useState("")
-  const [ticketData, setTicketData] = useState(location.state)
-  const id = useParams().id
-  const [params, setParams] = useState({
-  })
-  const [toggle, setToggle] = useState(false)
+  const [params, setParams] = useState({})
   const showDeactivateButton = queryParameters.get("xyz") ? true : false
-  var token = undefined, url = ""
   const isadminuser = queryParameters.get("admin");
-  const audio = new Audio(succcesssound);
+  ;
   const readonly = (queryParameters.get("readonly") === "7gu8dsutf8asdf" || false)
-  async function getData() {
-    if (readonly) {
-      token = localStorage.getItem("assist_token");
-      console.log("enter here ")
-      url = `/assistant/ticket/${id}`
-    } else {
-      if (isadminuser == null) {
-        token = localStorage.getItem("token")
-        url = `/ticket/${id}`
-      } else {
-        token = localStorage.getItem("admin_token");
-        url = `/admin/staticticket/${id}`;
-      }
-    }
-    try {
-      console.log("in try block")
-      const res = await axios.get(url, {
-        headers: {
-          'Authorization': "makingmoney " + token
-        },
-      }
 
-      )
-      console.log(res.data)
-      setTicket(res.data.ticket)
-      setTicketData(res.data.ticket)
-
-      const lettodaydate = dateFormater(new Date()).date;
-      const ticketTravelDate = dateFormater(res.data.ticket?.traveldate).date;
-      if ((dayjs(ticketTravelDate).diff(lettodaydate, "day")) < 0 && ticket?.active == true) {
-        setRedirect(true)
-        setMessage(`this ticket travel date is on the ${ticketTravelDate} but the traveller arrived on the  ${lettodaydate}`)
-      }
-
-      if (res.data?.ticket?.active === true) {
-        try {
-          if (window.navigator.vibrate) {
-            window?.navigator?.vibrate([500])
-          }
-          audio.play()
-
-        } catch (err) {
-          console.log("err: ", err)
-        }
-
-
-      }
-      if (!res.data?.ticket) {
-        setToggle(true)
-      }
-      if (isLoading) {
-        setIsloading(false);
-      }
-      setLoadbtn(false)
-      console.log("not here ")
-
-    } catch (err) {
-      // console.log(err)
-      setIsloading(false)
-      setToggle(true)
-      setMessage(err.response.data)
-    }
-  }
-
-  useEffect(() => {
-    getData()
-  }
-    , []
-  )
 
 
   const redeemTicket = async () => {
@@ -189,15 +116,11 @@ const User = () => {
         params
       }
       )
-      // setTicket(res.data?.updateTicket)
-      // setTicketData(res.data?.updateTicket)
+
     } catch (err) {
-      // setMessage(err.response.data);
       setLoadbtn(false)
     }
     finally {
-      // setToggle(true)
-      // setIsloading(false)
 
     }
   }
@@ -218,7 +141,7 @@ const User = () => {
   }
   const getActiveStatus = (index, someother, value = "roundtrip") => {
     if (![0, 1].some(x => x == index)) return false
-    return ticketData?.type === value && ticketData?.doubletripdetails[index][someother]
+    return ticket?.type === value && ticket?.doubletripdetails[index][someother]
   }
   useEffect(() => {
     if (Object.keys(params).length === 0) {
@@ -227,8 +150,7 @@ const User = () => {
     redeemTicket()
   }, [params])
   const [isOpen, setIsOpen] = useState(false);
-  const isClassic = (ticket?.seatposition < 20 && ticket?.price <= 6500 && (!ticket?.updatePrice))
-  if (isLoading) return <Loader toggle />
+
   return (
     <>
       <Helmet>
@@ -236,57 +158,29 @@ const User = () => {
           Single Ticket
         </title>
       </Helmet>
-      <div className={`max-w-3xl  justify-center  flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-60px)] pb-64 overflow-y-auto ${!isadminuser && "container"}`}>
-     
-      
-        {
-          isadminuser ? (
-            <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
-              <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                <li class="inline-flex items-center">
-                  <span
-                    onClick={previousPage}
-                    class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                    DashBoard
-                  </span>
-                </li>
-                <li>
-                  <div class="flex items-center">
-                    <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                    <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
-                      <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Ticket details</h1>
-                    </a>
-                  </div>
-                </li>
-
-              </ol>
-            </nav>
-
-          ) : (
-            <nav class="flex mb-5 mt-5 px-5 w-full " aria-label="Breadcrumb">
-              <ol class="flex items-center space-x-1 md:space-x-3">
-                <li class="inline-flex items-center flex-none">
-                  <span
-                    onClick={previousPage}
-                    class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                    User
-                  </span>
-                </li>
-                <li className="flex-1">
-                  <div class="flex items-center flex-1">
-                    <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                    <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
-                      <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Ticket details</h1>
-                    </a>
-                  </div>
-                </li>
+      <div className={`max-w-3xl  justify-center  scrollto  flex-none lg:px-10 !w-full md:px-5 mx-auto  h-[calc(100vh-4rem)] pb-64 overflow-y-auto ${!isadminuser && "container"}`}>
 
 
-              </ol>
-            </nav>
+        <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
+          <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+              <Link to=".."
+                relative='path'
+                class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                DashBoard
+              </Link>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                  <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Ticket details</h1>
+                </a>
+              </div>
+            </li>
 
-          )
-        }
+          </ol>
+        </nav>
         <div className="lg:flex flex flex-col lg:flex-row items-center lg:items-start !w-full  justify-center">
           <div className="flex-1 lg:flex-none w-full max-w-sm">
             <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
@@ -406,7 +300,7 @@ const User = () => {
           {/*  */}
 
 
-          <div className="lg:static lg:flex-none lg:py-10 
+          <div className="lg:sticky lg:top-[4rem] lg:flex-none lg:py-10 
                                      bottom-0
                                      fixed
                                      w-full
@@ -462,7 +356,7 @@ const User = () => {
                                      
                                      
                                      `}> <BsChevronCompactUp size={20} /></span>
-              {ticketData?.type === "roundtrip" ? "roundtrip" : "singletrip"}
+              {ticket?.type === "roundtrip" ? "roundtrip" : "singletrip"}
             </button>
             <motion.div
               className={`mx-auto
@@ -487,13 +381,13 @@ lg:py-10
                 <Heading text="Created By :" className="text-center !text-lg underline  underline-offset-8 !font-black !mb-0" />
 
 
-                <Heading text={(ticketData?.username || "loading ...")}
+                <Heading text={(ticket?.username || "loading ...")}
                   className="text-center capitalize !text-lg !font-manrope !mb-5 !font-medium !text-slate-600 dark:!text-white" />
               </div>
 
 
               {
-                ticketData?.type === "roundtrip" ? (
+                ticket?.type === "roundtrip" ? (
                   showDeactivateButton && <div className="grid grid-cols-1 md:grid-cols-1 justify-center md:justify-between px-4">
                     <div className="flex justify-center flex-col">
                       <div className="flex mb-1 items-center justify-center">

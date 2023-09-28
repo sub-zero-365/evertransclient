@@ -24,7 +24,7 @@ import { toast } from 'react-toastify'
 import customFetch from "../utils/customFetch"
 
 const errorToast = (msg = "Please select a seat and continue !!!") => toast.error(msg)
-
+const successToast = () => toast.success("created successfully!!!")
 export const loader = ({ request }) => {
   const params = Object.fromEntries([
     ...new URL(request.url).searchParams.entries(),
@@ -32,15 +32,11 @@ export const loader = ({ request }) => {
   return { userInformation: params }
 }
 
-export const action =(queryClient)=> async ({ request }) => {
+export const action = (queryClient) => async ({ request }) => {
   const params = Object.fromEntries([
     ...new URL(request.url).searchParams.entries(),
   ]);
-  console.log("this is the data in action", params)
-  const wait = () => new Promise(r => setTimeout(() => {
-    r()
-  }, 2000))
-  await wait()
+
   try {
     await customFetch.post("/ticket",
       params
@@ -49,8 +45,8 @@ export const action =(queryClient)=> async ({ request }) => {
       queryKey: ["tickets"],
       exact: true,
     })
-
-    return null
+    successToast()
+    return redirect("/user?rd_from=checkout")
 
   } catch (err) {
     errorToast(err.response?.data || " something went wrong try again later")

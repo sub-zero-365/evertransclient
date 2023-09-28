@@ -63,8 +63,8 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
         logoutUser();
     }, [isAuthError]);
 
-    const { user } = useQuery(adminQuery).data || {}
-
+    const { user } = useQuery(adminQuery)?.data || { user: {} }
+    // console.log("this is user", user)
     const [isDarkTheme, setIsDarkTheme] = useState(isDarkThemeEnabled);
     const toggleDarkTheme = () => {
         const newDarkTheme = !isDarkTheme;
@@ -109,10 +109,11 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
 
                 <div className={`flex ${view && "lg:flex-row-reverse"} ease duration-500 transition-all`}>
                     <SideBar
-                        user={data?.data?.user}
                     />
                     {
-                        isPageLoading ? <AppSpinner /> : <Outlet />
+                        isPageLoading ? <AppSpinner /> : <Outlet
+                            context={{ user }}
+                        />
                     }
 
                 </div>

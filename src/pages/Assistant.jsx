@@ -16,7 +16,29 @@ import { toast } from 'react-toastify'
 // import FormatTable from '../components';
 import ShowBuses from './ShowBuses';
 import InputBox from '../components/InputBox';
+import customFetch from "../utils/customFetch"
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+const allAssistantQuery = {
+    queryKey: ["assistants"],
+    queryFn: async () => {
+        const res = await customFetch.get("/assistant");
+        return res.data
+    }
+
+}
+export const loader = (queryClient) => async ({ request }) => {
+    return await queryClient.ensureQueryData(allAssistantQuery)
+}
+export const action = (queryClient) => async ({ request }) => {
+    const form = await request.formData()
+    const password = form.get("password")
+
+}
+
 const Appointment = () => {
+    const queryClient = useQueryClient()
+    const data = useQuery(allAssistantQuery).data || {}
     const constraintsRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
     const password = useRef(null)
@@ -28,39 +50,27 @@ const Appointment = () => {
     const handleDeleteUser = async (id, index = null) => {
         const { _id } = id
         console.log("this is the sent id here", _id)
-        return axios.delete(`/assistant/${_id}`,
-            {
-                headers: {
-                    "Authorization": "makingmoney " + token
-                }
-            })
-
-
+        return customFetch.delete(`/assistant/${_id}`
+            )
     }
-    const [error, setError] = useState(null)
     const handleCreateNewAssistant = async () => {
         setErr(null)
-
         try {
             setIsLoading(true)
-            const res = await axios.post("/auth/assistant/register", {
+          await customFetch.post("/auth/assistant/register", {
                 phone: phone.current.value,
                 password: password.current.value,
                 fullname: fullnames.current.value,
-
             },
-                {
-
-                    headers: {
-                        "Authorization": "makingmoney " + token
-                    }
-                })
+            )
             setIsOpen(false)
-            getData()
             setErr(null)
             fullnames.current.value = ""
             password.current.value = ""
             phone.current.value = ""
+            queryClient.invalidateQueries({
+                queryKey: ["assistants"]
+            })
 
         } catch (err) {
             setErr(err.response.data)
@@ -76,39 +86,10 @@ const Appointment = () => {
         e.preventDefault()
         handleCreateNewAssistant()
     }
-    const [loading, setLoading] = useState(false)
-    const [data, setData] = useState({})
-    const getData = async () => {
-        try {
-            const res = await axios.get("/assistant",
 
-                {
-                    headers: {
-                        'Authorization': "makingmoney " + token
-                    },
-
-                }
-            )
-            setData(res.data)
-        } catch (err) {
-            setError(err.response.data)
-        }
-        finally {
-
-        }
-    }
-    useEffect(() => {
-        setLoading(true);
-        getData()
-        setLoading(false)
-    }, [])
     const [toggle, setToggle] = useState(null)
-
-    const token = localStorage.getItem("admin_token");
-
     const [text, setText] = useState("")
     const [phoneNumber, setPhoneNumber] = useState(null)
-    if (loading) return <div>Loading</div>
     return (
         <motion.div
             className="max-w-full !flex-1 w-full   overflow-auto h-[calc(100vh-3rem)] pt-10 "
@@ -129,7 +110,7 @@ const Appointment = () => {
                         disabled={(phoneNumber === toggle?.phone && phoneNumber != null) ? false : true}
                         className={"w-[min(400px,calc(100%-30px))] pb-2.5 pt-1.5 mx-auto"}
                         onClick={() => toast.promise(handleDeleteUser(toggle).then((data) => {
-                            getData()
+                            queryClient.invalidateQueries(["assistants"])
                             setActiveIndex(null)
                             setToggle(null)
                         }), {
@@ -142,39 +123,7 @@ const Appointment = () => {
                 </div>
 
             </ShowBuses>
-            <motion.div
-                drag
-                dragConstraints={constraintsRef}
-                onClick={() => getData()
-
-                }
-                animate={{
-                    scale: [0.7, 1.2, 0.8],
-                    rotate: loading ? [0, 360] : null
-                }}
-                transition={{
-                    duration: 0.5,
-                    ease: "easeInOut",
-                    repeat: loading ? Infinity : null,
-
-                }
-                }
-                className="bottom-1/2
-                        -translate-y-1/2 fixed 
-                        flex-none 
-                        shadow-2xl button-add  top-auto bg-blue-400 
-w-[2.5rem]
-h-[2.5rem] 
-rounded-full 
-overflow-hidden 
-right-0
-z-10  "
-            >
-                <div className="flex h-full w-full items-center -scale-animation justify-center ">
-                    <FiRefreshCcw size={20} color="#fff" className="!rounded-full" />
-                </div>
-            </motion.div>
-
+   
             <div className="flex gap-x-1  items-center">
                 <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400"></h2>
             </div>

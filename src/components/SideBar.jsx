@@ -6,7 +6,7 @@ import { CiLogout } from "react-icons/ci"
 import { useState } from 'react'
 import { GrBus } from "react-icons/gr"
 import { GiModernCity } from "react-icons/gi"
-import { NavLink, useNavigate } from "react-router-dom"
+import { NavLink, useNavigate, useOutletContext } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { actions } from '../actions/toggleSide'
 import { motion } from 'framer-motion'
@@ -16,13 +16,15 @@ import { FcAssistant } from 'react-icons/fc'
 import { BsSliders2Vertical } from 'react-icons/bs'
 import { MdOutlineSecurity } from 'react-icons/md'
 import { useravatar } from '../Assets/images';
+import { useDashBoardContext } from "./DashboardLayout"
 
 // import { GrUserAdmin } from 'react-icons/gr'
 // import { AiOutlineMessage } from "react-icons/ai"
 
 // import { IoMdContacts } from "react-icons/io"
-const SideBar = ({ user }) => {
-
+const SideBar = () => {
+  const { user } = useDashBoardContext()
+  console.log(user)
   const dispatch = useDispatch()
   const toggleSideBar = () => dispatch(actions.toggleSideBar())
   const isSideOpen = useSelector((state) => state.sidebar.isOpen)

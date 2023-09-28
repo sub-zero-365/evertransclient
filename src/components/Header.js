@@ -1,5 +1,5 @@
-import { AiOutlineArrowUp, AiOutlineMenu } from "react-icons/ai"
-import { Outlet, Link, redirect, useNavigate, } from "react-router-dom"
+import {  AiOutlineMenu } from "react-icons/ai"
+import { useNavigation, Link, redirect, useNavigate, } from "react-router-dom"
 import { motion } from 'framer-motion'
 import { useravatar } from '../Assets/images';
 import { BsMoonStars, BsSun } from 'react-icons/bs';
@@ -11,7 +11,7 @@ export default function Header() {
     const navigate = useNavigate()
     const { user,
         toggleSideBar,
-        view, setView, toggleDarkTheme, isDarkTheme,logoutUser
+        view, setView, toggleDarkTheme, isDarkTheme, logoutUser
     } = useDashBoardContext()
     return (
 
@@ -74,7 +74,7 @@ hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0
 focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                    // onClick={() => setToggle(true)}
+                    onClick={() => logoutUser()}
                 >
                     logout
                 </button>

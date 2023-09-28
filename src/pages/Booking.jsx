@@ -29,7 +29,6 @@ import "swiper/css/thumbs";
 import { getCities } from "../utils/ReactSelectFunction";
 
 import { style } from "../utils/reactselectOptionsStyles"
-import UiButton from "../components/UiButton"
 import LoadingButton from '../components/LoadingButton'
 
 
@@ -45,7 +44,7 @@ const Booking = () => {
   const [fromCities, setFromCities] = useState(queryParams.get("from"))
   const [toCities, setToCities] = useState(queryParams.get("to"))
   const [time, setTime] = useState("7am")
-  const [isLine, setIsline] = useState(false)
+  const [isLine, setIsline] = useState(true)
   const navigate = useNavigate()
   const gotoBusSits = () => navigate(`/bus?from=${fromCities}&to=${toCities}&date=${startDate.toLocaleDateString('en-ZA')}&triptype=${tripType}&time=${time}`)
   const [demoFetch, setDemoFetch] = useState(false);

@@ -17,6 +17,8 @@ import Hero from "../components/Hero"
 import { Helmet } from 'react-helmet'
 import WhyChooseUs from "../Sections/WhyChooseUs"
 import FrequentlyAsked from "../Sections/FrequentlyAsked"
+import BusRentals from "../Sections/BusRentals"
+import ChooseTheBus from "../Sections/ChooseTheBus"
 const Home = () => {
     let downloadbaseurl = null
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -219,8 +221,10 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                 </Rounded>
                 <Hero />
                 <OurServices />
+                <ChooseTheBus />
                 <WhyChooseUs />
-                <FrequentlyAsked/>
+                <BusRentals />
+                <FrequentlyAsked />
 
                 <Footer />
             </div >

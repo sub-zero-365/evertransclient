@@ -14,11 +14,8 @@ import {
   createBrowserRouter
 }
   from 'react-router-dom'
-
 import { ErrorElement } from './components'
-
-
-import ContactLayout from "./pages/ContactLayout"
+// import ContactLayout from "./pages/ContactLayout"
 import 'react-datepicker/dist/react-datepicker.css'
 import "swiper/css"
 import "swiper/css/navigation"
@@ -36,6 +33,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import ScrollTo from "./withRouter"
+import Assist from "./pages/Assistant.user"
 import { loader as findBusLoader } from "./pages/FindBus"
 import { loader as busSitLoader } from "./pages/BusSits"
 import { loader as checkOutLoader, action as checkOutAction } from './pages/CheckOutInfo'
@@ -51,7 +49,11 @@ import { loader as seatsLoader } from "./pages/Seats"
 import { loader as ticketsLoader } from "./pages/UserBoard"
 import { loader as busLoader } from "./pages/Bus"
 import { loader as singleBusLoader, action as singleBusAction } from "./pages/BusDetails"
-
+import { loader as assistantsLoader } from "./pages/Assistant"
+import { loader as securityLoader } from "./pages/SecurityPage"
+import { loader as editSingleLoader } from "./pages/EditSingleTicket"
+import { action as findBusAction } from './pages/FindBusSingle'
+import { loader as busesSingleLoader, action as editTicketAction } from "./pages/BusesSingle"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
@@ -66,6 +68,7 @@ const FindBusSingle = lazy(() => import("./pages/FindBusSingle"))
 const BusesSingle = lazy(() => import("./pages/BusesSingle"))
 const Seat = lazy(() => import("./pages/Seats"));
 const Assistant = lazy(() => import("./pages/Assistant"));
+
 const Bus = lazy(() => import("./pages/Bus"));
 const Aboutus = lazy(() => import("./pages/Aboutus"));
 const BusRoutes = lazy(() => import("./pages/Routes"));
@@ -80,24 +83,14 @@ const BusSits = lazy(() => import("./pages/BusSits"));
 const Cities = lazy(() => import("./pages/Cities"));
 const Users = lazy(() => import("./pages/Users"));
 const Security = lazy(() => import("./pages/SecurityPage"))
-// const AdminAssistant = lazy(() => import("./pages/AdminContact"));
 const Details = lazy(() => import("./pages/userDetails"));
 const SeatDetails = lazy(() => import("./pages/SeatDetails"));
-const DashRegister = lazy(() => import("./pages/DashRegister"));
 const BusDetails = lazy(() => import("./pages/BusDetails"));
 const FindBus = lazy(() => import("./pages/FindBus"));
-const Assist = lazy(() => import("./pages/Assistant.user"));
-// axios.defaults.withCredentials = true;
-// if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-//   axios.defaults.baseURL = process.env.REACT_APP_LOCAL_URL
-//   // dev code
-// } else {
-//   // production code
-//   axios.defaults.baseURL = process.env.REACT_APP_PROD_URL
 
-// }
+
 const checkDefaultTheme = () => {
-
+  return false
   if (localStorage.theme === 'dark' || (
     window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark')
@@ -226,20 +219,23 @@ const router = createBrowserRouter([
               </Suspense>
             ,
             path: "user/edit/:id",
-            loader: singleTicketLOader(queryClient),
+            loader: editSingleLoader(queryClient),
             errorElement: <SingleTicketErrorElement />,
             children: [
               {
                 index: true,
                 element: <Suspense>
                   <FindBusSingle />
-                </Suspense>
+                </Suspense>,
+                action: findBusAction
               },
               {
                 path: "buses",
                 element: <Suspense>
                   <BusesSingle />
-                </Suspense>
+                </Suspense>,
+                loader: busesSingleLoader(queryClient),
+                action: editTicketAction(queryClient)
               },
             ]
 
@@ -274,7 +270,7 @@ const router = createBrowserRouter([
 
       ,
       {
-        path: "about",
+        path: "about-us",
         element: <Suspense fallback={<FallBack />}>
           <Aboutus />
         </Suspense>
@@ -352,8 +348,40 @@ const router = createBrowserRouter([
         element: <Suspense>
           <Assistant />
         </Suspense>,
-        loader: singleBusLoader(queryClient),
+        loader: assistantsLoader(queryClient),
         action: singleBusAction(queryClient),
+        errorElement: <SingleTicketErrorElement />
+
+      },
+      {
+        path: "security",
+        element: <Suspense>
+          <Security />
+        </Suspense>,
+        loader: securityLoader(queryClient),
+        action: singleBusAction(queryClient),
+        errorElement: <SingleTicketErrorElement />
+
+      },
+      {
+        element:
+          <Suspense fallback={<FallBack />}>
+            <Seat />
+          </Suspense>
+        ,
+        path: "seat",
+        loader: seatsLoader(queryClient),
+        errorElement: <SingleTicketErrorElement />
+
+      },
+      {
+        element:
+          <Suspense fallback={<FallBack />}>
+            <SeatDetails />
+          </Suspense>
+        ,
+        path: "seat/:id",
+        loader: singleSeatLoader(queryClient),
         errorElement: <SingleTicketErrorElement />
 
       },
@@ -364,8 +392,12 @@ const router = createBrowserRouter([
     element: <Assist />,
     children: [
       {
-        index: true,
-        element: <SingleTicket />,
+        path: ":id",
+        element:
+          <Suspense>
+            < SingleTicket />,
+          </Suspense>,
+        loader: singleTicketLOader(queryClient),
       }
 
     ]
@@ -376,87 +408,81 @@ const router = createBrowserRouter([
 ]
 )
 function App() {
-
   return (
-    <div className=""
-    >
-      {/* <BrowserRouter> */}
-      {/* <ScrollTo /> */}
-
+    <>
       <QueryClientProvider client={queryClient}>
         <RouterProvider
           router={router}
 
         />
         {/* <Suspense fallback={<div className="h-screen w-full
-          bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
-              <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-          </div>}>
-            <Routes>
-              <Route path="/" element={<UserLayout
-                toggleDarkTheme={toggleDarkTheme}
-                darkTheme={darkTheme}
-              />}>
-                <Route index element={<Home />} />
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
+    bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    </div>}>
+      <Routes>
+        <Route path="/" element={<UserLayout
+          toggleDarkTheme={toggleDarkTheme}
+          darkTheme={darkTheme}
+        />}>
+          <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
 
-                <Route path="/" element={<ProtectedRoute />}>
-                  <Route path="bus" element={<FindBus />} />
-                  <Route path="booking" element={<Booking />} />
-                  <Route path="bussits/:id" element={<BusSits />} />
-                  <Route path="information" element={<CheckOutInfo />} />
-                  <Route path="user/:id" element={<SingleTicket />} />
-                  <Route path="user" element={<UserBoard />} />
-                  <Route path="seat" element={<Seat />} />
-                  <Route path="seat/:id" element={<SeatDetails />} />
-                </Route>
-                <Route path="contact-us" element={<ContactUs />} />
-                <Route path="about-us" element={<Aboutus />} />
-                <Route path="auth" element={<Auth />} />
-              </Route>
-              <Route path="/dashboard"
+          <Route path="/" element={<ProtectedRoute />}>
+            <Route path="bus" element={<FindBus />} />
+            <Route path="booking" element={<Booking />} />
+            <Route path="bussits/:id" element={<BusSits />} />
+            <Route path="information" element={<CheckOutInfo />} />
+            <Route path="user/:id" element={<SingleTicket />} />
+            <Route path="user" element={<UserBoard />} />
+            <Route path="seat" element={<Seat />} />
+            <Route path="seat/:id" element={<SeatDetails />} />
+          </Route>
+          <Route path="contact-us" element={<ContactUs />} />
+          <Route path="about-us" element={<Aboutus />} />
+          <Route path="auth" element={<Auth />} />
+        </Route>
+        <Route path="/dashboard"
 
-                element={<DashboardLayout
+          element={<DashboardLayout
 
-                  toggleDarkTheme={toggleDarkTheme}
-                  darkTheme={darkTheme}
+            toggleDarkTheme={toggleDarkTheme}
+            darkTheme={darkTheme}
 
-                />} >
-                <Route index element={<DashboardHome />} />
-                <Route path="tickets" element={<Appointment />} />
-                <Route path=":id" element={<SingleTicket />} />
-                <Route path="cities" element={<Cities />} />
-                <Route path="users" element={<Users />} />
-                <Route path="bus" element={<Bus />} />
-                <Route path="details/:id" element={<Details />} />
-                <Route path="bus/:id" element={<BusDetails />} />
-                <Route path="seat/:id" element={<SeatDetails />} />
-                <Route path="seat" element={<Seat />} />
-                <Route path="routes" element={<BusRoutes />} />
-                <Route path="register" element={<DashRegister />} />
-                <Route path="assistants" element={<Assistant />} />
-                <Route path="contacts" element={<ContactLayout />}>
-                </Route>
-                <Route path='security' element={<Security />} />
+          />} >
+          <Route index element={<DashboardHome />} />
+          <Route path="tickets" element={<Appointment />} />
+          <Route path=":id" element={<SingleTicket />} />
+          <Route path="cities" element={<Cities />} />
+          <Route path="users" element={<Users />} />
+          <Route path="bus" element={<Bus />} />
+          <Route path="details/:id" element={<Details />} />
+          <Route path="bus/:id" element={<BusDetails />} />
+          <Route path="seat/:id" element={<SeatDetails />} />
+          <Route path="seat" element={<Seat />} />
+          <Route path="routes" element={<BusRoutes />} />
+          <Route path="register" element={<DashRegister />} />
+          <Route path="assistants" element={<Assistant />} />
+          <Route path="contacts" element={<ContactLayout />}>
+          </Route>
+          <Route path='security' element={<Security />} />
 
-              </Route>
-              <Route path="assistant"
-                element={<Assist />}>
-                <Route path=":id" element={<SingleTicket />} />
-              </Route>
+        </Route>
+        <Route path="assistant"
+          element={<Assist />}>
+          <Route path=":id" element={<SingleTicket />} />
+        </Route>
 
-              <Route
-                path="*"
-                element={<NotFound />} />
-            </Routes>
-          </Suspense> */}
+        <Route
+          path="*"
+          element={<NotFound />} />
+      </Routes>
+    </Suspense> */}
       </QueryClientProvider>
-      {/* </BrowserRouter> */}
       <ToastContainer />
-    </div>
+    </>
 
-  );
+  )
 }
 
 export default App;

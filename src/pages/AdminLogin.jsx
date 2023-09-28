@@ -1,16 +1,9 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-import { Loadingbtn, Alert } from "../components";
-import { useDispatch } from 'react-redux';
+import { Loadingbtn} from "../components";
 import { motion } from "framer-motion"
-import { setUser } from '../actions/adminData';
+import customFetch from '../utils/customFetch';
 const AdminLogin = () => {
-  const dispatch = useDispatch()
-  const setUserFunction = (user) => {
-    return dispatch(setUser({ ...user }))
-  }
-
   const [isLoading, setIsLoading] = useState(false);
   const url = "/auth/admin/login"
   const [number, setNumber] = useState(null)
@@ -24,7 +17,7 @@ const AdminLogin = () => {
     e.preventDefault()
     setIsLoading(true)
     try {
-      const res = await axios.post(url,
+      const res = await customFetch.post(url,
         { phone: number, password },
        
       )

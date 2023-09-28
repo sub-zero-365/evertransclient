@@ -15,6 +15,24 @@ import axios from 'axios'
 import { Swiper } from 'swiper/react'
 import { SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation } from 'swiper'
+import customFetch from '../utils/customFetch'
+
+const securityQuery = {
+    queryKey: ["alladmins"],
+    queryFn: async () => {
+        const res = await customFetch.get("/admin/alladmins")
+        return res.data
+    }
+}
+
+export const loader = (queryClient) => async ({ request }) => {
+    try {
+        return await queryClient.ensureQueryData(securityQuery)
+    } catch (err) {
+        throw err
+    }
+}
+
 const SecurityPage = ({ currentPage, skip }) => {
     const queryClient = useQueryClient()
     const token = localStorage.getItem("admin_token");
@@ -25,18 +43,10 @@ const SecurityPage = ({ currentPage, skip }) => {
     const password = useRef(null)
     const password2 = useRef(null)
     const setSelectedNull = () => setSelected(null)
-    const { isLoading, isError, data, error, refetch } = useQuery({
-        queryKey: ["alladmins"],
-        queryFn: async () => axios.get("/admin/alladmins", {
-            headers: {
-                'Authorization': "makingmoney " + token
-            },
-        }),
-
-
-    })
+    const { users, numberOfPages } = useQuery(securityQuery).data
+   
     const handleCreateNewAdmin = async () => {
-        return axios.post("/auth/admin/register", {
+        return customFetch.post("/auth/admin/register", {
             phone: phone.current?.value,
             fullname: fullname.current?.value,
             password: password.current?.value,
@@ -51,7 +61,6 @@ const SecurityPage = ({ currentPage, skip }) => {
 
     const addAdmin = useMutation(handleCreateNewAdmin, {
         onSuccess: data => {
-            refetch()
             setIsOpen(false)
             onSuccessToast("successfully added new bus to the routes!")
         },
@@ -59,11 +68,9 @@ const SecurityPage = ({ currentPage, skip }) => {
             onErrorToast((error.response.data ?? "Oops something bad happen try again later !!"))
         },
         onSettled: () => {
-            queryClient.invalidateQueries("create")
+            queryClient.invalidateQueries("alladmins")
         }
     })
-    if (isLoading) return <div>loading</div>
-    if (isError) return <div>some error occurs :{error?.response?.data}</div>
     return (
         <>
             <Helmet>
@@ -105,7 +112,7 @@ const SecurityPage = ({ currentPage, skip }) => {
 
                         <div className='w-[30rem] max-w-[calc(100%-2.5rem)]'>
                             {
-                                data && (
+                                users && (
 
                                     <Swiper
                                         className='md:hidden mx-auto  w-full lg:max-w-2xl border '
@@ -127,11 +134,11 @@ const SecurityPage = ({ currentPage, skip }) => {
 
                                                 chartData={
                                                     {
-                                                        labels: [...data.data?.users].map((v) => v.fullname),
+                                                        labels: users?.map((v) => v.fullname),
                                                         datasets: [
                                                             {
                                                                 label: "user vs admin data",
-                                                                data: [...data.data?.users].map((v) => v.total)
+                                                                data: users?.map((v) => v.total)
 
                                                             },
                                                         ]
@@ -141,25 +148,7 @@ const SecurityPage = ({ currentPage, skip }) => {
 
                                                 } />
                                         </SwiperSlide>
-                                        {/* <SwiperSlide className='w-full'>
-                                            <LineChart
 
-                                                chartData={
-                                                    {
-                                                        labels: [...data.data?.users].map((v) => v.fullname),
-                                                        datasets: [
-                                                            {
-                                                                label: "user vs admin data",
-                                                                data: [...data.data?.users].map((v) => v.total)
-
-                                                            },
-                                                        ]
-
-                                                    }
-
-
-                                                } />
-                                        </SwiperSlide> */}
 
                                     </Swiper>
 
@@ -236,13 +225,7 @@ dark:text-gray-400 transition-colors duration-[2s]">
                                     <th scope="col" className="px-3 py-3">
                                         N_created
                                     </th>
-                                    {/* 
-                                    <th scope="col" className="px-3 py-3">
-                                        Email
-                                    </th>
-                                    <th scope="col" className="px-3 py-3">
-                                        N_created
-                                    </th> */}
+
 
                                     <th scope="col" className="px-3 py-3">
                                         Action
@@ -256,10 +239,10 @@ dark:text-gray-400 transition-colors duration-[2s]">
 
                             >
                                 {
-                                    data?.data?.users.map((user, index) => {
+                                    users?.map((user, index) => {
                                         const { fullname,
                                             phone,
-                                            _id,
+
                                             total,
                                             createdAt } = user
 
@@ -329,7 +312,7 @@ dark:border-gray-600
                         className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto flex  md:gap-x-2"
                     >
                         {Array.from({
-                            length: data?.numberOfPages
+                            length: numberOfPages
                         }, (text, index) => {
                             return <PanigationButton
                                 text={index + 1}

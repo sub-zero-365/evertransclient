@@ -159,7 +159,6 @@ const
                 </h1>
               </div>
               <Swiper
-                onSwiper={setSwiper}
                 className="relative"
                 modules={[Pagination, Navigation]}
                 pagination={{
@@ -171,90 +170,7 @@ const
                   nextEl: ".arrow__right",
                 }}
               >
-
-                {
-
-
-                  (seat?.bus?.feature == undefined || seat?.bus?.feature == null || seat?.bus?.feature == "vip") ? (
-                    <>
-                      <SwiperSlide className="group">
-                        <Heading text={"First Class"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
-                        <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
-                          {
-                            seat?.seat_positions?.slice(0, 20)?.map(({ isTaken, _id, isReserved }, i) => {
-                              return (
-                                <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
-                                  key={_id}
-                                  onClick={() => checkBusAvailabity(isTaken, isReserved, _id)}>
-                                  <motion.div
-                                    initial={false}
-                                    animate={{ scale: selected == i ? [0.8, 1, 0.9] : null }}
-                                    transition={{
-                                      duration: 1,
-                                      ease: "easeInOut",
-                                      repeat: Infinity,
-                                    }
-
-                                    }
-
-                                    className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
-                ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
-                rounded-lg flex items-center justify-center`}>
-                                    <motion.div
-                                      initial={false}
-                                      animate={{ y: selected == _id ? "1.3rem" : 0 }}
-                                      className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
-                px-2 rounded-sm `}>{_id + 1}</motion.div>
-                                    {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
-                                  </motion.div>
-                                </div>
-                              )
-                            })
-                          }
-                        </motion.div>
-
-
-                      </SwiperSlide>
-                      <SwiperSlide className="group">
-                        <Heading text={"Second Class"} className="!mb-6 !text-orange-800 !text-lg !text-center !pl-0 !font-semibold first-letter:text-2xl" />
-                        <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
-                          {
-                            seat?.seat_positions?.slice(20)?.map(({ isTaken, isReserved, _id }, i) => {
-                              return (
-                                <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
-                                  key={_id}
-                                  onClick={() => checkBusAvailabity(isTaken, isReserved, _id)}>
-                                  <motion.div
-                                    initial={false}
-                                    animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
-                                    transition={{
-                                      duration: 1,
-                                      ease: "easeInOut",
-                                      repeat: Infinity,
-                                    }
-                                    }
-                                    className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
-                ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
-                rounded-lg flex items-center justify-center`}>
-                                    <motion.div
-                                      initial={false}
-                                      animate={{ y: selected == _id ? "1.3rem" : 0 }}
-                                      className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
-                px-2 rounded-sm `}>{_id + 1}</motion.div>
-                                    {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
-                                  </motion.div>
-                                </div>
-                              )
-                            })
-                          }
-                        </motion.div>
-                      </SwiperSlide>
-                    </>
-
-                  ) : <>
                     <SwiperSlide className="group">
-
-
                       <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
                         {
                           seat?.seat_positions?.map(({ isTaken, isReserved, _id }, i) => {
@@ -286,16 +202,7 @@ const
                           })
                         }
                       </motion.div>
-
                     </SwiperSlide>
-
-
-                  </>
-
-                }
-
-
-
 
 
               </Swiper>

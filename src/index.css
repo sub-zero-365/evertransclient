@@ -56,7 +56,7 @@
 
 body,
 html {
-  @apply font-poppins !font-light !text-sm  bg-color_light  dark:bg-color_dark dark:text-white;
+  @apply font-poppins !font-light !text-[1rem]  bg-color_light  dark:bg-color_dark dark:text-white;
 }
 
 .links-item {

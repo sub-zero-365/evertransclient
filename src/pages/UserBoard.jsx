@@ -16,16 +16,14 @@ import { IoMdClose } from "react-icons/io"
 import { NavLink, useSearchParams, useNavigate, Link, useOutletContext, useLoaderData } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineSetting } from 'react-icons/ai';
-import formatQuery from "../utils/formatQueryStringParams"
 import dateFormater from "../utils/DateFormater"
-import axios from 'axios'
 import { BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { MdOutlinePriceChange } from 'react-icons/md'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import ClearFilter from '../components/ClearFilter'
 import UiButton from '../components/UiButton'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import SelectTime from 'react-select'
 import EditTicketModal from '../components/EditTicketModal'
 import { toast } from 'react-toastify'
@@ -60,11 +58,10 @@ import {
   PercentageBar
   , CustomDatePicker
 } from '../components';
-import { components, style } from "../utils/reactselectOptionsStyles"
+// import { components, style } from "../utils/reactselectOptionsStyles"
 
 import dayjs from "dayjs"
 import { Helmet } from 'react-helmet'
-import { setUserData as setUserDataFunc } from '../actions/userData'
 import { getCities } from "../utils/ReactSelectFunction"
 
 import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
@@ -75,7 +72,7 @@ import {
   useQuery, useMutation, useQueryClient
 } from '@tanstack/react-query'
 import customFetch from '../utils/customFetch'
-
+const seats = []
 const allTicketsQuery = (params) => {
   const { search, sort, page } = params;
   return {
@@ -91,7 +88,20 @@ const allTicketsQuery = (params) => {
     },
   };
 };
+const style = {
+  control: base => ({
+    ...base,
+    // border: 0,
+    // borderBottom: "1px solid black",
+    boxShadow: "none",
+    background: "transparent",
+    borderRadius: 0,
+    fontSize: 1 + "rem",
+    cursor: "pointer"
+  }
+  )
 
+}
 export const loader =
   (queryClient) =>
     async ({ request }) => {
@@ -103,13 +113,12 @@ export const loader =
     };
 
 const Details = () => {
+
   const [querySearch] = useSearchParams();
   const { handleFilterChange, handleChange } = useFilter()
   const queryClient = useQueryClient()
   const { searchValues } = useLoaderData()
   const userData = useQuery(allTicketsQuery(searchValues))?.data
-  // console.log(data__)
-
   const [seatDate, setSeatDate] = useState(new Date())
 
   let downloadbaseurl = null
@@ -124,33 +133,8 @@ const Details = () => {
 
 
 
-  // const getSeats = async () => {
-
-  //   try {
-  //     const res = await axios.get("/seat/getstatic", {
-  //       params: {
-  //         traveldate: dayjs(seatDate).format("YYYY/MM/DD")
-  //       }
-  //     })
-
-  //     return res.data
-
-  //   } catch (err) {
-  //   }
 
 
-  // }
-
-  // const { data, refetch } = useQuery({
-  //   queryKey: ["findSeats", {
-  //     traveldate: dayjs(seatDate).format("YYYY-MM-DD")
-  //   }
-  //   ],
-  //   queryFn: getSeats,
-  //   enabled: false
-  // })
-  // 
-  // const {user}=useDispatch
   const { user } = useOutletContext();
 
 
@@ -164,7 +148,6 @@ const Details = () => {
   const [isOpen_, setIsOpen_] = useState(false)
   const [isOpen__, setIsOpen__] = useState(false)
   const [isOpen___, setIsOpen___] = useState(false)
-  const dispatch = useDispatch()
   const navigate = useNavigate()
   const [message, setMessage] = useState("")
   const [toggle_, setToggle_] = useState(false)
@@ -176,14 +159,12 @@ const Details = () => {
     e.preventDefault()
     try {
 
-      const res = await axios.post("/user/updatepassword", {
+      const res = await customFetch.post("/user/updatepassword", {
         oldpassword: password1.current.value,
         newpassword: password2.current.value,
         confirmpassword: password3.current.value
       }, {
-        headers: {
-          'Authorization': "makingmoney " + token
-        }
+
       })
       setIsOpen(false)
       onPasswordSuccess()
@@ -201,7 +182,6 @@ const Details = () => {
 
 
   }
-  // const { userData } = useSelector(state => state.userData);
 
 
 
@@ -211,7 +191,6 @@ const Details = () => {
   const password1 = useRef(null);
   const password2 = useRef(null);
   const password3 = useRef(null);
-  // const [isActiveIndexLoading, setIsActiveIndexLoading] = useState(false)
 
   const [selectedIds, setSelectedIds] = useState({
     seat_id: null,
@@ -264,13 +243,13 @@ const Details = () => {
 
   })
   const handleaddnewroute = () => {
-    return axios.post("/seat", {
+    return customFetch.post("/seat", {
       ...queryObj
     })
   }
   const handleAddNewSeat = () => {
     const { seat_id, bus_id } = selectedIds
-    return axios.post("/seat", { seat_id, bus_id })
+    return customFetch.post("/seat", { seat_id, bus_id })
   }
   const Demoadd = useMutation(handleAddNewSeat,
 
@@ -321,60 +300,12 @@ const Details = () => {
     handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
   }
 
-  const token = localStorage.getItem("token");
-  // const { loading: isLoading } = useSelector(state => state.userData)
-  const isLoading = false
-  const [userInfo, setUserInfo] = useState({});
-  // const config = {
-  //   headers: {
-  //     'Authorization': "makingmoney " + token
-  //   },
-  //   params: formatQuery(querySearch.toString())
-  // }
-  // async function getData() {
 
-  //   const url = "/ticket"
-  //   setIsActiveIndexLoading(true)
-
-  //   try {
-  //     const res = await axios.get(url, config)
-  //     setUserData(res.data)
-
-  //   } catch (err) {
-  //     setToggle_(true)
-  //     setMessage(err.response.data)
-  //     console.log(err)
-  //   }
-  //   setIsActiveIndexLoading(false)
-
-  // }
-  useEffect(() => {
-    if (!isOpen___) setSlide(false)
-  }, [isOpen___])
-  // useEffect(() => {
-  //   getData();
-  // }, [querySearch]);
-  const data = {}
   const [showAdd, setShowAdd] = useState(false)
   const _view = JSON.parse(localStorage.getItem("__view")) == true ? true : false
   const [__view, __setView] = useState(_view)
   const [greetingtext, setGreetingText] = useState("GOOD MORNING")
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     const hour = new Date().getHours()
-  //     if (hour < 13) {
-  //       setGreetingText("GOOD MORNING")
-  //     } else if (hour < 17) {
-  //       setGreetingText("GOOD AFTERNOON")
-  //     } else {
 
-  //       setGreetingText("GOOD EVENING")
-  //     }
-  //   }, 1000);
-  //   return () => {
-  //     clearInterval(timer)
-  //   }
-  // }, [])
   const getCount = ({ from, to, traveltime, _id }, arr) => {
     const count = arr?.filter((item) => item.from == from && item.to == to && item.traveltime == traveltime)
     return count.length
@@ -390,7 +321,7 @@ const Details = () => {
     setLoading(true)
     setErr(null)
     try {
-      const { data: { ticket } } = await axios.post("/public/ticket",
+      const { data: { ticket } } = await customFetch.post("/public/ticket",
         {
           id
           ,
@@ -569,10 +500,10 @@ const Details = () => {
                   className={` `}>
                   <div>
                     {
-                      makeUnique(data?.seats, ["traveltime", "from", "to"])?.map(({ traveltime, from, to, _id: seat_id }, idx) => {
+                      makeUnique(seats, ["traveltime", "from", "to"])?.map(({ traveltime, from, to, _id: seat_id }, idx) => {
                         const count = getCount({
                           from, to, traveltime
-                        }, data?.seats)
+                        }, seats)
                         return (
                           <div className='flex justify-between  flex-col  md:flex-row px-4 space-x-6 items-center border-b border-slate-200 pb-2 mb-1'>
                             <div className='flex-none flex space-x-5 space-y-2 items-center'>
@@ -634,14 +565,7 @@ const Details = () => {
                     <form onSubmit={e => {
                       e.preventDefault()
                       mutate()
-                      // toast.promise(handleaddnewroute().then(data => {
-                      //   alert("added success")
-                      //   refetch()
-                      // }), {
-                      //   pending: "loading please wait ",
-                      //   success: "done creating bus seat  ...",
-                      //   error: "oops Something went wrong ,try again later"
-                      // })
+
                     }}>
                       {
 
@@ -677,7 +601,7 @@ const Details = () => {
                                     fontSize: 10 + "px"
                                   }}
 
-                                  components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                  // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
                                   className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
                                 // onChange={evt => setFromCities(evt.value)}
@@ -708,7 +632,7 @@ const Details = () => {
                                     fontSize: 10 + "px"
                                   }}
 
-                                  components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                  // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
                                   className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
                                 />
@@ -725,7 +649,7 @@ const Details = () => {
                                       label: querySearch.get("traveltime") || "no time",
                                       value: "no time"
                                     }}
-                                    components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                    // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
                                     isSearchable={false}
 
@@ -1035,7 +959,7 @@ const Details = () => {
             dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
             dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
             dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-              disabled={isLoading}
+              disabled={false}
               data-te-ripple-init
               data-te-ripple-color="light">
               {loading ? <Loadingbtn /> : "Change Password"}
@@ -1121,9 +1045,7 @@ const Details = () => {
                         !mb-5
                         "
                           onClick={() => {
-                            setToggle(false)
-                            setIsOpen__(true)
-                            setIsOpen_(false)
+                            navigate(`edit/${ticket?._id}`)
                           }}
                         />
 
@@ -1245,57 +1167,52 @@ z-10  "
             <Heading text={"Recent Ticket(3)"} className={"!text-center !mb-2"} />
 
             {
-              isLoading ? <>
-                <LoadingBox />
-                <LoadingBox />
 
-
-              </> :
-                userData?.tickets?.slice(0, 3).map(({ fullname, traveldate, from, to, _id, createdAt }, i) => {
-                  return (
-                    <div
-                      key={i}
-                      class="max-w-sm mb-1 dark:text-white 
+              userData?.tickets?.slice(0, 3).map(({ fullname, traveldate, from, to, _id, createdAt }, i) => {
+                return (
+                  <div
+                    key={i}
+                    class="max-w-sm mb-1 dark:text-white 
       bg-white  border  border-gray-200 rounded-lg shadow-xl dark:shadow-sm 
       dark:shadow-black shadow-slate-300 dark:bg-gray-800 dark:border-gray-700">
-                      <div className="grid grid-cols-[1fr,auto] px-2 pt-3
+                    <div className="grid grid-cols-[1fr,auto] px-2 pt-3
   pb-2
   items-center justify-between border dark:border-slate-400 ">
-                        <Heading text="Tickets Details"
-                          className="!mb-0 !text-xs !text-start !mt-0 !pl-0 !ml-0 
+                      <Heading text="Tickets Details"
+                        className="!mb-0 !text-xs !text-start !mt-0 !pl-0 !ml-0 
   !font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                        <h4 className='!text-xs text-slate-500 !mb-0 !pb-0'>
-                          {createdAt && (dateFormater(createdAt).date)}
-                        </h4>
-                      </div>
+                      <h4 className='!text-xs text-slate-500 !mb-0 !pb-0'>
+                        {createdAt && (dateFormater(createdAt).date)}
+                      </h4>
+                    </div>
 
 
-                      <div class="p-2">
-                        <Heading text="FullName" className="!mb-0 !text-center !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                        <Heading text={fullname} className="!mb-2 !text-sm !text-center" />
-                        <div className='grid grid-cols-2'>
-                          <div>
-                            <Heading text="From" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                            <Heading text={from} className="!mb-2 !text-sm" />
-                          </div>
-
-                          <div>
-                            <Heading text="To" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                            <Heading text={to} className="!mb-2 !text-sm" />
-                          </div>
-
+                    <div class="p-2">
+                      <Heading text="FullName" className="!mb-0 !text-center !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+                      <Heading text={fullname} className="!mb-2 !text-sm !text-center" />
+                      <div className='grid grid-cols-2'>
+                        <div>
+                          <Heading text="From" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
+                          <Heading text={from} className="!mb-2 !text-sm" />
                         </div>
-                        <Heading text="Travel Date" className="!mb-0 !text-center !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                        <Heading text={(new Date(traveldate).toLocaleDateString())} className="!mb-2 !text-sm !text-center" />
-                        <div className='grid grid-cols-2 gap-x-1 place-items-center'>
 
-                          <Button name="view"
-                            className={"!inline-block !mx-0  !w-full"}
-                            href={`${_id}`}
-                          />
-                          <a
-                            target='_blank'
-                            className='
+                        <div>
+                          <Heading text="To" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
+                          <Heading text={to} className="!mb-2 !text-sm" />
+                        </div>
+
+                      </div>
+                      <Heading text="Travel Date" className="!mb-0 !text-center !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
+                      <Heading text={(new Date(traveldate).toLocaleDateString())} className="!mb-2 !text-sm !text-center" />
+                      <div className='grid grid-cols-2 gap-x-1 place-items-center'>
+
+                        <Button name="view"
+                          className={"!inline-block !mx-0  !w-full"}
+                          href={`${_id}`}
+                        />
+                        <a
+                          target='_blank'
+                          className='
                         w-full
                         font-medium
             shadow
@@ -1326,14 +1243,14 @@ z-10  "
                         
                         '
 
-                            href={`${downloadbaseurl}/downloadticket/${_id}`}>download</a>
+                          href={`${downloadbaseurl}/downloadticket/${_id}`}>download</a>
 
-                        </div>
                       </div>
                     </div>
-                  )
+                  </div>
+                )
 
-                })
+              })
             }
           </div>
           <div className="flex-1   mb-6 ">
@@ -1412,56 +1329,43 @@ z-10  "
                   percent={userData?.percentageInActive}
                   text="InActive  Ratio" />
               </Scrollable>
-              {
-                isLoading ?
-                  <PlaceHolderLoader />
 
-                  :
-                  <>
 
-                    <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${viewAll && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
-                      <TicketCounts counts={userData?.totalTickets}
-                        text={"Total Number Of Tickets"}
-                        icon={<AiOutlineSave />} />
-                      <TicketCounts counts={userData?.totalActiveTickets}
-                        text={"Total Number Of active Tickets"}
-                        icon={<VscFolderActive />} />
-                      <TicketCounts
-                        text={"Total Number Of Inactive Tickets"}
-                        counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
-                      <TicketCounts
-                        className="!bg-rose-200"
-                        counts={userData?.totalEditedTicket}
-                        text={"Total Edited  Tickets"}
-                        icon={<AiOutlineSave />} />
-                    </Scrollable>
-                    <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${viewAll && "!grid md:!grid-cols-2"}`}>
-                      <AmountCount
-                        className="!bg-blue-400"
-                        text="Total cost of all tickets"
-                        icon={<MdOutlinePriceChange />}
-                        amount={userData?.totalPrice} />
-                      <AmountCount
-                        className="!bg-green-400"
+              <>
 
-                        text="Total cost of all active tickets"
+                <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${viewAll && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
+                  <TicketCounts counts={userData?.totalTickets}
+                    text={"Total Number Of Tickets"}
+                    icon={<AiOutlineSave />} />
+                  <TicketCounts counts={userData?.totalActiveTickets}
+                    text={"Total Number Of active Tickets"}
+                    icon={<VscFolderActive />} />
+                  <TicketCounts
+                    text={"Total Number Of Inactive Tickets"}
+                    counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
+             
+                </Scrollable>
+                <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${viewAll && "!grid md:!grid-cols-2"}`}>
+                  <AmountCount
+                    className="!bg-blue-400"
+                    text="Total cost of all tickets"
+                    icon={<MdOutlinePriceChange />}
+                    amount={userData?.totalPrice} />
+                  <AmountCount
+                    className="!bg-green-400"
 
-                        icon={<BiCategory />} amount={userData?.totalActivePrice} />
-                      <AmountCount
-                        className="!bg-red-400 !text-black"
+                    text="Total cost of all active tickets"
 
-                        text="Total cost of all inactive tickets"
+                    icon={<BiCategory />} amount={userData?.totalActivePrice} />
+                  <AmountCount
+                    className="!bg-red-400 !text-black"
 
-                        icon={<BiCategory />} amount={userData?.totalInActivePrice} />
-                      <AmountCount
-                        className="!bg-red-400 !text-black"
+                    text="Total cost of all inactive tickets"
 
-                        text="Total cost of all edited tickets"
+                    icon={<BiCategory />} amount={userData?.totalInActivePrice} />
 
-                        icon={<BiCategory />} amount={userData?.totalSumOfEditedTicket} />
-                    </Scrollable>
-                  </>
-              }
+                </Scrollable>
+              </>
 
 
             </div>
@@ -1483,185 +1387,161 @@ z-10  "
             >
               <IoMdClose size={25} />
             </span>
-            {
 
-              isLoading ?
-                <div role="status" class="animate-pulse">
-                  <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
-                  <div class="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px] mb-3"></div>
-                  <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
-                  <div class="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px] mb-3"></div>
-                  <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
-                  <div class="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px] mb-3"></div>
-                  <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
-                  <div class="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px] mb-3"></div>
-                  <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
-                  <div class="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px] mb-3"></div>
-                  <div class="flex items-center justify-center mt-4">
-                    <svg class="w-8 h-8 text-gray-200 dark:text-gray-700 mr-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
-                    </svg>
-                    <div class="w-20 h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 mr-3"></div>
-                    <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                  </div>
-                  <span class="sr-only">Loading...</span>
-                </div>
-
-                :
-                <div
-                  className=' overflow-y-auto max-h-[calc(100vh-0px)] lg:max-h-fit overflow-x-hidden '
-                >
-                  {querySearch.get("account_block") && "account restricted"}
-                  <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4--  !text-lg first-letter:text-2xl" />
-                  <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
-                  <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.phone || "n/a"}</h4>
-                  <UiButton
-                    name="Update Password" className="!mx-auto !rounded-lg !mt-2 !bg-blue-700"
-                    onClick={() => {
-                      setIsOpen(true)
-                    }} />
-                  <Swiper
-                    className='my-6
+            <div
+              className=' overflow-y-auto max-h-[calc(100vh-0px)] lg:max-h-fit overflow-x-hidden '
+            >
+              {querySearch.get("account_block") && "account restricted"}
+              <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4--  !text-lg first-letter:text-2xl" />
+              <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
+              <h4 className='text-sm text-slate-500 font-medium '>{user?.phone || "n/a"}</h4>
+              <UiButton
+                name="Update Password" className="!mx-auto !rounded-lg !mt-2 !bg-blue-700"
+                onClick={() => {
+                  setIsOpen(true)
+                }} />
+              <Swiper
+                className='my-6
                             px-4 
                             w-full
                             lg:w-full 
                             !relative
                           
                             '
-                    slidesPerView={1}
-                    // onSlideChange={(e) => console.log(e)}
-                    modules={[Autoplay, Navigation]}
-                    navigation={{
-                      prevEl: ".arrow__left",
-                      nextEl: ".arrow__right",
-                    }}
-                  >
-                    <PrevButton className="!left-1.5" />
-                    <NextButton className="!right-1.5" />
+                slidesPerView={1}
+                // onSlideChange={(e) => console.log(e)}
+                modules={[Autoplay, Navigation]}
+                navigation={{
+                  prevEl: ".arrow__left",
+                  nextEl: ".arrow__right",
+                }}
+              >
+                <PrevButton className="!left-1.5" />
+                <NextButton className="!right-1.5" />
 
-                    <SwiperSlide className="group ">
-                      <Heading text={"Query  Travel At"} className="!font-black !text-sm underline !underline-offset-4 !mb-2 !text-center" />
+                <SwiperSlide className="group ">
+                  <Heading text={"Query  Travel At"} className="!font-black !text-sm underline !underline-offset-4 !mb-2 !text-center" />
 
 
-                      <div
+                  <div
 
-                        className="flex flex-col
+                    className="flex flex-col
                         items-center w-full justify-center group-[.swiper-slide-active]:!translate-y-0 
                          translate-y-[50px] ease duration-[1s] transition-all">
-                        <DatePicker
-                          selected={startDate}
-                          onChange={onChange}
-                          startDate={startDate}
-                          endDate={endDate}
-                          selectsRange
-                          inline
-                        />
-                        <button
-                          data-te-ripple-init
-                          data-te-ripple-color="light"
-                          className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+                    <DatePicker
+                      selected={startDate}
+                      onChange={onChange}
+                      startDate={startDate}
+                      endDate={endDate}
+                      selectsRange
+                      inline
+                    />
+                    <button
+                      data-te-ripple-init
+                      data-te-ripple-color="light"
+                      className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
   transition duration-150 ease-in-out hover:bg-blue-600
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                          onClick={handleBoardingRangeSearch}
+                      onClick={handleBoardingRangeSearch}
 
-                        >
-                          {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
-                        </button>
+                    >
+                      {false ? <Loadingbtn toggle /> : "Filter Tickets"}
+                    </button>
 
-                        {
-                          querySearch.get("boardingRange") && <button
-                            data-te-ripple-init
-                            data-te-ripple-color="light"
-                            className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
+                    {
+                      querySearch.get("boardingRange") && <button
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
 leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
 transition duration-150 ease-in-out hover:bg-red-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                            onClick={() => {
+                        onClick={() => {
 
-                              handleFilterChange("boardingRange")
-                            }}
-                          >
-                            Clear Travel
-                          </button>
-                        }
-                      </div>
-
-
-                    </SwiperSlide>
-                    <SwiperSlide className="group">
-                      <Heading text={"Query  Created At"}
-                        className=" !text-sm !text-slate-500 !font-semibold !underline-offset-4 !mb-2 !text-center" />
+                          handleFilterChange("boardingRange")
+                        }}
+                      >
+                        Clear Travel
+                      </button>
+                    }
+                  </div>
 
 
-                      <div
+                </SwiperSlide>
+                <SwiperSlide className="group">
+                  <Heading text={"Query  Created At"}
+                    className=" !text-sm !text-slate-500 !font-semibold !underline-offset-4 !mb-2 !text-center" />
 
-                        className="flex flex-col items-center w-full justify-center  group-[.swiper-slide-active]:!translate-y-0 
+
+                  <div
+
+                    className="flex flex-col items-center w-full justify-center  group-[.swiper-slide-active]:!translate-y-0 
                         translate-y-[50px] ease duration-[1s] transition-all">
-                        <DatePicker
-                          selected={startDate}
-                          onChange={onChange}
-                          startDate={startDate}
-                          endDate={endDate}
-                          selectsRange
-                          inline
-                          maxDate={new Date()}
-                        />
-                        <button
-                          data-te-ripple-init
-                          data-te-ripple-color="light"
-                          className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+                    <DatePicker
+                      selected={startDate}
+                      onChange={onChange}
+                      startDate={startDate}
+                      endDate={endDate}
+                      selectsRange
+                      inline
+                      maxDate={new Date()}
+                    />
+                    <button
+                      data-te-ripple-init
+                      data-te-ripple-color="light"
+                      className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
   transition duration-150 ease-in-out hover:bg-blue-600
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
   focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                          onClick={handleFilterSearch}
+                      onClick={handleFilterSearch}
 
-                        >
-                          {isLoading ? <Loadingbtn toggle /> : "Filter Tickets"}
-                        </button>
+                    >
+                      {false ? <Loadingbtn toggle /> : "Filter Tickets"}
+                    </button>
 
-                        {
-                          querySearch.get("daterange") && <button
-                            data-te-ripple-init
-                            data-te-ripple-color="light"
-                            className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
+                    {
+                      querySearch.get("daterange") && <button
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
 leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
 transition duration-150 ease-in-out hover:bg-red-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
 focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                            onClick={() => {
+                        onClick={() => {
 
-                              handleFilterChange("daterange")
+                          handleFilterChange("daterange")
 
-                            }}
+                        }}
 
-                          >
-                            Clear Filter Query
-                          </button>
-                        }
-                      </div>
+                      >
+                        Clear Filter Query
+                      </button>
+                    }
+                  </div>
 
 
-                    </SwiperSlide>
+                </SwiperSlide>
 
-                  </Swiper>
+              </Swiper>
 
-                  <div className="mt-10  md:mb-5">
+              <div className="mt-10  md:mb-5">
 
-                    <div
-                      onClick={e => e.stopPropagation()}
-                      className={`
+                <div
+                  onClick={e => e.stopPropagation()}
+                  className={`
                         mx-auto
           md:translate-x-0
           group-[.active]:translate-x-0
@@ -1678,17 +1558,17 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
           
             py-5 `}>
 
-                      <AnimateText text="Please enter ticket id to get and edit tickett" className='!text-lg' />
-                      <form
-                        onSubmit={handleSubmit}
-                        className='px-5 '
-                      >
-                        <div className="relative mb-6" data-te-input-wrapper-init>
-                          <input
-                            value={id}
-                            onChange={(e) => setId(e.target.value)}
-                            type="text"
-                            className="peer block min-h-[auto] w-full 
+                  <AnimateText text="Please enter ticket id to get and edit tickett" className='!text-lg' />
+                  <form
+                    onSubmit={handleSubmit}
+                    className='px-5 '
+                  >
+                    <div className="relative mb-6" data-te-input-wrapper-init>
+                      <input
+                        value={id}
+                        onChange={(e) => setId(e.target.value)}
+                        type="text"
+                        className="peer block min-h-[auto] w-full 
               rounded 
               border-2
               focus:border-2
@@ -1703,11 +1583,11 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
               ease-linear
               focus:placeholder:opacity-100
               data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                            id="ticket_id"
-                            placeholder="Password" required />
-                          <label
-                            htmlFor="ticket_id"
-                            className="pointer-events-none 
+                        id="ticket_id"
+                        placeholder="Password" required />
+                      <label
+                        htmlFor="ticket_id"
+                        className="pointer-events-none 
               absolute left-3
               top-0 mb-0
               max-w-[90%]
@@ -1736,20 +1616,20 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
               motion-reduce:transition-none
               dark:text-neutral-200
               dark:peer-focus:text-primary"
-                          >
-                            Enter Ticket Id
-                          </label>
-                        </div>
+                      >
+                        Enter Ticket Id
+                      </label>
+                    </div>
 
-                        <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
-                          <motion.h1
-                            className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> </motion.h1>
-                        </div>
+                    <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
+                      <motion.h1
+                        className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> </motion.h1>
+                    </div>
 
 
-                        <button
-                          type="submit"
-                          className="inline-block bg-blue-400
+                    <button
+                      type="submit"
+                      className="inline-block bg-blue-400
             w-full rounded bg-primary px-7
             pb-2.5 pt-3 text-sm font-medium
             uppercase leading-normal
@@ -1766,55 +1646,55 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
             dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
             dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
             dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                          // disabled={loading}
-                          data-te-ripple-init
-                          data-te-ripple-color="light">
-                          {/* {loading ? <Loadingbtn /> : "Change Password"}
+                      // disabled={loading}
+                      data-te-ripple-init
+                      data-te-ripple-color="light">
+                      {/* {loading ? <Loadingbtn /> : "Change Password"}
                             */}
-                          {"check ticket details"}
-                        </button>
+                      {"check ticket details"}
+                    </button>
 
 
-                      </form>
-                    </div>
-
-                  </div>
-                  <div>
-                    <form onSubmit={e => {
-                      e.preventDefault()
-                      setIsOpen___(true)
-                      // refetch()
-                    }}>
-                      <CustomDatePicker
-                        startDate={seatDate}
-                        setStartDate={setSeatDate}
-                      />
-
-
-                      <UiButton
-                        type="submit"
-                        className={"!bg-green-800 w-[min(300px,calc(100%-40px))] !mx-auto px-8 !mb-10 pb-2.5 pt-1.5"}
-                        name={"Show buses"}
-                        onClick={() => 0}
-                      />
-                    </form>
-
-                  </div>
+                  </form>
                 </div>
 
-            }
+              </div>
+              <div>
+                <form onSubmit={e => {
+                  e.preventDefault()
+                  setIsOpen___(true)
+                  // refetch()
+                }}>
+                  <CustomDatePicker
+                    startDate={seatDate}
+                    setStartDate={setSeatDate}
+                  />
+
+
+                  <UiButton
+                    type="submit"
+                    className={"!bg-green-800 w-[min(300px,calc(100%-40px))] !mx-auto px-8 !mb-10 pb-2.5 pt-1.5"}
+                    name={"Show buses"}
+                    onClick={() => 0}
+                  />
+                </form>
+
+              </div>
+            </div>
+
+
 
           </div>
         </div>
 
-        <div className="flex justify-between lg:justify-center  gap-x-4 gap-y-2 lg:gap-x-6
+        <div className="flex justify-between lg:justify-center  gap-x-4 gap-y-8 lg:gap-x-6
       flex-wrap pr-5 items-start mb-10">
-          <h1 className="text-2xl mt-4 
+          {/* <h1 className="text-2xl mt-4 
         text-gray-700 pl-6
         dark:text-white
         flex tracking-tight">All tickets <span className="text-xs ring-2 ring-gray-700  grid place-items-center
         ml-1 w-5 h-5 bg-gray-500 text-white
-        mb-4 rounded-full border">{userData?.totalTickets || 0} </span> </h1>
+        mb-4 rounded-full border">{userData?.totalTickets || 0} </span> </h1> */}
 
           <div className='mt-0'>
             <div className="text-[0.8rem] text-slate-300 dark:text-white uppercase text-center font-semibold mb-1 font-montserrat"> ticket status</div>
@@ -1828,7 +1708,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
               ref={selectRef}
               isSearchable={false}
               onChange={(e) => handleChange(e, "ticketStatus")}
-              components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+              // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
               className='!border-none !h-8 mt-0' />
           </div>
@@ -1863,7 +1743,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 label: querySearch.get("triptype") || "all trip",
                 value: "all"
               }}
-              components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+              // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
               isSearchable={false}
               // onChange={handleSortTime}
@@ -1880,10 +1760,9 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 label: querySearch.get("sort") || "createdAt -",
                 value: "newest"
               }}
-              components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+              // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
               isSearchable={false}
-              // onChange={handleSortTime}
               onChange={(e) => handleChange(e, "sort")}
 
               className='!border-none !h-8 mt-0' />
@@ -1899,10 +1778,9 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 label: querySearch.get("traveltime") || "no time",
                 value: "no time"
               }}
-              components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+              // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
               isSearchable={false}
-              // onChange={handleSortTime}
               onChange={(e) => handleChange(e, "traveltime")}
 
               className='!border-none !h-8 mt-0' />
@@ -1926,20 +1804,12 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
         <Form
           handleChangeText={handleChangeText}
           params={querySearch} />
-        {
-
-          !isLoading && (<FormatTable
-            ticketData={userData}
+        <FormatTable
+          ticketData={userData}
 
 
-          />)
-        }
+        />
 
-        {
-          isLoading && (
-            <PlaceHolderLoader />
-          )
-        }
         <div className='mt-10 ' />
 
 

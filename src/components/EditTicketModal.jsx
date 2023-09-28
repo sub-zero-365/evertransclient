@@ -331,7 +331,7 @@ shadow-slate-400
                             </motion.div>
                         ) : (
                             isOpen && <motion.form
-                                // transition={{ delay:isOpen? 0.2:0 }}
+                         
                                 className="px-6" onSubmit={handleSubmit}>
                                 <CustomDatePicker
                                     startDate={startDate}

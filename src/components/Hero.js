@@ -5,6 +5,7 @@ import UiButton from './UiButton';
 import busimages from '../Assets/images/mainbusimage.png'
 import { motion } from "framer-motion"
 import { Link, NavLink } from 'react-router-dom';
+import Write from './Write';
 const Hero = () => {
     return (
         <div className="h-screen text-white relative group">
@@ -49,9 +50,10 @@ const Hero = () => {
                                 }}
                         >
 
-                            <p
+                            <Write />
+                            {/* <p
                                 className='text-xl text-center lg:text-start lg:text-2xl font-medium my-4'
-                            >Luctus nisi pharetra mollis aliquet iaculis tempus potenti. Dictumst vestibulum luctus eget sit sag </p>
+                            >Luctus nisi pharetra mollis aliquet iaculis tempus potenti. Dictumst vestibulum luctus eget sit sag </p> */}
 
                             <div
                                 className='flex gap-6  justify-start flex-wrap '
@@ -66,8 +68,8 @@ const Hero = () => {
 
                                         to="/booking"
                                     >{
-                                            ({ isPending }) =>  isPending ? "please wait..." : "   Get Started"
-                                            
+                                            ({ isPending }) => isPending ? "please wait..." : "   Get Started"
+
                                         }
 
                                     </NavLink>
@@ -80,7 +82,7 @@ const Hero = () => {
                                 >
                                     <Link
 
-                                        to="/about"
+                                        to="/about-us"
                                     >
                                         Learn More
                                     </Link>

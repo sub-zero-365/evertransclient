@@ -44,7 +44,7 @@ const ProtectedRoute = (queryClient) => {
 
     customFetch.interceptors.response.use(
         (response) => {
-            console.log("this is the response before the request is being sent ", response)
+            // console.log("this is the response before the request is being sent ", response)
             return response;
         },
         (error) => {

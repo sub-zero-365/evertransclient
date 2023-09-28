@@ -14,22 +14,28 @@ import { getBuses } from '../utils/ReactSelectFunction'
 import { components, style } from "../utils/reactselectOptionsStyles"
 import { useState, useEffect, useRef } from 'react'
 import BusSelect from 'react-select/async'
-import axios from 'axios'
 import {
-    useQuery,
+    useQuery, useQueryClient
 } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet'
 import { ToggleSwitch, DisplayUi } from "../components"
-import UiButton from "../components/UiButton"
 import { AiOutlineWarning } from "react-icons/ai"
-// import customFetch from "../components/CusotomFetch"
 import { useFilter } from '../Hooks/FilterHooks'
 import customFetch from "../utils/customFetch"
 
 const singleSeat = (id) => {
     return ({
         queryKey: ["seat", id],
+        queryFn: async () => {
+            const res = await customFetch.get(`/seat/specific/${id}`)
+            return res.data
+        }
+    })
+}
+const seatDetails = (id) => {
+    return ({
+        queryKey: ["seatdetails", id],
         queryFn: async () => {
             const res = await customFetch.get(`/seat/seatdetails/${id}`)
             return res.data
@@ -50,8 +56,8 @@ export const loader = (queryClient) => async ({ params }) => {
 
 
 const SeatDetails = () => {
+    const queryClient = useQueryClient()
     const id = useLoaderData()
-
     const { handleChange: onChange } = useFilter()
     const token = localStorage.getItem("token");
     const [isOpen, setIsOpen] = useState(false)
@@ -80,15 +86,8 @@ const SeatDetails = () => {
 
     const [querySearch, setQuerySearch] = useSearchParams();
     const isadminuser = querySearch.get("admin")
-    let ticket_seat = querySearch.get("ticket_seat") || false;
     const [activeSeat, setActiveSeat] = useState(null);
-    const [loading, setLoading] = useState(false)
 
-    const scrollElement = () => {
-        ref.current?.scrollIntoView({
-            "behavior": "smooth"
-        })
-    }
 
     useEffect(() => {
         let timer = null
@@ -103,17 +102,15 @@ const SeatDetails = () => {
         }
     }, [activeSeat])
 
-
-    const {ticketData} = useQuery(singleSeat(id)).data;
-    const [seats, setSeats] = useState({})
+    const tickets = useQuery(seatDetails(id)).data;
+    const { seat } = useQuery(singleSeat(id)).data;
     const navigate = useNavigate()
-
 
     const [state, setState] = useState(false);
     const [seatposition, setPos] = useState(null)
     const handleChange = () => {
         setState(true)
-        return axios.post("ticket/removeticketfrombus", {
+        return customFetch.post("ticket/removeticketfrombus", {
             seat_id: id,
             seatposition
         }, {
@@ -125,37 +122,14 @@ const SeatDetails = () => {
 
     }
     const handleClick = async (index) => {
-        return axios.get(`/seat/ticket/${id}/${index}`)
+        return customFetch.get(`/seat/ticket/${id}/${index}`)
     }
-    const getSeats = async () => {
-        try {
-            const res = await axios.get("/seat/specific/" + id, {}, {});
-            setSeats(res.data)
-            console.log(res.data.seat.bus.bus)
-            if (res.data?.seat?.bus?.bus !== "demobus") {
-                onChange({ value: res.data?.seat?.bus?._id }, "bus_id")
-            }
-            // return res.data
-        } catch (err) {
-            console.log(err)
-            // alert("fail to get seat" + err.response.data)
-            // setLoadingError(err.response.data)
-        } finally {
-            setActiveSeat((ticket_seat))
-            setLoading(false)
-            if (loading == false) {
-                scrollElement()
-            }
-        }
-    }
-    useEffect(() => {
-        setLoading(true)
-        getSeats()
-    }, [])
 
 
 
-    
+
+
+
     return (
         <>
             <Helmet>
@@ -196,7 +170,7 @@ const SeatDetails = () => {
                                 onChange={() => toast.promise(
                                     handleChange().then(({ data }) => {
                                         setIsOpen(false)
-                                        getSeats()
+                                        queryClient.invalidateQueries(["seat", id])
                                     }).finally(() => {
                                         setTimeout(() => {
                                             setState(false)
@@ -256,8 +230,8 @@ const SeatDetails = () => {
                                 loadOptions={getBuses}
                                 required
                                 defaulValues={{
-                                    value: seats?.seat?.bus?._id,
-                                    label: seats?.seat?.bus?.bus,
+                                    value: seat?.bus?._id,
+                                    label: seat?.bus?.bus,
                                 }}
                                 styles={{
                                     ...style,
@@ -322,7 +296,7 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
                             {
 
-                                seats?.seat?.seat_positions?.map(({ isTaken, isReserved, _id }, index) => {
+                                seat?.seat_positions?.map(({ isTaken, isReserved, _id }, index) => {
                                     return (
                                         <motion.button
                                             ref={activeSeat == index ? ref : null}
@@ -399,16 +373,16 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
                     </div>
                     <div className="flex-1 lg:max-h-[calc(100vh-60px)] overflow-y-auto px-5">
-                      
+
                         <div>
 
                         </div>
                         <AnimatedText text={"Passenger manifest"} className="!uppercase !text-3xl lg:!text-4xl !mb-2" />
-                        <Heading text={`${seats?.seat?.traveldate ? dayjs(seats?.seat?.traveldate).format("DD/MM/YYYY") : null} at ${seats?.seat?.traveltime}`}
+                        <Heading text={`${seat?.traveldate ? dayjs(seat?.traveldate).format("DD/MM/YYYY") : null} at ${seat?.traveltime}`}
                             className={"!text-center !text-gray-950 dark:!text-white !mb-2"}
                         />
                         <div className="!max-w-sm mx-auto">
-                            <DisplayUi from={seats?.seat?.from} to={seats?.seat?.to} />
+                            <DisplayUi from={seat?.from} to={seat?.to} />
                         </div>
                         <div className="lg:mx-2 shadow-sm rounded-sm  lg:mt-10 w-full">
                             <div className="relative max-w-full overflow-x-auto
@@ -442,7 +416,7 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                                         className="pt-4 pb-12 text-xs md:text-sm"
                                     >
                                         {
-                                            ticketData?.data?.tickets?.map(({ fullname, seatposition, sex, email }, index) => (
+                                            tickets?.tickets?.map(({ fullname, seatposition, sex, email }, index) => (
                                                 <tr
                                                     key={index}
                                                     className={` ${index % 2 == 0

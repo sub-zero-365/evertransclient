@@ -20,7 +20,7 @@ import dayjs from 'dayjs'
 import Marquee from 'react-fast-marquee'
 import { useFilter } from '../Hooks/FilterHooks'
 import customFetch from "../utils/customFetch"
-import UiButton from '../components/UiButton'
+// import UiButton from '../components/UiButton'
 const busQuery = params => ({
     queryKey: ["buses", { params }],
     queryFn: async () => {
@@ -37,26 +37,17 @@ export const loader = (queryClient) => async ({ request }) => {
     const params = Object.fromEntries([
         ...new URL(request.url).searchParams.entries(),
     ]);
-    console.log(params)
     await queryClient.ensureQueryData(busQuery(params));
     return { searchValues: { ...params } }
 }
 
 const FindBus = () => {
-    const { handleFilterChange } = useFilter()
     const [querySearch] = useSearchParams();
     const [selected, setSelected] = useState(querySearch.get("bus"));
     const { searchValues } = useLoaderData()
-    const { data } = useQuery(busQuery(searchValues))
+    const  data  = useQuery(busQuery(searchValues)).data
     const [bus, setBus] = useState({})
-    useEffect(() => {
-        if (selected) {
-            const currentbus = data?.seats?.find(({ _id }) => _id === selected)
-            // handleFilterChange("bus", selected)
-            // setBus(currentbus)
-            return 
-        }
-    }, [selected])
+   
     const navigate = useNavigate()
     const Next = async () => {
         return navigate(`/bussits/${selected}?${querySearch.toString()}`)
