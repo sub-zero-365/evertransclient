@@ -19,7 +19,7 @@
   --color-subtext: #ffba71;
 }
 .react-datepicker__day.react-datepicker__day--disabled {
-  @apply !text-slate-50 !hidden;
+  @apply !text-gray-400 dark:!text-gray-500 !opacity-40;
 }
 .react-datepicker {
   border: none !important;
@@ -56,7 +56,8 @@
 
 body,
 html {
-  @apply font-poppins !font-light !text-[1rem]  bg-color_light  dark:bg-color_dark dark:text-white;
+  @apply font-poppins !font-light !text-xs  md:!text-sm ;
+  @apply bg-color_light  dark:bg-color_dark dark:text-white;
 }
 
 .links-item {

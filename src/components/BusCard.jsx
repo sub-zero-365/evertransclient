@@ -9,9 +9,13 @@ import { Form, useOutletContext } from 'react-router-dom'
 import LoadingButton from '../components/LoadingButton'
 
 const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus, _id, from, to }) => {
+    const currentDate = dayjs()
+    const future = dayjs(traveldate)
+    const timeLeft = dayjs(currentDate.diff(future)).format("YYYY-MM-DD")
+    // const timeLeft = dayjs(future.diff(currentDate)).format("HH:mm:ss")
     const errorToast = (msg = "bus seat is already taken") => toast.warning(msg)
     const [selected, setSelected] = useState(null)
-    const {  id } = useOutletContext()
+    const { id } = useOutletContext()
     const checkBusAvailabity = (isTaken, isReserved, id, flag = null) => {
         if (0 == id && isTaken == false && isReserved == false) {
             setSelected(0)
@@ -75,7 +79,7 @@ const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus,
                         />
                         <p>Rose Mary</p>
                     </div>
-                    <div
+                    {/* <div
                         className="flex items-end justify-center gap-x-4"
                     >
                         <Heading
@@ -83,6 +87,16 @@ const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus,
                             text="Name"
                         />
                         <p>{dayjs(traveldate).format("YYYY-MM-DD")}</p>
+                    </div> */}
+                    <div
+                        className="flex items-end justify-center gap-x-4"
+                    >
+                        <Heading
+                            className="!m-0 !p-0 !pb-0"
+                            text="time left"
+                        />
+                        <p>{
+                            timeLeft}</p>
                     </div>
                     <div
                         className="flex items-end justify-center gap-x-4"

@@ -21,7 +21,7 @@ export const action = async ({ request }) => {
 
 export default function FindBusSingle() {
     const [startDate, setStartDate] = useState(new Date());
-    const [disable, setDisable] = useState(true)
+    // const [disable, setDisable] = useState(true)
     const navigation = useNavigation()
     const { ticket, id } = useOutletContext()
     const isSubmitting = navigation.state == "submitting"
@@ -45,7 +45,7 @@ export default function FindBusSingle() {
 
                 />
 
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center items-center mt-10 mb-20">
                     <DatePicker
                         wrapperClassName="datePicker"
                         className="datePicker"
@@ -59,38 +59,15 @@ export default function FindBusSingle() {
                         required
                     />
                 </div>
-                <div className='items-center  flex mx-auto border border-orange-400 w-full max-w-sm'>
-                    <div
-                        className='flex-1'
-                    >
-                        <TimeSelect
-                            name="time"
-                            isDisabled={disable}
-                            isSearchable={false}
-                            onChange={(evt) => 0}
-                            components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-                            required className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl mb-6"
-                            defaultValue={{
-                                label: "7am",
-                                value: "7am"
-                            }}
-                            options={timeOptions} />
-                    </div>
-                    <ToggleSwitch
-                        message="time query is on"
-                        initialMessage="query with date?"
-                        state={disable}
-                        onChange={() => setDisable(c => !c)}
-                    />
-                </div>
+                
                 <UiButton
                     disabled={isSubmitting}
                     type="submit"
-                    className="w-[min(25rem,100%)] !rounded-xl !block !mx-auto !py-3"
+                    className="w-[min(30rem,100%)] !rounded-lg !block !mx-auto !py-5"
                 >
                     {
 
-                        isSubmitting ? <p className='text-xl'>please wait ...</p> : <p className='text-xl'>Find bus</p>
+                        isSubmitting ? <p className='text-xl'>please wait ...</p> : <p className='text-xl'>Search</p>
                     }
 
 

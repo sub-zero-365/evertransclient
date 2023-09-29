@@ -20,7 +20,17 @@ const busQuery = params => ({
     },
 
 })
+const singleTicket = (id) => {
+    return ({
+        queryKey: ["ticket", id],
+        queryFn: async () => {
+            const res = await customFetch.get(`/ticket/${id}`)
+            return res.data
+        }
 
+    })
+
+}
 export const action = (queryClient) => async ({ request }) => {
     const params = Object.fromEntries([
         ...new URL(request.url).searchParams.entries(),
@@ -28,10 +38,8 @@ export const action = (queryClient) => async ({ request }) => {
     try {
         const formData = await request.formData();
         const data = Object.fromEntries(formData);
-        console.log("this is the data", data)
-        
         await customFetch.patch(`/ticket/updateticket/${data.id}`, {
-           ...data
+            ...data
         })
         successEdit()
         return redirect(`/user/${params.id}`, { replace: true })
@@ -48,14 +56,7 @@ export const loader = (queryClient) => async ({ request }) => {
         ...new URL(request.url).searchParams.entries(),
     ]);
     try {
-        const currentTicket = queryClient.getQueryData(
-            {
-                queryKey: [
-                    "ticket", params.id
-                ]
-            }
-        )?.ticket
-
+        const { ticket: currentTicket } = await queryClient.ensureQueryData(singleTicket(params.id))
         if (params.time === "null") {
             delete params.time
         }

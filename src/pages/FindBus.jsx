@@ -20,7 +20,8 @@ import dayjs from 'dayjs'
 import Marquee from 'react-fast-marquee'
 import { useFilter } from '../Hooks/FilterHooks'
 import customFetch from "../utils/customFetch"
-// import UiButton from '../components/UiButton'
+import herooverlay from '../Assets/images/herooverlay.png'
+
 const busQuery = params => ({
     queryKey: ["buses", { params }],
     queryFn: async () => {
@@ -45,14 +46,14 @@ const FindBus = () => {
     const [querySearch] = useSearchParams();
     const [selected, setSelected] = useState(querySearch.get("bus"));
     const { searchValues } = useLoaderData()
-    const  data  = useQuery(busQuery(searchValues)).data
+    const data = useQuery(busQuery(searchValues)).data
     const [bus, setBus] = useState({})
-   
+
     const navigate = useNavigate()
     const Next = async () => {
         return navigate(`/bussits/${selected}?${querySearch.toString()}`)
     }
-    const BusDetail = ({ _id, number_of_seats, seat_positions, from, to, bus }) => {
+    const BusDetail = ({ _id, number_of_seats, seat_positions, from, to, bus, traveltime ,traveldate }) => {
         const busType = bus?.feature && bus.feature == "Normal Bus" || bus?.feature == "classic"
         const avalaibleseats = seat_positions?.filter(({ isTaken, isReserved }) => (isTaken == true || isReserved == true))?.length
         return (
@@ -61,17 +62,16 @@ const FindBus = () => {
                     if (selected == _id) return setSelected(null)
                     setSelected(_id)
                 }}
-                className={`${selected === _id ? "bg-blue-200  dark:bg-slate-950" : busType ? "bg-rose-100 dark:bg-slate-600" : "bg-white dark:bg-slate-800"} dark:text-white pt-5 w-full mx-1 ease duration-700 transition-colors rounded-lg mb-4 dark:shadow-sm dark:shadow-black shadow-lg shadow-white pb-5   min-h-[3rem]`}>
-                {
-                    (selected === _id) && (
-                        <Marquee >
-                            <p
-                                className='text-rose-700'
-
-                            >{busType ? "this is a classic bus all seat prices are thesame " : "this is a vip bus  prices ranges from seats to seats"}</p>
-                        </Marquee>
-                    )}
-
+                className={`${selected === _id ? "bg-blue-200  dark:bg-slate-950" : busType ? "bg-rose-100 dark:bg-slate-600" : "bg-white dark:bg-slate-800"}
+               border dark:text-white pt-5 w-full mx-1 ease duration-700 transition-colors rounded-lg mb-4
+                dark:shadow-sm dark:shadow-black shadow shadow-white pb-5   min-h-[3rem]`}>
+                {/* <img
+                    src={herooverlay}
+                    className='w-3/4 mx-auto'
+                /> */}
+                <h2 className='font-black !text-2xl capitalize leading-9 px-5 py-5'>
+                    {bus?.bus}
+                </h2>
                 <div className="grid grid-cols-2 mb-2">
                     <Heading text={"From"} className="!mb-0 !text-sm !font-semibold" />
                     <Heading text={"Destination"} className="!mb-0 !text-sm !font-semibold" />
@@ -79,14 +79,14 @@ const FindBus = () => {
                     <Heading text={to} className="!mb-0 !text-sm" />
                 </div>
                 <div className="grid grid-cols-2 mb-2">
-                    <Heading text={"Bus Name"} className="!mb-0 !text-sm !font-semibold" />
-                    <Heading text={"Bus Type"} className="!mb-0 !text-sm !font-semibold" />
-                    <Heading text={bus?.bus ?? "vip"} className="!mb-0 !text-sm" />
-                    <Heading text={bus?.feature && (bus.feature == "Normal Bus" || bus.feature == "classic") ? "Classic" : "Vip Bus"} className="!mb-0 !text-sm" />
+                    <Heading text={"Travel time"} className="!mb-0 !text-sm !font-semibold" />
+                    <Heading text={"Travel Date"} className="!mb-0 !text-sm !font-semibold" />
+                    <Heading text={traveltime ?? ""} className="!mb-0 !text-sm" />
+                    <Heading text={dayjs(traveldate).format("DD/MM/YY")} className="!mb-0 !text-sm" />
                 </div>
                 <div className="grid grid-cols-2 mb-2">
-                    <Heading text={"Seats"} className="!mb-0 !text-sm !font-semibold" />
-                    <Heading text={"Consumed"} className="!mb-0 !text-sm !font-semibold" />
+                    <Heading text={"Capacity"} className="!mb-0 !text-sm !font-semibold" />
+                    <Heading text={"Seat Consumed"} className="!mb-0 !text-sm !font-semibold" />
                     <Heading text={number_of_seats} className="!mb-0 !text-sm" />
                     <Heading text={avalaibleseats} className="!mb-0 !text-sm" />
                 </div>
@@ -101,7 +101,9 @@ const FindBus = () => {
             <div className={`md:grid grid-cols-[1fr,30rem]  w-full  h-full   ${selected !== null && "lg:grid-cols-[1fr,30rem,25rem]"}`}>
                 <div className="h-full hidden md:block">
 
-                    image here
+                    <img
+                        src='https://png.pngtree.com/png-vector/20221020/ourmid/pngtree-passengers-waiting-for-bus-in-city-png-image_6329327.png'
+                        className="h-full w-full" alt="bus pic" />
                 </div>
                 <div className="h-full pb-24 overflow-y-auto  px-2 lg:px-10 py-10 pt-0">
                     <nav className="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">

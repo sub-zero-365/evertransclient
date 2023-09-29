@@ -29,6 +29,7 @@ import Loader from '../components/Load'
 import customFetch from "../utils/customFetch"
 import { useQuery } from "@tanstack/react-query"
 import { toast } from "react-toastify"
+import UiButton from "../components/UiButton"
 const singleSeat = (id) => {
   return ({
     queryKey: ["seat", id],
@@ -170,39 +171,39 @@ const
                   nextEl: ".arrow__right",
                 }}
               >
-                    <SwiperSlide className="group">
-                      <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
-                        {
-                          seat?.seat_positions?.map(({ isTaken, isReserved, _id }, i) => {
-                            return (
-                              <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
-                                key={_id}
-                                onClick={() => checkBusAvailabity(isTaken, isReserved, _id, true)}>
-                                <motion.div
-                                  initial={false}
-                                  animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
-                                  transition={{
-                                    duration: 1,
-                                    ease: "easeInOut",
-                                    repeat: Infinity,
-                                  }
-                                  }
-                                  className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
+                <SwiperSlide className="group">
+                  <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
+                    {
+                      seat?.seat_positions?.map(({ isTaken, isReserved, _id }, i) => {
+                        return (
+                          <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
+                            key={_id}
+                            onClick={() => checkBusAvailabity(isTaken, isReserved, _id, true)}>
+                            <motion.div
+                              initial={false}
+                              animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
+                              transition={{
+                                duration: 1,
+                                ease: "easeInOut",
+                                repeat: Infinity,
+                              }
+                              }
+                              className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
                 ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
                 rounded-lg flex items-center justify-center`}>
-                                  <motion.div
-                                    initial={false}
-                                    animate={{ y: selected == _id ? "1.3rem" : 0 }}
-                                    className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
+                              <motion.div
+                                initial={false}
+                                animate={{ y: selected == _id ? "1.3rem" : 0 }}
+                                className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
                 px-2 rounded-sm `}>{_id + 1}</motion.div>
-                                  {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
-                                </motion.div>
-                              </div>
-                            )
-                          })
-                        }
-                      </motion.div>
-                    </SwiperSlide>
+                              {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
+                            </motion.div>
+                          </div>
+                        )
+                      })
+                    }
+                  </motion.div>
+                </SwiperSlide>
 
 
               </Swiper>
@@ -554,49 +555,19 @@ const
                     </label>
                   </div>
                 </div>
-
-                <button
-                  type="submit"
-                  className="hidden md:inline-block bg-blue-400 
-              w-full rounded bg-primary px-7
-              pb-2.5 pt-3 text-sm font-medium
-              uppercase leading-normal
-              text-white
-              shadow-[0_4px_9px_-4px_#3b71ca]
-              transition duration-150
-              ease-in-out hover:bg-primary-600
-              hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-              focus:bg-primary-600 
-              focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-              focus:outline-none focus:ring-0 active:bg-primary-700 
-              active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-              dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
-              dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-              dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-              dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                  data-te-ripple-init
-                  data-te-ripple-color="light"
-
+                <UiButton
+                  className="!w-[min(30rem,calc(100%-1.5rem))]  hidden md:block !mx-auto !py-3.5 !text-lg !rounded-xl"
                 >
-                  Checkout
-                </button>
-                <div className="md:hidden  h-[2.7rem] flex
-                            items-center justify-center mt-5 fixed z-10 bottom-8 w-full">
-                  <button
-                    type="submit"
-                    data-te-ripple-init
-                    data-te-ripple-color="light"
-                    className="inline-block  rounded bg-blue-500 cal-width mx-auto --w-[90%] md:hidden  pb-2 pt-2.5 text-lg font-montserrat font-medium uppercase
-  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] ml-0
-  transition duration-150 ease-in-out hover:bg-primary-600
-  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                  // onClick
+                  CHECKOUT
+                </UiButton>
 
+                <div className="md:hidden  h-[2.7rem] flex left-0 
+                            items-center justify-center mt-5 fixed z-20 bottom-8 w-full">
+                  <UiButton
+                    className="!w-[min(30rem,calc(100%-1.5rem))]  !mx-auto !py-3.5 !text-lg !rounded-xl"
                   >
                     CHECKOUT
-                  </button>
+                  </UiButton>
 
                 </div>
 

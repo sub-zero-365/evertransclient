@@ -2,13 +2,12 @@ import AnimateText from './AnimateText'
 import herobg from '../Assets/images/herobg.jpg'
 import herooverlay from '../Assets/images/herooverlay.png'
 import UiButton from './UiButton';
-import busimages from '../Assets/images/mainbusimage.png'
 import { motion } from "framer-motion"
 import { Link, NavLink } from 'react-router-dom';
 import Write from './Write';
 const Hero = () => {
     return (
-        <div className="h-screen text-white relative group">
+        <div className="min-h-screen h-screen text-white relative group">
             <img className="absolute -z-0  inset-0 w-full h-full "
                 src={herobg}
             />
