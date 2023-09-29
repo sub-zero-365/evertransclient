@@ -57,7 +57,6 @@ import { loader as busesSingleLoader, action as editTicketAction } from "./pages
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
-import axios from "axios"
 const FallBack = () => (<div className="h-screen w-full
 bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
