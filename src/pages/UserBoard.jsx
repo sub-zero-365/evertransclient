@@ -43,7 +43,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-
+import { useUserLayoutContext } from "../components/UserLayout"
 import {
   AmountCount,
   FormatTable,
@@ -58,7 +58,6 @@ import {
   PercentageBar
   , CustomDatePicker
 } from '../components';
-// import { components, style } from "../utils/reactselectOptionsStyles"
 
 import dayjs from "dayjs"
 import { Helmet } from 'react-helmet'
@@ -72,6 +71,7 @@ import {
   useQuery, useMutation, useQueryClient
 } from '@tanstack/react-query'
 import customFetch from '../utils/customFetch'
+import { CiLogout } from 'react-icons/ci'
 const seats = []
 const allTicketsQuery = (params) => {
   const { search, sort, page } = params;
@@ -91,8 +91,6 @@ const allTicketsQuery = (params) => {
 const style = {
   control: base => ({
     ...base,
-    // border: 0,
-    // borderBottom: "1px solid black",
     boxShadow: "none",
     background: "transparent",
     borderRadius: 0,
@@ -137,7 +135,7 @@ const Details = () => {
 
   const { user } = useOutletContext();
 
-
+  const { logoutUser } = useUserLayoutContext()
 
 
   const onPasswordSuccess = () => toast.success("Password Change Successfully!!", {
@@ -1343,7 +1341,7 @@ z-10  "
                   <TicketCounts
                     text={"Total Number Of Inactive Tickets"}
                     counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
-             
+
                 </Scrollable>
                 <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${viewAll && "!grid md:!grid-cols-2"}`}>
                   <AmountCount
@@ -1391,7 +1389,23 @@ z-10  "
             <div
               className=' overflow-y-auto max-h-[calc(100vh-0px)] lg:max-h-fit overflow-x-hidden '
             >
-              {querySearch.get("account_block") && "account restricted"}
+
+              <UiButton
+
+                onClick={() => logoutUser()}
+                className="!w-[min(30rem,calc(100%-1.5rem))] !mx-auto !py-3.5 !my-5 !text-lg !rounded-xl lg:hidden !bg-red-400"
+              >
+
+                <div className='flex items-center gap-x-2 text-xs'>
+
+                  <CiLogout
+                    size={25}
+                  /> LogOut
+                </div>
+
+              </UiButton>
+
+
               <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4--  !text-lg first-letter:text-2xl" />
               <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
               <h4 className='text-sm text-slate-500 font-medium '>{user?.phone || "n/a"}</h4>
@@ -1678,8 +1692,22 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                     onClick={() => 0}
                   />
                 </form>
+                <UiButton
+                  onClick={() => logoutUser()}
+                  className="!w-[min(30rem,calc(100%-1.5rem))] hidden lg:block
+                !mx-auto !py-3.5 !my-5 !text-lg !rounded-xl  !bg-red-400"
+                >
 
+                  <div className='flex items-center justify-center gap-x-2 text-xs'>
+
+                    <CiLogout
+                      size={25}
+                    /> LogOut
+                  </div>
+
+                </UiButton>
               </div>
+
             </div>
 
 
@@ -1689,12 +1717,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
         <div className="flex justify-between lg:justify-center  gap-x-4 gap-y-8 lg:gap-x-6
       flex-wrap pr-5 items-start mb-10">
-          {/* <h1 className="text-2xl mt-4 
-        text-gray-700 pl-6
-        dark:text-white
-        flex tracking-tight">All tickets <span className="text-xs ring-2 ring-gray-700  grid place-items-center
-        ml-1 w-5 h-5 bg-gray-500 text-white
-        mb-4 rounded-full border">{userData?.totalTickets || 0} </span> </h1> */}
+
 
           <div className='mt-0'>
             <div className="text-[0.8rem] text-slate-300 dark:text-white uppercase text-center font-semibold mb-1 font-montserrat"> ticket status</div>

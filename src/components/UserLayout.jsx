@@ -27,10 +27,15 @@ const UserLayout = ({ isDarkThemeEnabled }) => {
     setUserDetails(data?.data?.user)
   }
   const logoutUser = async () => {
-    await customFetch.get('/auth/logout');
-    queryClient.invalidateQueries();
-  
-    navigate("/login")
+    try {
+      await customFetch.get('/auth/logout');
+      queryClient.invalidateQueries();
+      setUserDetails({})
+      navigate("/login")
+    } catch (err) {
+      console.log("this is the fail response here", err.response?.data)
+    }
+
   };
   return (
     <UserLayoutContext.Provider

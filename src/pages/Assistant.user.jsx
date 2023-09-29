@@ -1,5 +1,5 @@
 
-import { Outlet, Navigate, useNavigate, useLocation, Link } from 'react-router-dom';
+import { Outlet, Navigate, useNavigate, useLocation, Link, redirect } from 'react-router-dom';
 import { Heading } from '../components';
 import UiButton, { UiButtonDanger } from '../components/UiButton';
 import { useState, useEffect, useRef } from 'react'
@@ -9,8 +9,32 @@ import { toast } from 'react-toastify'
 import { Loadingbtn, } from '../components'
 import { motion } from 'framer-motion'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
-const Assist = () => {
+import customFetch from '../utils/customFetch';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+const onLoadFailure = () => toast.error("Something went wrong", {
+    position: toast.POSITION.TOP_CENTER
+})
+const assistantQuery = {
+    queryKey: ["assistant"],
+    queryFn: async () => {
+        const res = await customFetch.get("/assistant/current-user");
+        return res.data
+    }
 
+}
+export const loader = (queryClient) => async ({ request }) => {
+    try {
+        return await queryClient.ensureQueryData(assistantQuery)
+    } catch (err) {
+        onLoadFailure()
+        console.log("this is the error message : ", err.response.data)
+        return redirect("/login?message=please login and try again &from=assistant")
+
+    }
+
+}
+const Assist = () => {
+    const queryClient = useQueryClient()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const password1 = useRef(null);
@@ -19,24 +43,10 @@ const Assist = () => {
     const onPasswordSuccess = () => toast.success("Password Change Successfully!!", {
         position: toast.POSITION.BOTTOM_CENTER
     })
-    const onLoadFailure = () => toast.error("Something went wrong", {
-        position: toast.POSITION.TOP_CENTER
-    })
-    const [userData, setUserData] = useState({})
-    const getAssistant = async () => {
-        return axios.get("/assistant/user", {
-            headers: {
-                'Authorization': "makingmoney " + token
-            }
-        })
-    }
-    useEffect(() => {
-        getAssistant().then(({ data }) => {
-            setUserData(data)
-        }).catch(err => {
-            onLoadFailure()
-        })
-    }, [])
+
+
+    const { assistant } = useQuery(assistantQuery).data
+
     const handleChangePassWord = async (e) => {
         setLoading(true)
         e.preventDefault()
@@ -78,7 +88,7 @@ const Assist = () => {
     const navigate = useNavigate()
     const token = localStorage.getItem("assist_token");
     const [isOpen, setIsOpen] = useState(false)
-    if (!token) return <Navigate to="/login?message=login to scan this ticket " />
+
     return (
         <div className="h-[calc(100vh-60px)] max-w-sm mx-auto">
             <div
@@ -346,7 +356,7 @@ const Assist = () => {
                                 className="!flex-1 !inline-block"
                             />
                             <Heading
-                                text={`${userData?.assistant?.phone || "loading"}`}
+                                text={`${assistant?.phone || "loading"}`}
                                 className="!text-xl !font-black !text-black !pl-2 !inline-block"
                             />
 
@@ -370,7 +380,7 @@ const Assist = () => {
                                     className="!text-xl !text-gray-900 italic !mb-0"
                                 />
                                 <AnimateText
-                                    text={`${userData?.assistant?.fullname || "loading"}`}
+                                    text={`${assistant?.fullname || "loading"}`}
                                     className="!text-3xl !text-black"
                                 />
                                 <AnimateText

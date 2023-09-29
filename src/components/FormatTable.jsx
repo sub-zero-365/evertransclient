@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Button, DeactiveStatusButton, ActiveStatusButton, PanigationButton } from './'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import dateFormater from '../utils/DateFormater'
-// import EditTicketModal from './EditTicketModal'
 import UiButton from "./UiButton";
-import { useSearchParams,Link } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
 
 const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
 
@@ -28,17 +27,7 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
         if (querySearch.get("page") == index) return
         handleFilterChange("page", index)
     }
-    // const [ticket, setSelectTicket] = useState({})
-    // const [isOpen, setIsOpen] = useState(false);
-    // const handleEditTicket = async (ticket) => {
-    //     setIsOpen(true)
-    //     setSelectTicket(ticket)
-    // }
-    // useEffect(() => {
-    //     if (!isOpen) {
-    //         setSelectTicket({})
-    //     }
-    // }, [isOpen])
+
 
 
     const FormatTd = ({ ticket }) => {
@@ -61,10 +50,7 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
     }
     return (
         <>
-            {/* <EditTicketModal
-                ticket={ticket}
-                isOpen={isOpen}
-                setIsOpen={setIsOpen} /> */}
+
             <AnimatePresence>
 
                 {
@@ -205,20 +191,21 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                                     <td className="py-0 text-xs flex items-center"
                                     >
                                         <Button admin state={ticket}
+                                            disabled={(admin)}
                                             href={`/${admin ? "dashboard" : "user"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
                                         />
                                         {(ticket?.active && !admin) && (
                                             <UiButton
-                                           
+
                                                 className={"!bg-blue-900"}
-                                               
+
                                             >
-                                            <Link
-                                             to={`/${admin ? "dashboard/edit" : "user/edit"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
-                                            >
-                                            Edit
-                                            
-                                            </Link>
+                                                <Link
+                                                    to={`/${admin ? "dashboard/edit" : "user/edit"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
+                                                >
+                                                    Edit
+
+                                                </Link>
                                             </UiButton>
                                         )}
                                     </td>

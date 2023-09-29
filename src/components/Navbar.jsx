@@ -30,7 +30,15 @@ const Navbar = ({ }) => {
         }
         localStorage.removeItem('theme');
     };
-    const isLogin = userDetails?.phone ? true : false;
+    const [isLogin, setIsLogin] = useState(userDetails?.phone ? true : false)
+    useEffect(() => {
+        const islogin = userDetails?.phone ? true : false
+        if (islogin) {
+            setIsLogin(true)
+        } else {
+            setIsLogin(false)
+        }
+    }, [userDetails])
     const navigate = useNavigate()
     const logoutUser = async () => {
         await customFetch.get('/auth/logout');
@@ -191,7 +199,7 @@ const Navbar = ({ }) => {
                                     </motion.div>
                                     <p className="w-fit mx-auto ">{userDetails?.fullname}</p>
                                     <p className="w-fit mx-auto ">{userDetails?.phone}</p>
-                                    <div className="flex justify-center pt-1">
+                                    <div className="flex- justify-center pt-1 hidden">
 
                                         <UiButton onClick={() => logoutUser()}>
                                             logout
@@ -269,28 +277,6 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                     <Rounded className="!w-10 !h-10">
                                         <img src={useravatar} alt="user " className='w-[40px] h-[40px] rounded-full shadow-2xl ' onClick={gotoUserPage} />
                                     </Rounded>
-
-                                    <button
-                                        type="button"
-                                        data-te-ripple-init
-                                        data-te-ripple-color="light"
-                                        class="inline-block rounded bg-red-400 px-4 py-1 text-xs font-medium capitalize
-                                        hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150
-  ease-in-out hover:bg-primary-600
-  focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:outline-none focus:ring-0 active:bg-primary-700
-  active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-  dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-
-                                        onClick={() => logoutUser()}
-                                    >
-                                        logout
-
-                                    </button>
-
-
-
                                 </div>
 
                             ) : (

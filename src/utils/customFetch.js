@@ -1,17 +1,13 @@
 import axios from 'axios';
-let downloadbaseurl = null
+var url = 'http://192.168.43.68:5000'
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    downloadbaseurl = process.env.REACT_APP_LOCAL_URL
-    // dev code
+    url = 'http://192.168.43.68:5000'
 } else {
-    // production code
-    downloadbaseurl = process.env.REACT_APP_PROD_URL
-
+    url = "https://evertrans.onrender.com"
 }
-
 const customFetch = axios.create({
-    // baseURL: 'http://192.168.43.68:5000',
-    baseURL: "https://evertrans.onrender.com",
+    baseURL: url,
+    // baseURL: "https://evertrans.onrender.com",
     // baseURL: "http://localhost:5000",
     withCredentials: true
 });

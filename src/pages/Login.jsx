@@ -15,10 +15,13 @@ export const action = (queryClient) => async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   try {
-    await customFetch.post('/auth/login', data);
+    const res = await customFetch.post('/auth/login', data);
     queryClient.invalidateQueries();
 
     toast.success('Login successful');
+    if (res.data?.user?.redirect) {
+      return redirect("/assistant", { replace: true })
+    }
     return redirect("/user", { replace: true })
   } catch (error) {
     console.log("logging error", error?.response?.data)

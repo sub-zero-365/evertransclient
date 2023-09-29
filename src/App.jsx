@@ -54,6 +54,7 @@ import { loader as securityLoader } from "./pages/SecurityPage"
 import { loader as editSingleLoader } from "./pages/EditSingleTicket"
 import { action as findBusAction } from './pages/FindBusSingle'
 import { loader as busesSingleLoader, action as editTicketAction } from "./pages/BusesSingle"
+import { loader as singleAssistantLoader } from "./pages/Assistant.user"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
@@ -87,7 +88,7 @@ const SeatDetails = lazy(() => import("./pages/SeatDetails"));
 const BusDetails = lazy(() => import("./pages/BusDetails"));
 const FindBus = lazy(() => import("./pages/FindBus"));
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL="https://evertrans.onrender.com"
+axios.defaults.baseURL = "https://evertrans.onrender.com"
 const checkDefaultTheme = () => {
   return false
   if (localStorage.theme === 'dark' || (
@@ -262,8 +263,6 @@ const router = createBrowserRouter([
 
           },
 
-
-
         ]
       }
 
@@ -384,11 +383,21 @@ const router = createBrowserRouter([
         errorElement: <SingleTicketErrorElement />
 
       },
+      {
+        path: ":id",
+        element:
+          <Suspense>
+            < SingleTicket />,
+          </Suspense>,
+        loader: singleTicketLOader(queryClient),
+        errorElement: <SingleTicketErrorElement />
+      }
     ]
 
   }, {
     path: "assistant",
     element: <Assist />,
+    loader: singleAssistantLoader(queryClient),
     children: [
       {
         path: ":id",
@@ -396,6 +405,7 @@ const router = createBrowserRouter([
           <Suspense>
             < SingleTicket />,
           </Suspense>,
+           errorElement: <SingleTicketErrorElement />,
         loader: singleTicketLOader(queryClient),
       }
 

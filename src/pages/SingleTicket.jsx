@@ -8,7 +8,7 @@ import {
 } from '../components'
 import dayjs from 'dayjs'
 import dateFormater from '../utils/DateFormater'
-import axios from 'axios'
+
 import Marquee from 'react-fast-marquee'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { Loadingbtn } from '../components'
@@ -18,14 +18,14 @@ import QRCode from "react-qr-code";
 import { BsChevronCompactUp } from 'react-icons/bs'
 import succcesssound from '../utils/successsound.mp3'
 import { Helmet } from 'react-helmet'
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import customFetch from '../utils/customFetch'
 
-const singleTicket = (id) => {
+const singleTicket = (url, id) => {
   return ({
     queryKey: ["ticket", id],
     queryFn: async () => {
-      const res = await customFetch.get(`/ticket/${id}`)
+      const res = await customFetch.get(url)
       return res.data
     }
 
@@ -33,14 +33,37 @@ const singleTicket = (id) => {
 
 }
 export const loader = (queryClient) => async ({ request, params }) => {
+  const searchParams = Object.fromEntries([
+    ...new URL(request.url).searchParams.entries(),
+  ]);
   try {
+    var url = ""
+    const showDeactivateButton = searchParams.xyz === "secret"
+    const isadminuser = searchParams.admin === "true";
+    const readonly = searchParams.readonly === "7gu8dsutf8asdf" || false
+    if (readonly) {
+      url = `/assistant/ticket/${params.id}`
+    } else {
+      if (isadminuser) {
+        url = `/admin/staticticket/${params.id}`
+      } else {
+        url = `/ticket/${params.id}`
+      }
+
+    }
     // try to get the previous page from user being
-    const { ticket: { active } } = await queryClient.ensureQueryData(singleTicket(params.id));
+    const { ticket: { active } } = await queryClient.ensureQueryData(singleTicket(url, params.id));
     const audio = new Audio(succcesssound)
     if (active) {
       audio.play()
     }
-    return params.id
+    return {
+      id: params.id,
+      url,
+      isadminuser,
+      readonly,
+      showDeactivateButton
+    }
   } catch (err) {
     throw err
   }
@@ -48,10 +71,11 @@ export const loader = (queryClient) => async ({ request, params }) => {
 }
 
 const User = () => {
+  const queryClient = useQueryClient()
   const ref = useRef(null);
   const isInView = useInView(ref)
-  const id = useLoaderData()
-  const { ticket } = useQuery(singleTicket(id)).data
+  const { id, url, readonly, isadminuser, showDeactivateButton } = useLoaderData()
+  const { ticket } = useQuery(singleTicket(url, id)).data
   useEffect(() => {
     if (isInView) {
       setIsOpen(true)
@@ -63,7 +87,6 @@ const User = () => {
 
   }, [isInView])
 
-  const [redirect, setRedirect] = useState(false);
   let downloadbaseurl = null
   if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     downloadbaseurl = process.env.REACT_APP_LOCAL_URL
@@ -73,55 +96,22 @@ const User = () => {
     downloadbaseurl = process.env.REACT_APP_PROD_URL
 
   }
-  const navigate = useNavigate();
-  // const previousPage = () => navigate(-1)
   const [active, setActive] = useState(null);
-  const [queryParameters] = useSearchParams()
   const [isLoading, setIsloading] = useState(false);
   const [loadbtn, setLoadbtn] = useState(false)
   const [params, setParams] = useState({})
-  const showDeactivateButton = queryParameters.get("xyz") ? true : false
-  const isadminuser = queryParameters.get("admin");
-  ;
-  const readonly = (queryParameters.get("readonly") === "7gu8dsutf8asdf" || false)
-
-
-
   const redeemTicket = async () => {
-    let token = null
     setLoadbtn(true)
     setIsloading(true)
-    let url = ""
-    if (readonly) {
-      url = `/assistant/edit/${id}`
-      token = localStorage.getItem("assist_token");
-
-    } else {
-      if (isadminuser) {
-        url = `/admin/edit/${id}`
-        token = localStorage.getItem("admin_token");
-      } else {
-        url = `/ticket/edit/${id}`
-        token = localStorage.getItem("token");
-
-      }
-
-    }
-
     try {
-      const res = await axios.post(url, {}, {
-        headers: {
-          'Authorization': "makingmoney " + token
-        },
+      await customFetch.post("/assistant/edit/" + id, {}, {
         params
       }
       )
+      queryClient.invalidateQueries(["ticket", id])
 
     } catch (err) {
       setLoadbtn(false)
-    }
-    finally {
-
     }
   }
   const handleChangeParams = (index) => {
@@ -280,7 +270,7 @@ const User = () => {
 
 
             {
-              (ticket) && (
+              (!readonly) && (
                 <Link
                   className="lg:hidden"
                   to={`/${isadminuser ? "dashboard/seat" : "seat"}/${ticket?.seat_id}?rd_from=assistant&ticket_id=${ticket?._id}&ticket_seat=${ticket.seatposition}&${isadminuser ? "admin=true" : null}`}
@@ -533,7 +523,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                       {
                         ticket?.active ?
                           <motion.button
-                            disabled={redirect}
+                            disabled={false}
                             animate={{ opacity: [0, 1], bottom: ["-2rem", "4rem", "2rem"] }}
                             exit={{ opacity: 0, bottom: "-2rem" }}
 
