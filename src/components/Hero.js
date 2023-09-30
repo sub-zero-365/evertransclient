@@ -7,7 +7,7 @@ import { Link, NavLink } from 'react-router-dom';
 import Write from './Write';
 const Hero = () => {
     return (
-        <div className="min-h-screen h-screen text-white relative group">
+        <div className=" h-[min(30rem,100vh)] text-white relative group">
             <img className="absolute -z-0  inset-0 w-full h-full "
                 src={herobg}
             />
@@ -55,7 +55,7 @@ const Hero = () => {
                             >Luctus nisi pharetra mollis aliquet iaculis tempus potenti. Dictumst vestibulum luctus eget sit sag </p> */}
 
                             <div
-                                className='flex gap-6  justify-start flex-wrap '
+                                className='flex-- hidden gap-6  justify-start flex-wrap '
                             >
                                 <UiButton
                                     className="!bg-[#ffae02] flex-none !my-10 !py-3 lg:!py-3.5

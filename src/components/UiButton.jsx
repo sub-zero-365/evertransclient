@@ -50,8 +50,8 @@ const UiButton = ({ className, onClick, name, disabled, type, children }) => {
 font-medium
 shadow
 md:shadow-md
-shadow-blue-200
-dark:shadow-slate-800
+shadow-blue-200--
+dark:shadow-slate-800--
 bg-blue-400
 pt-1
 mr-1

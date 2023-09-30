@@ -6,13 +6,13 @@ import { useNavigate, NavLink, Link } from 'react-router-dom';
 import { useravatar } from '../Assets/images';
 import logo from "../Assets/images/logo.png"
 import { useSelector, useDispatch } from 'react-redux'
-import { motion, useScroll } from "framer-motion";
+import { motion} from "framer-motion";
 import Rounded from './Rounded';
 import { useUserLayoutContext } from './UserLayout';
 import UiButton from "./UiButton"
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {  useQueryClient } from "@tanstack/react-query";
 import customFetch from "../utils/customFetch";
-import { setUser, clearUser } from '../actions/User'
+import {  clearUser } from '../actions/User'
 
 const Navbar = ({ }) => {
     const queryClient = useQueryClient()
@@ -108,6 +108,10 @@ const Navbar = ({ }) => {
                         to="/booking"
                         className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                     >Bus Here</NavLink></motion.li>
+                    <motion.li whileHover={{ scaleX: 1.2 }} className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                        to="/mailing"
+                        className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                    >Mail Here</NavLink></motion.li>
                     <li className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/about-us"
                         className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
@@ -144,6 +148,24 @@ const Navbar = ({ }) => {
                             className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                         >Our Services</NavLink></motion.li>
 
+                    <motion.li
+                        initial={false}
+                        animate={{ x: isOpen ? 0 : -1000 }}
+                        transition={{ delay: 0.1 }}
+
+                        className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                            to="/booking"
+                            className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                        >Bus Here</NavLink></motion.li>
+                    <motion.li
+                        initial={false}
+                        animate={{ x: isOpen ? 0 : -1000 }}
+                        transition={{ delay: 0.1 }}
+
+                        className='links-item  border-b-2 mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                            to="/mailing"
+                            className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                        >Mail Here</NavLink></motion.li>
                     <motion.li
                         initial={false}
                         animate={{ x: isOpen ? 0 : -1000 }}

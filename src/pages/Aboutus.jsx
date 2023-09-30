@@ -2,9 +2,11 @@ import { Footer, Heading } from "../components"
 // import { possibility } from "../Assests/images"
 import AnimatedText from "../components/AnimateText"
 import bg from '../Assets/images/interior-of-a-regular-intercity-bus.jpeg'
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 
 const Aboutus = () => {
+  const location = useLocation()
+  console.log(location.state)
   return (
     <>
       <div>

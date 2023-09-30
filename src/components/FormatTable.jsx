@@ -98,9 +98,7 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                             <th scope="col" className="px-3 py-3">
                                 createdAt
                             </th>
-                            <th scope="col" className="px-3 py-3">
-                                phone
-                            </th>
+                      
 
                             <th scope="col" className="px-3 py-3">
                                 status
@@ -172,10 +170,6 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                                         {ticket?.createdAt ?
                                             dateFormater(ticket?.createdAt).date : "n/a"}
                                     </td>
-                                    <td className="px-3 py-2 cursor-pointer">
-                                        {ticket?.email ?
-                                            <a href={`tel:${ticket?.email} `} >{ticket?.email}</a> : "n/a"}
-                                    </td>
 
                                     <FormatTd ticket={ticket} />
                                     <td className="px-3 py-2">
@@ -204,7 +198,6 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                                                     to={`/${admin ? "dashboard/edit" : "user/edit"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
                                                 >
                                                     Edit
-
                                                 </Link>
                                             </UiButton>
                                         )}

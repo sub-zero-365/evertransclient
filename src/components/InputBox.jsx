@@ -1,18 +1,20 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import generateRandonNumber from '../utils/generateRandonCharacters'
-const InputBox = ({ inputRef, value, onChange, name,type }) => {
+const InputBox = ({ inputRef, value, onChange, name, type, hidden = false, className }) => {
     const [inputid, setInputId] = useState(null)
-    
+
     useEffect(() => {
         setInputId(generateRandonNumber())
     }, [])
     return (
         <div className="relative mb-6" data-te-input-wrapper-init>
-            <input ref={inputRef}
+            <input
+                name={name}
+                ref={inputRef}
                 onChange={onChange}
-                type={type ??"text"}
-                className="peer block min-h-[auto] w-full 
+                type={type ?? "text"}
+                className={`peer block min-h-[auto] w-full 
 rounded 
 border-2
 focus:border-2
@@ -26,12 +28,13 @@ transition-all
 duration-200
 ease-linear
 focus:placeholder:opacity-100
-data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0`}
                 id={inputid}
-                placeholder="Full Names" required />
-            <label
-                htmlFor={inputid}
-                className="pointer-events-none 
+                placeholder={name} required />
+            {
+                !hidden && <label
+                    htmlFor={inputid}
+                    className="pointer-events-none 
 absolute left-3
 top-0 mb-0
 max-w-[90%]
@@ -61,9 +64,10 @@ motion-reduce:transition-none
 dark:text-neutral-200
 dark:peer-focus:text-primary"
 
-            >
-                {name}
-            </label>
+                >
+                    {name}
+                </label>
+            }
         </div>
     )
 }

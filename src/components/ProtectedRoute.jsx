@@ -65,21 +65,13 @@ const ProtectedRoute = (queryClient) => {
 
             }}
         >
-
-            <div className='flex flex-col h-screen'>
                 <OnlineDetector />
-                <div className='flex-1'>
-          
-
+              
                     {
                         isPageLoading ? <AppSpinner/> : <Outlet
                             context={{ user }}
                         />
                     }
-
-                </div>
-
-            </div>
 
         </ProtectedContext.Provider>
     )

@@ -55,9 +55,13 @@ import { loader as editSingleLoader } from "./pages/EditSingleTicket"
 import { action as findBusAction } from './pages/FindBusSingle'
 import { loader as busesSingleLoader, action as editTicketAction } from "./pages/BusesSingle"
 import { loader as singleAssistantLoader } from "./pages/Assistant.user"
+import { action as mailingAction } from "./pages/MailingPreview"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
+import Mailing from './pages/Mailing'
+import MailingForm from './components/MailingForm'
+import MailingPreview from './pages/MailingPreview'
 const FallBack = () => (<div className="h-screen w-full
 bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -70,6 +74,8 @@ const Seat = lazy(() => import("./pages/Seats"));
 const Assistant = lazy(() => import("./pages/Assistant"));
 
 const Bus = lazy(() => import("./pages/Bus"));
+const Mails = lazy(() => import("./pages/Mails"));
+const Books = lazy(() => import("./pages/Books"));
 const Aboutus = lazy(() => import("./pages/Aboutus"));
 const BusRoutes = lazy(() => import("./pages/Routes"));
 const Appointment = lazy(() => import("./pages/Appointment"));
@@ -163,6 +169,26 @@ const router = createBrowserRouter([
           },
           {
             element:
+              <Suspense fallback={<FallBack />}>
+                <Mailing />
+              </Suspense>
+            ,
+            path: "mailing",
+            children: [
+              {
+                index: true,
+                element: <MailingForm />
+              },
+              {
+                path: "preview",
+                element: <MailingPreview />,
+                action: mailingAction(queryClient)
+              },
+            ]
+
+          },
+          {
+            element:
 
               <Suspense fallback={<FallBack />}>
                 <FindBus />
@@ -197,8 +223,23 @@ const router = createBrowserRouter([
               </Suspense>
 
             ,
-            loader: ticketsLoader(queryClient),
+            
             path: "user",
+            children: [
+              {
+                index: true,
+                element: <Suspense fallback={<FallBack />}>
+                  <Books />
+                </Suspense>,
+                loader: ticketsLoader(queryClient),
+              },
+              {
+                path: "mails",
+                element: <Suspense fallback={<FallBack />}>
+                  <Mails />
+                </Suspense>
+              },
+            ]
 
           },
           {
@@ -405,7 +446,7 @@ const router = createBrowserRouter([
           <Suspense>
             < SingleTicket />,
           </Suspense>,
-           errorElement: <SingleTicketErrorElement />,
+        errorElement: <SingleTicketErrorElement />,
         loader: singleTicketLOader(queryClient),
       }
 

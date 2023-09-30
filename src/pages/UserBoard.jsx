@@ -2,7 +2,6 @@ import { AiOutlineArrowLeft, AiOutlineCheck, AiOutlineClose } from 'react-icons/
 import { timeOptions } from '../utils/sortedOptions'
 import TimeSelect from 'react-select'
 import { onSuccessToast, onErrorToast, onWarningToast } from '../utils/toastpopup'
-import { MdOutlineClose } from 'react-icons/md'
 import AnimateText from '../components/AnimateText'
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker from 'react-datepicker';
@@ -13,36 +12,29 @@ import SelectSortDate from 'react-select';
 import { useState, useEffect, useRef } from 'react';
 import { AiOutlineSave } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io"
-import { NavLink, useSearchParams, useNavigate, Link, useOutletContext, useLoaderData } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import {
+  NavLink,
+  useSearchParams, useNavigate,
+  Link, useOutletContext,
+  useLoaderData, Outlet
+} from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { AiOutlineSetting } from 'react-icons/ai';
 import dateFormater from "../utils/DateFormater"
-import { BiCategory } from 'react-icons/bi'
+import { BiBusSchool, BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { MdOutlinePriceChange } from 'react-icons/md'
-import { Autoplay, Navigation, Pagination } from 'swiper'
+import { MdOutlineForwardToInbox, MdOutlinePriceChange } from 'react-icons/md'
+import { Autoplay, Navigation, } from 'swiper'
 import ClearFilter from '../components/ClearFilter'
 import UiButton from '../components/UiButton'
-import { useDispatch } from 'react-redux'
 import SelectTime from 'react-select'
-import EditTicketModal from '../components/EditTicketModal'
 import { toast } from 'react-toastify'
 import { getBuses } from "../utils/ReactSelectFunction";
 import BusSelect from 'react-select/async'
-import Alert from '../components/Alert'
 import FromSelect from 'react-select/async'
 import ToSelect from 'react-select/async'
 import { Button, Rounded } from '../components'
-import "swiper/css"
-import "swiper/css/navigation"
-import "swiper/css/pagination"
-import "swiper/css/autoplay"
-import "swiper/css/a11y"
-import "swiper/css/scrollbar"
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
+
 import { useUserLayoutContext } from "../components/UserLayout"
 import {
   AmountCount,
@@ -53,7 +45,6 @@ import {
   Loadingbtn,
   Form,
   NextButton,
-  PlaceHolderLoader,
   PrevButton,
   PercentageBar
   , CustomDatePicker
@@ -62,7 +53,6 @@ import {
 import dayjs from "dayjs"
 import { Helmet } from 'react-helmet'
 import { getCities } from "../utils/ReactSelectFunction"
-
 import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
 import { useFilter } from '../Hooks/FilterHooks'
 import ShowBuses from './ShowBuses'
@@ -88,16 +78,22 @@ const allTicketsQuery = (params) => {
     },
   };
 };
+
 const style = {
-  control: base => ({
-    ...base,
-    boxShadow: "none",
-    background: "transparent",
-    borderRadius: 0,
-    fontSize: 1 + "rem",
-    cursor: "pointer"
+  control: (base, state) => {
+    // console.log(state.isFocused)
+    return ({
+      ...base,
+      boxShadow: "none",
+      backgroundColor: "transparent",
+      borderRadius: 0,
+      fontSize: 1 + "rem",
+      cursor: "pointer",
+      // backgroundColor: state.isSelected ? "red" : "green"
+    }
+    )
   }
-  )
+
 
 }
 export const loader =
@@ -113,10 +109,10 @@ export const loader =
 const Details = () => {
 
   const [querySearch] = useSearchParams();
-  const { handleFilterChange, handleChange } = useFilter()
+  const { handleFilterChange } = useFilter()
   const queryClient = useQueryClient()
-  const { searchValues } = useLoaderData()
-  const userData = useQuery(allTicketsQuery(searchValues))?.data
+  // const { searchValues } = useLoaderData()
+  // const userData = useQuery(allTicketsQuery(searchValues))?.data
   const [seatDate, setSeatDate] = useState(new Date())
 
   let downloadbaseurl = null
@@ -144,11 +140,9 @@ const Details = () => {
 
   const [isOpen, setIsOpen] = useState(false)
   const [isOpen_, setIsOpen_] = useState(false)
-  const [isOpen__, setIsOpen__] = useState(false)
   const [isOpen___, setIsOpen___] = useState(false)
   const navigate = useNavigate()
-  const [message, setMessage] = useState("")
-  const [toggle_, setToggle_] = useState(false)
+
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const viewAll = querySearch.get("viewall")
@@ -157,7 +151,7 @@ const Details = () => {
     e.preventDefault()
     try {
 
-      const res = await customFetch.post("/user/updatepassword", {
+      await customFetch.post("/user/updatepassword", {
         oldpassword: password1.current.value,
         newpassword: password2.current.value,
         confirmpassword: password3.current.value
@@ -230,7 +224,6 @@ const Details = () => {
   }
   )
   useEffect(() => {
-    console.log("this is the seat date here ", seatDate)
     queryObj.traveldate = dayjs(seatDate).format("YYYY/MM/DD")
   }, [seatDate])
   const [queryObj, setQueryObj] = useState({
@@ -300,14 +293,13 @@ const Details = () => {
 
 
   const [showAdd, setShowAdd] = useState(false)
-  const _view = JSON.parse(localStorage.getItem("__view")) == true ? true : false
-  const [__view, __setView] = useState(_view)
+
   const [greetingtext, setGreetingText] = useState("GOOD MORNING")
 
-  const getCount = ({ from, to, traveltime, _id }, arr) => {
-    const count = arr?.filter((item) => item.from == from && item.to == to && item.traveltime == traveltime)
-    return count.length
-  }
+  // const getCount = ({ from, to, traveltime, _id }, arr) => {
+  //   const count = arr?.filter((item) => item.from == from && item.to == to && item.traveltime == traveltime)
+  //   return count.length
+  // }
   const [err, setErr] = useState("")
   const [id, setId] = useState("")
   const [ticket, setTicket] = useState({})
@@ -348,75 +340,68 @@ const Details = () => {
   };
 
   const [toggle, setToggle] = useState(false);
-
-  const selectRef = useRef(null)
-  const LoadingBox = ({ }) => {
-
-
-    return (
-      <div role="status" class="max-w-md p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
-
-
-        <div class="flex items-center justify-between">
-          <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-          </div>
-          <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-        </div>
-        <div class="flex items-center justify-between pt-4">
-          <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-          </div>
-          <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-        </div>
-        <div class="flex items-center justify-between pt-4">
-          <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-          </div>
-          <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-        </div>
-        <div class="flex items-center justify-between pt-4">
-          <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-          </div>
-          <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-        </div>
-        <div class="flex items-center justify-between pt-4">
-          <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-          </div>
-          <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-        </div>
-        <span class="sr-only">Loading...</span>
-      </div>
-
-    )
-
+  const getCount = ({ from, to, traveltime, _id }, arr) => {
+    const count = arr?.filter((item) => item.from == from && item.to == to && item.traveltime == traveltime)
+    return count.length
   }
+
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title>
           User Dashboard
         </title>
-      </Helmet>
-      <motion.div
-        className='pt-4 px-2 max-w-full overflow-x-auto select-none lg:px-10 
+      </Helmet> */}
+      <div
+        className='pt-4   overflow-x-hidden
       mx-auto
     max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark'
         ref={constraintsRef}>
-        {
-          (ticket) && (<EditTicketModal
-            className="!z-[100]"
-            isOpen={isOpen__}
-            setIsOpen={setIsOpen__}
-            ticket={ticket} />)
-        }
+
+        <div
+          className='flex justify-center items-center py-5 gap-x-4 px-2'
+
+        >
+          <UiButton
+            className="!px-5 !flex-none
+                 !py-3 !text-lg !rounded-none
+                !bg-[#ffae02] !font-black"
+          >
+            <NavLink
+              to={`/user?${querySearch.toString()}`}
+              replace
+
+            >
+              {({ isPending }) => <div className="flex items-center gap-x-4">
+                <BiBusSchool
+                  size={25}
+                />
+                {isPending ? "loading please wait " : <p>Tickets</p>}
+              </div>}
+
+            </NavLink>
+
+
+          </UiButton>
+          <UiButton
+            className="!px-5 !flex-none  
+                 !py-3 !text-lg !rounded-none
+                !bg-blue-700 !font-black"
+          >
+            <NavLink
+              to="/user/mails"
+              replace
+            >
+              {({ isPending }) => <div className="flex items-center gap-x-4">
+                <MdOutlineForwardToInbox
+                  size={25}
+                />
+                {isPending ? "loading please wait " : <p>Mails</p>}
+              </div>}
+            </NavLink>
+          </UiButton>
+        </div>
+
         <ShowBuses isOpen={isOpen___}
           className2="!w-[min(40rem,calc(100%-30px))]"
           setIsOpen={setIsOpen___}
@@ -938,30 +923,11 @@ const Details = () => {
             </div>
 
 
-            <button
+            <UiButton
               type="submit"
-              className="inline-block bg-blue-400
-            w-full rounded bg-primary px-7
-            pb-2.5 pt-3 text-sm font-medium
-            uppercase leading-normal
-            text-white
-            shadow-[0_4px_9px_-4px_#3b71ca]
-            transition duration-150
-            ease-in-out hover:bg-primary-600
-            hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            focus:bg-primary-600 
-            focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-            focus:outline-none focus:ring-0 active:bg-primary-700 
-            active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
-            dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-              disabled={false}
-              data-te-ripple-init
-              data-te-ripple-color="light">
+            >
               {loading ? <Loadingbtn /> : "Change Password"}
-            </button>
+            </UiButton>
 
 
           </form>
@@ -1080,17 +1046,6 @@ focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-[0_8px_9px_-4p
 
         {/* ticket modal */}
 
-
-        <Alert message={message}
-          duration="30000"
-          className={`
-      ${toggle_ && "!top-1/2 -translate-y-1/2"}
-      `}
-          toggle={toggle_}
-          // confirmFunc={() =>0}
-          setToggle={() => 0}
-
-        />
         <motion.div
           onClick={() => setToggle(true)}
           animate={{
@@ -1119,265 +1074,24 @@ z-10  "
             <AiOutlineSetting size={20} color="#fff" className="" />
           </div>
         </motion.div>
-        <div className='flex justify-between items-center px-5'>
-          <nav class="flex mb-5 mt-5 px-5 pl-0 lg:hidden" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-3">
-              <li class="inline-flex items-center">
-                <NavLink to={"/booking"} href="#" class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                  Booking
-                </NavLink>
-              </li>
-              <li>
-                <div class="flex items-center" >
-                  <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                  <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
-                    <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Employee Details</h1>
-                  </a>
-                </div>
-              </li>
 
-            </ol>
-          </nav>
-          <div>
-            <span
-              onClick={() => {
-                if (viewAll) {
-                  // code her
-                  handleFilterChange("viewall")
-                }
-                else {
-                  // code here
-                  handleFilterChange("viewall", "all")
+        <div className={`lg:flex ${false && "lg:flex-row-reverse"}  items-start justify-start gap-4 `}>
 
-                }
-              }
-              }
-              className='lg:hidden text-blue-400 underline underline-offset-2 text-sm'>view {viewAll ? "all" : "less"}</span>
+          <div className="lg:w-[calc(100%-25rem)] mb-6 ">
+            <Outlet />
           </div>
-        </div>
-        <div className={`lg:flex ${__view && "lg:flex-row-reverse"}  items-start justify-start gap-4 `}>
-          <div
-            className="flex-none w-[18rem] hidden lg:block
-          "
 
-          >
-
-            <Heading text={"Recent Ticket(3)"} className={"!text-center !mb-2"} />
-
-            {
-
-              userData?.tickets?.slice(0, 3).map(({ fullname, traveldate, from, to, _id, createdAt }, i) => {
-                return (
-                  <div
-                    key={i}
-                    class="max-w-sm mb-1 dark:text-white 
-      bg-white  border  border-gray-200 rounded-lg shadow-xl dark:shadow-sm 
-      dark:shadow-black shadow-slate-300 dark:bg-gray-800 dark:border-gray-700">
-                    <div className="grid grid-cols-[1fr,auto] px-2 pt-3
-  pb-2
-  items-center justify-between border dark:border-slate-400 ">
-                      <Heading text="Tickets Details"
-                        className="!mb-0 !text-xs !text-start !mt-0 !pl-0 !ml-0 
-  !font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                      <h4 className='!text-xs text-slate-500 !mb-0 !pb-0'>
-                        {createdAt && (dateFormater(createdAt).date)}
-                      </h4>
-                    </div>
-
-
-                    <div class="p-2">
-                      <Heading text="FullName" className="!mb-0 !text-center !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                      <Heading text={fullname} className="!mb-2 !text-sm !text-center" />
-                      <div className='grid grid-cols-2'>
-                        <div>
-                          <Heading text="From" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                          <Heading text={from} className="!mb-2 !text-sm" />
-                        </div>
-
-                        <div>
-                          <Heading text="To" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                          <Heading text={to} className="!mb-2 !text-sm" />
-                        </div>
-
-                      </div>
-                      <Heading text="Travel Date" className="!mb-0 !text-center !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                      <Heading text={(new Date(traveldate).toLocaleDateString())} className="!mb-2 !text-sm !text-center" />
-                      <div className='grid grid-cols-2 gap-x-1 place-items-center'>
-
-                        <Button name="view"
-                          className={"!inline-block !mx-0  !w-full"}
-                          href={`${_id}`}
-                        />
-                        <a
-                          target='_blank'
-                          className='
-                        w-full
-                        font-medium
-            shadow
-            md:shadow-md
-            shadow-blue-200
-            dark:shadow-slate-800
-            bg-blue-400
-            dark:bg-gray-700
-            pt-1
-            mr-1
-            rounded-sm
-            text-white
-            dark:font-semibold
-            px-3
-            pb-1.5
-            place-items-center  
-            hover:bg-blue-700
-            ease 
-            transition-colors
-            duration-700
-            hover:underline
-            flex
-            justify-center 
-            items-center
-            text-[0.7rem] 
-            md:text-sm
-            font-montserrat
-                        
-                        '
-
-                          href={`${downloadbaseurl}/downloadticket/${_id}`}>download</a>
-
-                      </div>
-                    </div>
-                  </div>
-                )
-
-              })
-            }
-          </div>
-          <div className="flex-1   mb-6 ">
-            <div className="flex  items-center  mb-10  justify-between
-        py-2 mx-auto mt-5 max-w-sm rounded-xl shadow bg-white dark:bg-slate-950 px-6 ">
-              <div className="flex-1">
-                <Heading text={greetingtext} className="!mb-1 !font-black mt-0 !italic" />
-                <p className="mb-3 text-sm font-montserrat px-6 uppercase italic !font-light">{(user?.fullname || "loading")} </p>
-              </div>
-
-              <UiButton
-                name="change view"
-                className="!hidden lg:!block !rounded-xl !text-sm capitalize lg:!ml-2"
-                onClick={() => {
-                  if (__view == true) {
-                    __setView(false)
-                    localStorage.setItem("__view", JSON.stringify(__view))
-                  } else {
-                    __setView(true)
-                    localStorage.setItem("__view", JSON.stringify(__view))
-                  }
-
-                }}
-              />
-
-            </div>
-            <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
-
-              <div className='md:hidden'>
-                <Swiper className='md:hidden max-w-sm w-full'
-                  slidesPerView={1}
-                  modules={[Autoplay, Navigation]}
-                  autoplay={{
-                    delay: 2000,
-                    disableOnInteraction: false
-                  }}
-                >
-                  <SwiperSlide>
-                    <PercentageBar
-                      className={`${viewAll && "!min-w-[8rem]"}`}
-                      percent={userData?.percentageActive}
-                      n={userData?.totalActiveTickets}
-                      price={userData?.totalActivePrice}
-                      text="Active  Ratio" />
-
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <PercentageBar
-                      className={`${viewAll && "!min-w-[8rem]"}`}
-                      stroke="red"
-                      n={userData?.totalInActiveTickets}
-                      price={userData?.totalInActivePrice}
-                      percent={userData?.percentageInActive}
-                      text="InActive  Ratio" />
-
-                  </SwiperSlide>
-                </Swiper>
-              </div>
-
-              <Scrollable className={`!mb-10 mx-auto hidden
-            md:!hidden
-             !justify-center 
-            md:!grid-cols-2 gap-y-5 !transition-all 
-            !duration-[1s]`}>
-                <PercentageBar
-                  className={`${viewAll && "!min-w-[8rem]"}`}
-                  percent={userData?.percentageActive}
-                  n={userData?.totalActiveTickets}
-                  price={userData?.totalActivePrice}
-                  text="Active  Ratio" />
-                <PercentageBar
-                  className={`${viewAll && "!min-w-[8rem]"}`}
-                  stroke="red"
-                  n={userData?.totalInActiveTickets}
-                  price={userData?.totalInActivePrice}
-                  percent={userData?.percentageInActive}
-                  text="InActive  Ratio" />
-              </Scrollable>
-
-
-              <>
-
-                <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${viewAll && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
-                  <TicketCounts counts={userData?.totalTickets}
-                    text={"Total Number Of Tickets"}
-                    icon={<AiOutlineSave />} />
-                  <TicketCounts counts={userData?.totalActiveTickets}
-                    text={"Total Number Of active Tickets"}
-                    icon={<VscFolderActive />} />
-                  <TicketCounts
-                    text={"Total Number Of Inactive Tickets"}
-                    counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
-
-                </Scrollable>
-                <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${viewAll && "!grid md:!grid-cols-2"}`}>
-                  <AmountCount
-                    className="!bg-blue-400"
-                    text="Total cost of all tickets"
-                    icon={<MdOutlinePriceChange />}
-                    amount={userData?.totalPrice} />
-                  <AmountCount
-                    className="!bg-green-400"
-
-                    text="Total cost of all active tickets"
-
-                    icon={<BiCategory />} amount={userData?.totalActivePrice} />
-                  <AmountCount
-                    className="!bg-red-400 !text-black"
-
-                    text="Total cost of all inactive tickets"
-
-                    icon={<BiCategory />} amount={userData?.totalInActivePrice} />
-
-                </Scrollable>
-              </>
-
-
-            </div>
-          </div>
-          <div className={`flex-none py-5
-        sidebarr m lg:rounded-lg shadow rounded-lg  overflow-y-auto--
+          <div className={`flex-none lg:flex-1 py-5
+        sidebar m lg:rounded-lg shadow rounded-lg  
         ${toggle ? "right-0" : "!-right-full"}
         duration-500
         transition-[right] shadow
-        lg:shadow-none lg:max-w-sm lg:w-[22rem] 
+        lg:shadow-none  lg:w-[25rem] 
+        lg:max-w-full
         text-center bg-white
         dark:bg-slate-800 rounded-sm right-0 top-0 h-fit
            w-[calc(100vw-3.5rem)] max-w-sm
-           z-20 fixed   lg:static px-4 `}>
+           z-20 fixed   lg:!sticky lg:static== lg:!-top-3 lg:h-[100vh-4rem] px-4  `}>
             <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 
        -left-[3.125rem] z-10 rounded-none flex items-center justify-center  font-black border-black"
@@ -1387,24 +1101,8 @@ z-10  "
             </span>
 
             <div
-              className=' overflow-y-auto max-h-[calc(100vh-0px)] lg:max-h-fit overflow-x-hidden '
+              className=' overflow-y-auto max-h-[calc(100vh-0px)] lg:h-full overflow-x-hidden '
             >
-
-              <UiButton
-
-                onClick={() => logoutUser()}
-                className="!w-[min(30rem,calc(100%-1.5rem))] !mx-auto !py-3.5 !my-5 !text-lg !rounded-xl lg:hidden !bg-red-400"
-              >
-
-                <div className='flex items-center gap-x-2 text-xs'>
-
-                  <CiLogout
-                    size={25}
-                  /> LogOut
-                </div>
-
-              </UiButton>
-
 
               <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4--  !text-lg first-letter:text-2xl" />
               <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
@@ -1692,20 +1390,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                     onClick={() => 0}
                   />
                 </form>
-                <UiButton
-                  onClick={() => logoutUser()}
-                  className="!w-[min(30rem,calc(100%-1.5rem))] hidden lg:block
-                !mx-auto !py-3.5 !my-5 !text-lg !rounded-xl  !bg-red-400"
-                >
 
-                  <div className='flex items-center justify-center gap-x-2 text-xs'>
-
-                    <CiLogout
-                      size={25}
-                    /> LogOut
-                  </div>
-
-                </UiButton>
               </div>
 
             </div>
@@ -1715,128 +1400,9 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
           </div>
         </div>
 
-        <div className="flex justify-between lg:justify-center  gap-x-4 gap-y-8 lg:gap-x-6
-      flex-wrap pr-5 items-start mb-10">
 
 
-          <div className='mt-0'>
-            <div className="text-[0.8rem] text-slate-300 dark:text-white uppercase text-center font-semibold mb-1 font-montserrat"> ticket status</div>
-            <Select
-              styles={style}
-              options={sortTicketStatusOptions}
-              defaultValue={{
-                label: "All tickets",
-                value: "all"
-              }}
-              ref={selectRef}
-              isSearchable={false}
-              onChange={(e) => handleChange(e, "ticketStatus")}
-              // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-              className='!border-none !h-8 mt-0' />
-          </div>
-
-          <div className='mt-0'>
-            <div className="text-[0.8rem]
-          text-slate-300 dark:text-white uppercase
-          text-center font-semibold mb-1 font-montserrat"> trip type </div>
-            <SelectTrip
-
-              onChange={(e) => handleChange(e, "triptype")}
-
-              options={
-
-
-                [
-                  {
-                    label: "all trip",
-                    value: "all"
-                  }, {
-                    label: "singletrip",
-                    value: "singletrip"
-                  }, {
-                    label: "roundtrip",
-                    value: "roundtrip"
-                  }
-
-
-                ]}
-              styles={style}
-              defaultValue={{
-                label: querySearch.get("triptype") || "all trip",
-                value: "all"
-              }}
-              // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-              isSearchable={false}
-              // onChange={handleSortTime}
-              className='!border-none !h-8 mt-0' />
-          </div>
-          <div className='mt-0'>
-            <div className="text-[0.8rem]
-          text-slate-300 dark:text-white uppercase
-          text-center font-semibold mb-1 font-montserrat"> sorted date </div>
-            <SelectSortDate
-              options={sortedDateOptions}
-              styles={style}
-              defaultValue={{
-                label: querySearch.get("sort") || "createdAt -",
-                value: "newest"
-              }}
-              // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-              isSearchable={false}
-              onChange={(e) => handleChange(e, "sort")}
-
-              className='!border-none !h-8 mt-0' />
-          </div>
-          <div className='mt-0'>
-            <div className="text-[0.8rem]
-          text-slate-300 dark:text-white uppercase
-          text-center font-semibold mb-1 font-montserrat"> Travel Time </div>
-            <TimeSelect
-              options={timeOptions}
-              styles={style}
-              defaultValue={{
-                label: querySearch.get("traveltime") || "no time",
-                value: "no time"
-              }}
-              // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-              isSearchable={false}
-              onChange={(e) => handleChange(e, "traveltime")}
-
-              className='!border-none !h-8 mt-0' />
-          </div>
-
-
-        </div>
-        <ClearFilter keys={[
-          "sort,newest",
-          "ticketStatus,all",
-          "search,*",
-          "daterange,*",
-          "boardingRange,*",
-          "triptype,all",
-          "limit,100",
-          "sort,newest",
-          "_id,xyx",
-          "traveltime,no time",
-        ]} />
-
-        <Form
-          handleChangeText={handleChangeText}
-          params={querySearch} />
-        <FormatTable
-          ticketData={userData}
-
-
-        />
-
-        <div className='mt-10 ' />
-
-
-      </motion.div >
+      </div >
     </>
   )
 }
