@@ -12,16 +12,18 @@ const AdminLogin = () => {
   const [qs] = useSearchParams();
 
   const message = qs.get("message")
+  const from =qs.get("from")
   const navigate = useNavigate();
   const handeSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
     try {
-      const res = await customFetch.post(url,
+      const redirect_path=from ?? "/dashboard"
+  await customFetch.post(url,
         { phone: number, password },
        
       )
-      navigate("/dashboard", { replace: true })
+      navigate(redirect_path, { replace: true })
     } catch (err) {
       console.log(err?.response);
       setError(err?.response.data);
@@ -61,6 +63,7 @@ const AdminLogin = () => {
                   }}
                   transition={{ duration: 0.3 }}
                   className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> {message}</motion.h1>
+              
               </div>
 
             }

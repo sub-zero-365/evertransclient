@@ -22,15 +22,11 @@ const adminQuery = {
     }, staleTime: Infinity
 }
 
-export const loader = (queryClient) => async ({ request, params }) => {
+export const loader = (queryClient) => async ({ request }) => {
     try {
-        // const wait = () => new Promise(r => setTimeout(() => r(), 5000))
-        // await wait()
         return await queryClient.ensureQueryData(adminQuery);
     } catch (error) {
-        console.log(error.response?.data)
-        // toast.error('please loggin to continue')
-        return redirect('/auth?message=something went wrong try again here?');
+        return redirect(`/auth?message=something went wrong try again here&from=${new URL(request.url).pathname}`);
     }
 }
 
@@ -46,25 +42,10 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
 
     const [isAuthError, setIsAuthError] = useState(false);
 
-    customFetch.interceptors.response.use(
-        (response) => {
-            // console.log("this is the response before the request is being sent ", response)
-            return response;
-        },
-        (error) => {
-            if (error?.response?.status === 401) {
-                setIsAuthError(true);
-            }
-            return Promise.reject(error);
-        }
-    );
-    useEffect(() => {
-        if (!isAuthError) return;
-        logoutUser();
-    }, [isAuthError]);
+
 
     const { user } = useQuery(adminQuery)?.data || { user: {} }
-    // console.log("this is user", user)
+
     const [isDarkTheme, setIsDarkTheme] = useState(isDarkThemeEnabled);
     const toggleDarkTheme = () => {
         const newDarkTheme = !isDarkTheme;
@@ -78,21 +59,27 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
     };
     const navigation = useNavigation()
     const isPageLoading = navigation.state === "loading"
-    const token = localStorage.getItem("admin_token");
     const dispatch = useDispatch()
-
-
-    const { data } = useQuery({
-        queryKey: ["currentadmin"],
-        queryFn: async () => axios.get("/admin/user", {
-            headers: {
-                'Authorization': "makingmoney " + token
-            },
-        })
-
-    })
     const [view, setView] = useState(false)
     const toggleSideBar = () => dispatch(actions.toggleSideBar())
+    customFetch.interceptors.response.use(
+        (response) => {
+            // console.log("this is the response before the request is being sent ", response)
+        
+            return response;
+        },
+        (error) => {
+            if (error?.response?.status === 401) {
+                alert("enter here ")
+                setIsAuthError(true);
+            }
+            return Promise.reject(error);
+        }
+    );
+    useEffect(() => {
+        if (!isAuthError) return;
+        logoutUser();
+    }, [isAuthError]);
     return (
         <DashBoardContext.Provider value={{
             user,

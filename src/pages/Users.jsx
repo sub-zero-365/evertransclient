@@ -12,7 +12,6 @@ import { Loader, Button, Heading } from '../components';
 import { AiOutlinePlus } from 'react-icons/ai'
 import { motion } from 'framer-motion'
 import { UserData } from '../Assets/userdata';
-import { setUserName } from "../actions/userName"
 import { Loadingbtn } from "../components";
 import InputBox from '../components/InputBox';
 import UiButton from '../components/UiButton';
@@ -33,7 +32,7 @@ const usersQuery = {
     }
 }
 export const loader = (queryClient) => async ({ params }) => {
-    return await queryClient.ensureQueryData(usersQuery)
+        return await queryClient.ensureQueryData(usersQuery)
 }
 
 const Appointment = ({ skip, currentPage }) => {

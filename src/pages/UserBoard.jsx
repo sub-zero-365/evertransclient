@@ -353,13 +353,13 @@ const Details = () => {
         </title>
       </Helmet> */}
       <div
-        className='pt-4   overflow-x-hidden
+        className=' overflow-x-hidden
       mx-auto
     max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark'
         ref={constraintsRef}>
 
         <div
-          className='flex justify-center items-center py-5 gap-x-4 px-2'
+          className='flex justify-center hidden-- items-center py-5 gap-x-4 px-2'
 
         >
           <UiButton
@@ -1077,7 +1077,7 @@ z-10  "
 
         <div className={`lg:flex ${false && "lg:flex-row-reverse"}  items-start justify-start gap-4 `}>
 
-          <div className="lg:w-[calc(100%-25rem)] mb-6 ">
+          <div className="lg:w-[calc(100%-25rem)]">
             <Outlet />
           </div>
 
@@ -1091,7 +1091,7 @@ z-10  "
         text-center bg-white
         dark:bg-slate-800 rounded-sm right-0 top-0 h-fit
            w-[calc(100vw-3.5rem)] max-w-sm
-           z-20 fixed   lg:!sticky lg:static== lg:!-top-3 lg:h-[100vh-4rem] px-4  `}>
+           z-20 fixed   lg:!sticky lg:static== lg:!top-[4rem] lg:h-[calc(100vh-4rem)] first-letter: px-4  `}>
             <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 
        -left-[3.125rem] z-10 rounded-none flex items-center justify-center  font-black border-black"

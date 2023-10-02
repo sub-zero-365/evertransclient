@@ -20,15 +20,13 @@ const userQuery = {
     },
 };
 
-export const loader = (queryClient) => async () => {
+export const loader = (queryClient) => async ({ request }) => {
     try {
-        const wait = () => new Promise(r => setTimeout(() => r(), 5000))
-        // await wait()
         return await queryClient.ensureQueryData(userQuery);
     } catch (error) {
-        console.log(error.response)
+        // console.log(error.response)
         toast.error('please loggin to continue')
-        return redirect('/login?message=something went wrong try again?');
+        return redirect(`/login?message=something went wrong try again&from=${new URL(request.url).pathname}`);
     }
 };
 
@@ -40,7 +38,7 @@ const ProtectedRoute = (queryClient) => {
     const [isAuthError, setIsAuthError] = useState(false);
     const navigation = useNavigation();
     const isPageLoading = navigation.state === 'loading'
-   
+
 
     customFetch.interceptors.response.use(
         (response) => {
@@ -65,13 +63,13 @@ const ProtectedRoute = (queryClient) => {
 
             }}
         >
-                <OnlineDetector />
-              
-                    {
-                        isPageLoading ? <AppSpinner/> : <Outlet
-                            context={{ user }}
-                        />
-                    }
+            <OnlineDetector />
+
+            {
+                isPageLoading ? <AppSpinner /> : <Outlet
+                    context={{ user }}
+                />
+            }
 
         </ProtectedContext.Provider>
     )

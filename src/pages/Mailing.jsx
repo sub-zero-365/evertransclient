@@ -18,19 +18,19 @@ const MailingContext = createContext()
 
 const Mailing = () => {
 
-    const [imgArr, setImgUrl] = useState((window.history.state.imgArr ?? []))
-    const deleteImg = (index) => {
-        const temp = imgArr
-        temp.splice(index, 1)
-        setImgUrl([
-            ...temp
-        ])
-    }
+    const [file, setFile] = useState((window.history.state.file ?? null))
+    
+    // const deleteImg = (index) => {
+    //     const temp = imgArr
+    //     temp.splice(index, 1)
+    //     setImgUrl([
+    //         ...temp
+    //     ])
+    // }
 
 
     return (
-        <MailingContext.Provider value={{
-            deleteImg, imgArr, setImgUrl
+        <MailingContext.Provider value={{ file, setFile
         }}>
             <Helmet>
                 <title>

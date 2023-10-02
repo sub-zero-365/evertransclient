@@ -3,7 +3,6 @@ import LoadingButton from '../components/LoadingButton'
 import { CiLocationOn } from "react-icons/ci"
 import { WiTime4 } from "react-icons/wi"
 import { GiPathDistance } from "react-icons/gi"
-import { RiDeleteBin6Line } from "react-icons/ri"
 import InputBox from "../components/InputBox"
 import { getCities } from "../utils/ReactSelectFunction";
 import { useNavigate, useSearchParams, Link, useNavigation } from "react-router-dom"
@@ -22,6 +21,7 @@ import { useMailingContext } from "../pages/Mailing"
 import { toast } from "react-toastify"
 import { BsCreditCard2Front, BsFillPersonFill, BsTelephoneMinus } from 'react-icons/bs'
 import { GrCircleInformation } from 'react-icons/gr'
+import dayjs from "dayjs"
 const MailingForm = () => {
     const style = {
         control: (base, { isFocused, isSelected }) => ({
@@ -44,10 +44,11 @@ const MailingForm = () => {
     const loadDemoData = async (evt) => {
         evt.preventDefault()
         const formdata = new FormData(evt.target)
-        // imgArr.forEach((file, index) => {
-        //     formdata.append("file.name" + index, file, file.name)
-        // });
+
         const data = Object.fromEntries(formdata)
+        if (data.registerdate) {
+            data.registerdate = dayjs(data.registerdate).format("YYYY-MM-DD")
+        }
         const { from, to } = data
         if (from == to) return toast.error("cities should not be thesame!")
         console.log("this i sthe source data here", data)
@@ -55,7 +56,7 @@ const MailingForm = () => {
         navigate(`preview`, {
             state: {
                 ...data,
-                imgArr
+                file
             }
         })
     }
@@ -63,25 +64,13 @@ const MailingForm = () => {
 
 
     const {
-        deleteImg, imgArr, setImgUrl } = useMailingContext()
+        file, setFile } = useMailingContext()
 
 
     const handleFileChange = () => {
-        const files = fileRef.current.files
-        if (imgArr && imgArr.length > 3) {
-            toast.warning("you can add just 4 photos")
-            return
-        }
-        const temp = []
-        for (let file of files) {
-            console.log(`this is a file at any time`, file)
-            // const file = fileRef.current.files[0]
-            temp.push(file)
-            // if (!file) return
-        }
-        setImgUrl([
-            ...imgArr, ...temp
-        ])
+        const file = fileRef.current.files[0]
+        if (!file) return
+        setFile(file)
 
     }
 
@@ -110,6 +99,7 @@ const MailingForm = () => {
 
     return (
         <div>
+
             <form onSubmit={loadDemoData}
                 ref={formRef}
             >
@@ -123,7 +113,7 @@ const MailingForm = () => {
                         id="file"
                         name='images'
                         onChange={handleFileChange}
-                        multiple
+
                     />
                     <label htmlFor="file">
                         <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbAVXZhlM-qA4bg_bOHRutl3wQVQdAbSWx_A&usqp=CAU'
@@ -133,49 +123,10 @@ const MailingForm = () => {
                     <div className=''>
                         {/* <AnimatePresence> */}
 
-                        {
-                            imgArr.map((img, index) =>
-                                <>
-                                    <div
-                                        initial={{ opacity: 0, scale: 0.5 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.4 }}
-                                        key={`${img?.name}--${img?.size}`}
-                                        className='flex px-4 py-4
-                                justify-between 
-                                mb-3 items-center 
-                                gap-x-2 border rounded-lg bg-slate-50'
-                                    >
-                                        <img
-                                            className='flex-none w-16 h-14'
-                                            src={URL.createObjectURL(img)}
-                                        />
-                                        <div classNamme="flex-1  overflow-hidden ">
-                                            <Heading
-                                                className="!text-sm line-clamp-1 !text-start"
-                                                text={img?.name
-                                                }
-                                            />
-                                            <Heading
-                                                className="!text-sm line-clamp-1 !text-start"
-                                                text={`${(img?.size / 1024).toFixed(1)} kb`
-                                                }
-                                            />
-                                        </div>
-                                        <div
-                                            className='flex-none'
-                                        >
-                                            <RiDeleteBin6Line
-                                                className='cursor-pointer'
-                                                onClick={() => deleteImg(index)}
-                                                size={25}
-                                            />
-                                        </div>
-                                    </div>
-                                </>
-
-                            )
-                        }
+                        <img
+                            alt='mails imae'
+                            src={file ? URL.createObjectURL(file) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbAVXZhlM-qA4bg_bOHRutl3wQVQdAbSWx_A&usqp=CAU'}
+                        />
 
                         {/* </AnimatePresence> */}
 
@@ -184,8 +135,6 @@ const MailingForm = () => {
                 </div>
 
                 <div className="flex flex-col justify-center items-center mt-4">
-
-
 
                     <DatePicker
                         inline={false}
@@ -199,7 +148,7 @@ const MailingForm = () => {
                     />
                     <input
                         type="hidden"
-                        name='date'
+                        name='registerdate'
                         value={startDate}
                     />
                 </div>
@@ -273,7 +222,34 @@ const MailingForm = () => {
                         value: "7am"
                     }}
                     options={timeOptions} />
+                <div className='px-2'>
+                    <div className="flex items-end pb-2 justify-start gap-x-4">
+                        <BsTelephoneMinus
+                            size={20}
+                        />
+                        <h1 className='text-xl  font-light '>Product Name</h1> <span className='text-rose-700 text-2xl -mb-0.5'>*</span>
+                    </div>
 
+                    <InputBox
+                        className="!min-h-[3rem]"
+                        name="name"
+                        hidden
+                    />
+                </div>
+                <div className='px-2'>
+                    <div className="flex items-end pb-2 justify-start gap-x-4">
+                        <BsTelephoneMinus
+                            size={20}
+                        />
+                        <h1 className='text-xl  font-light '>Estimated Price for Product</h1> <span className='text-rose-700 text-2xl -mb-0.5'>*</span>
+                    </div>
+
+                    <InputBox
+                        className="!min-h-[3rem]"
+                        name="estimatedprice"
+                        hidden
+                    />
+                </div>
                 <div className='flex items-center mb-5  justify-center'>
 
                     <Heading
@@ -295,7 +271,7 @@ const MailingForm = () => {
 
                     <InputBox
                         className="!min-h-[3rem]"
-                        name="fullname"
+                        name="senderfullname"
                         hidden
                     />
                 </div>

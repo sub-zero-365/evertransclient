@@ -15,14 +15,16 @@ export const action = (queryClient) => async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   try {
+    const from = data.from || "/user"
     const res = await customFetch.post('/auth/login', data);
     queryClient.invalidateQueries();
 
     toast.success('Login successful');
     if (res.data?.user?.redirect) {
-      return redirect("/assistant", { replace: true })
+      const from = data.from || "/assistant"
+      return redirect(from, { replace: true })
     }
-    return redirect("/user", { replace: true })
+    return redirect(from, { replace: true })
   } catch (error) {
     console.log("logging error", error?.response?.data)
     toast.error(error?.response?.data);
@@ -31,6 +33,8 @@ export const action = (queryClient) => async ({ request }) => {
 }
 
 const Login = () => {
+  const [searchParams] = useSearchParams()
+  const from = searchParams.get("from")
   const navigation = useNavigation()
   const isSubmitting = navigation.state == "submitting"
   const errorMessageFromLoader = useLoaderData()
@@ -45,6 +49,7 @@ const Login = () => {
       }, 3000)
     }
   }, [errorMessageFromAction, err])
+
   return (
     <section className="h-screen">
 
@@ -63,7 +68,14 @@ const Login = () => {
               {errorMessageFromLoader && <p
                 className="text-rose-600 text-center "
               >{errorMessageFromLoader}</p>}
+              <input
+                type="hidden"
+                name="from"
+                value={from}
+
+              />
               <div className="relative mb-6" data-te-input-wrapper-init>
+
                 <input
                   type="tel"
                   name="phone"

@@ -7,27 +7,52 @@ import LoadingButton from "../components/LoadingButton"
 import AnimatedText from "../components/AnimateText"
 import { toast } from "react-toastify"
 import { GrCircleInformation } from "react-icons/gr"
-import { useEffect } from "react"
-
+import customFetch from "../utils/customFetch"
 export const loader = async () => {
 
-
+    return null
 }
 
-export const action = (queryClient) => async ({ }) => {
-    toast.success("successfully added product")
-    // return redirect("/user")
-    // return <Navigate to={"/user"} replace />
-    return "successfully"
+export const action =
+    (queryClient) =>
+        async ({ request }) => {
 
-}
+
+            try {
+
+                const formData = await request.formData();
+                // const data =window.history.state?.usr
+                // const file = formData.get('avatar');
+                const file = window.history.state?.usr?.file
+                console.log("file is the file here  ", file)
+                if (file) {
+                    alert("enter here")
+                    formData.append("mailimg", file, file.name)
+                    return null
+                }
+                console.log("this is the form data ", formData)
+
+                if (file && file.size > 500000) {
+                    toast.error('Image size too large');
+                    return null;
+                }
+
+                await customFetch.post('/mails/new', formData);
+                queryClient.invalidateQueries(['mails']);
+                toast.success('Profile updated successfully');
+                return redirect('/user/mails');
+            } catch (error) {
+                toast.error(error?.response?.data || error.message);
+                return redirect("/mailing");
+            }
+        };
 
 const MailingPreview = () => {
     const navigate = useNavigate()
     const location = useLocation()
-    const { imgArr, from, to, senderidcardnumber, fullname, senderphonenumber, } = location.state ?? {}
+    const { imgArr, from, to, senderidcardnumber, fullname, senderphonenumber, file } = location.state ?? {}
     window.onpopstate = (e) => {
-        window.history.pushState({ imgArr, from, to }, null, window.location.href)
+        window.history.replaceState({ imgArr, from, to }, null, window.location.href)
     }
     const NUMBER_OF_IMAGES = imgArr?.length
     const message = useActionData()
@@ -35,7 +60,26 @@ const MailingPreview = () => {
         return <Navigate to={"/user"} replace />
     }
     return (
-        <Form method="post">
+        <Form method="post" className='form' encType='multipart/form-data'
+            state={{ user: "send the code" }}>
+
+            {
+                location.state && Object.keys(location.state).map((input, index) => {
+                    if (input == "images") return null
+                    return (
+                        <input key={index}
+                            type="text"
+                            readOnly
+                            name={input}
+                            value={location.state[input]}
+                        />)
+
+
+                }
+                )
+
+            }
+
             <div className="flex items-center px-5 gap-x-4 py-4">
                 <Rounded
                     className=""
@@ -57,7 +101,18 @@ const MailingPreview = () => {
                     />
                 </div>
             </div>
-
+            <input
+                name="fullname"
+                value="fullname"
+                id="fullname"
+            />
+            <input
+                type='file'
+                id='avatar'
+                name='avatar'
+                className='form-input'
+                accept='image/*'
+            />
             <div className=''>
                 <AnimatedText
                     text={`Product Images (${NUMBER_OF_IMAGES})`}
@@ -65,50 +120,11 @@ const MailingPreview = () => {
 
                 />
 
-                {
-                    imgArr?.map((img, index) =>
-                        <>
-                            <div
 
-                                key={`${img?.name}--${img?.size}`}
-                                className='flex px-4 py-4
-                                justify-between  
-                                flex-col
-                                mb-3 items-center 
-                                gap-x-2 border rounded-lg bg-slate-50'
-                            >
-                                <img
-                                    className='flex-none w-full max-w-sm '
-                                    src={URL.createObjectURL(img)}
-                                />
-                                <div classNamme="flex-1  overflow-hidden ">
-                                    <Heading
-                                        className="!text-sm line-clamp-1 !text-start"
-                                        text={img?.name
-                                        }
-                                    />
-                                    <Heading
-                                        className="!text-sm line-clamp-1 !text-start"
-                                        text={`${(img?.size / 1024).toFixed(1)} kb`
-                                        }
-                                    />
-                                </div>
-                                <div
-                                    className='flex-none'
-                                >
-                                    {/* <RiDeleteBin6Line
-                                        className='cursor-pointer'
-                                        onClick={() => deleteImg(index)}
-                                        size={25}
-                                    /> */}
-                                </div>
-                            </div>
-
-                        </>
-
-                    )
-                }
-
+                <img
+                    alt='mails imae'
+                    src={file ? URL.createObjectURL(file) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbAVXZhlM-qA4bg_bOHRutl3wQVQdAbSWx_A&usqp=CAU'}
+                />
 
 
                 <div className="py-10">
