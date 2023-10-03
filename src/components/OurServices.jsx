@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { BsBusFront } from "react-icons/bs"
+import { MdOutlineForwardToInbox } from "react-icons/md"
 import Heading from './Headings'
 export default function OurServices() {
   const slideUp = {
@@ -28,7 +30,7 @@ export default function OurServices() {
     }
 
   }
-  const Service = ({ index }) => {
+  const Service = ({ index, text, title, icon: Icon }) => {
     return (
       <motion.div
         style={{
@@ -52,11 +54,12 @@ export default function OurServices() {
 
         className='p-2 rounded-md border cursor-pointer  ppt  bg-gradient-to-b from-[#a204f4]  to-[#221c7f]'>
         <div className='bg-slate-200 text-center p-4 py-10'>
+          <div className='w-fit mx-auto mb-5'>{Icon}</div>
           <Heading
             className="!text-[#181e76] !text-3xl !font-semibold"
-            text="School Bus Rental"
+            text={title}
           />
-          nisi in placeat blanditiis quos ducimus, sed nesciunt fugit ipsam sapiente laudantium, veniam perspiciatis laboriosam maiores!
+          {text}
         </div>
       </motion.div>
 
@@ -84,7 +87,12 @@ export default function OurServices() {
         initial="initial"
         whileInView="animate"
         className='text-center my-3 pt-3 leading-snug max-w-3xl mx-auto'
-      >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</motion.p>
+      >
+        At  the heart of Arriva is an ambition to make passenger
+        transport the best choice as we look to connect people with our
+        local communities to all the things that are important
+        to them -safety,reliably,and sustainably
+      </motion.p>
 
       <div
         className='grid  py-10        grid-cols-[repeat(auto-fit,minmax(min(25rem,calc(100%-20px)),1fr))]
@@ -92,9 +100,26 @@ export default function OurServices() {
         gap-y-6'
 
       >
-        {
-          Array.from({ length: 6 }, (arr, index) => <Service key={index} index={index} />)
-        }
+        <Service index={1}
+          icon={<BsBusFront
+            size={30}
+          />}
+          title="Bus Booking"
+          text="Our bus bookjing service herlo ot "
+        />
+        <Service index={1}
+          icon={<MdOutlineForwardToInbox
+            size={30}
+          />}
+          title="Mailing Services"
+          text="Our bus bookjing service herlo ot "
+        />
+        <Service index={1}
+
+          title="Bus Booking"
+          text="Our bus bookjing service herlo ot "
+        />
+
 
       </div>
     </div>

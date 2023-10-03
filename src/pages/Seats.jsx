@@ -1,10 +1,7 @@
-import { Button, PanigationButton, Scrollable, TicketCounts } from "../components"
+import { PanigationButton, Scrollable, TicketCounts } from "../components"
 import { AiOutlineSave } from "react-icons/ai"
 import { VscFolderActive } from 'react-icons/vsc'
-import UiButton,
-{ UiButtonDanger } from "../components/UiButton"
 import { useState, useEffect, useRef } from "react"
-import axios from 'axios'
 import { useNavigate, useParams, useLoaderData } from 'react-router-dom'
 import { Heading } from '../components'
 import { useSearchParams } from 'react-router-dom'
@@ -14,22 +11,26 @@ import {
 // import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai"
 import dateFormater from '../utils/DateFormater'
 import ClearFilter from '../components/ClearFilter'
-import formatQuery from "../utils/formatQueryStringParams"
-import { useSelector, useDispatch } from 'react-redux'
-import { setSeats } from "../actions/seatsData"
+
 import FromSelect from 'react-select/async'
 import ToSelect from 'react-select/async'
 import TimeSelect from "react-select"
 import { getCities } from "../utils/ReactSelectFunction"
 import { components, style } from "../utils/reactselectOptionsStyles"
 import DatePicker from 'react-datepicker';
-import { useInView } from 'framer-motion'
 import { PlaceHolderLoader } from '../components'
 import { Helmet } from 'react-helmet'
 import customFetch from '../utils/customFetch'
 import {
     useQuery,
 } from '@tanstack/react-query'
+import { motion } from "framer-motion"
+import AnimateText from "../components/AnimateText"
+import UiButton from "../components/UiButton"
+import { MdOutlineClose } from "react-icons/md"
+import { AiOutlinePlus } from "react-icons/ai"
+import InputBox from "../components/InputBox"
+import LoadingButton from "../components/LoadingButton"
 const seatsQuery = (params = {}) => ({
     queryKey: ["seats"],
     queryFn: async () => {
@@ -50,6 +51,7 @@ export const loader = (queryClient) => async ({ request }) => {
 }
 
 const Seats = () => {
+    const [isOpen, setIsOpen] = useState(false)
     const { searchValues } = useLoaderData()
     const { seats, nHits, numberOfPages, routes_count } = useQuery(seatsQuery(searchValues)).data
     let downloadbaseurl = null
@@ -65,8 +67,8 @@ const Seats = () => {
 
     // const isInView = useInView(ref)
 
-   
-  
+
+
     const [querySearch, setQuerySearch] = useSearchParams();
     const isadminuser = querySearch.get("admin")
     const handleFilterChange = (key, value = null) => {
@@ -118,6 +120,35 @@ const Seats = () => {
             </Helmet>
 
             <div className="h-[calc(100vh-60px)] container mx-auto !flex-1 w-full overflow-y-auto">
+                <div className="flex  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow
+                    bg-white dark:bg-slate-800 mx-4">
+                    <div className="flex-1">
+                        <Heading text="hey you can add a new route " className="!mb-2 !font-black mt-0" />
+                        <p className="mb-3 text-sm  px-6">they more the route the more the buses</p>
+                    </div>
+                    <motion.div onClick={() => setIsOpen(c => !c)}
+                        initial={{ x: "-50%" }}
+                        animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
+                        transition={{
+                            duration: 2,
+                            ease: "easeInOut",
+                            times: [0, 0.2, 0.5, 0.8, 1],
+                            repeat: Infinity,
+                            repeatDelay: 1
+                        }
+
+                        }
+                        className="bottom-6 flex-none ml-2 shadow-2xl button-add  top-auto bg-blue-400 
+w-[2rem] h-[2rem] rounded-full left-1/2 overflow-hidden 
+-translate-x-1/2
+z-10  "
+                    >
+                        <div className="flex h-full w-full items-center scale-animation justify-center ">
+                            <AiOutlinePlus size={30} color="#fff" className="" />
+                        </div>
+                    </motion.div>
+
+                </div>
                 <div className="flex
             flex-col lg:flex-row
             lg:mt-10 lg:px-8 max-w-full rounded-sm shadow-sm lg:mx-10
@@ -163,6 +194,70 @@ const Seats = () => {
                             name="query"
                             className="!mx-auto !block !px-10 !mt-1 lg:px-10" />
                     </div>
+                    <div className={`
+            ${isOpen ? "visible opacity-100 pointer-events-all " : "invisible opacity-0 pointer-events-none"}
+            fixed 
+            lg:static
+            lg:opacity-100
+            lg:visible
+            lg:!pointer-events-auto
+            transition-[opacity]
+            left-1/2
+            -translate-x-1/2
+            w-[min(calc(100%-2.5rem),25rem)]
+            min-h-[10rem]
+            bg-white
+            dark:bg-slate-800
+            dark:shadow-sm
+            dark:shadow-dark
+            z-20
+            rounded-2xl
+            top-1/2
+            -translate-y-1/2
+            lg:translate-x-0
+            lg:translate-y-0
+            shadow-xl
+            shadow-slate-400
+            py-5 pb-10`}>
+                        <span
+                            className='absolute lg:hidden
+                    w-8 h-8  hover:ring-red-500
+           
+            md:h-10 md:w-10 rounded-full
+            grid place-items-center
+            text-xs
+            hover:shadow-xl
+            mx-4
+            mt-2
+            bg-slate-100
+            hover:bg-red-400
+            ease duration-500
+            transition-colors
+            right-0 top-0 '
+                            onClick={() => setIsOpen(false)}
+                        >
+                            <MdOutlineClose
+                                classNae="text-sm" />
+                        </span>
+                        <AnimateText text="create new employee" className='!text-lg' />
+                        <form
+
+                            className='px-5'
+                        >
+                            <InputBox
+
+                                name={"Full Names"}
+                            />
+
+
+
+                            <LoadingButton >
+                                add a new route here
+                            </LoadingButton>
+
+                        </form>
+                    </div>
+
                 </div>
                 <Scrollable className="
                     !overflow-visible

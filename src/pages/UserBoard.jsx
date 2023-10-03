@@ -63,21 +63,21 @@ import {
 import customFetch from '../utils/customFetch'
 import { CiLogout } from 'react-icons/ci'
 const seats = []
-const allTicketsQuery = (params) => {
-  const { search, sort, page } = params;
-  return {
-    queryKey: [
-      'tickets',
-      { search: search ?? "", page: page ?? 1, sort: sort ?? "newest" }
-    ],
-    queryFn: async () => {
-      const { data } = await customFetch.get('/ticket', {
-        params,
-      });
-      return data;
-    },
-  };
-};
+// const allTicketsQuery = (params) => {
+//   const { search, sort, page } = params;
+//   return {
+//     queryKey: [
+//       'tickets',
+//       { search: search ?? "", page: page ?? 1, sort: sort ?? "newest" }
+//     ],
+//     queryFn: async () => {
+//       const { data } = await customFetch.get('/ticket', {
+//         params,
+//       });
+//       return data;
+//     },
+//   };
+// };
 
 const style = {
   control: (base, state) => {
@@ -96,15 +96,15 @@ const style = {
 
 
 }
-export const loader =
-  (queryClient) =>
-    async ({ request }) => {
-      const params = Object.fromEntries([
-        ...new URL(request.url).searchParams.entries(),
-      ]);
-      await queryClient.ensureQueryData(allTicketsQuery(params));
-      return { searchValues: { ...params } };
-    };
+// export const loader =
+//   (queryClient) =>
+//     async ({ request }) => {
+//       const params = Object.fromEntries([
+//         ...new URL(request.url).searchParams.entries(),
+//       ]);
+//       await queryClient.ensureQueryData(allTicketsQuery(params));
+//       return { searchValues: { ...params } };
+//     };
 
 const Details = () => {
 
@@ -131,7 +131,7 @@ const Details = () => {
 
   const { user } = useOutletContext();
 
-  const { logoutUser } = useUserLayoutContext()
+  // const { logoutUser } = useUserLayoutContext()
 
 
   const onPasswordSuccess = () => toast.success("Password Change Successfully!!", {

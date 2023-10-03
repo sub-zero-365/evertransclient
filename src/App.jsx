@@ -41,7 +41,7 @@ import { loader as ticketsloader } from "./pages/Appointment"
 import { loader as usersLoader } from "./pages/Users"
 import { loader as userLoader } from "./pages/userDetails"
 import { loader as seatsLoader } from "./pages/Seats"
-import { loader as ticketsLoader } from "./pages/UserBoard"
+import { loader as ticketsLoader } from "./pages/Books"
 import { loader as busLoader } from "./pages/Bus"
 import { loader as singleBusLoader, action as singleBusAction } from "./pages/BusDetails"
 import { loader as assistantsLoader } from "./pages/Assistant"
@@ -220,7 +220,6 @@ const router = createBrowserRouter([
               <Suspense fallback={<FallBack />}>
                 <UserBoard />
               </Suspense>
-
             ,
 
             path: "user",

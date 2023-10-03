@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import generateRandonNumber from '../utils/generateRandonCharacters'
-const InputBox = ({ inputRef, value, onChange, name, type, hidden = false, className }) => {
+const InputBox = ({ inputRef, value, onChange, name, type, hidden = false, className, defaultValue }) => {
     const [inputid, setInputId] = useState(null)
 
     useEffect(() => {
@@ -10,6 +10,7 @@ const InputBox = ({ inputRef, value, onChange, name, type, hidden = false, class
     return (
         <div className="relative mb-6" data-te-input-wrapper-init>
             <input
+                defaultValue={defaultValue || ""}
                 name={name}
                 ref={inputRef}
                 onChange={onChange}

@@ -34,7 +34,7 @@ const Hero = () => {
                         <AnimateText
                             className="!text-4xl md:!text-5xl lg:leading-[1.2]
                             lg:!text-left lg:!text-6xl !text-center    !py-6 !font-black"
-                            text="Charter With Us For An Adventure-Filled Journey"
+                            text="Travel With Us For An Adventure-Filled Journey"
                         />
 
                         <motion.div

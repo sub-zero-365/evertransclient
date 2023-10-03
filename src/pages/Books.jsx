@@ -50,27 +50,25 @@ import {
     , CustomDatePicker
 } from '../components';
 
-import dayjs from "dayjs"
 import { Helmet } from 'react-helmet'
 import { getCities } from "../utils/ReactSelectFunction"
 import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
 import { useFilter } from '../Hooks/FilterHooks'
-import ShowBuses from './ShowBuses'
-import Marquee from 'react-fast-marquee'
 import {
-    useQuery, useMutation, useQueryClient
+    useQuery
 } from '@tanstack/react-query'
 import customFetch from '../utils/customFetch'
 import { CiLogout } from 'react-icons/ci'
-const seats = []
 
-const allTicketsQuery = (params) => {
+
+const allTicketsQuery = (params = {}) => {
     // console.log("this is the params", params)
     const { search, sort, page } = params
     return {
         queryKey: [
             'tickets',
-            { search: search ?? "", page: page ?? 1, sort: sort ?? "newest" }
+            // { search: search ?? "", page: page ?? 1, sort: sort ?? "newest" }
+            { ...params }
         ],
         queryFn: async () => {
             const { data } = await customFetch.get('/ticket', {
@@ -111,9 +109,9 @@ export const loader =
 const Books = () => {
     const { handleFilterChange, handleChange } = useFilter()
     const [querySearch] = useSearchParams();
-    const handleChangeText = (e) => {
-        handleFilterChange("search", e.target.value)
-    }
+    // const handleChangeText = (e) => {
+    //     handleFilterChange("search", e.target.value)
+    // }
     // const { user } = useOutletContext();
     const { logoutUser, user } = useUserLayoutContext()
     const { searchValues } = useLoaderData()
@@ -405,10 +403,13 @@ const Books = () => {
                 "_id,xyx",
                 "traveltime,no time",
             ]} />
-
+            {/* <input
+                onChange={e => handleChange({ value: e.target.value }, "search")}
+                type="text"
+            /> */}
             <Form
-                handleChangeText={handleChangeText}
-                params={querySearch} />
+                onChange={search => handleFilterChange("search", search)}
+            />
             <div className='w-full max-w-full'>
                 <FormatTable
                     ticketData={userData}

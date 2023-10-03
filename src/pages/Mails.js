@@ -1,22 +1,22 @@
 import { useFilter } from "../Hooks/FilterHooks"
 import AnimatedText from "../components/AnimateText"
-import { Scrollable } from "../components"
+import { Heading, Scrollable } from "../components"
 import UiButton from "../components/UiButton"
 import { useLoaderData, useSearchParams } from "react-router-dom"
 import Mail from "../components/Mail"
 import customFetch from "../utils/customFetch"
 import { useQuery } from "@tanstack/react-query"
 
+import CustomSelect from "../components/CustomSelect"
+import { sortedDateOptions, queryOptions } from "../utils/sortedOptions"
+import SelectSortDate from 'react-select';
 
-
-
-const allMailsQuery = (params) => {
-  // console.log("this is the params", params)
-  const { search, sort, page } = params
+const allMailsQuery = (params = {}) => {
+  const { search, sort, page, mailStatus } = params
   return {
     queryKey: [
-      'mails',
-      { search: search ?? "", page: page ?? 1, sort: sort ?? "newest" }
+      'mails', params
+      // { search: search ?? "", page: page ?? 1, sort: sort ?? "newest", mailStatus: mailStatus ?? "all" }
     ],
     queryFn: async () => {
       const { data } = await customFetch.get('/mails', {
@@ -24,6 +24,7 @@ const allMailsQuery = (params) => {
       });
       return data;
     },
+    keepPreviousData: true
   };
 };
 
@@ -38,29 +39,27 @@ export const loader =
       return { searchValues: { ...params } };
     };
 
+const style = {
+  control: (base, state) => {
+    // console.log(state.isFocused)
+    return ({
+      ...base,
+      boxShadow: "none",
+      backgroundColor: "transparent",
+      borderRadius: 0,
+      fontSize: 1 + "rem",
+      cursor: "pointer",
+      // backgroundColor: state.isSelected ? "red" : "green"
+    }
+    )
+  }
 
+
+}
 const Mails = () => {
   const [querySearch] = useSearchParams()
   const { handleChange, handleFilterChange } = useFilter()
-  const queryOptions = [
-    {
-      value: "all",
-      label: "all"
-    },
-    {
-      value: "my owns",
-      label: "own"
-    },
-    {
-      value: "pending",
-      label: "pending"
-    },
-    {
-      value: "recieved",
-      label: "recieved"
-    },
 
-  ]
 
 
 
@@ -82,16 +81,40 @@ const Mails = () => {
   const { mails } = useQuery(allMailsQuery(searchValues)).data || []
   return (
     <div>
-      <AnimatedText
-        text="under maintenances oops"
-        className="!text-3xl"
+      <Heading
+        text="Mails"
+        className="!text-4xl !text-center !mb-10 !font-black"
       />
-      <Scrollable className="!justify-center">
+      <Scrollable className="!justify-center pt-10">
         {
           queryOptions.map((query) => <FilterButton {...query} key={query} />)
         }
 
       </Scrollable>
+      <Scrollable className="!justify-center !gap-y-6 !overflow-visible !flex-wrap pt-10 !mb-20">
+
+<div className="!mb-2 !flex-none ">
+            <h1 className="text-sm  text-center font-bold ">sort</h1>
+            <SelectSortDate
+              options={sortedDateOptions}
+              styles={style}
+              defaultValue={{
+                label: querySearch.get("mailStatus") || "createdAt -",
+                value: "newest"
+              }}
+              // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+
+              isSearchable={false}
+              onChange={(e) => handleFilterChange("filter", e.value)}
+
+              className='!border-none !h-8 mt-0' />
+          </div>
+        
+
+      </Scrollable>
+
+
+
       <div
         className="lg:px-24 px-8 gap-x-4 grid py-5 grid-cols-[repeat(auto-fit,minmax(min(calc(100%-20px),25rem),1fr))]"
 
@@ -101,6 +124,10 @@ const Mails = () => {
         />)}
 
       </div>
+      <UiButton>
+        LOAD MORE
+
+      </UiButton>
     </div>
   )
 }

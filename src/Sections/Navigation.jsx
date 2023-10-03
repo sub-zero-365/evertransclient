@@ -4,10 +4,27 @@ import { Heading } from '../components'
 import { MdOutlineForwardToInbox } from "react-icons/md"
 import { BiBusSchool } from "react-icons/bi"
 import { NavLink } from 'react-router-dom'
+import { motion } from "framer-motion"
+const variants = {
+    show: {
+        opacity: 1,
+        x: [-1000,100,0],
+        transition: {
+            duration: 1
+        }
+    }
+    , hidden: {
+        opacity: 0,
+        // x: -1000
+    }
+}
 const Navigation = () => {
     return (
         <div className='bg-white '>
-            <div
+            <motion.div
+                variants={variants}
+                animate="show"
+                initial="hidden"
                 className='max-w-2xl mx-10 rounded-sm
             -mt-20 z-10 relative
             lg:mx-auto bg-white py-16 px-5 shadow'
@@ -39,18 +56,18 @@ const Navigation = () => {
                 !mx-auto !py-5 !text-lg !rounded-none
                 !bg-blue-700 !font-black"
                 >
-                 <NavLink
+                    <NavLink
                         to="mailing"
                     >
                         {({ isPending }) => <div className="flex items-center gap-x-4">
                             <MdOutlineForwardToInbox
                                 size={25}
                             />
-                            {isPending ? "loading please wait " :  <p>Mail As Service</p>}
+                            {isPending ? "loading please wait " : <p>Mail As Service</p>}
                         </div>}
                     </NavLink>
                 </UiButton>
-            </div>
+            </motion.div>
         </div>
     )
 }

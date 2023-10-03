@@ -58,4 +58,25 @@ export const timeWithClearOptions = [
   { label: "10am", value: "10am" },
   { label: "10pm", value: "10pm" },
 ]
+
+export const queryOptions = [
+  {
+    value: "all",
+    label: "all"
+  },
+  {
+    value: "my owns",
+    label: "own"
+  },
+  {
+    value: "pending",
+    label: "pending"
+  },
+  {
+    value: "recieved",
+    label: "recieved"
+  },
+
+]
+
 export default 748

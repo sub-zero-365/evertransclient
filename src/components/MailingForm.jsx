@@ -5,14 +5,14 @@ import { WiTime4 } from "react-icons/wi"
 import { GiPathDistance } from "react-icons/gi"
 import InputBox from "../components/InputBox"
 import { getCities } from "../utils/ReactSelectFunction";
-import { useNavigate, useSearchParams, Link, useNavigation } from "react-router-dom"
+import { useNavigate, useSearchParams, Link, useNavigation, useLocation } from "react-router-dom"
 import {
     Heading,
 } from "../components"
 import { useState, forwardRef, useRef } from "react"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { AiOutlineArrowRight } from 'react-icons/ai'
+import { AiOutlineArrowRight, AiOutlineCloudUpload } from 'react-icons/ai'
 import FromSelect from 'react-select/async'
 import ToSelect from 'react-select/async'
 import TimeSelect from 'react-select'
@@ -22,7 +22,12 @@ import { toast } from "react-toastify"
 import { BsCreditCard2Front, BsFillPersonFill, BsTelephoneMinus } from 'react-icons/bs'
 import { GrCircleInformation } from 'react-icons/gr'
 import dayjs from "dayjs"
+import { AnimatePresence, motion } from 'framer-motion'
+import AnimatedText from './AnimateText'
 const MailingForm = () => {
+    const location = useLocation()
+    const state = location.state || {};
+    console.log("this is the state value ", state, location)
     const style = {
         control: (base, { isFocused, isSelected }) => ({
             ...base,
@@ -115,20 +120,38 @@ const MailingForm = () => {
                         onChange={handleFileChange}
 
                     />
-                    <label htmlFor="file">
-                        <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbAVXZhlM-qA4bg_bOHRutl3wQVQdAbSWx_A&usqp=CAU'
-                            alt="inputimage"
+                    <label htmlFor="file"
+                        className="cursor-pointer"
+                    >
+                        <AiOutlineCloudUpload
+                            size={80}
+                            className='mx-auto text-center'
+                        />
+                        <AnimatedText
+                            text="upload product image"
+                            className='!text-2xl '
+
                         />
                     </label>
                     <div className=''>
-                        {/* <AnimatePresence> */}
+                        <AnimatePresence
+                            initial={false}
+                        >
 
-                        <img
-                            alt='mails imae'
-                            src={file ? URL.createObjectURL(file) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbAVXZhlM-qA4bg_bOHRutl3wQVQdAbSWx_A&usqp=CAU'}
-                        />
 
-                        {/* </AnimatePresence> */}
+                            {
+                                file && <motion.img
+                                    initial={{ y: 100 }}
+                                    animate={{ y: 0 }}
+                                    exit={false}
+                                    alt='mails image'
+                                    src={file ? URL.createObjectURL(file) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbAVXZhlM-qA4bg_bOHRutl3wQVQdAbSWx_A&usqp=CAU'}
+                                />
+                            }
+
+
+
+                        </AnimatePresence>
 
                     </div>
 
@@ -233,6 +256,7 @@ const MailingForm = () => {
                     <InputBox
                         className="!min-h-[3rem]"
                         name="name"
+                        defaultValue={state.name}
                         hidden
                     />
                 </div>
@@ -247,6 +271,7 @@ const MailingForm = () => {
                     <InputBox
                         className="!min-h-[3rem]"
                         name="estimatedprice"
+                        defaultValue={state?.estimatedprice}
                         hidden
                     />
                 </div>
@@ -273,6 +298,7 @@ const MailingForm = () => {
                         className="!min-h-[3rem]"
                         name="senderfullname"
                         hidden
+                        defaultValue={state?.senderfullname}
                     />
                 </div>
                 <div className='px-2'>
@@ -287,6 +313,7 @@ const MailingForm = () => {
                         className="!min-h-[3rem]"
                         name="senderidcardnumber"
                         hidden
+                        defaultValue={state?.senderidcardnumber}
                     />
                 </div>
                 <div className='px-2'>
@@ -300,6 +327,7 @@ const MailingForm = () => {
                     <InputBox
                         className="!min-h-[3rem]"
                         name="senderphonenumber"
+                        defaultValue={state.senderphonenumber}
                         hidden
                     />
                 </div>
@@ -325,6 +353,7 @@ const MailingForm = () => {
                     <InputBox
                         className="!min-h-[3rem]"
                         name="recieverphonenumber"
+                        defaultValue={state?.recieverphonenumber}
                         hidden
                     />
                 </div>

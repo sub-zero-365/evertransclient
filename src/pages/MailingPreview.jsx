@@ -7,6 +7,8 @@ import LoadingButton from "../components/LoadingButton"
 import AnimatedText from "../components/AnimateText"
 import { toast } from "react-toastify"
 import { GrCircleInformation } from "react-icons/gr"
+import { AnimatePresence, motion } from 'framer-motion'
+
 import customFetch from "../utils/customFetch"
 export const loader = async () => {
 
@@ -24,13 +26,11 @@ export const action =
                 // const data =window.history.state?.usr
                 // const file = formData.get('avatar');
                 const file = window.history.state?.usr?.file
-                console.log("file is the file here  ", file)
+                // console.log("file is the file here  ", file)
                 if (file) {
-                    alert("enter here")
-                    formData.append("mailimg", file, file.name)
-                    return null
+                    formData.append("imgUrl", file, file.name)
                 }
-                console.log("this is the form data ", formData)
+                // console.log("this is the form data ", formData)
 
                 if (file && file.size > 500000) {
                     toast.error('Image size too large');
@@ -50,25 +50,28 @@ export const action =
 const MailingPreview = () => {
     const navigate = useNavigate()
     const location = useLocation()
-    const { imgArr, from, to, senderidcardnumber, fullname, senderphonenumber, file } = location.state ?? {}
+    const { from, to, senderidcardnumber, fullname, senderphonenumber, file, estimatedprice, name, senderfullname, recieverphonenumber } = location.state ?? {}
     window.onpopstate = (e) => {
-        window.history.replaceState({ imgArr, from, to }, null, window.location.href)
+        window.history.replaceState(window.history.state, null, window.location.href)
     }
-    const NUMBER_OF_IMAGES = imgArr?.length
+    const NUMBER_OF_IMAGES = file ? 1 : 0
     const message = useActionData()
     if (message === "successfully") {
         return <Navigate to={"/user"} replace />
     }
+
     return (
         <Form method="post" className='form' encType='multipart/form-data'
-            state={{ user: "send the code" }}>
+        // state={{ user: "send the code" }}
+
+        >
 
             {
                 location.state && Object.keys(location.state).map((input, index) => {
                     if (input == "images") return null
                     return (
                         <input key={index}
-                            type="text"
+                            type="hidden"
                             readOnly
                             name={input}
                             value={location.state[input]}
@@ -83,7 +86,10 @@ const MailingPreview = () => {
             <div className="flex items-center px-5 gap-x-4 py-4">
                 <Rounded
                     className=""
-                    onClick={() => navigate(-1, { state: { imgArr, from, to } })}
+                    onClick={() => {
+                        console.log("preview state", location.state)
+                        navigate("/mailing", { state: location.state })
+                    }}
                 >
                     <AiOutlineArrowLeft
                         size={20}
@@ -101,32 +107,66 @@ const MailingPreview = () => {
                     />
                 </div>
             </div>
-            <input
-                name="fullname"
-                value="fullname"
-                id="fullname"
-            />
-            <input
-                type='file'
-                id='avatar'
-                name='avatar'
-                className='form-input'
-                accept='image/*'
-            />
             <div className=''>
                 <AnimatedText
                     text={`Product Images (${NUMBER_OF_IMAGES})`}
                     className="!text-2xl !text-blue-400"
 
                 />
+                <AnimatePresence
+                // initial={false}
+                >
 
 
-                <img
-                    alt='mails imae'
-                    src={file ? URL.createObjectURL(file) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbAVXZhlM-qA4bg_bOHRutl3wQVQdAbSWx_A&usqp=CAU'}
-                />
+                    {
+                        file && <motion.img
+                            transition={{ delay: 0.2 }}
+                            initial={{ y: 100 }}
+                            animate={{ y: 0 }}
+                            exit={false}
+                            alt='mails image'
+                            src={file ? URL.createObjectURL(file) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbAVXZhlM-qA4bg_bOHRutl3wQVQdAbSWx_A&usqp=CAU'}
+                        />
+                    }
 
 
+
+                </AnimatePresence>
+
+
+
+                <div className="py-10">
+                    <div className='flex items-center mb-5  justify-center'>
+
+                        <Heading
+                            text="Product's Information"
+                            className="!text-center !p-0 !m-0 !text-2xl !font-black"
+                        />
+                        <GrCircleInformation
+                            className="ml-2"
+                            size={20}
+                        />
+                    </div>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                        <Heading text="Product Name" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{name}</div>
+                    </div>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                        <Heading text="From" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{from}</div>
+                    </div>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                        <Heading text="To" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{to}</div>
+                    </div>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                        <Heading text="Estimated Price" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{estimatedprice}</div>
+                    </div>
+
+
+
+                </div>
                 <div className="py-10">
                     <div className='flex items-center mb-5  justify-center'>
 
@@ -141,7 +181,7 @@ const MailingPreview = () => {
                     </div>
                     <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                         <Heading text="Full Name" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{fullname}</div>
+                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{senderfullname}</div>
                     </div>
                     <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                         <Heading text="Phone Number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
@@ -151,10 +191,7 @@ const MailingPreview = () => {
                         <Heading text="ID Card Number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
                         <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{senderidcardnumber}</div>
                     </div>
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-                        <Heading text="To" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{to}</div>
-                    </div>
+
 
 
                 </div>
@@ -170,22 +207,12 @@ const MailingPreview = () => {
                             size={20}
                         />
                     </div>
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-                        <Heading text="Full Name" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{fullname}</div>
-                    </div>
+
                     <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                         <Heading text="Phone Number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{senderphonenumber}</div>
+                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{recieverphonenumber}</div>
                     </div>
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-                        <Heading text="ID Card Number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{senderidcardnumber}</div>
-                    </div>
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-                        <Heading text="To" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{to}</div>
-                    </div>
+
 
 
                 </div>

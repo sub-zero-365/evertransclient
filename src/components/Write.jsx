@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 const Write = () => {
-    const initialText = " Luctus nisi pharetra mollis aliquet iaculis tempus potenti. Dictumst vestibulum luctus eget sit sag "
+    const initialText = "Together we are focused on delevering our vital services in a better way every day: greate service today - even better service tomorrow."
     const [text, setText] = useState("")
     useEffect(() => {
         const timer = setInterval(() => {
