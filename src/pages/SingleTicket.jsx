@@ -71,6 +71,8 @@ export const loader = (queryClient) => async ({ request, params }) => {
 }
 
 const User = () => {
+  const [querySearch] = useSearchParams()
+
   const queryClient = useQueryClient()
   const ref = useRef(null);
   const isInView = useInView(ref)
@@ -154,7 +156,7 @@ const User = () => {
         <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
           <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
-              <Link to=".."
+              <Link to={`..?${querySearch.toString()}`}
                 relative='path'
                 class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                 DashBoard
@@ -608,21 +610,7 @@ focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-[0_8px_9px_-4p
 
 
             </motion.div>
-            {
-              (ticket) && (
-                <Link
-                  className="hidden lg:block"
-                  to={`/${isadminuser ? "dashboard/seat" : "seat"}/${ticket?.seat_id}?rd_from=assistant&ticket_seat=${ticket?.seatposition}&${isadminuser ? "admin=true" : null}`}
-                >
-                  <UiButton
-                    className="!bg-green-600 !mt-5 !text-sm !mx-auto !w-[min(100%,calc(100%-60px))]"
-                    name="Locate Borderaux"
-                  />
-                </Link>
 
-              )
-
-            }
           </div>
         </div>
 

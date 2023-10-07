@@ -50,7 +50,7 @@ export const action =
 const MailingPreview = () => {
     const navigate = useNavigate()
     const location = useLocation()
-    const { from, to, senderidcardnumber, fullname, senderphonenumber, file, estimatedprice, name, senderfullname, recieverphonenumber } = location.state ?? {}
+    const { from, to, senderidcardnumber, recieverfullname, senderphonenumber, file, estimatedprice, name, senderfullname, recieverphonenumber } = location.state ?? {}
     window.onpopstate = (e) => {
         window.history.replaceState(window.history.state, null, window.location.href)
     }
@@ -135,7 +135,7 @@ const MailingPreview = () => {
 
 
 
-                <div className="py-10">
+                <div className="py-10 border-b border-l">
                     <div className='flex items-center mb-5  justify-center'>
 
                         <Heading
@@ -147,27 +147,27 @@ const MailingPreview = () => {
                             size={20}
                         />
                     </div>
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} text-xl group justify-center mb-1 items-center `}>
                         <Heading text="Product Name" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{name}</div>
+                        <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{name}</div>
                     </div>
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} text-xl group justify-center mb-1 items-center `}>
                         <Heading text="From" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{from}</div>
+                        <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{from}</div>
                     </div>
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} text-xl group justify-center mb-1 items-center `}>
                         <Heading text="To" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{to}</div>
+                        <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{to}</div>
                     </div>
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} text-xl group justify-center mb-1 items-center `}>
                         <Heading text="Estimated Price" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{estimatedprice}</div>
+                        <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{estimatedprice}</div>
                     </div>
 
 
 
                 </div>
-                <div className="py-10">
+                <div className="py-10 border-b border-r">
                     <div className='flex items-center mb-5  justify-center'>
 
                         <Heading
@@ -179,23 +179,23 @@ const MailingPreview = () => {
                             size={20}
                         />
                     </div>
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} text-xl group justify-center mb-1 items-center `}>
                         <Heading text="Full Name" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{senderfullname}</div>
+                        <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{senderfullname}</div>
                     </div>
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} text-xl group justify-center mb-1 items-center `}>
                         <Heading text="Phone Number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{senderphonenumber}</div>
+                        <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{senderphonenumber}</div>
                     </div>
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} text-xl group justify-center mb-1 items-center `}>
                         <Heading text="ID Card Number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{senderidcardnumber}</div>
+                        <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{senderidcardnumber}</div>
                     </div>
 
 
 
                 </div>
-                <div className="py-10">
+                <div className="py-10 border-b  mb-4 border-l">
                     <div className='flex items-center mb-5  justify-center'>
 
                         <Heading
@@ -208,9 +208,13 @@ const MailingPreview = () => {
                         />
                     </div>
 
-                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} text-xl group justify-center mb-1 items-center `}>
+                        <Heading text="Full Name" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+                        <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{recieverfullname}</div>
+                    </div>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} text-xl group justify-center mb-1 items-center `}>
                         <Heading text="Phone Number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                        <div className=" line-clamp-2 capitalize pl-2  group-[.active]:!text-center">{recieverphonenumber}</div>
+                        <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{recieverphonenumber}</div>
                     </div>
 
 

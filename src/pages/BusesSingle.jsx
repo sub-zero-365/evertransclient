@@ -109,7 +109,7 @@ const BusesSingle = () => {
 
 
             <div
-                className="lg:px-24 px-8 grid grid-cols-[repeat(auto-fit,minmax(min(calc(100%-20px),25rem),1fr))]"
+                className="lg:px-24 px-8 gap-x-4 grid grid-cols-[repeat(auto-fit,minmax(min(calc(100%-20px),25rem),1fr))]"
             >
                 {
                     seats?.map((seat) => <BusCard

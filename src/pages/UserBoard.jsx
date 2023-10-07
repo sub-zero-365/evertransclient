@@ -96,23 +96,13 @@ const style = {
 
 
 }
-// export const loader =
-//   (queryClient) =>
-//     async ({ request }) => {
-//       const params = Object.fromEntries([
-//         ...new URL(request.url).searchParams.entries(),
-//       ]);
-//       await queryClient.ensureQueryData(allTicketsQuery(params));
-//       return { searchValues: { ...params } };
-//     };
+
 
 const Details = () => {
-
   const [querySearch] = useSearchParams();
   const { handleFilterChange } = useFilter()
   const queryClient = useQueryClient()
-  // const { searchValues } = useLoaderData()
-  // const userData = useQuery(allTicketsQuery(searchValues))?.data
+
   const [seatDate, setSeatDate] = useState(new Date())
 
   let downloadbaseurl = null
@@ -131,7 +121,6 @@ const Details = () => {
 
   const { user } = useOutletContext();
 
-  // const { logoutUser } = useUserLayoutContext()
 
 
   const onPasswordSuccess = () => toast.success("Password Change Successfully!!", {
@@ -145,7 +134,6 @@ const Details = () => {
 
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
-  const viewAll = querySearch.get("viewall")
   const handleChangePassWord = async (e) => {
     setLoading(true)
     e.preventDefault()
@@ -245,7 +233,7 @@ const Details = () => {
   const Demoadd = useMutation(handleAddNewSeat,
 
     {
-      onSuccess: data => {
+      onSuccess: () => {
         // refetch()
         setShowAdd(false)
         if (showAdd) setShowAdd(false)

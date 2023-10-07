@@ -52,7 +52,7 @@ import { loader as busesSingleLoader, action as editTicketAction } from "./pages
 import { loader as singleAssistantLoader } from "./pages/Assistant.user"
 import { action as mailingAction } from "./pages/MailingPreview"
 import { loader as mailsLoader } from "./pages/Mails"
-import { loader as singleMailLoader } from "./pages/SingleMail"
+import { loader as singleMailLoader, action as editSingleMailAction } from "./pages/SingleMail"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
@@ -251,7 +251,8 @@ const router = createBrowserRouter([
             ,
             path: "user/mail/:id",
             loader: singleMailLoader(queryClient),
-            errorElement: <SingleTicketErrorElement />
+            errorElement: <SingleTicketErrorElement />,
+            action: editSingleMailAction(queryClient)
 
           },
           {
@@ -461,7 +462,18 @@ const router = createBrowserRouter([
           </Suspense>,
         errorElement: <SingleTicketErrorElement />,
         loader: singleTicketLOader(queryClient),
-      }
+      },
+      {
+        element:
+          <Suspense fallback={<FallBack />}>
+            <SingleMail />
+          </Suspense>
+        ,
+        path: "mail/:id",
+        loader: singleMailLoader(queryClient),
+        errorElement: <SingleTicketErrorElement />
+
+      },
 
     ]
 

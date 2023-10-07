@@ -1,7 +1,7 @@
 import
 DeactiveStatusButton
   from '../components/DeactiveStatusButton';
-
+import dayjs from "dayjs"
 import ActiveStatusButton from '../components/ActiveStatusButton'
 export const sortedDateOptions = [
 
@@ -60,23 +60,50 @@ export const timeWithClearOptions = [
 ]
 
 export const queryOptions = [
-  {
-    value: "all",
-    label: "all"
-  },
-  {
-    value: "my owns",
-    label: "own"
-  },
+
   {
     value: "pending",
     label: "pending"
+  },
+  {
+    value: "sent",
+    label: "sent"
   },
   {
     value: "recieved",
     label: "recieved"
   },
 
+]
+
+let now = dayjs()
+export const dateSortedOption = [
+
+  {
+    label: "today",
+    value: now.format("YYYY-MM-DD")
+
+  },
+  {
+    label: "Yesterday",
+    value: now.subtract("1", "day").format("YYYY-MM-DD")
+
+  },
+  {
+    label: "1 week Ago",
+    value: now.subtract("14", "day").format("YYYY-MM-DD")
+
+  },
+  {
+    label: "1 Month Ago",
+    value: now.subtract("30", "day").format("YYYY-MM-DD")
+
+  },
+  {
+    label: "1 Year Ago",
+    value: now.subtract("365", "day").format("YYYY-MM-DD")
+
+  },
 ]
 
 export default 748

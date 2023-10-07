@@ -7,11 +7,14 @@ import { toast } from "react-toastify"
 import { useState } from 'react'
 import { Form, useOutletContext } from 'react-router-dom'
 import LoadingButton from '../components/LoadingButton'
+import logo from "../Assets/images/logo.png"
 
 const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus, _id, from, to }) => {
     const currentDate = dayjs()
     const future = dayjs(traveldate)
     const timeLeft = dayjs(currentDate.diff(future)).format("YYYY-MM-DD")
+    const avalaibleseats = number_of_seats - seat_positions?.filter(({ isTaken, isReserved }) => (isTaken == true || isReserved == true))?.length
+
     // const timeLeft = dayjs(future.diff(currentDate)).format("HH:mm:ss")
     const errorToast = (msg = "bus seat is already taken") => toast.warning(msg)
     const [selected, setSelected] = useState(null)
@@ -31,7 +34,15 @@ const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus,
         }
     }
     return (
-        <div className="bg-white overflow-hidden group swiper-slide-active w-full  min-[100px] mx-auto mb-5 py-5 px-4">
+        <div
+
+            style={{
+                backgroundImage: `url(${logo})`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                backgroundSize: "contain"
+            }}
+            className="bg-white- shadow text-lg overflow-hidden w-full  min-[100px] mx-auto mb-5 py-5 px-4">
             <Form method='post'>
                 <input
                     type='hidden'
@@ -69,60 +80,60 @@ const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus,
                     value={to}
                 />
 
-                <div className="py-5">
+                <div className="py-5 text-sm">
                     <div
-                        className="flex items-end justify-center gap-x-4"
+                        className="flex items-end justify-start gap-x-4 mb-6"
                     >
-                        <Heading
-                            className="!m-0 !p-0 !pb-0"
-                            text="Name"
-                        />
-                        <p>Rose Mary</p>
-                    </div>
-                    {/* <div
-                        className="flex items-end justify-center gap-x-4"
-                    >
-                        <Heading
-                            className="!m-0 !p-0 !pb-0"
-                            text="Name"
-                        />
-                        <p>{dayjs(traveldate).format("YYYY-MM-DD")}</p>
-                    </div> */}
-                    <div
-                        className="flex items-end justify-center gap-x-4"
-                    >
-                        <Heading
-                            className="!m-0 !p-0 !pb-0"
-                            text="time left"
-                        />
-                        <p>{
-                            timeLeft}</p>
-                    </div>
-                    <div
-                        className="flex items-end justify-center gap-x-4"
-                    >
-                        <Heading
-                            className="!m-0 !p-0 !pb-0"
-                            text="Traveltime"
-                        />
-                        <p>{traveltime}</p>
+                        <h1
+                            className='text-3xl font-bold  leading-8'
+
+                        >School Bus</h1>
+
                     </div>
 
                     <div
-                        className="flex items-end justify-center gap-x-4"
+                        className="flex flex-wrap items-end justify-start gap-x-6 leading-6 mb-6"
                     >
-                        <Heading
-                            className="!m-0 !p-0 !pb-0"
-                            text="Name"
-                        />
-                        <p>Rose Mary</p>
+                        <div className='flex gap-x-4'>
+                            <Heading
+                                className="!m-0 !p-0 !pb-0"
+                                text="Departure time : "
+                            />
+                            <p >{traveltime}</p>
+                        </div>
+                        <div className='flex gap-x-4'>
+                            <Heading
+                                className="!m-0 !p-0 !pb-0"
+                                text="Departure Date : "
+                            />
+                            <p >{traveltime}</p>
+                        </div>
                     </div>
+                    <div
+                        className="flex flex-wrap items-end justify-start gap-x-6 leading-6 mb-6"
+                    >
+                        <div className='flex gap-x-4'>
+                            <Heading
+                                className="!m-0 !p-0 !pb-0"
+                                text="Seats : "
+                            />
+                            <p >{number_of_seats}</p>
+                        </div>
+                        <div className='flex gap-x-4'>
+                            <Heading
+                                className="!m-0 !p-0 !pb-0"
+                                text="Avalaible Seats : "
+                            />
+                            <p >{avalaibleseats}</p>
+                        </div>
+                    </div>
+
                 </div>
-                <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
+                <motion.div className="flex flex-wrap  ">
                     {
                         seat_positions?.map(({ isTaken, isReserved, _id }, i) => {
                             return (
-                                <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
+                                <div className="w-1/5 cursor-pointer hover:bg-green-950- transition duration-300 group  h-[3.75rem] p-2 px-3 select-none"
                                     key={_id}
                                     onClick={() => checkBusAvailabity(isTaken, isReserved, _id)}>
                                     <motion.div
@@ -135,12 +146,12 @@ const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus,
                                         }
                                         }
                                         className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
-                ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
+                ${selected == _id ? "border-2 border-black dark:border-white" : ""}group w-full h-full  relative max-w-[4.5rem] mx-auto
                 rounded-lg flex items-center justify-center`}>
                                         <motion.div
                                             initial={false}
                                             animate={{ y: selected == _id ? "1.3rem" : 0 }}
-                                            className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
+                                            className={`absolute group-hover:!translate-y-[1.3rem] transition-all duration-300 top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
                 px-2 rounded-sm `}>{_id + 1}</motion.div>
                                         {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
                                     </motion.div>

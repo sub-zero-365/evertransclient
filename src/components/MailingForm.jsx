@@ -20,6 +20,7 @@ import { timeOptions } from '../utils/sortedOptions'
 import { useMailingContext } from "../pages/Mailing"
 import { toast } from "react-toastify"
 import { BsCreditCard2Front, BsFillPersonFill, BsTelephoneMinus } from 'react-icons/bs'
+
 import { GrCircleInformation } from 'react-icons/gr'
 import dayjs from "dayjs"
 import { AnimatePresence, motion } from 'framer-motion'
@@ -258,6 +259,7 @@ const MailingForm = () => {
                         name="name"
                         defaultValue={state.name}
                         hidden
+                        type="text"
                     />
                 </div>
                 <div className='px-2'>
@@ -273,6 +275,7 @@ const MailingForm = () => {
                         name="estimatedprice"
                         defaultValue={state?.estimatedprice}
                         hidden
+                        type="number"
                     />
                 </div>
                 <div className='flex items-center mb-5  justify-center'>
@@ -299,6 +302,7 @@ const MailingForm = () => {
                         name="senderfullname"
                         hidden
                         defaultValue={state?.senderfullname}
+                        type="text"
                     />
                 </div>
                 <div className='px-2'>
@@ -314,6 +318,9 @@ const MailingForm = () => {
                         name="senderidcardnumber"
                         hidden
                         defaultValue={state?.senderidcardnumber}
+                        type="number"
+                    // min="9"
+                    // max="12"
                     />
                 </div>
                 <div className='px-2'>
@@ -327,8 +334,11 @@ const MailingForm = () => {
                     <InputBox
                         className="!min-h-[3rem]"
                         name="senderphonenumber"
+                        type="tel"
                         defaultValue={state.senderphonenumber}
                         hidden
+                    // min="9"
+                    // max="12"
                     />
                 </div>
                 <div className='flex items-center mb-5  justify-center'>
@@ -347,10 +357,27 @@ const MailingForm = () => {
                         <BsTelephoneMinus
                             size={20}
                         />
+                        <h1 className='text-xl  font-light '>Full Name</h1> <span className='text-rose-700 text-2xl -mb-0.5'>*</span>
+                    </div>
+
+                    <InputBox
+                        type="string"
+                        className="!min-h-[3rem]"
+                        name="recieverfullname"
+                        defaultValue={state?.recieverfullname}
+                        hidden
+                    />
+                </div>
+                <div className='px-2'>
+                    <div className="flex items-end pb-2 justify-start gap-x-4">
+                        <BsTelephoneMinus
+                            size={20}
+                        />
                         <h1 className='text-xl  font-light '>Phone Number</h1> <span className='text-rose-700 text-2xl -mb-0.5'>*</span>
                     </div>
 
                     <InputBox
+                        type="tel"
                         className="!min-h-[3rem]"
                         name="recieverphonenumber"
                         defaultValue={state?.recieverphonenumber}
@@ -360,7 +387,7 @@ const MailingForm = () => {
 
                 <div className="hidden min-h-8 md:flex items-center justify-center mt-auto">
                     <LoadingButton
-                        className="!w-[min(30rem,calc(100%-1.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
+                        className="!w-[min(30rem,calc(100%-0.5rem))] !mx-auto !py-4 !text-lg !rounded-xl"
                     >
                         <>Prewiew <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
                     </LoadingButton>
@@ -370,7 +397,7 @@ const MailingForm = () => {
                 <div className="md:hidden min-h-8
            flex items-center justify-center mt-5 sticky left-0 bottom-8 w-full">
                     <LoadingButton
-                        className="!w-[min(30rem,calc(100%-0.5rem))] !mx-auto !py-4 !text-lg !rounded-xl"
+                        className="!w-[min(40rem,calc(100%-0.5rem))] !mx-auto !py-5 !text-lg !rounded-xl"
                     >
                         <>Preview <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
                     </LoadingButton>

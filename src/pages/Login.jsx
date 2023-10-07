@@ -1,10 +1,9 @@
 
 
 import { useNavigate, useSearchParams, Form, useNavigation, redirect, useLoaderData, useActionData } from "react-router-dom"
-import UiButton from "../components/UiButton";
+import LoadingButton from "../components/LoadingButton";
 import { toast } from "react-toastify"
 import customFetch from "../utils/customFetch";
-import { useState, useEffect } from "react"
 export const loader = async ({ request }) => {
   const params = Object.fromEntries([
     ...new URL(request.url).searchParams.entries(),
@@ -14,6 +13,7 @@ export const loader = async ({ request }) => {
 export const action = (queryClient) => async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
+
   try {
     const from = data.from || "/user"
     const res = await customFetch.post('/auth/login', data);
@@ -26,29 +26,16 @@ export const action = (queryClient) => async ({ request }) => {
     }
     return redirect(from, { replace: true })
   } catch (error) {
-    console.log("logging error", error?.response?.data)
     toast.error(error?.response?.data);
-    return error?.response?.data;
+    return error?.response?.data ||" something went wrong";
   }
 }
 
 const Login = () => {
   const [searchParams] = useSearchParams()
   const from = searchParams.get("from")
-  const navigation = useNavigation()
-  const isSubmitting = navigation.state == "submitting"
   const errorMessageFromLoader = useLoaderData()
   var errorMessageFromAction = useActionData()
-  const [err, setError] = useState(null)
-  useEffect(() => {
-    if (errorMessageFromAction) {
-      setError(errorMessageFromAction)
-      const timer = setTimeout(() => {
-        setError(null)
-        clearTimeout(timer)
-      }, 3000)
-    }
-  }, [errorMessageFromAction, err])
 
   return (
     <section className="h-screen">
@@ -185,20 +172,18 @@ const Login = () => {
                 </label>
               </div>
 
-              {err && <p
+              {errorMessageFromAction && <p
 
                 className="text-rose-600 "
-              >{err}</p>}
+              >{errorMessageFromAction}</p>}
 
-              <UiButton
-                disabled={isSubmitting}
-                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-sm"
-
+              <LoadingButton
+                className="!w-[min(30rem,calc(100%-0.5rem))] !mx-auto !py-4 !text-lg !rounded-sm"
                 type="submit"
               >
-                {isSubmitting ? "please wait " : "Login"}
+                Login
+              </LoadingButton>
 
-              </UiButton>
 
 
 
