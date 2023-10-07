@@ -62,6 +62,10 @@ export const timeWithClearOptions = [
 export const queryOptions = [
 
   {
+    value: null,
+    label: "all"
+  },
+  {
     value: "pending",
     label: "pending"
   },
@@ -80,28 +84,33 @@ let now = dayjs()
 export const dateSortedOption = [
 
   {
+    label: "all",
+    value: null
+
+  },
+  {
     label: "today",
-    value: now.format("YYYY-MM-DD")
+    value: now.format("YYYY/MM/DD")
 
   },
   {
     label: "Yesterday",
-    value: now.subtract("1", "day").format("YYYY-MM-DD")
+    value: now.subtract("1", "day").format("YYYY/MM/DD")
 
   },
   {
     label: "1 week Ago",
-    value: now.subtract("14", "day").format("YYYY-MM-DD")
+    value: now.subtract("14", "day").format("YYYY/MM/DD")
 
   },
   {
     label: "1 Month Ago",
-    value: now.subtract("30", "day").format("YYYY-MM-DD")
+    value: now.subtract("30", "day").format("YYYY/MM/DD")
 
   },
   {
     label: "1 Year Ago",
-    value: now.subtract("365", "day").format("YYYY-MM-DD")
+    value: now.subtract("365", "day").format("YYYY/MM/DD")
 
   },
 ]

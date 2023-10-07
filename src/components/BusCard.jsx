@@ -133,7 +133,7 @@ const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus,
                     {
                         seat_positions?.map(({ isTaken, isReserved, _id }, i) => {
                             return (
-                                <div className="w-1/5 cursor-pointer hover:bg-green-950- transition duration-300 group  h-[3.75rem] p-2 px-3 select-none"
+                                <div className="w-1/5  cursor-pointer hover:bg-green-950- transition duration-300 group  h-[3.75rem] p-2 px-3 select-none"
                                     key={_id}
                                     onClick={() => checkBusAvailabity(isTaken, isReserved, _id)}>
                                     <motion.div

@@ -18,9 +18,9 @@ import {
 import axios from 'axios'
 import dayjs from 'dayjs'
 import Marquee from 'react-fast-marquee'
-import { useFilter } from '../Hooks/FilterHooks'
+// import { useFilter } from '../Hooks/FilterHooks'
 import customFetch from "../utils/customFetch"
-import herooverlay from '../Assets/images/herooverlay.png'
+// import herooverlay from '../Assets/images/herooverlay.png'
 
 const busQuery = params => ({
     queryKey: ["buses", { params }],
@@ -38,6 +38,10 @@ export const loader = (queryClient) => async ({ request }) => {
     const params = Object.fromEntries([
         ...new URL(request.url).searchParams.entries(),
     ]);
+    params.time = params.traveltime
+    params.date = params.traveldate
+    delete params.traveltime
+    delete params.traveldate
     await queryClient.ensureQueryData(busQuery(params));
     return { searchValues: { ...params } }
 }
@@ -53,7 +57,7 @@ const FindBus = () => {
     const Next = async () => {
         return navigate(`/bussits/${selected}?${querySearch.toString()}`)
     }
-    const BusDetail = ({ _id, number_of_seats, seat_positions, from, to, bus, traveltime ,traveldate }) => {
+    const BusDetail = ({ _id, number_of_seats, seat_positions, from, to, bus, traveltime, traveldate }) => {
         const busType = bus?.feature && bus.feature == "Normal Bus" || bus?.feature == "classic"
         const avalaibleseats = seat_positions?.filter(({ isTaken, isReserved }) => (isTaken == true || isReserved == true))?.length
         return (
@@ -65,10 +69,7 @@ const FindBus = () => {
                 className={`${selected === _id ? "bg-blue-200  dark:bg-slate-950" : busType ? "bg-rose-100 dark:bg-slate-600" : "bg-white dark:bg-slate-800"}
                border dark:text-white pt-5 w-full mx-1 ease duration-700 transition-colors rounded-lg mb-4
                 dark:shadow-sm dark:shadow-black shadow shadow-white pb-5   min-h-[3rem]`}>
-                {/* <img
-                    src={herooverlay}
-                    className='w-3/4 mx-auto'
-                /> */}
+
                 <h2 className='font-black !text-2xl capitalize leading-9 px-5 py-5'>
                     {bus?.bus}
                 </h2>

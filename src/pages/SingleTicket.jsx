@@ -71,7 +71,10 @@ export const loader = (queryClient) => async ({ request, params }) => {
 }
 
 const User = () => {
-  const [querySearch] = useSearchParams()
+  const location = useLocation()
+  const { searchParams } = location.state ?? { searchParams: "" }
+
+  // const [querySearch] = useSearchParams()
 
   const queryClient = useQueryClient()
   const ref = useRef(null);
@@ -156,7 +159,7 @@ const User = () => {
         <nav class="flex mb-5 mt-5 px-5" aria-label="Breadcrumb">
           <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
-              <Link to={`..?${querySearch.toString()}`}
+              <Link to={`..?${searchParams}`}
                 relative='path'
                 class="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                 DashBoard

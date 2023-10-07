@@ -184,6 +184,7 @@ const MailingForm = () => {
                     <Heading text="From" className={"!m-0 !p-0 !text-lg first-letter:text-2xl first-letter:font-black"} />
                 </div>
                 <FromSelect
+                    isSearchable={false}
                     name='from'
                     defaultOptions
                     catcheOptions
@@ -209,6 +210,7 @@ const MailingForm = () => {
                     <Heading text="Destination" className={"!m-0 !p-0 !text-lg first-letter:text-2xl first-letter:font-black"} />
                 </div>
                 <ToSelect
+                    isSearchable={false}
                     name='to'
                     defaultOptions
                     catcheOptions

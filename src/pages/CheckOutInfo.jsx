@@ -57,7 +57,13 @@ export const action = (queryClient) => async ({ request }) => {
 
 const BusSits = () => {
   const navigation = useNavigation()
-  const { userInformation } = useLoaderData()
+  const { userInformation: {
+    from, to, traveldate: date, sex, fullname, traveltime
+    , type
+    , seatposition,
+    paymenttype
+
+  } } = useLoaderData() ?? { userInformation: {} }
   const constraintsRef = useRef(null);
 
   const [view, setView] = useState(false)
@@ -66,46 +72,8 @@ const BusSits = () => {
   const [queryParameters] = useSearchParams()
   const [message] = useState("")
 
-  const formatPrice = (triptype, seatposition) => {
-    const seatnumber = Number(seatposition) + 1;
-    if (queryParameters.get("flag") == "classic") {
-      if (triptype == "round") {
-        return 10000
-      }
-      return 6500
-    }
-    if (!seatnumber) alert("invalid seat number")
-    if (triptype == "null" || triptype == "single") {
-      return seatnumber <= 20 ? 10000 : 6500
-    }
-    if (triptype == "round") {
-      return seatnumber <= 20 ? 20000 : 10000
-    }
-    return "invalid seatposition or price "
-  }
-
-  // const handleSubmit = async () => {
-  //   // var submitdata = {
-  //   //   from: queryParameters.get("from"),
-  //   //   to: queryParameters.get("to"),
-  //   //   traveldate: dayjs(`${queryParameters.get("date")}`).format("YYYY-MM-DD"),
-  //   //   traveltime: queryParameters.get("time") || "n/a",
-  //   //   price: formatPrice(queryParameters.get("triptype"), queryParameters.get("sitpos")),
-  //   //   sex: queryParameters.get("gender"),
-  //   //   email: queryParameters.get("email"),
-  //   //   age: queryParameters.get("age"),
-  //   //   phone: queryParameters.get("phone"),
-  //   //   fullname: queryParameters.get("name"),
-  //   //   seat_id: queryParameters.get("seat_id"),
-  //   //   seatposition: Number(queryParameters.get("sitpos")),
-  //   //   paymenttype: queryParameters.get("paymenttype"),
-  //   //   busType: queryParameters.get("flag")
-  //   // }
-
-  //   setIsLoading(true)
 
 
-  // }
   return (
     <>
       <Helmet>
@@ -213,14 +181,14 @@ z-10  "
               <span className="absolute left-1/2 py-2 -translate-x-1/2 border px-10 rounded-lg shadow  min-h-[35px]  bg-color_light
                       dark:bg-color_dark top-[-15px] text-montserrat  font-semibold">
                 {
-                  (queryParameters.get("triptype") === "single" || queryParameters.get("triptype")) == "null" ? "Single Trip" : "Round Trip"
+                  (type === "singletrip" ? "Single Trip" : "Round Trip")
                 }
               </span>
               <div className={`grid ${view ? "grid-cols-1 active " : "grid-cols-2"}
             group justify-center mb-1 items-center `}>
                 <Heading text="Fullname"
                   className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                <div className=" line-clamp-2 group-[.active]:!text-center capitalize pl-2 border-b-2"> {queryParameters.get("name") || "fail"}</div>
+                <div className=" line-clamp-2 group-[.active]:!text-center capitalize pl-2 border-b-2"> {fullname}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active " : "grid-cols-2"} group justify-center- mb-1 items-center `}>
                 <Heading text="ID number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
@@ -229,50 +197,45 @@ z-10  "
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="From" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("from")}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{from}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="To" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center"> {queryParameters.get("to")}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center"> {to}</div>
               </div>
-              <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-                <Heading text="Age" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("age")} years</div>
-              </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Gender" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("gender")}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{sex}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Seat" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{(Number(queryParameters.get("sitpos")) + 1)}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{(Number(seatposition) + 1)}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Travel Date" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{new Date(queryParameters.get("date")).toLocaleDateString()
-                }</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{date}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Travel Time" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("time")}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{traveltime}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Payment type" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("paymenttype")}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{paymenttype}</div>
               </div>
-              <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+              {/* <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Bus type" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
                 <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{queryParameters.get("flag")}</div>
-              </div>
+              </div> */}
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Travel Cost" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{formatPrice(queryParameters.get("triptype"), queryParameters.get("sitpos"))} frs</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{type == "singletrip" ? "3500" : "6000"} frs</div>
               </div>
 
             </div>

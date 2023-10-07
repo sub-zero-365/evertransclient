@@ -89,7 +89,7 @@ const Mails = () => {
         className="!text-center !m-0 !p-0  !text-2xl "
       />
 
-      <Scrollable className="!justify-center pb-5">
+      <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5">
         {
           queryOptions.map((query) => <FilterButton
             name="mailStatus"
@@ -102,7 +102,7 @@ const Mails = () => {
         className="!text-center !m-0 !p-0  !text-2xl "
       />
 
-      <Scrollable className="!justify-center pb-5">
+      <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5">
         {
           dateSortedOption.map((query) => <FilterButton
             name="quickdatesort"
@@ -110,27 +110,7 @@ const Mails = () => {
         }
 
       </Scrollable>
-      <Scrollable className="!justify-center !gap-y-6 !overflow-visible !flex-wrap pt-10 !mb-20">
-
-        <div className="!mb-2 !flex-none ">
-          <h1 className="text-sm  text-center font-bold ">sort</h1>
-          <SelectSortDate
-            options={sortedDateOptions}
-            styles={style}
-            defaultValue={{
-              label: querySearch.get("mailStatus") || "createdAt -",
-              value: "newest"
-            }}
-            // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-            isSearchable={false}
-            onChange={(e) => handleFilterChange("filter", e.value)}
-
-            className='!border-none !h-8 mt-0' />
-        </div>
-
-
-      </Scrollable>
+      
 
       <Form
         placeholder="search products, sendername ,recievername"

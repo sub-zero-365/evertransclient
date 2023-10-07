@@ -30,6 +30,7 @@ import customFetch from "../utils/customFetch"
 import { useQuery } from "@tanstack/react-query"
 import { toast } from "react-toastify"
 import UiButton from "../components/UiButton"
+import { RiSteering2Line } from "react-icons/ri"
 const singleSeat = (id) => {
   return ({
     queryKey: ["seat", id],
@@ -53,25 +54,25 @@ export const loader = (queryClient) => async ({ params }) => {
 
 const
   BusSits = () => {
-    const [swiper, setSwiper] = useState(null)
     const [queryParameters] = useSearchParams()
 
     const id = useLoaderData()
 
     const { seat } = useQuery(singleSeat(id)).data;
+    const avalaibleseats = seat?.seat_positions?.filter(({ isTaken, isReserved }) => (isTaken == true || isReserved == true))?.length
+
     const [userInfo, setUserInfo] = useState({
       ...formatQuery(queryParameters.toString()),
       gender: (formatQuery(queryParameters.toString()).gender || "male"),
-      triptype: (formatQuery(queryParameters.toString()).triptype || "singletrip"),
+      type: (formatQuery(queryParameters.toString()).type || "singletrip"),
     })
     console.log(userInfo)
 
     const navigate = useNavigate()
-    const [selected, setSelected] = useState(queryParameters.get("sitpos"))
-    const [flag, setFlag] = useState((queryParameters.get("flag") || "vip"))
+    const [selected, setSelected] = useState(queryParameters.get("seatposition"))
 
     const checkBusAvailabity = (isTaken, isReserved, id, flag = null) => {
-      if (flag) setFlag("classic")
+      // if (flag) setFlag("classic")
       if (0 == id && isTaken == false && isReserved == false) {
         setSelected(0)
         return
@@ -98,7 +99,7 @@ const
       gotoCheckOut()
     }
     const gotoCheckOut = () =>
-      navigate(`/information?seatposition=${selected}&fullname=${userInfo.name}&age=${userInfo.age}&sex=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&traveldate=${userInfo.date}&traveltime=${userInfo.time}&triptype=${userInfo.triptype}&seat_id=${id}&paymenttype=${(userInfo?.paymenttype ?? "Cash In")}&flag=${flag}`)
+      navigate(`/information?seatposition=${selected}&fullname=${userInfo.fullname}&age=${userInfo.age}&sex=${userInfo.gender}&phone=${userInfo.phone}&email=${userInfo.email}&from=${userInfo.from}&to=${userInfo.to}&traveldate=${userInfo.traveldate}&traveltime=${userInfo.traveltime}&type=${userInfo.type}&seat_id=${id}&paymenttype=${(userInfo?.paymenttype ?? "Cash In")}`)
 
     return (
       <>
@@ -144,8 +145,8 @@ const
               </nav>
               <DisplayUi from={queryParameters.get("from")} to={queryParameters.get("to")} />
               <DateUi
-                date={queryParameters.get("date")}
-                time={queryParameters.get("time")} />
+                date={queryParameters.get("traveldate")}
+                time={queryParameters.get("traveltime")} />
               <AnimateText text="Please Select Seat"
                 className={"!text-lg md:!text-lg lg:!text-2xl !text-center"} />
               <div className="flex justify-between px-2 pb-2">
@@ -159,6 +160,12 @@ const
                   Not Available
                 </h1>
               </div>
+              <div className="grid grid-cols-2 mb-2">
+                <Heading text={"Capacity"} className="!mb-0 !text-sm !font-semibold" />
+                <Heading text={"Seat Consumed"} className="!mb-0 !text-sm !font-semibold" />
+                <Heading text={seat?.number_of_seats} className="!mb-0 !text-sm" />
+                <Heading text={avalaibleseats} className="!mb-0 !text-sm" />
+              </div>
               <Swiper
                 className="relative"
                 modules={[Pagination, Navigation]}
@@ -171,15 +178,28 @@ const
                   nextEl: ".arrow__right",
                 }}
               >
-                <SwiperSlide className="group">
-                  <motion.div className="flex flex-wrap translate-y-6 opacity-40 transition-transform duration-700 group-[.swiper-slide-active]:!opacity-100 group-[.swiper-slide-active]:!translate-y-0">
+                <SwiperSlide className="group--">
+                  <motion.div className="flex flex-wrap py-4 transition-transform duration-700 ">
+                    <div className="w-2/4 p-4">
+                      <div className="bg-red-400-  w-fit  mx-auto ">
+
+                        <RiSteering2Line
+                          size={50}
+                        />
+                        <h1>Driver Seat</h1>
+
+                      </div>
+                    </div>
                     {
                       seat?.seat_positions?.map(({ isTaken, isReserved, _id }, i) => {
                         return (
-                          <div className="w-1/5 h-[3.75rem] p-2 px-3 select-none"
+                          <div className="w-1/4 group
+                          cursor-pointer hover:bg-green-950- transition duration-300 
+                          h-[3.75rem] p-2 px-3 select-none"
                             key={_id}
-                            onClick={() => checkBusAvailabity(isTaken, isReserved, _id, true)}>
+                          >
                             <motion.div
+                              onClick={() => checkBusAvailabity(isTaken, isReserved, _id, true)}
                               initial={false}
                               animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
                               transition={{
@@ -188,13 +208,13 @@ const
                                 repeat: Infinity,
                               }
                               }
-                              className={`${(isTaken) ? "bg-orange-400" : isReserved ? "!bg-blue-500" : "bg-green-400"} peer
-                ${selected == _id ? "border-2 border-black dark:border-white" : ""} w-full h-full  relative
+                              className={`${(isTaken) ? "bg-orange-400 group-hover:bg-orange-800" : isReserved ? "!bg-blue-500 group-hover:bg-blue-800" : "bg-green-500 group-hover:bg-green-800"} peer
+                ${selected == _id ? "border-2 border-black dark:border-white" : ""} transition duration-200  group w-full h-full  relative max-w-[4.5rem] mx-auto
                 rounded-lg flex items-center justify-center`}>
                               <motion.div
                                 initial={false}
                                 animate={{ y: selected == _id ? "1.3rem" : 0 }}
-                                className={`absolute top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
+                                className={`absolute group-hover:!translate-y-[1.3rem] transition-all duration-300 top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
                 px-2 rounded-sm `}>{_id + 1}</motion.div>
                               {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
                             </motion.div>
@@ -215,9 +235,9 @@ const
                 </Marquee>
                 <div className="relative mb-6" data-te-input-wrapper-init>
                   <input
-
-                    value={decodeURIComponent((userInfo.name || ""))}
-                    onChange={e => setUserInfo({ ...userInfo, name: e.target.value })}
+                    defaultValue={userInfo.fullname}
+                    value={decodeURIComponent((userInfo.fullname || ""))}
+                    onChange={e => setUserInfo({ ...userInfo, fullname: e.target.value })}
                     type="text"
                     className="peer block min-h-[auto] w-full 
                 rounded 

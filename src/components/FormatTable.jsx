@@ -98,7 +98,7 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                             <th scope="col" className="px-3 py-3">
                                 createdAt
                             </th>
-                      
+
 
                             <th scope="col" className="px-3 py-3">
                                 status
@@ -184,7 +184,10 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
 
                                     <td className="py-0 text-xs flex items-center"
                                     >
-                                        <Button admin state={ticket}
+                                        <Button admin state={{
+                                            ticket,
+                                            searchParams:querySearch.toString()
+                                        }}
                                             disabled={(admin)}
                                             href={`/${admin ? "dashboard" : "user"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
                                         />

@@ -33,18 +33,18 @@ import LoadingButton from '../components/LoadingButton'
 import { CiLocationOn } from "react-icons/ci"
 import { WiTime4 } from "react-icons/wi"
 import { GiPathDistance } from "react-icons/gi"
+import dayjs from "dayjs"
 const Booking = () => {
   const [queryParams] = useSearchParams()
   const [toggle, setToggle] = useState(false)
   const navigation = useNavigation()
-  const isPageLoading = navigation.state == "loading"
-  const tripType = queryParams.get("triptype");
+  const tripType = queryParams.get("type") || "singletrip";
   const [fromCities, setFromCities] = useState(queryParams.get("from"))
   const [toCities, setToCities] = useState(queryParams.get("to"))
   const [time, setTime] = useState("7am")
   const [isLine, setIsline] = useState(false)
   const navigate = useNavigate()
-  const gotoBusSits = () => navigate(`/bus?from=${fromCities}&to=${toCities}&date=${startDate.toLocaleDateString('en-ZA')}&triptype=${tripType}&time=${time}`)
+  const gotoBusSits = () => navigate(`/bus?from=${fromCities}&to=${toCities}&traveldate=${dayjs(startDate).format("YYYY/MM/DD")}&type=${tripType}&traveltime=${time}`)
   const [demoFetch, setDemoFetch] = useState(false);
   const loadDemoData = (evt) => {
     evt.preventDefault()
@@ -109,8 +109,6 @@ const Booking = () => {
           <div className="image flex-1 h-[200px] md:h-[calc(100vh-60px)]
         w-full rounded-b-[3rem] md:rounded-none  overflow-hidden">
             <img
-              // src="https://th.bing.com/th/id/OIP.83QkNLDMdg1mZ1rn6bnx-gHaHa?pid=ImgDet&rs=1"
-              // src="https://i.pinimg.com/originals/40/ef/a6/40efa606063d41c754b0a4a6c5de8df8.gif"
               src="https://images.squarespace-cdn.com/content/v1/63937853a25f36131a1b84f8/9b1f1e55-2c91-4d3d-b377-2542b32ee85c/bus.png"
               className="h-full w-full" alt="bus pic" />
 
@@ -123,12 +121,12 @@ const Booking = () => {
             <div className="shadow-lg mx-4 min-h-[3rem]
           -mt-[25px] bg-white dark:bg-slate-700
           dark:text-white rounded-lg flex p-1 ">
-              <Link to=".?triptype=single"
+              <Link to=".?type=single"
                 replace
-                className={`w-1/2 ${(tripType === "single" || !tripType) ? "bg-blue-400" : "bg-orange-400"} text-center text-white flex items-center justify-center rounded-sm `}>One Way</Link>
+                className={`w-1/2 ${(tripType === "singletrip" || !tripType) ? "bg-blue-400" : "bg-orange-400"} text-center text-white flex items-center justify-center rounded-sm `}>One Way</Link>
               <Link
                 replace
-                to=".?triptype=round" className={`w-1/2 ${tripType === "round" ? "bg-blue-400" : "bg-orange-400"} text-center text-black flex items-center justify-center
+                to=".?type=roundtrip" className={`w-1/2 ${tripType === "roundtrip" ? "bg-blue-400" : "bg-orange-400"} text-center text-black flex items-center justify-center
           rounded-sm `}>Round Trip</Link>
             </div>
 
@@ -170,6 +168,7 @@ const Booking = () => {
             </div>
             <FromSelect
               defaultOptions
+              isSearchable={false}
               catcheOptions
               loadOptions={getCities}
               required
@@ -194,12 +193,11 @@ const Booking = () => {
               <Heading text="Destination" className={"!m-0 !p-0 !text-lg first-letter:text-2xl first-letter:font-black"} />
             </div>
             <ToSelect
-
               defaultOptions
+              isSearchable={false}
               catcheOptions
               loadOptions={getCities}
               required
-
               styles={{
                 ...style,
                 wdith: "100%",
