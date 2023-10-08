@@ -30,7 +30,6 @@ export const action = (queryClient) => async ({ request }) => {
     console.log("form data is ", formData);
     const id = await formData.get("id")
     const status = await formData.get("status")
-    const recieved = await formData.get("recieved")
     if (status == null) {
         return toast.warning("please mark and send")
     }
@@ -40,7 +39,7 @@ export const action = (queryClient) => async ({ request }) => {
         // queryClient.
         queryClient.invalidateQueries(["mail", id])
     } catch (err) {
-        toast.error("something went wrong")
+        toast.error(err.response?.data ||  "something went wrong")
         console.log(err.response.data)
     }
     return null
