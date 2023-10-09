@@ -58,7 +58,8 @@ export const action = (queryClient) => async ({ request }) => {
 const BusSits = () => {
   const navigation = useNavigation()
   const { userInformation: {
-    from, to, traveldate: date, sex, fullname, traveltime
+    from, to, traveldate: date, sex,
+    fullname, traveltime
     , type
     , seatposition,
     paymenttype

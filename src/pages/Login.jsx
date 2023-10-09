@@ -4,6 +4,8 @@ import { useNavigate, useSearchParams, Form, useNavigation, redirect, useLoaderD
 import LoadingButton from "../components/LoadingButton";
 import { toast } from "react-toastify"
 import customFetch from "../utils/customFetch";
+import { Helmet } from 'react-helmet'
+
 export const loader = async ({ request }) => {
   const params = Object.fromEntries([
     ...new URL(request.url).searchParams.entries(),
@@ -27,7 +29,7 @@ export const action = (queryClient) => async ({ request }) => {
     return redirect(from, { replace: true })
   } catch (error) {
     toast.error(error?.response?.data);
-    return error?.response?.data ||" something went wrong";
+    return error?.response?.data || " something went wrong";
   }
 }
 
@@ -37,7 +39,11 @@ const Login = () => {
   const errorMessageFromLoader = useLoaderData()
   var errorMessageFromAction = useActionData()
 
-  return (
+  return (<>
+    <Helmet>
+      <title>Login | {process.env.REACT_APP_APP_NAME}</title>
+      <meta name="description" content="Login to eagletranz website,login to eagle website ,login" />
+    </Helmet>
     <section className="h-screen">
 
       <div className="container h-full px-6 py-24">
@@ -192,6 +198,7 @@ const Login = () => {
         </div>
       </div>
     </section>
+  </>
   )
 }
 

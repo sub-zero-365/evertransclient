@@ -38,7 +38,8 @@ const Home = () => {
     return (
         <>
             <Helmet>
-                <title>Home</title>
+                <title>Home | {process.env.REACT_APP_APP_NAME}</title>
+                <meta name="description" content="Book Your Ticket at Eagletranz " />
             </Helmet>
             <div className="ol">
 
@@ -58,11 +59,8 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
 
                 <Navigation />
                 <OurServices />
-                <ChooseTheBus />
                 <WhyChooseUs />
-                <BusRentals />
                 <FrequentlyAsked />
-
                 <Footer />
             </div >
         </>

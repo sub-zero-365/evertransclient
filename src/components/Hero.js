@@ -7,7 +7,7 @@ import { Link, NavLink } from 'react-router-dom';
 import Write from './Write';
 const Hero = () => {
     return (
-        <div className=" h-[min(30rem,100vh)] text-white relative group">
+        <div className=" h-[min(40rem,100vh)] text-white relative group">
             <img className="absolute -z-0  inset-0 w-full h-full "
                 src={herobg}
             />
@@ -32,7 +32,7 @@ const Hero = () => {
                             }}
                     >
                         <AnimateText
-                            className="!text-4xl md:!text-5xl lg:leading-[1.2]
+                            className="!text-5xl md:!text-6xl lg:leading-[1.3]
                             lg:!text-left lg:!text-6xl !text-center    !py-6 !font-black"
                             text="Travel With Us For An Adventure-Filled Journey"
                         />

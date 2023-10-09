@@ -45,7 +45,49 @@ const WhyChooseUs = () => {
                                 </div>
                                 <div className='flex-1'>
                                     <Heading
-                                        className="!font-semibold !text-white !text-xl !pl-0 !m-0 !mb-2"
+                                        className="!font-semibold !text-white !text-2xl !pl-0 !m-0 !mb-2.5"
+                                        text="On Time & Punctual"
+                                    />
+                                    <p className='text-lg'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
+                                </div>
+                            </div>
+                            <div className='flex gap-x-4'>
+                                <div className='flex-none '>
+                                    <motion.div
+                                        whileHover={{
+                                            y: -8
+                                        }}
+                                        className=' w-14 h-14 rounded-sm
+                                        left-0 !sticky lg:sticky top-16  bg-[#ffae02]'
+                                    >
+
+                                    </motion.div>
+
+                                </div>
+                                <div className='flex-1'>
+                                    <Heading
+                                        className="!font-semibold !text-white !text-2xl !pl-0 !m-0 !mb-2.5"
+                                        text="Proffessional Drivers"
+                                    />
+                                    <p className='text-lg'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
+                                </div>
+                            </div>
+                            <div className='flex gap-x-4'>
+                                <div className='flex-none '>
+                                    <motion.div
+                                        whileHover={{
+                                            y: -8
+                                        }}
+                                        className=' w-14 h-14 rounded-sm
+                                        left-0 !sticky lg:sticky top-16  bg-[#ffae02]'
+                                    >
+
+                                    </motion.div>
+
+                                </div>
+                                <div className='flex-1'>
+                                    <Heading
+                                        className="!font-semibold !text-white !text-2xl !pl-0 !m-0 !mb-2.5"
                                         text="Safety And Security"
                                     />
                                     <p className='text-lg'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
@@ -66,50 +108,8 @@ const WhyChooseUs = () => {
                                 </div>
                                 <div className='flex-1'>
                                     <Heading
-                                        className="!font-semibold !text-white !text-xl !pl-0 !m-0 !mb-2"
-                                        text="Safety And Security"
-                                    />
-                                    <p className='text-lg'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
-                                </div>
-                            </div>
-                            <div className='flex gap-x-4'>
-                                <div className='flex-none '>
-                                    <motion.div
-                                        whileHover={{
-                                            y: -8
-                                        }}
-                                        className=' w-14 h-14 rounded-sm
-                                        left-0 !sticky lg:sticky top-16  bg-[#ffae02]'
-                                    >
-
-                                    </motion.div>
-
-                                </div>
-                                <div className='flex-1'>
-                                    <Heading
-                                        className="!font-semibold !text-white !text-xl !pl-0 !m-0 !mb-2"
-                                        text="Safety And Security"
-                                    />
-                                    <p className='text-lg'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
-                                </div>
-                            </div>
-                            <div className='flex gap-x-4'>
-                                <div className='flex-none '>
-                                    <motion.div
-                                        whileHover={{
-                                            y: -8
-                                        }}
-                                        className=' w-14 h-14 rounded-sm
-                                        left-0 !sticky lg:sticky top-16  bg-[#ffae02]'
-                                    >
-
-                                    </motion.div>
-
-                                </div>
-                                <div className='flex-1'>
-                                    <Heading
-                                        className="!font-semibold !text-white !text-xl !pl-0 !m-0 !mb-2"
-                                        text="Safety And Security"
+                                        className="!font-semibold !text-white !text-2xl !pl-0 !m-0 !mb-2.5"
+                                        text="Well Maintenance"
                                     />
                                     <p className='text-lg'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
                                 </div>

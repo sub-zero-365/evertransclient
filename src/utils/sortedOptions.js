@@ -84,7 +84,7 @@ let now = dayjs()
 export const dateSortedOption = [
 
   {
-    label: "all",
+    label: "all time",
     value: null
 
   },

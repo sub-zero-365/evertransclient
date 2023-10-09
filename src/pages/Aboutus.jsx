@@ -1,14 +1,15 @@
-import { Footer, Heading } from "../components"
-// import { possibility } from "../Assests/images"
+import { Footer} from "../components"
 import AnimatedText from "../components/AnimateText"
 import bg from '../Assets/images/interior-of-a-regular-intercity-bus.jpeg'
-import { Link, useLocation } from "react-router-dom"
-
+import { Link} from "react-router-dom"
+import { Helmet } from "react-helmet"
 const Aboutus = () => {
-  const location = useLocation()
-  console.log(location.state)
   return (
     <>
+      <Helmet>
+        <title>About Us| {process.env.REACT_APP_APP_NAME}</title>
+        <meta name="description" content="eagletranz about us page" />
+      </Helmet>
       <div>
         <div className="relative">
           <img className="absolute -z-0 object-cover  inset-0 w-full h-full "

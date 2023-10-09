@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query"
 import { sortedDateOptions, queryOptions, dateSortedOption } from "../utils/sortedOptions"
 import SelectSortDate from 'react-select';
 import Form from "../components/Form"
+import FilterButton from "../components/FilterButton"
 const allMailsQuery = (params = {}) => {
   const { search, sort, page, mailStatus } = params
   return {
@@ -63,19 +64,19 @@ const Mails = () => {
 
 
 
-  const FilterButton = (props) => {
-    const { value } = props
-    const isSelected = value === querySearch.get(props.name)
-    return (
-      <UiButton
-        onClick={() => handleFilterChange(props.name, value)}
-        className={`!px-8 !py-2.5 !flex-none !uppercase ${isSelected && "!bg-green-900 !rounded-lg"}`}
+  // const FilterButton = (props) => {
+  //   const { value } = props
+  //   const isSelected = value === querySearch.get(props.name)
+  //   return (
+  //     <UiButton
+  //       onClick={() => handleFilterChange(props.name, value)}
+  //       className={`!px-8 !py-2.5 !flex-none !uppercase ${isSelected && "!bg-green-900 !rounded-lg"}`}
 
-      > {props.label}</UiButton>
+  //     > {props.label}</UiButton>
 
-    )
+  //   )
 
-  }
+  // }
   const { searchValues } = useLoaderData()
   const { mails, nHits } = useQuery(allMailsQuery(searchValues)).data || []
   return (

@@ -3,9 +3,15 @@ import AnimatedText from "../components/AnimateText"
 import bg from '../Assets/images/interior-of-a-regular-intercity-bus.jpeg'
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
+import { Helmet } from "react-helmet"
 const ContactUs = () => {
   return (
     <>
+      <Helmet>
+        <title>Contact | {process.env.REACT_APP_APP_NAME}</title>
+        <meta name="description" content="eagletranz contact page" />
+      </Helmet>
+
       <div>
         <div className="relative">
           <img className="absolute -z-0 object-cover  inset-0 w-full h-full "
@@ -54,11 +60,11 @@ const ContactUs = () => {
               key={index}
             >
               <motion.div
-              
-              whileHover={{
-                y: -8
-            }}
-            className=' w-16 h-16 rounded-sm
+
+                whileHover={{
+                  y: -8
+                }}
+                className=' w-16 h-16 rounded-sm
             left-0 !sticky lg:sticky top-16  bg-[#ffae02]'
               >
 
@@ -70,10 +76,10 @@ const ContactUs = () => {
                   Office Line
                 </h1>
                 <h3>
-                +6221.2002.2012
+                  +6221.2002.2012
                 </h3>
                 <p>
-                22 Jakarta - Indonesia 
+                  22 Jakarta - Indonesia
                 </p>
               </div>
 

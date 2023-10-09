@@ -70,7 +70,6 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
         },
         (error) => {
             if (error?.response?.status === 401) {
-                alert("enter here ")
                 setIsAuthError(true);
             }
             return Promise.reject(error);

@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react"
 import { Modal, DisplayUi, DateUi, PrevButton, NextButton, Heading } from "../components"
 import { useLoaderData, useNavigate } from "react-router-dom"
-import { NavLink, useSearchParams, useParams } from 'react-router-dom'
+import { NavLink, useSearchParams, useParams, Link } from 'react-router-dom'
 import { motion } from "framer-motion"
 import { TbArmchair2, TbArmchairOff } from 'react-icons/tb'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Scrollbar, Pagination, Navigation } from 'swiper'
+import {
+  Scrollbar,
+  Pagination,
+  Navigation,
+
+} from 'swiper'
 import Alert from "../components/Alert"
 import { Helmet } from 'react-helmet'
 import axios from 'axios'
@@ -25,12 +30,13 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import formatQuery from "../utils/formatQueryStringParams"
 import { paymentOptions } from '../utils/sortedOptions'
-import Loader from '../components/Load'
+// import Loader from '../components/Load'
 import customFetch from "../utils/customFetch"
 import { useQuery } from "@tanstack/react-query"
 import { toast } from "react-toastify"
 import UiButton from "../components/UiButton"
 import { RiSteering2Line } from "react-icons/ri"
+// import CustomerPage from "./CustomerPage"
 const singleSeat = (id) => {
   return ({
     queryKey: ["seat", id],
@@ -70,7 +76,7 @@ const
 
     const navigate = useNavigate()
     const [selected, setSelected] = useState(queryParameters.get("seatposition"))
-
+    const [shouldAnimate, setShoultAnimate] = useState(true)
     const checkBusAvailabity = (isTaken, isReserved, id, flag = null) => {
       // if (flag) setFlag("classic")
       if (0 == id && isTaken == false && isReserved == false) {
@@ -199,9 +205,9 @@ const
                             key={_id}
                           >
                             <motion.div
+                              animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
                               onClick={() => checkBusAvailabity(isTaken, isReserved, _id, true)}
                               initial={false}
-                              animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
                               transition={{
                                 duration: 1,
                                 ease: "easeInOut",
@@ -227,6 +233,32 @@ const
 
 
               </Swiper>
+              <motion.div
+                className="my-5"
+                onTouchStart={() => setShoultAnimate(false)}
+                onTouchEnd={() => setShoultAnimate(true)}
+                onMouseEnter={() => setShoultAnimate(false)}
+                onMouseLeave={() => setShoultAnimate(true)}
+                animate={{ scale: shouldAnimate ? [0.8, 1, 0.9] : null }}
+                transition={{
+                  duration: 1,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                }}
+              >
+                <UiButton
+                  onClick={() => {
+                    if (selected == 0 || selected != null) {
+                      navigate(`/customer?seatposition=${selected}&seat_id=${id}&${queryParameters.toString()}`)
+                      return
+                    }
+                    errorToast()
+                  }}
+                  className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
+                >
+                  Continue as Customer
+                </UiButton>
+              </motion.div>
               <form onSubmit={proccedCheckout} className="md:px-3">
                 <Marquee play pauseOnClick pauseOnHover
                   className="capitalize text-red-500 dark:text-red-500 py-2  mb-4 text-sm
@@ -592,6 +624,9 @@ const
                 </div>
 
               </form>
+
+
+
             </div>        </div >
         </div >
       </>

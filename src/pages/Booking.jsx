@@ -34,10 +34,11 @@ import { CiLocationOn } from "react-icons/ci"
 import { WiTime4 } from "react-icons/wi"
 import { GiPathDistance } from "react-icons/gi"
 import dayjs from "dayjs"
+import UiButton from "../components/UiButton"
 const Booking = () => {
   const [queryParams] = useSearchParams()
   const [toggle, setToggle] = useState(false)
-  const navigation = useNavigation()
+  // const navigation = useNavigation()
   const tripType = queryParams.get("type") || "singletrip";
   const [fromCities, setFromCities] = useState(queryParams.get("from"))
   const [toCities, setToCities] = useState(queryParams.get("to"))
@@ -83,7 +84,7 @@ const Booking = () => {
 
 
 
-
+  const [shouldAnimate, setShoultAnimate] = useState(true)
   const [err, setErr] = useState(false)
   const [msg, setMsg] = useState("time must not be thesame !")
   return (
@@ -114,14 +115,16 @@ const Booking = () => {
 
           </div>
 
-          <form onSubmit={loadDemoData} className="-mt-10 mx-4   md:pb-24
+          <form onSubmit={loadDemoData} className="-mt-20 mx-4   md:pb-24
         md:mt-0 pt-10  md:w-[25rem]  lg:w-[30rem]
         md:max-w-[calc(100vw-2.5rem)] md:max-h-[calc(100vh-60px)]  md:overflow-y-auto">
-
+          
             <div className="shadow-lg mx-4 min-h-[3rem]
-          -mt-[25px] bg-white dark:bg-slate-700
+          --mt-[25px] bg-white dark:bg-slate-700
           dark:text-white rounded-lg flex p-1 ">
-              <Link to=".?type=single"
+
+
+              <Link to=".?type=singletrip"
                 replace
                 className={`w-1/2 ${(tripType === "singletrip" || !tripType) ? "bg-blue-400" : "bg-orange-400"} text-center text-white flex items-center justify-center rounded-sm `}>One Way</Link>
               <Link

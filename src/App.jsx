@@ -52,11 +52,13 @@ import { loader as busesSingleLoader, action as editTicketAction } from "./pages
 import { loader as singleAssistantLoader } from "./pages/Assistant.user"
 import { action as mailingAction } from "./pages/MailingPreview"
 import { loader as mailsLoader } from "./pages/Mails"
+
 import { loader as singleMailLoader, action as editSingleMailAction } from "./pages/SingleMail"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
 import Mailing from './pages/Mailing'
+// import CustomerPage from './pages/CustomerPage'
 import MailingForm from './components/MailingForm'
 import MailingPreview from './pages/MailingPreview'
 const FallBack = () => (<div className="h-screen w-full
@@ -71,6 +73,7 @@ const Seat = lazy(() => import("./pages/Seats"));
 const Assistant = lazy(() => import("./pages/Assistant"));
 
 const Bus = lazy(() => import("./pages/Bus"));
+const CustomerPage = lazy(() => import("./pages/CustomerPage"));
 const SingleMail = lazy(() => import("./pages/SingleMail"));
 const Mails = lazy(() => import("./pages/Mails"));
 const Books = lazy(() => import("./pages/Books"));
@@ -164,6 +167,15 @@ const router = createBrowserRouter([
               </Suspense>
             ,
             path: "booking"
+
+          },
+          {
+            element:
+              <Suspense fallback={<FallBack />}>
+                <CustomerPage />
+              </Suspense>
+            ,
+            path: "customer"
 
           },
           {

@@ -39,7 +39,7 @@ export const action = (queryClient) => async ({ request }) => {
         // queryClient.
         queryClient.invalidateQueries(["mail", id])
     } catch (err) {
-        toast.error(err.response?.data ||  "something went wrong")
+        toast.error(err.response?.data || "something went wrong")
         console.log(err.response.data)
     }
     return null
@@ -203,20 +203,15 @@ const SingleMail = () => {
                                 <p className="text-center text-slate-500 mb-4 text-lg"> {dayjs(mail?.registerdate || new Date).format("MMM D, YYYY")}</p>
                             </div>
                             <div>
-                                <h2 className="text-center  text-xl md:text-xl font-medium  ">register time </h2>
-                                <p className="text-center text-slate-500 mb-4 text-lg"> {dayjs(mail?.registerdate || new Date).format("h:mm:ss A")}</p>
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2">
-                            <div>
                                 <h2 className="text-center  text-xl md:text-xl font-medium  ">Estimate Price </h2>
                                 <p className="text-center text-slate-500 mb-4 text-lg"> {mail?.estimatedprice + "frs" ?? "n/a"}</p>
                             </div>
-                            <div>
-                                <h2 className="text-center  text-xl md:text-xl font-medium  ">Delivery Time </h2>
-                                <p className="text-center text-slate-500 mb-4 text-lg"> {mail?.registerdate || "n/a"}</p>
-                            </div>
                         </div>
+                        {/*  */}
+                        <h2 className="text-center  text-xl md:text-xl font-medium  "> Created At </h2>
+                        <p className="text-center animate- text-slate-500 mb-4 text-lg">{
+                            dayjs(mail?.createdAt || new Date()).format("dddd, MMMM D, YYYY h:mm A")
+                        }</p>
                         <h2 className="text-center  text-xl md:text-xl font-medium  "> Mail Status</h2>
                         <p className="text-center animate-bounce text-slate-500 mb-4 text-lg">{mail?.status}</p>
                         {/* <span className='w-6 h-6 mx-auto  bg-green-400 grid place-items-center text-lg rounded-full text-white'><AiOutlineCheck /></span> */}
