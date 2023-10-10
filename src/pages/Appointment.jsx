@@ -598,7 +598,8 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 </div>
 
             </div>
-            <Form handleChangeText={handleChangeText} params={querySearch} />
+            <Form handleChangeText={handleChangeText}
+            params={querySearch} />
             <Heading text={"Recent Regular Booking"} className="!mb-4 !text-center md:text-start first-letter:!text-4xl underline underline-offset-8" />
             {
                 false ? (<PlaceHolderLoader />) : (

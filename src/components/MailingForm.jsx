@@ -16,15 +16,16 @@ import { AiOutlineArrowRight, AiOutlineCloudUpload } from 'react-icons/ai'
 import FromSelect from 'react-select/async'
 import ToSelect from 'react-select/async'
 import TimeSelect from 'react-select'
-import { timeOptions } from '../utils/sortedOptions'
+import { timeOptions, priceOptions } from '../utils/sortedOptions'
 import { useMailingContext } from "../pages/Mailing"
 import { toast } from "react-toastify"
 import { BsCreditCard2Front, BsFillPersonFill, BsTelephoneMinus } from 'react-icons/bs'
-
+import { MdPriceCheck, MdProductionQuantityLimits } from "react-icons/md"
 import { GrCircleInformation } from 'react-icons/gr'
 import dayjs from "dayjs"
 import { AnimatePresence, motion } from 'framer-motion'
 import AnimatedText from './AnimateText'
+import CreatableSelect from 'react-select/creatable'
 const MailingForm = () => {
     const location = useLocation()
     const state = location.state || {};
@@ -57,7 +58,6 @@ const MailingForm = () => {
         }
         const { from, to } = data
         if (from == to) return toast.error("cities should not be thesame!")
-        console.log("this i sthe source data here", data)
 
         navigate(`preview`, {
             state: {
@@ -240,8 +240,8 @@ const MailingForm = () => {
                 <TimeSelect
                     name="time"
                     styles={style}
-                    isSearchable={false}
                     components={{ IndicatorSeparator: () => null }}
+                    isSearchable={false}
                     required className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl mb-6"
                     defaultValue={{
                         label: "7am",
@@ -266,7 +266,29 @@ const MailingForm = () => {
                 </div>
                 <div className='px-2'>
                     <div className="flex items-end pb-2 justify-start gap-x-4">
-                        <BsTelephoneMinus
+                        <MdPriceCheck
+                            size={20}
+                        />
+                        <h1 className='text-xl  font-light '>Sending Cost</h1> <span className='text-rose-700 text-2xl -mb-0.5'>*</span>
+                    </div>
+                    <CreatableSelect
+                        defaultValue={priceOptions[0]}
+                        styles={style}
+                        components={{ IndicatorSeparator: () => null }}
+                        isClearable options={priceOptions}
+                        name='price'
+                    />
+                    {/* <InputBox
+                        className="!min-h-[3rem]"
+                        name="price"
+                        defaultValue={state?.price}
+                        hidden
+                        type="number"
+                    /> */}
+                </div>
+                <div className='px-2'>
+                    <div className="flex items-end pb-2 justify-start gap-x-4">
+                        <MdProductionQuantityLimits
                             size={20}
                         />
                         <h1 className='text-xl  font-light '>Estimated Price for Product</h1> <span className='text-rose-700 text-2xl -mb-0.5'>*</span>

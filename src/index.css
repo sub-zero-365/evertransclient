@@ -56,7 +56,7 @@
 
 body,
 html {
-  @apply font-poppins !font-light !text-xs  md:!text-sm ;
+  @apply font-poppins !font-light !text-xs  md:!text-sm;
   @apply bg-color_light  dark:bg-color_dark dark:text-white;
 }
 
@@ -236,6 +236,7 @@ html {
 .loader-ticket {
   position: relative;
   width: 120px;
+
   height: 55px;
   background-repeat: no-repeat;
   background-image: radial-gradient(circle 2.5px, #ff3d00 100%, transparent 0),
@@ -345,7 +346,7 @@ html {
   input,
   select,
   textarea {
-    @apply !text-lg;
+    @apply !text-lg cursor-pointer;
   }
 }
 .screen {
@@ -424,3 +425,29 @@ html {
 .overlay.active {
   @apply opacity-100 pointer-events-auto visible;
 }
+
+
+
+
+
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #8f54a0 #ffffff;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 16px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #8f54a0;
+    border-radius: 10px;
+    border: 3px solid #ffffff;
+  }

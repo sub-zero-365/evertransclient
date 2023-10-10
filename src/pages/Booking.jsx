@@ -118,7 +118,7 @@ const Booking = () => {
           <form onSubmit={loadDemoData} className="-mt-20 mx-4   md:pb-24
         md:mt-0 pt-10  md:w-[25rem]  lg:w-[30rem]
         md:max-w-[calc(100vw-2.5rem)] md:max-h-[calc(100vh-60px)]  md:overflow-y-auto">
-          
+
             <div className="shadow-lg mx-4 min-h-[3rem]
           --mt-[25px] bg-white dark:bg-slate-700
           dark:text-white rounded-lg flex p-1 ">

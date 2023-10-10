@@ -11,6 +11,7 @@ const Form = ({ onChange, params, placeholder }) => {
       const search = await formData.get("search") || ""
       onChange(search)
       e.preventDefault()
+      
       // const text = await e.target.formData()
 
     }}>

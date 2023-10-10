@@ -403,10 +403,7 @@ const Books = () => {
                 "_id,xyx",
                 "traveltime,no time",
             ]} />
-            {/* <input
-                onChange={e => handleChange({ value: e.target.value }, "search")}
-                type="text"
-            /> */}
+         
             <Form
                 onChange={search => handleFilterChange("search", search)}
             />

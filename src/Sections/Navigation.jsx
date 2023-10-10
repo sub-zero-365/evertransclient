@@ -8,14 +8,13 @@ import { motion } from "framer-motion"
 const variants = {
     show: {
         opacity: 1,
-        x: [-1000,100,0],
+        y: [100,0],
         transition: {
             duration: 1
         }
     }
     , hidden: {
         opacity: 0,
-        // x: -1000
     }
 }
 const Navigation = () => {

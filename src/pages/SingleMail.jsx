@@ -208,6 +208,10 @@ const SingleMail = () => {
                             </div>
                         </div>
                         {/*  */}
+                        <h2 className="text-center  text-xl md:text-xl font-medium  "> Sending Cost </h2>
+                        <p className="text-center animate- text-slate-500 mb-4 text-lg">{
+                            mail?.price ? mail.price + " frs" : "n/a"
+                        }</p>
                         <h2 className="text-center  text-xl md:text-xl font-medium  "> Created At </h2>
                         <p className="text-center animate- text-slate-500 mb-4 text-lg">{
                             dayjs(mail?.createdAt || new Date()).format("dddd, MMMM D, YYYY h:mm A")
@@ -416,9 +420,12 @@ const SingleMail = () => {
                             }
 
                         </ul>
-                        <LoadingButton className="!block !my-5 !mx-auto !px-8 !py-2.5">
+                        {
+                            mail?.status!="recieved"&& <LoadingButton className="!block !my-5 !mx-auto !px-8 !py-2.5">
                             Validate
                         </LoadingButton >
+                        }
+                       
 
                     </Form>
                 </motion.div>

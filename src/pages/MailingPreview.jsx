@@ -50,7 +50,15 @@ export const action =
 const MailingPreview = () => {
     const navigate = useNavigate()
     const location = useLocation()
-    const { from, to, senderidcardnumber, recieverfullname, senderphonenumber, file, estimatedprice, name, senderfullname, recieverphonenumber } = location.state ?? {}
+    const { from, to,
+        senderidcardnumber,
+        recieverfullname,
+        senderphonenumber,
+        file, estimatedprice,
+        name,
+        senderfullname,
+        recieverphonenumber,
+        price } = location.state ?? {}
     window.onpopstate = (e) => {
         window.history.replaceState(window.history.state, null, window.location.href)
     }
@@ -62,10 +70,7 @@ const MailingPreview = () => {
 
     return (
         <Form method="post" className='form' encType='multipart/form-data'
-        // state={{ user: "send the code" }}
-
         >
-
             {
                 location.state && Object.keys(location.state).map((input, index) => {
                     if (input == "images") return null
@@ -135,7 +140,7 @@ const MailingPreview = () => {
 
 
 
-                <div className="py-10 border-b border-l">
+                <div className="py-10 border-black dark:border-gray-600  border-b  border-l">
                     <div className='flex items-center mb-5  justify-center'>
 
                         <Heading
@@ -160,6 +165,10 @@ const MailingPreview = () => {
                         <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{to}</div>
                     </div>
                     <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} text-xl group justify-center mb-1 items-center `}>
+                        <Heading text="Sending Cost " className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
+                        <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{price}</div>
+                    </div>
+                    <div className={`grid ${false ? "grid-cols-1 active" : "grid-cols-2"} text-xl group justify-center mb-1 items-center `}>
                         <Heading text="Estimated Price" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
                         <div className=" line-clamp-2 capitalize pl-2 text-lg  group-[.active]:!text-center">{estimatedprice}</div>
                     </div>
@@ -167,7 +176,7 @@ const MailingPreview = () => {
 
 
                 </div>
-                <div className="py-10 border-b border-r">
+                <div className="py-10 border-black dark:border-gray-600  border-b  border-r">
                     <div className='flex items-center mb-5  justify-center'>
 
                         <Heading
@@ -195,7 +204,7 @@ const MailingPreview = () => {
 
 
                 </div>
-                <div className="py-10 border-b  mb-4 border-l">
+                <div className="py-10 border-black dark:border-gray-600  border-b  mb-4  border-l">
                     <div className='flex items-center mb-5  justify-center'>
 
                         <Heading

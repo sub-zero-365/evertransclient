@@ -50,7 +50,7 @@ const AnimatedText = ({ text, className = "", inView, amount }) => {
                 whileInView={inView ? "animate" : false}
                 viewport={{ once: true, amount: amount ? amount : 0.2 }}
                 className={`${className} break-words
-            inline-block w-full text-dark font-bold capitalize
+            inline-block w-full text-dark font-black  capitalize
             text-8xl`}>
                 <SplitText text={text} />
             </motion.h1>

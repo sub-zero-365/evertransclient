@@ -7,7 +7,7 @@ import { Link, NavLink } from 'react-router-dom';
 import Write from './Write';
 const Hero = () => {
     return (
-        <div className=" h-[min(40rem,100vh)] text-white relative group">
+        <div className=" h-[min(35rem,100vh)] text-white relative group">
             <img className="absolute -z-0  inset-0 w-full h-full "
                 src={herobg}
             />
@@ -16,9 +16,10 @@ const Hero = () => {
                   bg-opacity-80 px-5 lg:p-20 sm:px-10  py-10 relative z-1 bg-[#1a1f6f]'
             >
                 <div
-                    className="grid grid-cols-1 h-full items-center lg:grid-cols-2"
+                    className=" h-full items-center  "
                 >
                     <motion.div
+                    className="max-w-5xl mx-auto"
                         initial={{ y: 100, opacity: 0 }}
                         animate={{
                             y: 0, opacity
@@ -32,8 +33,8 @@ const Hero = () => {
                             }}
                     >
                         <AnimateText
-                            className="!text-5xl md:!text-6xl lg:leading-[1.3]
-                            lg:!text-left lg:!text-6xl !text-center    !py-6 !font-black"
+                            className="!text-5xl md:!text-6xl lg:leading-[1.3] !font-manrope
+                            lg:!text-left-- lg:!text-7xl !text-center    !py-6 !font-black"
                             text="Travel With Us For An Adventure-Filled Journey"
                         />
 
@@ -91,18 +92,16 @@ const Hero = () => {
                         </motion.div>
 
                     </motion.div>
-                    <div>
+                    {/* <div>
                         <img
-                            // initial={{ x: 300 }}
-                            // animate={{ x: 0 }}
-
+                     
                             className='lg:scale-[1.3] lg:translate-x-20
                             duration-700 transition-all
                             lg:group-hover:translate-x-10  '
                             src={herooverlay}
                         />
 
-                    </div>
+                    </div> */}
                 </div>
 
             </div>

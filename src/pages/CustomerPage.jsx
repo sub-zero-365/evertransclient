@@ -9,8 +9,10 @@ import { dateSortedOption, queryOptions } from "../utils/sortedOptions"
 import FilterButton from '../components/FilterButton'
 import { useQuery } from '@tanstack/react-query'
 import customFetch from '../utils/customFetch'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useFilter } from '../Hooks/FilterHooks'
+import { BsSearch } from 'react-icons/bs'
+import { BiChevronDown } from 'react-icons/bi'
 const topRankedQuery = (params) => {
 
     return (
@@ -36,7 +38,7 @@ const CustomerPage = () => {
         ...new URL(window.location.href).searchParams.entries(),
     ])
     const { data, isPreviousData } = useQuery(topRankedQuery(params))
-    console.log("this is the data here", data)
+    const [querySearch] = useSearchParams()
     return (
         <CustomerContext.Provider
             value={{ data }}
@@ -70,15 +72,57 @@ const CustomerPage = () => {
                         </Rounded>
 
                     </div>
-                    <Form
-                        onChange={search => handleFilterChange("search", search)}
-                    />
+                    {/* search number form here  */}
+
+                    <form
+                        onSubmit={async (e) => {
+                            e.preventDefault()
+                            const formdata = new FormData(e.target)
+                            const name = await formdata.get("search")
+                            handleFilterChange("numberFilter", name)
+
+                        }}
+                        className='py-2 my-6  mx-2 bg-white px-4  rounded-md'>
+
+                        <div
+                            className='w-full  flex items-stretch '
+                        >
+                            <button type='submit' className='grid place-items-center border-none bg-transparent outline-none'>
+                                <BsSearch
+                                    color='gray'
+                                    size={20}
+                                    className='flex-none mr-4'
+                                />
+                            </button>
+                            <input
+                                name="search"
+                                defaultValue={querySearch.get("numberFilter")}
+                                className='flex-1 
+                                min-h-[2.5rem] 
+                                outline-none
+                                focus:outline-none
+                                text-lg
+                                '
+                                type='tel'
+                                placeholder='search phone of customer'
+                            />
+                            <div className='grid place-items-center'
+                            >
+                                <BiChevronDown
+                                    color='gray'
+                                    size={20}
+                                    className='flex-none mr-4 cursor-pointer hover:text-gray-800'
+                                />
+                            </div>
+                        </div>
+
+                    </form>
                     {/* end of header here */}
-                    <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5">
+                    <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5 scrollto">
                         {
                             dateSortedOption.map((query) => <FilterButton
                                 name="quickdatesort"
-                                {...query} key={query} />)
+                                {...query} key={Math.random()} />)
                         }
 
                     </Scrollable>

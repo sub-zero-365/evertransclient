@@ -19,7 +19,7 @@ const MailingContext = createContext()
 const Mailing = () => {
 
     const [file, setFile] = useState((window.history.state.file ?? null))
-    
+
     // const deleteImg = (index) => {
     //     const temp = imgArr
     //     temp.splice(index, 1)
@@ -30,7 +30,8 @@ const Mailing = () => {
 
 
     return (
-        <MailingContext.Provider value={{ file, setFile
+        <MailingContext.Provider value={{
+            file, setFile
         }}>
             <Helmet>
                 <title>
@@ -41,11 +42,12 @@ const Mailing = () => {
                 className="md:mt-0 pb-20 md:pb-0 md:h-[calc(100vh-60px)]">
                 <div className="container mx-auto md:flex ">
                     <div className="image flex-1 h-[200px] md:h-[calc(100vh-60px)]
-        w-full rounded-b-[3rem] md:rounded-none  overflow-hidden">
+        w-full rounded-b-[3rem] md:rounded-none  overflow-hidden p-8">
                         <img
-                        src='https://image.similarpng.com/very-thumbnail/2020/06/Smiley-delivery-man-transparent-PNG.png'
-                            // src="https://images.squarespace-cdn.com/content/v1/63937853a25f36131a1b84f8/9b1f1e55-2c91-4d3d-b377-2542b32ee85c/bus.png"
-                            className="h-full w-full" alt="bus pic" />
+                            // src='https://image.similarpng.com/very-thumbnail/2020/06/Smiley-delivery-man-transparent-PNG.png'
+                            // src="https://cdn.pixabay.com/photo/2017/03/01/10/03/businessman-2108029_640.jpg"
+                            src="https://i.ibb.co/4KHRwJM/businessman-2108029-640-removebg-preview.png"
+                            className="h-full w-full rounded-lg" alt="bus pic" />
 
                     </div>
                     <div
