@@ -20,7 +20,19 @@ import FrequentlyAsked from "../Sections/FrequentlyAsked"
 import BusRentals from "../Sections/BusRentals"
 import ChooseTheBus from "../Sections/ChooseTheBus"
 import Navigation from "../Sections/Navigation"
+
+
+
 const Home = () => {
+    // let defferedPrompt = null
+    const [defferedPrompt, setDefferedPrompt] = useState(null)
+    window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault()
+        console.log("this is the promt ", e)
+        setDefferedPrompt(e)
+    })
+    // window.addEventListener("b")
+
     let downloadbaseurl = null
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
         downloadbaseurl = process.env.REACT_APP_LOCAL_URL
@@ -43,6 +55,32 @@ const Home = () => {
             </Helmet>
             <div className="ol">
 
+                {
+                    defferedPrompt && (
+                        <div
+                            className="fixed bottom-4 top-auto right-5 px-6 
+                            lg:hidden p-4 z-20 bg-white shadow"
+                        >
+                            <h1
+                                className="text-xl mb-2"
+                            >Install {process.env.REACT_APP_APP_NAME} Wep App</h1>
+                            <UiButton
+                                className="text-green-500 !px-6 !text-sm"
+                                onClick={async () => {
+                                    defferedPrompt.prompt()
+                                    const { outcome } = await defferedPrompt.userChoice;
+                                    if (outcome == "accepted") {
+                                        setDefferedPrompt(null)
+                                    }
+                                }}
+                            >
+                                Install
+                            </UiButton>
+                        </div>
+
+                    )
+
+                }
 
                 <Rounded
                     className={`fixed !w-[40px] !h-[40px] bottom-[5rem] !bg-white right-[2rem] md:right-[4rem] 

@@ -26,7 +26,7 @@ const Navigation = () => {
                 initial="hidden"
                 className='max-w-2xl mx-10 rounded-sm
             -mt-20 z-10 relative
-            lg:mx-auto bg-white py-16 px-5 shadow'
+            sm:mx-auto bg-white py-16 px-5 shadow'
             >
                 <h1
                     className='text-center leading-10 pb-10  text-3xl font-black font-monserrat'

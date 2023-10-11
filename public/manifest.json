@@ -1,18 +1,18 @@
 {
-    "short_name": "Africa Continental",
-    "name": "Afri-Con",
+    "short_name": "EagleTranz Vip Services",
+    "name": "EagleTranz",
     "icons": [{
-            "src": "favicon.ico.jpg",
+            "src": "favicon.ico.png",
             "sizes": "64x64 32x32 24x24 16x16",
             "type": "image/x-icon"
         },
         {
-            "src": "favicon.ico.jpg",
+            "src": "favicon.ico.png",
             "type": "image/png",
             "sizes": "192x192"
         },
         {
-            "src": "favicon.ico.jpg",
+            "src": "favicon.ico.png",
             "type": "image/png",
             "sizes": "512x512"
         }
