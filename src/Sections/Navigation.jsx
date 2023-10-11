@@ -29,7 +29,7 @@ const Navigation = () => {
             sm:mx-auto bg-white py-16 px-5 shadow'
             >
                 <h1
-                    className='text-center leading-10 pb-10  text-3xl font-black font-monserrat'
+                    className='text-center dark:text-white leading-10 pb-10  text-3xl font-black font-monserrat'
                 >Get Started</h1>
                 <UiButton
                     className="!w-[min(30rem,calc(100%-0.5rem))]
