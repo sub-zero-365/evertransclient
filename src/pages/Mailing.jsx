@@ -17,18 +17,7 @@ import { Outlet } from "react-router-dom"
 const MailingContext = createContext()
 
 const Mailing = () => {
-
     const [file, setFile] = useState((window.history.state.file ?? null))
-
-    // const deleteImg = (index) => {
-    //     const temp = imgArr
-    //     temp.splice(index, 1)
-    //     setImgUrl([
-    //         ...temp
-    //     ])
-    // }
-
-
     return (
         <MailingContext.Provider value={{
             file, setFile

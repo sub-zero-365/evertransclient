@@ -6,14 +6,13 @@ import { useNavigate, NavLink, Link } from 'react-router-dom';
 import { useravatar } from '../Assets/images';
 import logo from "../Assets/images/logo.png"
 import { useSelector, useDispatch } from 'react-redux'
-import { motion} from "framer-motion";
+import { motion } from "framer-motion";
 import Rounded from './Rounded';
 import { useUserLayoutContext } from './UserLayout';
 import UiButton from "./UiButton"
-import {  useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import customFetch from "../utils/customFetch";
-import {  clearUser } from '../actions/User'
-
+import { clearUser } from '../actions/User'
 const Navbar = ({ }) => {
     const queryClient = useQueryClient()
     const disatch = useDispatch()
@@ -30,19 +29,22 @@ const Navbar = ({ }) => {
         }
         localStorage.removeItem('theme');
     };
-    const [isLogin, setIsLogin] = useState(userDetails?.phone ? true : false)
-    useEffect(() => {
-        const islogin = userDetails?.phone ? true : false
-        if (islogin) {
-            setIsLogin(true)
-        } else {
-            setIsLogin(false)
-        }
-    }, [userDetails])
+
+    const isLogin = user?.fullname
+    // const [isLogin, setIsLogin] = useState(userDetails?.phone ? true : false)
+    // useEffect(() => {
+    //     const islogin = userDetails?.phone ? true : false
+    //     if (islogin) {
+    //         setIsLogin(true)
+    //     } else {
+    //         setIsLogin(false)
+    //     }
+    // }, [userDetails])
     const navigate = useNavigate()
     const logoutUser = async () => {
         await customFetch.get('/auth/logout');
-        queryClient.invalidateQueries();
+        // queryClient.invalidateQueries();
+        await queryClient.removeQueries()
         navigate("/login")
     };
     const gotoLoginPage = () => {
@@ -88,11 +90,14 @@ const Navbar = ({ }) => {
 
             <div className="lg:container mx-auto  h-[4rem] items-center  px-4 flex justify-between relative  ">
                 <Link to="/">
-                    <img
+                    {/* <img
                         className='h-12 w-20'
                         src={logo}
 
-                    />
+                    /> */}
+                    <h1
+                        className='text-3xl font-black '
+                    >{process.env.REACT_APP_APP_NAME}</h1>
 
                 </Link>
                 {/* <div className="text-2xl font-montserrat cursor-pointer font-black hover:text-slate-950 dark:hover:text-white duration-300 hover:font-light transition-[color] " onClick={navigateToHome}>{process.env.REACT_APP_APP_NAME || "EvansTrans"}</div> */}
@@ -103,15 +108,46 @@ const Navbar = ({ }) => {
                             to="/?#ourservices"
                             className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                         >Our Services</NavLink></motion.li>
+                    <div className='group relative'>
+                        <h1
+                            className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'
+                        >Book Services</h1>
 
-                    <motion.li whileHover={{ scaleX: 1.2 }} className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
-                        to="/booking"
-                        className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                    >Bus Here</NavLink></motion.li>
-                    <motion.li whileHover={{ scaleX: 1.2 }} className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
-                        to="/mailing"
-                        className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                    >Mail Here</NavLink></motion.li>
+                        <div
+                            className='
+absolute
+top-[calc(100%+0.3rem)] 
+translate-y-5
+invisible 
+opacity-0 group-hover:opacity-100
+group-hover:visible
+group-hover:translate-y-0
+transition-all
+duration-200
+py-2
+min-w-fit
+bg-color_light  dark:bg-color_dark
+px-5
+left-0
+-translate-x-[calc(calc(100%-100px)/2)]
+rounded-sm
+shadow
+'
+                        >
+                            <motion.li whileHover={{ scaleX: 1.2 }} className='links-item min-w-full  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                                to="/booking"
+                                className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                            >Bus Here</NavLink></motion.li>
+                            <motion.li whileHover={{ scaleX: 1.2 }} className='links-item min-w-full  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                                to="/mailing"
+                                className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                            >Mail Here</NavLink></motion.li>
+                        </div>
+
+                    </div>
+
+
+
                     <li className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/about-us"
                         className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
@@ -219,11 +255,13 @@ const Navbar = ({ }) => {
                                         className="h-[80px] w-[80px]  mx-auto shadow-2xl border-2 overflow-hidden  rounded-full mt- p-0 ">
                                         <img src={useravatar} alt="user " onClick={gotoUserPage} className='w-full h-full m-0  object-cover scale-[1.3]' />
                                     </motion.div>
-                                    <p className="w-fit mx-auto ">{userDetails?.fullname}</p>
+                                    <p className="w-fit mx-auto capitalize">{userDetails?.fullname}</p>
                                     <p className="w-fit mx-auto ">{userDetails?.phone}</p>
-                                    <div className="flex- justify-center pt-1 hidden">
+                                    <div className="flex justify-center pt-2 -hidden">
 
-                                        <UiButton onClick={() => logoutUser()}>
+                                        <UiButton
+                                            className="!bg-rose-700"
+                                            onClick={() => logoutUser()}>
                                             logout
                                         </UiButton>
 
@@ -294,12 +332,70 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                         isLogin
                             ? (
 
+                                <>
 
-                                <div className=" relative flex gap-4 items-center   rounded-full overflow-hidden- " >
-                                    <Rounded className="!w-10 !h-10">
-                                        <img src={useravatar} alt="user " className='w-[40px] h-[40px] rounded-full shadow-2xl ' onClick={gotoUserPage} />
-                                    </Rounded>
-                                </div>
+                                    <div className=" relative flex gap-4 items-center group  " >
+                                        <Rounded className=" !flex-none group">
+                                            <img src={useravatar} alt="user " className='w-[40px] h-[40px] rounded-full shadow-2xl ' onClick={gotoUserPage} />
+                                        </Rounded>
+                                        <div
+                                            className='
+                                            absolute
+                                            top-[calc(100%+0.3rem)] 
+                                            translate-y-5
+                                            invisible 
+                                            opacity-0 group-hover:opacity-100
+                                            group-hover:visible
+                                            group-hover:translate-y-0
+                                            transition-all
+                                            duration-200
+                                            py-2
+                                            px-10
+                                            w-fit
+                                            bg-white 
+                                            left-0
+                                            -translate-x-[calc(calc(100%-50px)/2)]
+                                            rounded-sm
+                                            shadow
+                                            '
+                                        >
+
+                                            <ul
+                                                className='flex flex-col gap-y-1'
+                                            >
+                                                <li className='min-w-full group hover:text-blue-700 transition duration-500'>
+                                                    <Link
+                                                        to="/user"
+                                                    >
+                                                        Dashboard
+                                                    </Link>
+                                                    <div
+                                                        className='group-hover:w-full bg-blue-500 w-0 transition-all duration-700 h-[1px]'
+                                                    />
+                                                </li>
+
+                                                <li className='min-w-full group hover:text-blue-700 group transition duration-500'>
+                                                    <Link
+                                                        to="/user/mails"
+                                                    >
+                                                        Mails
+                                                    </Link>
+                                                    <div
+                                                        className='group-hover:w-full bg-blue-500 w-0 transition-all duration-700 h-[1px]'
+                                                    />
+                                                </li>
+
+                                            </ul>
+
+                                        </div>
+                                    </div>
+
+                                    <UiButton
+                                        className="bg-red-400"
+                                        onClick={() => logoutUser()}>
+                                        Logout
+                                    </UiButton>
+                                </>
 
                             ) : (
                                 <>

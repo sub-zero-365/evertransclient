@@ -335,60 +335,18 @@ const Details = () => {
 
   return (
     <>
-      {/* <Helmet>
+      <Helmet>
         <title>
           User Dashboard
         </title>
-      </Helmet> */}
+      </Helmet>
       <div
         className=' overflow-x-hidden
       mx-auto
-    max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark'
+    max-h-[calc(100vh-4rem)]-- overflow-y-auto-- bg-color_light dark:bg-color_dark'
         ref={constraintsRef}>
 
-        <div
-          className='flex justify-center hidden-- items-center py-5 gap-x-4 px-2'
 
-        >
-          <UiButton
-            className="!px-5 !flex-none
-                 !py-3 !text-lg !rounded-none
-                !bg-[#ffae02] !font-black"
-          >
-            <NavLink
-              to={`/user?${querySearch.toString()}`}
-              replace
-
-            >
-              {({ isPending }) => <div className="flex items-center gap-x-4">
-                <BiBusSchool
-                  size={25}
-                />
-                {isPending ? "loading please wait " : <p>Tickets</p>}
-              </div>}
-
-            </NavLink>
-
-
-          </UiButton>
-          <UiButton
-            className="!px-5 !flex-none  
-                 !py-3 !text-lg !rounded-none
-                !bg-blue-700 !font-black"
-          >
-            <NavLink
-              to="/user/mails"
-              replace
-            >
-              {({ isPending }) => <div className="flex items-center gap-x-4">
-                <MdOutlineForwardToInbox
-                  size={25}
-                />
-                {isPending ? "loading please wait " : <p>Mails</p>}
-              </div>}
-            </NavLink>
-          </UiButton>
-        </div>
 
         <ShowBuses isOpen={isOpen___}
           className2="!w-[min(40rem,calc(100%-30px))]"
@@ -1063,12 +1021,54 @@ z-10  "
           </div>
         </motion.div>
 
-        <div className={`lg:flex ${false && "lg:flex-row-reverse"}  items-start justify-start gap-4 `}>
+        <div className={`lg:flex ${false && "lg:flex-row-reverse"} h-[calc(100vh-4rem)] items-start justify-start gap-4 `}>
 
-          <div className="lg:w-[calc(100%-25rem)]">
+          <div className="lg:w-[calc(100%-25rem)] max-h-full overflow-y-auto">
+            <div
+              className='flex justify-center hidden-- items-center py-5 gap-x-4 px-2'
+
+            >
+              <UiButton
+                className="!px-5 !flex-none
+                 !py-3 !text-lg !rounded-none
+                !bg-[#ffae02] !font-black"
+              >
+                <NavLink
+                  to={`/user?${querySearch.toString()}`}
+                  replace
+
+                >
+                  {({ isPending }) => <div className="flex items-center gap-x-4">
+                    <BiBusSchool
+                      size={25}
+                    />
+                    {isPending ? "loading please wait " : <p>Tickets</p>}
+                  </div>}
+
+                </NavLink>
+
+
+              </UiButton>
+              <UiButton
+                className="!px-5 !flex-none  
+                 !py-3 !text-lg !rounded-none
+                !bg-blue-700 !font-black"
+              >
+                <NavLink
+                  to="/user/mails"
+                  replace
+                >
+                  {({ isPending }) => <div className="flex items-center gap-x-4">
+                    <MdOutlineForwardToInbox
+                      size={25}
+                    />
+                    {isPending ? "loading please wait " : <p>Mails</p>}
+                  </div>}
+                </NavLink>
+              </UiButton>
+            </div>
             <Outlet />
           </div>
-
           <div className={`flex-none lg:flex-1 py-5
         sidebar m lg:rounded-lg shadow rounded-lg  
         ${toggle ? "right-0" : "!-right-full"}
@@ -1079,7 +1079,7 @@ z-10  "
         text-center bg-white
         dark:bg-slate-800 rounded-sm right-0 top-0 h-fit
            w-[calc(100vw-3.5rem)] max-w-sm
-           z-20 fixed   lg:!sticky lg:static== lg:!top-[4rem] lg:h-[calc(100vh-4rem)] first-letter: px-4  `}>
+           z-20 fixed   lg:!static lg:static== lg:!top-[4rem] lg:h-[calc(100vh-4rem)] first-letter: px-4  `}>
             <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 
        -left-[3.125rem] z-10 rounded-none flex items-center justify-center  font-black border-black"

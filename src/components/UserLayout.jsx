@@ -23,13 +23,12 @@ const UserLayout = ({ isDarkThemeEnabled }) => {
   };
 
   const data = useQuery(userQuery)
-  if (data?.data?.user) {
-    setUserDetails(data?.data?.user)
-  }
+
   const logoutUser = async () => {
     try {
       await customFetch.get('/auth/logout');
-      queryClient.invalidateQueries();
+      // queryClient.invalidateQueries();
+      queryClient.removeQueries()
       setUserDetails({})
       navigate("/login")
     } catch (err) {

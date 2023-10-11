@@ -32,9 +32,9 @@ export const loader = (queryClient) => async ({ request }) => {
 
 const ProtectedRoute = (queryClient) => {
     const { setUserDetails, logoutUser } = useUserLayoutContext()
-    const { user } = useQuery(userQuery).data
+    const { user } = useQuery(userQuery).data || {}
     setUserDetails(user)
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const [isAuthError, setIsAuthError] = useState(false);
     const navigation = useNavigation();
     const isPageLoading = navigation.state === 'loading'
