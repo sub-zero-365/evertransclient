@@ -140,5 +140,13 @@ export const dateSortedOption = [
 
   },
 ]
+export const seatOptions = [
+  ...Array.from({ length: 6 }, (arr, i) => (
+      {
+          label: 4 + i,
+          value: 4 + i
+      }))
+
+]
 
 export default 748

@@ -5,6 +5,7 @@ import { BsMoonStars, BsSun } from 'react-icons/bs';
 import { useNavigate, NavLink, Link } from 'react-router-dom';
 import { useravatar } from '../Assets/images';
 import logo from "../Assets/images/logo.png"
+import logotext from "../Assets/images/logotext.png"
 import { useSelector, useDispatch } from 'react-redux'
 import { motion } from "framer-motion";
 import Rounded from './Rounded';
@@ -84,8 +85,8 @@ const Navbar = ({ }) => {
 
     return (
         <div className="sticky
-     bg-white/70 text-black dark:bg-slate-900 dark:text-white
-        top-0 left-0 shadow-lg dark:shadow-black dark:shadow-sm select-none
+     bg-white/70 text-black dark:bg-slate-900 dark:text-white shadow-gray-200
+        top-0 left-0 shadow-sm dark:shadow-black dark:shadow-sm select-none
          z-20">
 
             <div className="lg:container mx-auto  h-[4rem] items-center  px-4 flex justify-between relative  ">
@@ -95,9 +96,13 @@ const Navbar = ({ }) => {
                         src={logo}
 
                     /> */}
-                    <h1
+                    {/* <h1
                         className='text-3xl font-black '
-                    >{process.env.REACT_APP_APP_NAME}</h1>
+                    >{process.env.REACT_APP_APP_NAME}</h1> */}
+                    <img src={logotext}
+                    className="h-32 w-24"
+                    alt="logotext"
+                    />
 
                 </Link>
                 {/* <div className="text-2xl font-montserrat cursor-pointer font-black hover:text-slate-950 dark:hover:text-white duration-300 hover:font-light transition-[color] " onClick={navigateToHome}>{process.env.REACT_APP_APP_NAME || "EvansTrans"}</div> */}

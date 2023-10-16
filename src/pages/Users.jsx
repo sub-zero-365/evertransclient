@@ -1,13 +1,11 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Form, redirect } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
 import { LineChart, Number, PanigationButton } from '../components';
 import AnimateText from '../components/AnimateText'
 import { MdOutlineClose } from 'react-icons/md'
-import { useravatar } from '../Assets/images';
+// import { useravatar } from '../Assets/images';
 import Alert from '../components/Alert'
-import { setUsers } from '../actions/adminData';
 import { Loader, Button, Heading } from '../components';
 import { AiOutlinePlus } from 'react-icons/ai'
 import { motion } from 'framer-motion'
@@ -20,9 +18,9 @@ import { SlOptions } from 'react-icons/sl';
 import ShowBuses from './ShowBuses';
 import customFetch from '../utils/customFetch'
 import { useQuery } from "@tanstack/react-query"
-
+import {toast } from "react-toastify"
 const usersQuery = {
-    querKey: ["user"],
+    queryKey: ["user"],
     queryFn: async () => {
         const res = await customFetch.get(
             "/admin/userticketlength"
@@ -31,8 +29,37 @@ const usersQuery = {
 
     }
 }
+export const action = (queryClient) => async ({ request }) => {
+    try {
+        const form = await request.formData()
+
+        const user_id = form.get("id")
+        var type = form.get("type")
+        type = "addrestricted" ? true : false;
+        if (type) {
+            await customFetch.post("/restricted", {
+                user_id
+            })
+        } else {
+            await customFetch.delete("/restricted", {
+                user_id
+            })
+        }
+        await queryClient.invalidateQueries({
+            queryKey: ["users"]
+        })
+        toast.success("all good")
+        return null
+    }
+    catch (err) {
+        console.log(err)
+        toast.warning("something went wrong try again")
+        return err
+    }
+
+}
 export const loader = (queryClient) => async ({ params }) => {
-        return await queryClient.ensureQueryData(usersQuery)
+    return await queryClient.ensureQueryData(usersQuery)
 }
 
 const Appointment = ({ skip, currentPage }) => {
@@ -410,9 +437,51 @@ dark:border-gray-600
                                                 />
                                                 <Button
                                                     className={"!max-w-[14rem] !w-full"}
-                                                    name="Check User"
+                                                    name="View Employee"
                                                     href={`/dashboard/details/${_id || index}?admin=true&createdBy=${_id}`}
                                                 ></Button>
+                                                {
+                                                    user?.isrestricted ?
+
+                                                        <Form method="post">
+                                                            <input
+                                                                type="hidden"
+                                                                name="type"
+                                                                value="addrestricted"
+                                                            />
+                                                            <input
+                                                                type="hidden"
+                                                                name="id"
+                                                                value={user?._id}
+                                                            />
+                                                            <UiButton
+                                                                className="px-2 "
+                                                            >
+                                                                UnSuspend
+                                                            </UiButton>
+                                                        </Form>
+                                                        :
+
+                                                        <Form method="post">
+                                                            <input
+                                                                type="hidden"
+                                                                name="type"
+                                                                value="removerestricted"
+                                                            />
+                                                            <input
+                                                                type="hidden"
+                                                                name="id"
+                                                                value={user?._id}
+                                                            />
+                                                            <UiButton
+                                                                className="px-2 !bg-rose-800 hover:bg-red-900"
+                                                            >
+                                                                Suspend
+                                                            </UiButton>
+                                                        </Form>
+
+                                                }
+
 
                                             </td>
                                         </tr>

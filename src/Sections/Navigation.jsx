@@ -43,7 +43,7 @@ const Navigation = () => {
                             <BiBusSchool
                                 size={25}
                             />
-                            {isPending ? "loading please wait " : <p>Book As Bus</p>}
+                            {isPending ? "loading please wait " : <p>Book A Seat</p>}
                         </div>}
 
                     </NavLink>
@@ -62,7 +62,7 @@ const Navigation = () => {
                             <MdOutlineForwardToInbox
                                 size={25}
                             />
-                            {isPending ? "loading please wait " : <p>Mail As Service</p>}
+                            {isPending ? "loading please wait " : <p>Mail Service</p>}
                         </div>}
                     </NavLink>
                 </UiButton>

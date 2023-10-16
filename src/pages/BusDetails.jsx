@@ -1,8 +1,7 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { Heading } from '../components'
-import { useEffect, useState, useRef } from 'react';
-import {  useLoaderData, Form, useNavigation, redirect } from 'react-router-dom'
-import formatQuery from "../utils/formatQueryStringParams"
+import { useState, useRef } from 'react';
+import { useLoaderData, Form, useNavigation, redirect } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { toast } from 'react-toastify'
 
@@ -23,12 +22,12 @@ const singleBusQuery = (id) => {
 export const action = (queryClient) => async ({ request }) => {
     try {
         const form = await request.formData()
-        const  id  = form.get("id")
+        const id = form.get("id")
         await customFetch.delete("/bus/" + id)
         queryClient.invalidateQueries({
             queryKey: ["buses"]
         })
-        return redirect("/bus")
+        return redirect("/dashboard/bus")
     }
     catch (err) {
         console.log(err)
@@ -51,10 +50,10 @@ const BusDetails = () => {
     const navigation = useNavigation()
     const isSubmitting = navigation.state === "submitting"
     const id = useLoaderData()
-    const [isOpen, setIsOpen] = useState(false);
     const { bus } = useQuery(singleBusQuery(id)).data ?? {}
+    const [isOpen, setIsOpen] = useState(false);
     const [text, setText] = useState("")
-   
+
 
     return (
         <div className='!flex-1 h-[calc(100vh-60px)] container mx-auto overflow-y-auto pb-24'>
@@ -105,9 +104,9 @@ const BusDetails = () => {
           
             py-5 pb-10`}>
 
-                    <AnimatedText text="Delete Bus !!"
+                    <AnimatedText text="Delete Car !!"
                         className='!mb-1 !text-lg !text-rose-600 !text-center capitalize' />
-                    <p className="text-lsm !font-montserrat !text-center mb-6">Enter Bus name to delete Bus: <span className="!text-sm !text-rose-600">{bus?.name}</span></p>
+                    <p className="text-lsm !font-montserrat !text-center mb-6">Enter Bus name to delete Car: <span className="!text-sm !text-rose-600">{bus?.name}</span></p>
                     <Form
                         method="post"
                         className='px-5'
@@ -186,16 +185,13 @@ const BusDetails = () => {
                                     (text !== bus?.name)
                                 }
                                 type="submit"
-                                name="DELETE BUS" className="" />
+                                name="DELETE Car" className="" />
                         }
-
-
-
 
                     </Form>
                 </div>
             </div>
-            <AnimatedText text={"Bus Details "} className='!text-3xl !text-center lg:!text-4xl w-full' />
+            <AnimatedText text={"Car Details "} className='!text-3xl !text-center lg:!text-4xl w-full' />
             <div className='flex flex-col lg:flex-row justify-center w-full'>
                 <div className='mb-10 '>
                     <Heading text={"Properties"} className={"!font-black"} />
@@ -218,13 +214,22 @@ const BusDetails = () => {
                         </div>
 
                     </div>
-                    <div className='grid place-items-center mt-3 '>
-                        <Heading text={"Caution!!!"}
-                            className={"!mb-2 !pl-0"} />
+                    <Heading text={"Caution!!!"}
+                        className={"!mb-2 !pl-0 !text-center"} />
+                    <div className='flex items-center justify-center gap-x-8 place-items-center mt-3 '>
                         <UiButtonDanger
-                            name={"Delete Bus"}
+                            name={"Delete Car"}
                             onClick={() => setIsOpen(true)}
                             className={"!scroll-px-10 !px-12"} />
+                        <UiButton
+                            className="!px-10 "
+                        >
+                            <Link
+                                to={`/dashboard/car/edit/${id}`}
+                            >
+                                Edit Car
+                            </Link>
+                        </UiButton>
                     </div>
                 </div>
                 {/* <div className='lg:w-full mx-4 mb-10 shadow pb-10 lg:mr-5  bg-white dark:bg-slate-900 py-7 rounded-sm px-6'>

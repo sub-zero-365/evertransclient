@@ -239,7 +239,7 @@ const Booking = () => {
               <LoadingButton
                 className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
               >
-                <>FindBus <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
+                <>Find Available Car <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
               </LoadingButton>
 
             </div>
@@ -248,7 +248,7 @@ const Booking = () => {
               <LoadingButton
                 className="!w-[min(30rem,calc(100%-1.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
               >
-                <>FindBus <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
+                <>Find Available Car <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
               </LoadingButton>
 
 

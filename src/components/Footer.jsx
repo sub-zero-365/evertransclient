@@ -262,7 +262,7 @@ const Footer = () => {
               <li className='
               flex gap-x-3  items-stretch hover:text-orange-500 transitio duration-300
               '>
-                <p>Privacy Policy</p>
+                <Link to={"/policy"}>Privacy Policy</Link>
                 <span
                   className='p-[1px] flex-none   bg-orange-400'
                 />

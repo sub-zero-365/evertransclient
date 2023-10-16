@@ -1,9 +1,10 @@
-import { motion } from "framer-motion"
-import { useState } from "react"
-import { Heading } from "../components"
+import { motion, useInView } from "framer-motion"
+import { useState, useRef } from "react"
+// import { Heading } from "../components"
 import AnimatedText from "../components/AnimateText"
 import { BsArrowDownLeft } from "react-icons/bs"
 import { MdOutlineClose } from "react-icons/md"
+import Write from "../components/Write"
 const slideUp = {
   initial: {
     y: 100, opacity: 0
@@ -30,7 +31,7 @@ const slideRight = {
   }
 
 }
-const Acc = ({ idx, active, setActive }) => {
+const Acc = ({ idx, active, setActive, heading, text }) => {
   const toggle = idx == active
   const boolean = idx & 1
   return (<div className="pb-6 ">
@@ -59,7 +60,7 @@ const Acc = ({ idx, active, setActive }) => {
       
       cursor-pointer items-center flex justify-between select-none px-4 `}>
       <AnimatedText
-        text="where can i find a company"
+        text={heading}
         inView amount={0.5}
         className={`!capitalize  !text-start
         !text-lg !m-0 !pl-0 !font-black"
@@ -83,8 +84,9 @@ const Acc = ({ idx, active, setActive }) => {
 
       <p
         className="p-4 px-3 text-sm lg:text-lg"
-      >lorem dasd Lorem ipsum dolor sit amet,
-        consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
+      >
+        {text}
+      </p>
 
     </div>
 
@@ -92,7 +94,8 @@ const Acc = ({ idx, active, setActive }) => {
 }
 const FrequentlyAsked = () => {
   const [active, setActive] = useState(null)
-
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.4 })
   return (
     <section className="py-24 overflow-x-hidden bg-white text-black lg:px-10 px-5 ">
       <div className="grid gap-x-8 grid-cols-1 lg:grid-cols-12">
@@ -108,14 +111,21 @@ const FrequentlyAsked = () => {
             className='text-center capitalize text-4xl text-[#181e76] lg:text-5xl font-semibold'
           >Frequently asked questions </motion.h1>
           <motion.p
-
+            ref={ref}
             variants={slideRight}
             viewport={{ once: true, amount: 0.6 }}
 
             initial="initial"
             whileInView="animate"
             className='lg:text-start text-center my-3 pt-3 leading-snug max-w-3xl mx-auto text-lg'
-          >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</motion.p>
+          >
+            {isInView && <Write
+              className="!text-lg 
+              lg:!text-xl"
+              message="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo."
+            />}
+
+          </motion.p>
 
         </div>
         <motion.div
@@ -127,12 +137,18 @@ const FrequentlyAsked = () => {
             duration: 1
           }}
         >
-          {
-            Array.from({ length: 5 }, (arr, index) => <Acc key={index}
-              active={active} setActive={setActive}
 
-              idx={index} />)
-          }
+          <Acc
+            heading="where can i find a company"
+            text="We are located at buea cameroon beside ...."
+            active={active} setActive={setActive}
+            idx={0} />
+          <Acc
+            heading="How can i booked a ticket"
+            text="We are located at buea cameroon beside ...."
+            active={active} setActive={setActive}
+            idx={2} />
+
         </motion.div>
 
       </div>

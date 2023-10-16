@@ -231,13 +231,13 @@ const MailingForm = () => {
 
 
 
-                <div className="flex items-center !mb-1 !mt-2 gap-x-2">
+                {/* <div className="flex items-center !mb-1 !mt-2 gap-x-2">
                     <WiTime4 size={20}
                         className="text-rose-600"
                     />
                     <Heading text="Time" className={"!m-0 !p-0 !text-lg first-letter:text-2xl first-letter:font-black"} />
-                </div>
-                <TimeSelect
+                </div> */}
+                {/* <TimeSelect
                     name="time"
                     styles={style}
                     components={{ IndicatorSeparator: () => null }}
@@ -247,7 +247,7 @@ const MailingForm = () => {
                         label: "7am",
                         value: "7am"
                     }}
-                    options={timeOptions} />
+                    options={timeOptions} /> */}
                 <div className='px-2'>
                     <div className="flex items-end pb-2 justify-start gap-x-4">
                         <BsTelephoneMinus

@@ -11,7 +11,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 import customFetch from "../utils/customFetch"
 export const loader = async () => {
-
     return null
 }
 

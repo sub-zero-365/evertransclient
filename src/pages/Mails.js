@@ -1,6 +1,6 @@
 import { useFilter } from "../Hooks/FilterHooks"
 import AnimatedText from "../components/AnimateText"
-import { Heading, Scrollable } from "../components"
+import { Heading, Scrollable, TicketCounts } from "../components"
 import UiButton from "../components/UiButton"
 import { useLoaderData, useSearchParams } from "react-router-dom"
 import Mail from "../components/Mail"
@@ -11,6 +11,9 @@ import { sortedDateOptions, queryOptions, dateSortedOption } from "../utils/sort
 import SelectSortDate from 'react-select';
 import Form from "../components/Form"
 import FilterButton from "../components/FilterButton"
+import { AiOutlineSave } from "react-icons/ai"
+import { VscFolderActive } from "react-icons/vsc"
+import { BiCategory } from "react-icons/bi"
 const allMailsQuery = (params = {}) => {
   const { search, sort, page, mailStatus } = params
   return {
@@ -78,7 +81,11 @@ const Mails = () => {
 
   // }
   const { searchValues } = useLoaderData()
-  const { mails, nHits } = useQuery(allMailsQuery(searchValues)).data || []
+  const { mails, nHits ,
+    totalMailsSum,
+    totalSentMails,
+    totalPendingMails,
+    totalRecievedMails} = useQuery(allMailsQuery(searchValues)).data || []
   return (
     <div>
       <Heading
@@ -117,6 +124,19 @@ const Mails = () => {
         placeholder="search products, sendername ,recievername"
         onChange={search => handleFilterChange("search", search)}
       />
+      
+      <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
+                                <TicketCounts counts={nHits}
+                                    text={"Total Number Of Books"}
+                                    icon={<AiOutlineSave />} />
+                                <TicketCounts counts={totalSentMails}
+                                    text={"Total Number Of active Tickets"}
+                                    icon={<VscFolderActive />} />
+                                <TicketCounts
+                                    text={"Total Number Of Inactive Tickets"}
+                                    counts={totalSentMails} icon={<BiCategory />} />
+
+                            </Scrollable>
       <div className="mx-auto text-4xl my-10 rounded-full  bg-orange-600 w-12 h-12 flex justify-center items-center ring-2 ring-blue-600">{nHits}</div>
       <div
         className="lg:px-24 px-8 gap-x-4 grid py-5 grid-cols-[repeat(auto-fit,minmax(min(calc(100%-20px),25rem),1fr))]"

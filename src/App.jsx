@@ -38,7 +38,7 @@ import { loader as singleTicketLOader } from "./pages/SingleTicket"
 import { loader as singleSeatLoader } from "./pages/SeatDetails"
 import { loader as dashboardLayoutLoader } from "./components/DashboardLayout"
 import { loader as ticketsloader } from "./pages/Appointment"
-import { loader as usersLoader } from "./pages/Users"
+import { loader as usersLoader, action as usersAction } from "./pages/Users"
 import { loader as userLoader } from "./pages/userDetails"
 import { loader as seatsLoader } from "./pages/Seats"
 import { loader as ticketsLoader } from "./pages/Books"
@@ -52,7 +52,7 @@ import { loader as busesSingleLoader, action as editTicketAction } from "./pages
 import { loader as singleAssistantLoader } from "./pages/Assistant.user"
 import { action as mailingAction } from "./pages/MailingPreview"
 import { loader as mailsLoader } from "./pages/Mails"
-
+import { action as carAction } from "./pages/EditBusPage"
 import { loader as singleMailLoader, action as editSingleMailAction } from "./pages/SingleMail"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import EditSingleTicket from './pages/EditSingleTicket'
@@ -61,6 +61,7 @@ import Mailing from './pages/Mailing'
 // import CustomerPage from './pages/CustomerPage'
 import MailingForm from './components/MailingForm'
 import MailingPreview from './pages/MailingPreview'
+import Policy from './pages/Policy';
 const FallBack = () => (<div className="h-screen w-full
 bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -94,9 +95,14 @@ const Details = lazy(() => import("./pages/userDetails"));
 const SeatDetails = lazy(() => import("./pages/SeatDetails"));
 const BusDetails = lazy(() => import("./pages/BusDetails"));
 const FindBus = lazy(() => import("./pages/FindBus"));
+const EditBusPage = lazy(() => import("./pages/EditBusPage"));
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://evertrans.onrender.com"
 const checkDefaultTheme = () => {
+  // if(localStorage.theme){
+  // return fals
+  // }
+  //   else
   return false
   if (localStorage.theme === 'dark' || (
     window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -122,6 +128,18 @@ const router = createBrowserRouter([
     />,
 
     children: [
+      {
+        element: <Home
+
+        />,
+        index: true,
+      },
+      {
+        element: <Home
+
+        />,
+        index: true,
+      },
       {
         element: <Home
 
@@ -206,7 +224,8 @@ const router = createBrowserRouter([
               </Suspense>
             ,
             path: "bus",
-            loader: findBusLoader(queryClient)
+            loader: findBusLoader(queryClient),
+
           },
           {
             element:
@@ -348,6 +367,13 @@ const router = createBrowserRouter([
       }
       ,
       {
+        path: "policy",
+        element: <Suspense fallback={<FallBack />}>
+          <Policy />
+        </Suspense>
+      }
+      ,
+      {
         path: "*",
         element:
           <Suspense fallback={<FallBack />}>
@@ -378,11 +404,29 @@ const router = createBrowserRouter([
         loader: ticketsloader(queryClient),
       },
       {
+        path: "mails",
+        element: <Suspense fallback={<FallBack />}>
+          <Mails />
+        </Suspense>,
+        loader: mailsLoader(queryClient)
+      },
+      {
+        element:
+          <Suspense fallback={<FallBack />}>
+            <SingleMail />
+          </Suspense>
+        ,
+        path: "mail/:id",
+        loader: singleMailLoader(queryClient),
+        errorElement: <SingleTicketErrorElement />
+      },
+      {
         path: "users",
         element: <Suspense>
           <Users />
         </Suspense>,
         loader: usersLoader(queryClient),
+        action: usersAction(queryClient)
       },
       {
         path: "details/:id",
@@ -397,6 +441,19 @@ const router = createBrowserRouter([
           <Bus />
         </Suspense>,
         loader: busLoader(queryClient),
+        action: singleBusAction(queryClient),
+      },
+      {
+        path: "car/edit/:id",
+        element: <Suspense>
+          <EditBusPage />
+        </Suspense>,
+        loader: singleBusLoader(queryClient),
+        action: carAction(queryClient)
+        ,
+        errorElement: <SingleTicketErrorElement />
+
+        // action: singleBusAction(queryClient),
       },
       {
         path: "bus/:id",

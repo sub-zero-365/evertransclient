@@ -48,7 +48,7 @@ const WhyChooseUs = () => {
                                         className="!font-semibold !text-white !text-2xl !pl-0 !m-0 !mb-2.5"
                                         text="On Time & Punctual"
                                     />
-                                    <p className='text-lg'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
+                                    <p className='text-lg'>Find affordable tickets,</p>
                                 </div>
                             </div>
                             <div className='flex gap-x-4'>

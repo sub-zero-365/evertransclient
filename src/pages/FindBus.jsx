@@ -7,7 +7,7 @@ import {
     useSearchParams, useNavigate, useLoaderData
 } from "react-router-dom"
 import { useEffect, useState } from 'react'
-import { Heading } from '../components'
+import { Heading, Scrollable } from '../components'
 import AnimateText from '../components/AnimateText'
 import LoadingButton from '../components/LoadingButton'
 
@@ -15,12 +15,10 @@ import {
     motion,
     AnimatePresence
 } from 'framer-motion'
-import axios from 'axios'
 import dayjs from 'dayjs'
-import Marquee from 'react-fast-marquee'
-// import { useFilter } from '../Hooks/FilterHooks'
 import customFetch from "../utils/customFetch"
-// import herooverlay from '../Assets/images/herooverlay.png'
+import { dateSortedOption } from '../utils/sortedOptions'
+import FilterButton from '../components/FilterButton'
 
 const busQuery = params => ({
     queryKey: ["buses", { params }],
@@ -124,17 +122,23 @@ const FindBus = () => {
                                 <div className="flex items-center">
                                     <svg aria-hidden="true" className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                                     <a href="#" className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
-                                        <h1 className="text-slate-400  font-medium text-xl ">Select Bus</h1>
+                                        <h1 className="text-slate-400  font-medium text-xl ">Select Car</h1>
                                     </a>
                                 </div>
                             </li>
 
                         </ol>
                     </nav>
-                    <AnimateText text="Select Bus" className="!text-2xl " />
+                    <AnimateText text="Select Car" className="!text-2xl " />
                     <AnimateText text={dayjs().format("DD-MM-YYYY")} className="!text-lg " />
+                    <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5">
+                        {
+                            dateSortedOption.map((query) => <FilterButton
+                                name="quickdatesort"
+                                {...query} key={query} />)
+                        }
 
-
+                    </Scrollable>
                     {
 
                         data?.seats?.map((arr, index) => {

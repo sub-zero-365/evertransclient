@@ -1,7 +1,7 @@
-import { Footer} from "../components"
+import { Footer } from "../components"
 import AnimatedText from "../components/AnimateText"
 import bg from '../Assets/images/interior-of-a-regular-intercity-bus.jpeg'
-import { Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 import { Helmet } from "react-helmet"
 const Aboutus = () => {
   return (
@@ -18,10 +18,24 @@ const Aboutus = () => {
           <div
             className="min-h-[min(30rem,calc(100vh-4rem))]  z-0 text-white relative flex-col  bg-[#1a1f6f] bg-opacity-60 flex items-center justify-center"
           >
-            <AnimatedText
-              className="!text-5xl  lg:text-6xl !mb-2"
-              text={"About Us"}
-            />
+            <div
+              className="relative w-full"
+            >
+              <h1 className="text-8xl text-center 
+              absolute- -z-1
+              w-full 
+              font-black text-gray-500 lg:text-9xl
+              bg-white/10-- uppercase opacity-30">
+                About Us
+              </h1>
+
+              <AnimatedText
+                className="!text-5xl lg:!text-7xl !absolute top-0 !m-0 translate-y-1/2    z-1"
+                text={"About Us"}
+              />
+
+            </div>
+
             <p
               className="text-lg text-center"
             >Be comfortable while you travel with our reliable bus rental.</p>

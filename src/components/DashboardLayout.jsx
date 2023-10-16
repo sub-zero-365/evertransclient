@@ -7,7 +7,6 @@ import { actions } from '../actions/toggleSide'
 import { useState, createContext, useContext, useEffect } from 'react'
 
 
-import axios from 'axios'
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import OnlineDetector from "./OnlineDetector"

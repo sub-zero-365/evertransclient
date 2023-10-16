@@ -30,7 +30,7 @@ export default function OurServices() {
     }
 
   }
-  const Service = ({ index, text, title, icon: Icon }) => {
+  const Service = ({ index, text, title, icon: Icon, imgUrl }) => {
     return (
       <motion.div
         style={{
@@ -52,9 +52,13 @@ export default function OurServices() {
           duration: 1, mass: 20 + (index * 5), stiffness: "spring"
         }}
 
-        className='p-2 rounded-md border cursor-pointer  ppt  bg-gradient-to-b from-[#a204f4]  to-[#221c7f]'>
-        <div className='bg-slate-200 text-center p-4 py-10'>
-          <div className='w-fit mx-auto mb-5'>{Icon}</div>
+        className='p-2 rounded-md border cursor-pointer  ppt  bg-gradient-to-b from-white  to-[#fcfcf7]'>
+        <div className='bg-[#eceff4] text-center p-4 py-10'>
+          {/* <div className='w-fit mx-auto mb-5'>{Icon}</div> */}
+          <img
+          className="mx-auto block  w-24 h-24"
+            src={imgUrl}
+          />
           <Heading
             className="!text-[#181e76] !text-3xl !font-semibold"
             text={title}
@@ -101,17 +105,19 @@ export default function OurServices() {
 
       >
         <Service index={1}
-          icon={<BsBusFront
-            size={30}
-          />}
+          // icon={<BsBusFront
+          //   size={30}
+          // />}
+          imgUrl="https://www.svgrepo.com/show/522773/bus.svg"
           title="Bus Booking"
           text="Our bus bookjing service herlo ot "
         />
         <Service index={1}
-          icon={<MdOutlineForwardToInbox
-            size={30}
-          />}
-          title="Mailing Services"
+          // icon={<MdOutlineForwardToInbox
+          //   size={30}
+          // />}
+          imgUrl="https://www.svgrepo.com/show/499796/ticket-information.svg"
+          title="Mailing"
           text="Our bus bookjing service herlo ot "
         />
         <Service index={1}

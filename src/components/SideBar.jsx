@@ -24,7 +24,7 @@ import { useDashBoardContext } from "./DashboardLayout"
 // import { IoMdContacts } from "react-icons/io"
 const SideBar = () => {
   const { user } = useDashBoardContext()
-  console.log(user)
+  // console.log(user)
   const dispatch = useDispatch()
   const toggleSideBar = () => dispatch(actions.toggleSideBar())
   const isSideOpen = useSelector((state) => state.sidebar.isOpen)
@@ -47,6 +47,11 @@ const SideBar = () => {
         , to: "/dashboard/tickets?view=all&admin=true"
       },
       {
+        name: "Mails",
+        icon: <TiMessages size={20} />
+        , to: "/dashboard/mails?view=all&admin=true"
+      },
+      {
 
         name: "Employees",
         icon: <BsPersonLinesFill size={20} />
@@ -54,16 +59,16 @@ const SideBar = () => {
         , to: "/dashboard/users?admin=true"
       },
 
+      // {
+
+      //   name: "Cities",
+      //   icon: <GiModernCity size={20} />
+      //   , to: "/dashboard/cities"
+
+      // },
       {
 
-        name: "Cities",
-        icon: <GiModernCity size={20} />
-        , to: "/dashboard/cities"
-
-      },
-      {
-
-        name: "Buses",
+        name: "Cars",
         icon: <GrBus size={20} />
         , to: "/dashboard/bus"
 

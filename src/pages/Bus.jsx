@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
 import { AiOutlinePlus } from 'react-icons/ai'
-import { Form, Heading, ToggleSwitch } from '../components'
+import { Heading, ToggleSwitch } from '../components'
 import AnimateText from '../components/AnimateText'
 import { useState, useEffect, useRef, forwardRef } from 'react'
 import { components, style } from "../utils/reactselectOptionsStyles"
-import axios from 'axios'
+// import customFetch from 'axios'
 import { AnimateError } from '../components'
 import Seats from 'react-select'
 import Features from 'react-select'
@@ -14,16 +14,15 @@ import Alert from '../components/Alert'
 import Categories from 'react-select'
 // import FromSelect from 'react-select/async'
 // import ToSelect from 'react-select/async'
-import { useNavigate, useSearchParams, Link, useLoaderData } from 'react-router-dom'
+import { useNavigate, useSearchParams, Link, useLoaderData, Form } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import customFetch from "../utils/customFetch"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-
+import LoadingButton from "../components/LoadingButton"
 // import DatePicker from 'react-datepicker'
-const token = localStorage.getItem("admin_token");
 const allBusQuery = (params = {}) => {
     return ({
-        queryKey: ["buses", params],
+        queryKey: ["buses"],
         queryFn: async () => {
             const res = await customFetch.get("/bus", {
                 params: params
@@ -51,24 +50,23 @@ export const loader = (queryClient) => async ({ request }) => {
         return err
     }
 }
-const Bus = () => {
-    const newbustoast = () => toast.success("Add bus successfully  !", {
-        position: toast.POSITION.BOTTOM_CENTER
-    })
-    const BusDetail = ({ number_of_seats, feature, name, _id, seat_positions, active, from, to, time }) => {
-        const counter = seat_positions?.filter((x) => x.isTaken == true)?.length
-        return (
+const BusDetail = ({ number_of_seats, name, _id, seat_positions, active, from, to, time, plate_number }) => {
+    return (
+        <div className="max-w-sm border-b-2  border-gray-200 dark:border-gray-700 rounded-lg shadow">
             <Link to={`${_id}`}
                 key={_id}
-                class={`max-w-sm border-b-2  border-gray-200 dark:border-gray-700 rounded-lg shadow  ${counter == number_of_seats ? "bg-slate-300" : "bg-white"} dark:bg-gray-800 dark:border-gray-700`}>
-                <div className="grid grid-cols-[1fr,auto] px-2 pt-3
-    pb-2
-    items-center place-items-center border-b ">
+                class={` dark:bg-gray-800 dark:border-gray-700`}>
+                <div className="flex justify-between px-2 pt-3
+pb-2
+items-center place-items-center border-b ">
                     <Heading text="Bus Details"
                         className="!mb-0 !text-lg !text-start !mt-0 !pl-0 !ml-0 
-    !font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
+!font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
                     <h4 className='!text-xs text-slate-500 !mb-0 !pb-0'>
-                        {_id}
+                        <div
+                            className="inline-block mr-2 text-gray-500"
+                        >#Plate Number</div>
+                        {plate_number}
                     </h4>
                 </div>
 
@@ -82,30 +80,41 @@ const Bus = () => {
                             <Heading text={number_of_seats} className="!mb-2 !text-sm" />
                         </div>
                     </div>
-                    <div className='grid grid-cols-2'>
-                        <div>
-                            <div className='flex'>
-                                <Heading text="Bus Type" className="!mb-0 !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                            </div>
-                            <Heading text={"VIP Bus"}
-                                className="!mb-2 !text-sm" />
-                        </div>
-
-
-                    </div>
 
                 </div>
             </Link>
+            <Form
+                method="post"
+                className='px-5'
+            >
+                <input
+                    type="hidden"
+                    name="id"
+                    value={_id}
+                />
+                <LoadingButton
+                    className="bg-rose-800"
+                >
+                    Delete Bus
+                </LoadingButton>
+            </Form>
+        </div>
 
 
-        )
+    )
 
-    }
+}
+const Bus = () => {
+    const queryClient = useQueryClient()
+    const newbustoast = () => toast.success("Add bus successfully  !", {
+        position: toast.POSITION.BOTTOM_CENTER
+    })
+   
 
 
     const focusRef = useRef(null)
-    const navigate = useNavigate()
-    const [searchText, setSearchText] = useState("")
+    // const navigate = useNavigate()
+
     const constraintsRef = useRef(null)
     const [toggle, setToggle] = useState(false)
     const [message, setMessage] = useState("")
@@ -151,7 +160,7 @@ const Bus = () => {
 
     const [busDat, setBusData] = useState({
         name: null,
-        number_of_seats: 49,
+        number_of_seats: 9,
         feature: "classic",
 
     })
@@ -161,25 +170,24 @@ const Bus = () => {
         e.preventDefault()
         setIsAble(true)
         try {
-            const data = await axios.post("/bus",
+            await customFetch.post("/bus",
                 busDat
-                ,
-                {
-                    headers: {
-                        'Authorization': "makingmoney " + token
-                    }
-                }
+
             )
+            // invalidateQueries
             setIsOpen(false);
-            // console.log(data)
+
             setBusData({
                 name: "",
-                number_of_seats: 49
+                number_of_seats: 9
                 ,
                 feature: "classic",
             })
+            await queryClient.invalidateQueries({
+                queryKey: ["buses"],
+                exact: true,
+            })
             newbustoast()
-            // getBuses()
 
         } catch (err) {
             setErr(err.response.data)
@@ -195,10 +203,10 @@ const Bus = () => {
 
     }
     const seatOptions = [
-        ...Array.from({ length: 12 }, (arr, i) => (
+        ...Array.from({ length: 6 }, (arr, i) => (
             {
-                label: 48 + i,
-                value: 48 + i
+                label: 4 + i,
+                value: 4 + i
             }))
 
     ]
@@ -280,7 +288,7 @@ z-10  "
                     <div className="flex px-5  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow bg-white dark:bg-slate-900 mx-4">
                         <div className="flex-1 ">
                             <Heading text="Hey Add A New Bus" className="!mb-0 !pl-0 !font-black mt-0" />
-                            <AnimateText text="Hello admin add new buses to the app"
+                            <AnimateText text="Hello admin add new bus to the app"
                                 className={"!text-sm leading-tight md:!text-lg lg:!text-xl !font-light !text-start"} />
                         </div>
                         <motion.div onClick={() => {
@@ -363,7 +371,7 @@ z-10  "
                         <MdOutlineClose
                             classNae="text-sm" />
                     </span>
-                    <AnimateText text="add new bus" className='!text-lg' />
+                    <AnimateText text="add new car" className='!text-lg' />
 
                     <form onSubmit={handleAddNewBus} className="px-6">
                         <div className="relative mb-6" data-te-input-wrapper-init>
@@ -423,7 +431,7 @@ z-10  "
                 dark:text-neutral-200
                 dark:peer-focus:text-primary"
                             >
-                                Bus Name
+                                Car Name
                             </label>
                         </div>
                         <div className="relative mb-6" data-te-input-wrapper-init>
@@ -450,7 +458,7 @@ z-10  "
                 focus:placeholder:opacity-100
                 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                                 id="busnumber"
-                                placeholder="Bus Number" required />
+                                placeholder="Bus Plate Number" required />
                             <label
                                 htmlFor="busnumber"
                                 className="pointer-events-none 
@@ -483,7 +491,7 @@ z-10  "
                 dark:text-neutral-200
                 dark:peer-focus:text-primary"
                             >
-                                Bus Number
+                                #Car Number
                             </label>
                         </div>
 
@@ -493,7 +501,7 @@ z-10  "
                                 <div className="flex
                                 !text-sm
                                 flex-col items-center">
-                                    <Heading text="N_seats" className="!text-sm !text-slate-400  !mb-1" />
+                                    <Heading text="Number of Seats" className="!text-sm !text-slate-400  !mb-1" />
                                     <Seats options={seatOptions}
                                         onChange={e => setBusData((prev) => ({
                                             ...prev,
@@ -506,13 +514,10 @@ z-10  "
                                             fontSize: 10 + "px"
                                         }}
                                         components={components()}
-                                        defaultValue={{
-                                            value: "49",
-                                            label: "49"
-                                        }}
+                                        defaultValue={seatOptions[0]}
                                     />
                                 </div>
-                                <div className="flex !text-sm 
+                                <div className="flex- !text-sm  hidden
                                 flex-col items-center">
                                     <Heading text="Bus Type" className="!text-sm !text-slate-400  !mb-1" />
                                     <Features
@@ -568,7 +573,7 @@ z-10  "
                 </div>
 
             </div>
-            
+
             <div className='max-w-[15rem] mx-auto w-full'>
 
                 <Categories
@@ -587,7 +592,7 @@ z-10  "
             </div>
             <div
 
-                className='w-full grid sm:grid-cols-2 lg:grid-cols-3  px-5  gap-x-2 gap-y-5 pt-10 '>
+                className='w-full grid sm:grid-cols-2 justify-center lg:grid-cols-3  px-5  gap-x-2 gap-y-5 pt-10 '>
                 {buses.map((arr, i) => {
                     return (
                         <BusDetail {...arr} />
