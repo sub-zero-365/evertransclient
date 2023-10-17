@@ -142,7 +142,7 @@ shadow
                             <motion.li whileHover={{ scaleX: 1.2 }} className='links-item min-w-full  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                                 to="/booking"
                                 className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                            >Bus Here</NavLink></motion.li>
+                            >Car Here</NavLink></motion.li>
                             <motion.li whileHover={{ scaleX: 1.2 }} className='links-item min-w-full  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                                 to="/mailing"
                                 className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
@@ -197,7 +197,7 @@ shadow
                         className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                             to="/booking"
                             className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                        >Bus Here</NavLink></motion.li>
+                        >Car Here</NavLink></motion.li>
                     <motion.li
                         initial={false}
                         animate={{ x: isOpen ? 0 : -1000 }}

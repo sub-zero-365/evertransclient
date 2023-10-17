@@ -53,6 +53,7 @@ import { loader as singleAssistantLoader } from "./pages/Assistant.user"
 import { action as mailingAction } from "./pages/MailingPreview"
 import { loader as mailsLoader } from "./pages/Mails"
 import { action as carAction } from "./pages/EditBusPage"
+import { action as logoutAction } from "./pages/Assistant.user"
 import { loader as singleMailLoader, action as editSingleMailAction } from "./pages/SingleMail"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import EditSingleTicket from './pages/EditSingleTicket'
@@ -522,6 +523,7 @@ const router = createBrowserRouter([
     path: "assistant",
     element: <Assist />,
     loader: singleAssistantLoader(queryClient),
+    action: logoutAction(queryClient),
     children: [
       {
         path: ":id",
@@ -531,6 +533,7 @@ const router = createBrowserRouter([
           </Suspense>,
         errorElement: <SingleTicketErrorElement />,
         loader: singleTicketLOader(queryClient),
+        
       },
       {
         element:

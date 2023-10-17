@@ -22,28 +22,28 @@ export const action =
             try {
 
                 const formData = await request.formData();
-                // const data =window.history.state?.usr
-                // const file = formData.get('avatar');
                 const file = window.history.state?.usr?.file
-                // console.log("file is the file here  ", file)
                 if (file) {
                     formData.append("imgUrl", file, file.name)
                 }
-                // console.log("this is the form data ", formData)
+                localStorage.setItem("mailingdetails", JSON.stringify(window.history.state?.usr || window.history.state))
 
                 if (file && file.size > 500000) {
-                    toast.error('Image size too large');
-                    return null;
+                    const error = new Error("fail to large ")
+                    throw error
                 }
 
                 await customFetch.post('/mails/new', formData);
                 queryClient.invalidateQueries(['mails']);
                 toast.success('Profile updated successfully');
+                localStorage.removeItem("mailingdetails")
                 return redirect('/user/mails');
             } catch (error) {
                 toast.error(error?.response?.data || error.message);
                 return redirect("/mailing");
+
             }
+
         };
 
 const MailingPreview = () => {
@@ -59,7 +59,7 @@ const MailingPreview = () => {
         recieverphonenumber,
         price } = location.state ?? {}
     window.onpopstate = (e) => {
-        window.history.replaceState(window.history.state, null, window.location.href)
+        window.history.replaceState(window.history.state, null)
     }
     const NUMBER_OF_IMAGES = file ? 1 : 0
     const message = useActionData()

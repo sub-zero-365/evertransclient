@@ -16,7 +16,8 @@ import {
   NavLink,
   useSearchParams, useNavigate,
   Link, useOutletContext,
-  useLoaderData, Outlet
+  useLocation,
+  Outlet
 } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AiOutlineSetting } from 'react-icons/ai';
@@ -24,8 +25,8 @@ import dateFormater from "../utils/DateFormater"
 import { BiBusSchool, BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { MdOutlineForwardToInbox, MdOutlinePriceChange } from 'react-icons/md'
-import { Autoplay, Navigation, } from 'swiper'
-import ClearFilter from '../components/ClearFilter'
+// import { Autoplay, Navigation, } from 'swiper'
+// import ClearFilter from '../components/ClearFilter'
 import UiButton from '../components/UiButton'
 import SelectTime from 'react-select'
 import { toast } from 'react-toastify'
@@ -33,20 +34,18 @@ import { getBuses } from "../utils/ReactSelectFunction";
 import BusSelect from 'react-select/async'
 import FromSelect from 'react-select/async'
 import ToSelect from 'react-select/async'
-import { Button, Rounded } from '../components'
+import { Rounded } from '../components'
 
-import { useUserLayoutContext } from "../components/UserLayout"
+// import { useUserLayoutContext } from "../components/UserLayout"
 import {
-  AmountCount,
-  FormatTable,
+  // AmountCount,
+  // FormatTable,
   Heading
   ,
-  Scrollable, TicketCounts,
-  Loadingbtn,
-  Form,
-  NextButton,
-  PrevButton,
-  PercentageBar
+  Scrollable,
+  Loadingbtn
+
+
   , CustomDatePicker
 } from '../components';
 
@@ -61,7 +60,7 @@ import {
   useQuery, useMutation, useQueryClient
 } from '@tanstack/react-query'
 import customFetch from '../utils/customFetch'
-import { CiLogout } from 'react-icons/ci'
+// import { CiLogout } from 'react-icons/ci'
 const seats = []
 // const allTicketsQuery = (params) => {
 //   const { search, sort, page } = params;
@@ -99,6 +98,9 @@ const style = {
 
 
 const Details = () => {
+  const location = useLocation()
+  const isInUserPage = location.pathname?.slice(1) == "user"
+  // console.log("location path", location.pathname,isInUserPage)
   const [querySearch] = useSearchParams();
   const { handleFilterChange } = useFilter()
   const queryClient = useQueryClient()
@@ -924,7 +926,7 @@ const Details = () => {
                       </div>
                       <div>
                         <h2 className="text-center  text-lg md:text-xl font-medium  "> status</h2>
-                        <p className="text-center sidebar text-slate-500 mb-4 grid place-items-center"> {ticket?.active ?
+                        <p className="text-center sidebar-- text-slate-500 mb-4 grid place-items-center"> {ticket?.active ?
 
 
                           ticket?.type == "roundtrip" ? <div className="flex gap-x-1">
@@ -1109,74 +1111,19 @@ z-10  "
                           
                             '
                 slidesPerView={1}
-                // onSlideChange={(e) => console.log(e)}
-                modules={[Autoplay, Navigation]}
-                navigation={{
-                  prevEl: ".arrow__left",
-                  nextEl: ".arrow__right",
-                }}
+              // onSlideChange={(e) => console.log(e)}
+              // modules={[]}
+              // navigation={{
+              //   prevEl: ".arrow__left",
+              //   nextEl: ".arrow__right",
+              // }}
               >
-                <PrevButton className="!left-1.5" />
-                <NextButton className="!right-1.5" />
-
-                <SwiperSlide className="group ">
-                  <Heading text={"Query  Travel At"} className="!font-black !text-sm underline !underline-offset-4 !mb-2 !text-center" />
+                {/* <PrevButton className="!left-1.5" />
+                <NextButton className="!right-1.5" /> */}
 
 
-                  <div
-
-                    className="flex flex-col
-                        items-center w-full justify-center group-[.swiper-slide-active]:!translate-y-0 
-                         translate-y-[50px] ease duration-[1s] transition-all">
-                    <DatePicker
-                      selected={startDate}
-                      onChange={onChange}
-                      startDate={startDate}
-                      endDate={endDate}
-                      selectsRange
-                      inline
-                    />
-                    <button
-                      data-te-ripple-init
-                      data-te-ripple-color="light"
-                      className="inline-block  rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
-  leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
-  transition duration-150 ease-in-out hover:bg-blue-600
-  hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-  focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-
-                      onClick={handleBoardingRangeSearch}
-
-                    >
-                      {false ? <Loadingbtn toggle /> : "Filter Tickets"}
-                    </button>
-
-                    {
-                      querySearch.get("boardingRange") && <button
-                        data-te-ripple-init
-                        data-te-ripple-color="light"
-                        className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
-leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-transition duration-150 ease-in-out hover:bg-red-600
-hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-
-                        onClick={() => {
-
-                          handleFilterChange("boardingRange")
-                        }}
-                      >
-                        Clear Travel
-                      </button>
-                    }
-                  </div>
-
-
-                </SwiperSlide>
                 <SwiperSlide className="group">
-                  <Heading text={"Query  Created At"}
+                  <Heading text={""}
                     className=" !text-sm !text-slate-500 !font-semibold !underline-offset-4 !mb-2 !text-center" />
 
 
@@ -1236,129 +1183,132 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 </SwiperSlide>
 
               </Swiper>
+{
+isInUserPage?<div className="mt-10  md:mb-5">
 
-              <div className="mt-10  md:mb-5">
+<div
+  onClick={e => e.stopPropagation()}
+  className={`
+        mx-auto
+md:translate-x-0
+group-[.active]:translate-x-0
+duration-700
+ease 
+transition-all
+md:group-[.active]:translate-y-0
+group-[.active]:opacity-100
+bg-white
+dark:bg-slate-800
+shadow-sm
+rounded-lg
+w-[min(calc(100%-40px),400px)]
 
-                <div
-                  onClick={e => e.stopPropagation()}
-                  className={`
-                        mx-auto
-          md:translate-x-0
-          group-[.active]:translate-x-0
-          duration-700
-          ease 
-          transition-all
-          md:group-[.active]:translate-y-0
-          group-[.active]:opacity-100
-          bg-white
-          dark:bg-slate-800
-          shadow-sm
-          rounded-lg
-          w-[min(calc(100%-40px),400px)]
-          
-            py-5 `}>
+py-5 `}>
 
-                  <AnimateText text="Please enter ticket id to get and edit tickett" className='!text-lg' />
-                  <form
-                    onSubmit={handleSubmit}
-                    className='px-5 '
-                  >
-                    <div className="relative mb-6" data-te-input-wrapper-init>
-                      <input
-                        value={id}
-                        onChange={(e) => setId(e.target.value)}
-                        type="text"
-                        className="peer block min-h-[auto] w-full 
-              rounded 
-              border-2
-              focus:border-2
-              focus:border-blue-400
-              valid:border-blue-400
-              bg-transparent
-              px-3 py-[0.32rem]
-              leading-[2.15] 
-              outline-none
-              transition-all 
-              duration-200
-              ease-linear
-              focus:placeholder:opacity-100
-              data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                        id="ticket_id"
-                        placeholder="Password" required />
-                      <label
-                        htmlFor="ticket_id"
-                        className="pointer-events-none 
-              absolute left-3
-              top-0 mb-0
-              max-w-[90%]
-              origin-[0_0]
-              truncate 
-              pt-[0.37rem] 
-              leading-[2.15]
-              text-neutral-500
-              transition-all duration-200  
-              ease-out 
-              peer-focus:-translate-y-[1.15rem]
-              peer-focus:scale-[0.8]
-              peer-valid:scale-[0.8]
-              peer-valid:text-blue-400
-              peer-valid:-translate-y-[1.15rem]
-              peer-focus:text-blue-400
-              peer-focus:bg-white
-              peer-valid:bg-white
-              dark:peer-focus:bg-slate-800
-              dark:peer-valid:bg-slate-800
-              px-0
-              bg-transparent
-              peer-data-[te-input-state-active]:-translate-y-[1.15rem]
-               rounded-sm
-               peer-data-[te-input-state-active]:scale-[0.8]
-              motion-reduce:transition-none
-              dark:text-neutral-200
-              dark:peer-focus:text-primary"
-                      >
-                        Enter Ticket Id
-                      </label>
-                    </div>
+  <AnimateText text="Please enter ticket id to get and edit tickett" className='!text-lg' />
+  <form
+    onSubmit={handleSubmit}
+    className='px-5 '
+  >
+    <div className="relative mb-6" data-te-input-wrapper-init>
+      <input
+        value={id}
+        onChange={(e) => setId(e.target.value)}
+        type="text"
+        className="peer block min-h-[auto] w-full 
+rounded 
+border-2
+focus:border-2
+focus:border-blue-400
+valid:border-blue-400
+bg-transparent
+px-3 py-[0.32rem]
+leading-[2.15] 
+outline-none
+transition-all 
+duration-200
+ease-linear
+focus:placeholder:opacity-100
+data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+        id="ticket_id"
+        placeholder="Password" required />
+      <label
+        htmlFor="ticket_id"
+        className="pointer-events-none 
+absolute left-3
+top-0 mb-0
+max-w-[90%]
+origin-[0_0]
+truncate 
+pt-[0.37rem] 
+leading-[2.15]
+text-neutral-500
+transition-all duration-200  
+ease-out 
+peer-focus:-translate-y-[1.15rem]
+peer-focus:scale-[0.8]
+peer-valid:scale-[0.8]
+peer-valid:text-blue-400
+peer-valid:-translate-y-[1.15rem]
+peer-focus:text-blue-400
+peer-focus:bg-white
+peer-valid:bg-white
+dark:peer-focus:bg-slate-800
+dark:peer-valid:bg-slate-800
+px-0
+bg-transparent
+peer-data-[te-input-state-active]:-translate-y-[1.15rem]
+rounded-sm
+peer-data-[te-input-state-active]:scale-[0.8]
+motion-reduce:transition-none
+dark:text-neutral-200
+dark:peer-focus:text-primary"
+      >
+        Enter Ticket Id
+      </label>
+    </div>
 
-                    <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
-                      <motion.h1
-                        className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> </motion.h1>
-                    </div>
-
-
-                    <button
-                      type="submit"
-                      className="inline-block bg-blue-400
-            w-full rounded bg-primary px-7
-            pb-2.5 pt-3 text-sm font-medium
-            uppercase leading-normal
-            text-white
-            shadow-[0_4px_9px_-4px_#3b71ca]
-            transition duration-150
-            ease-in-out hover:bg-primary-600
-            hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            focus:bg-primary-600 
-            focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-            focus:outline-none focus:ring-0 active:bg-primary-700 
-            active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
-            dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                      // disabled={loading}
-                      data-te-ripple-init
-                      data-te-ripple-color="light">
-                      {/* {loading ? <Loadingbtn /> : "Change Password"}
-                            */}
-                      {"check ticket details"}
-                    </button>
+    <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
+      <motion.h1
+        className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> </motion.h1>
+    </div>
 
 
-                  </form>
-                </div>
+    <button
+      type="submit"
+      className="inline-block bg-blue-400
+w-full rounded bg-primary px-7
+pb-2.5 pt-3 text-sm font-medium
+uppercase leading-normal
+text-white
+shadow-[0_4px_9px_-4px_#3b71ca]
+transition duration-150
+ease-in-out hover:bg-primary-600
+hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:bg-primary-600 
+focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
+focus:outline-none focus:ring-0 active:bg-primary-700 
+active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
+dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
+dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
+dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+      // disabled={loading}
+      data-te-ripple-init
+      data-te-ripple-color="light">
+      {/* {loading ? <Loadingbtn /> : "Change Password"}
+            */}
+      {"check ticket details"}
+    </button>
 
-              </div>
+
+  </form>
+</div>
+
+</div>:null
+}
+
+              
               <div>
                 <form onSubmit={e => {
                   e.preventDefault()

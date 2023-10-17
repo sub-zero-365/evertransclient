@@ -17,14 +17,14 @@ export const action = (queryClient) => async ({ request }) => {
   const data = Object.fromEntries(formData);
 
   try {
-    const from = data.from || "/user"
+    var from = data.from || "/user"
     const res = await customFetch.post('/auth/login', data);
     queryClient.invalidateQueries();
 
     toast.success('Login successful');
     if (res.data?.user?.redirect) {
-      const from = data.from || "/assistant"
-      return redirect(from, { replace: true })
+      from = data.from || "/assistant"
+      return redirect(`${from}`)
     }
     return redirect(from, { replace: true })
   } catch (error) {

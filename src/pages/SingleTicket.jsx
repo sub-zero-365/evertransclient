@@ -258,7 +258,7 @@ const User = () => {
               </div>
 
             </div>
-            <Heading text="Bus Details" className={"!text-center !font-bold italic"} />
+            {/* <Heading text="Bus Details" className={"!text-center !font-bold italic"} />
             <div className='grid  grid-cols-2'>
               <div>
                 <h2 className="text-center  text-lg md:text-xl font-medium  ">Name</h2>
@@ -268,10 +268,9 @@ const User = () => {
                 <h2 className="text-center  text-lg md:text-xl font-medium  ">feature</h2>
                 <p className="text-center text-slate-500 mb-10 " >{ticket?.busdetails?.feature || "n/a"} </p>
 
-                {/* <p className="text-center text-slate-500 mb-10 " >{ticket?.seatposition !== null ? Number(ticket?.seatposition) + 1 : "n/a"} </p> */}
               </div>
 
-            </div>
+            </div> */}
 
 
             {

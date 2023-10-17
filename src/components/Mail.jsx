@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { MdPendingActions } from "react-icons/md"
 import UiButton from './UiButton'
 import { motion } from "framer-motion"
+import { scalevariants } from '../utils/framermotionanimate'
 const Status = ({ status }) => {
     return (<div>
         {status ? "collected" : <div className='flex items-end gap-x-2'>
@@ -21,6 +22,14 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     downloadbaseurl = process.env.REACT_APP_PROD_URL
 
 }
+// const variants = {
+//     whileHover:{
+//         scale: 0.9, 
+//         transition: {
+//             duration: 0.4
+//         }
+//     }
+// }
 const Mail = ({ id, _id, collected,
     name, senderfullname, senderidcardnumber,
     senderphonenumber, recieverfullname,
@@ -30,11 +39,8 @@ const Mail = ({ id, _id, collected,
     const createdDate = dayjs().format("MMM D, YYYY")
     return (
         <motion.div
-            whileHover={{
-                scale: 0.9, transition: {
-                    duration: 0.4
-                }
-            }}
+            variants={scalevariants}
+            whileHover="whileHover"
             className='shadow border-b px-4   mb-2 py-5'>
             <Link to={"/user/mail/" + _id}
                 className='  '>

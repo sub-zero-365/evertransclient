@@ -26,10 +26,13 @@ import dayjs from "dayjs"
 import { AnimatePresence, motion } from 'framer-motion'
 import AnimatedText from './AnimateText'
 import CreatableSelect from 'react-select/creatable'
+import imageCompression from 'browser-image-compression'
 const MailingForm = () => {
     const location = useLocation()
-    const state = location.state || {};
-    console.log("this is the state value ", state, location)
+    // const state = location.state || {};
+    const state = JSON.parse(localStorage.getItem("mailingdetails")) || location.state || {}
+
+    console.log("this is the state value ", state)
     const style = {
         control: (base, { isFocused, isSelected }) => ({
             ...base,
@@ -73,10 +76,16 @@ const MailingForm = () => {
         file, setFile } = useMailingContext()
 
 
-    const handleFileChange = () => {
+    const handleFileChange = async() => {
         const file = fileRef.current.files[0]
         if (!file) return
-        setFile(file)
+        const options = {
+            maxSizeMB: 0.4,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          }
+          const compressedFile = await imageCompression(file, options);
+        setFile(compressedFile)
 
     }
 

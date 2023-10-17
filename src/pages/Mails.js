@@ -67,19 +67,7 @@ const Mails = () => {
 
 
 
-  // const FilterButton = (props) => {
-  //   const { value } = props
-  //   const isSelected = value === querySearch.get(props.name)
-  //   return (
-  //     <UiButton
-  //       onClick={() => handleFilterChange(props.name, value)}
-  //       className={`!px-8 !py-2.5 !flex-none !uppercase ${isSelected && "!bg-green-900 !rounded-lg"}`}
-
-  //     > {props.label}</UiButton>
-
-  //   )
-
-  // }
+ 
   const { searchValues } = useLoaderData()
   const { mails, nHits ,
     totalMailsSum,
@@ -105,19 +93,19 @@ const Mails = () => {
         }
 
       </Scrollable>
-      <Heading
+      {/* <Heading
         text="Quick Date Sort"
         className="!text-center !m-0 !p-0  !text-2xl "
       />
 
-      <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5">
+      <Scrollable className="!justify-start hidden !max-w-full !w-fit !mx-auto px-4 pb-5">
         {
           dateSortedOption.map((query) => <FilterButton
             name="quickdatesort"
             {...query} key={query} />)
         }
 
-      </Scrollable>
+      </Scrollable> */}
       
 
       <Form

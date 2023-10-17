@@ -1,16 +1,16 @@
 
-import { Outlet, Navigate, useNavigate, useLocation, Link, redirect } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation, Link, redirect, Form } from 'react-router-dom';
 import { Heading } from '../components';
-import UiButton, { UiButtonDanger } from '../components/UiButton';
+import UiButton from '../components/UiButton';
 import { useState, useEffect, useRef } from 'react'
 import AnimateText from '../components/AnimateText'
-import axios from 'axios'
 import { toast } from 'react-toastify'
 import { Loadingbtn, } from '../components'
 import { motion } from 'framer-motion'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import customFetch from '../utils/customFetch';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import LoadingButton from "../components/LoadingButton"
 const onLoadFailure = () => toast.error("Something went wrong", {
     position: toast.POSITION.TOP_CENTER
 })
@@ -28,13 +28,22 @@ export const loader = (queryClient) => async ({ request }) => {
     } catch (err) {
         onLoadFailure()
         console.log("this is the error message : ", err.response.data)
-        return redirect("/login?message=please login and try again &from=assistant")
-
+        return redirect(`/login?message=something went wrong try again later&from=${new URL(request.url).pathname}`);
     }
 
 }
+
+export const action = (queryClient) => async ({ }) => {
+    try {
+        await customFetch.get("/auth/assistant/logout");
+        await queryClient.removeQueries()
+        return redirect("/")
+    } catch (err) {
+        toast.warning(err?.response?.data || err?.message || "something went wrong")
+        return err
+    }
+}
 const Assist = () => {
-    const queryClient = useQueryClient()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const password1 = useRef(null);
@@ -51,15 +60,10 @@ const Assist = () => {
         setLoading(true)
         e.preventDefault()
         try {
-
-            const res = await axios.patch("/assistant", {
+          await customFetch.patch("/assistant", {
                 oldpassword: password1.current.value,
                 newpassword: password2.current.value,
                 confirmpassword: password3.current.value
-            }, {
-                headers: {
-                    'Authorization': "makingmoney " + token
-                }
             })
             setIsOpen(false)
             onPasswordSuccess()
@@ -85,10 +89,7 @@ const Assist = () => {
         } else { setShow(true) }
     }, [location])
 
-    const navigate = useNavigate()
-    const token = localStorage.getItem("assist_token");
     const [isOpen, setIsOpen] = useState(false)
-
     return (
         <div className="h-[calc(100vh-60px)] max-w-sm mx-auto">
             <div
@@ -363,13 +364,21 @@ const Assist = () => {
                         </div>
 
                     </div>
-                    <UiButtonDanger
-                        name="Logout ?"
-                        className="!w-[min(400px,calc(100%-40px))] !pb-2.5 !pt-1.5 !pl-0  !mb-2 !mx-auto"
-                        onClick={() => {
-                            localStorage.removeItem("assist_token")
-                            navigate("/")
-                        }} />
+
+                    <Form
+                        method="post"
+
+                    >
+                        <LoadingButton
+                            name="Logout ?"
+                            className="!w-[min(400px,calc(100%-40px))] !pb-2.5 !pt-1.5
+                            !bg-rose-800 !hover:bg-orange-900
+                            !pl-0  !mb-2 !mx-auto"
+                        >
+                            Logout ?
+                        </LoadingButton>
+
+                    </Form>
                 </div>
                 {
                     show && (

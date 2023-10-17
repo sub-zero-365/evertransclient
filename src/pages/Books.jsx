@@ -59,6 +59,7 @@ import {
 } from '@tanstack/react-query'
 import customFetch from '../utils/customFetch'
 import { CiLogout } from 'react-icons/ci'
+import TicketDetail from '../components/TicketDetail'
 
 
 const allTicketsQuery = (params = {}) => {
@@ -136,94 +137,11 @@ const Books = () => {
           "
 
                 >
-
                     <Heading text={"Recent Ticket(3)"} className={"!text-center !mb-2"} />
-
                     {
-
-                        userData?.tickets?.slice(0, 2).map(({ fullname, traveldate, from, to, _id, createdAt }, i) => {
-                            return (
-                                <div
-                                    key={i}
-                                    class="max-w-sm mb-1 dark:text-white 
-      bg-white  border  border-gray-200 rounded-lg shadow-xl dark:shadow-sm 
-      dark:shadow-black shadow-slate-300 dark:bg-gray-800 dark:border-gray-700">
-                                    <div className="grid grid-cols-[1fr,auto] px-2 pt-3
-  pb-2
-  items-center justify-between border dark:border-slate-400 ">
-                                        <Heading text="Tickets Details"
-                                            className="!mb-0 !text-xs !text-start !mt-0 !pl-0 !ml-0 
-  !font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                                        <h4 className='!text-xs text-slate-500 !mb-0 !pb-0'>
-                                            {createdAt && (dateFormater(createdAt).date)}
-                                        </h4>
-                                    </div>
-
-
-                                    <div class="p-2">
-                                        <Heading text="FullName" className="!mb-0 !text-center !text-lg !font-medium first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
-                                        <Heading text={fullname} className="!mb-2 !text-sm !text-center" />
-                                        <div className='grid grid-cols-2'>
-                                            <div>
-                                                <Heading text="From" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                                                <Heading text={from} className="!mb-2 !text-sm" />
-                                            </div>
-
-                                            <div>
-                                                <Heading text="To" className="!mb-0 !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                                                <Heading text={to} className="!mb-2 !text-sm" />
-                                            </div>
-
-                                        </div>
-                                        <Heading text="Travel Date" className="!mb-0 !text-center !text-lg !font-medium  first-letter:!font-semibold !font-montserrat" />
-                                        <Heading text={(new Date(traveldate).toLocaleDateString())} className="!mb-2 !text-sm !text-center" />
-                                        <div className='grid grid-cols-2 gap-x-1 place-items-center'>
-
-                                            <Button name="view"
-                                                className={"!inline-block !mx-0  !w-full"}
-                                                href={`${_id}`}
-                                            />
-                                            <a
-                                                target='_blank'
-                                                className='
-                        w-full
-                        font-medium
-            shadow
-            md:shadow-md
-            shadow-blue-200
-            dark:shadow-slate-800
-            bg-blue-400
-            dark:bg-gray-700
-            pt-1
-            mr-1
-            rounded-sm
-            text-white
-            dark:font-semibold
-            px-3
-            pb-1.5
-            place-items-center  
-            hover:bg-blue-700
-            ease 
-            transition-colors
-            duration-700
-            hover:underline
-            flex
-            justify-center 
-            items-center
-            text-[0.7rem] 
-            md:text-sm
-            font-montserrat
-                        
-                        '
-
-                                                href={`${downloadbaseurl}/downloadticket/${_id}`}>download</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-
-                        })
+                        userData?.tickets?.slice(0, 3).map((ticket, i) => <TicketDetail key={ticket._id}
+                            {...ticket}
+                        />)
                     }
                 </div>
                 <div className='flex-1'>
@@ -403,7 +321,7 @@ const Books = () => {
                 "_id,xyx",
                 "traveltime,no time",
             ]} />
-         
+
             <Form
                 onChange={search => handleFilterChange("search", search)}
             />
