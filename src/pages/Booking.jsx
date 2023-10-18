@@ -4,7 +4,7 @@ import {
   AnimateError
 } from "../components"
 import { BiChevronDown } from 'react-icons/bi'
-import { useState, forwardRef, useEffect } from "react"
+import { useState, forwardRef} from "react"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { AiOutlineArrowRight } from 'react-icons/ai'
@@ -34,11 +34,10 @@ import { CiLocationOn } from "react-icons/ci"
 import { WiTime4 } from "react-icons/wi"
 import { GiPathDistance } from "react-icons/gi"
 import dayjs from "dayjs"
-import UiButton from "../components/UiButton"
+
 const Booking = () => {
   const [queryParams] = useSearchParams()
   const [toggle, setToggle] = useState(false)
-  // const navigation = useNavigation()
   const tripType = queryParams.get("type") || "singletrip";
   const [fromCities, setFromCities] = useState(queryParams.get("from"))
   const [toCities, setToCities] = useState(queryParams.get("to"))

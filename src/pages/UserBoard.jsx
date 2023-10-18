@@ -1,4 +1,4 @@
-import { AiOutlineArrowLeft, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
+import { AiOutlineArrowLeft, AiOutlineCheck, AiOutlineClose, AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { timeOptions } from '../utils/sortedOptions'
 import TimeSelect from 'react-select'
 import { onSuccessToast, onErrorToast, onWarningToast } from '../utils/toastpopup'
@@ -60,23 +60,9 @@ import {
   useQuery, useMutation, useQueryClient
 } from '@tanstack/react-query'
 import customFetch from '../utils/customFetch'
+import InputBox from '../components/InputBox'
 // import { CiLogout } from 'react-icons/ci'
 const seats = []
-// const allTicketsQuery = (params) => {
-//   const { search, sort, page } = params;
-//   return {
-//     queryKey: [
-//       'tickets',
-//       { search: search ?? "", page: page ?? 1, sort: sort ?? "newest" }
-//     ],
-//     queryFn: async () => {
-//       const { data } = await customFetch.get('/ticket', {
-//         params,
-//       });
-//       return data;
-//     },
-//   };
-// };
 
 const style = {
   control: (base, state) => {
@@ -98,6 +84,8 @@ const style = {
 
 
 const Details = () => {
+  const [active, setActive] = useState(false)
+
   const location = useLocation()
   const isInUserPage = location.pathname?.slice(1) == "user"
   // console.log("location path", location.pathname,isInUserPage)
@@ -343,7 +331,7 @@ const Details = () => {
         </title>
       </Helmet>
       <div
-        className=' overflow-x-hidden
+        className=' overflow-x-hidden 
       mx-auto
     max-h-[calc(100vh-4rem)]-- overflow-y-auto-- bg-color_light dark:bg-color_dark'
         ref={constraintsRef}>
@@ -1022,10 +1010,110 @@ z-10  "
             <AiOutlineSetting size={20} color="#fff" className="" />
           </div>
         </motion.div>
+        {/* add mails or ticket button */}
+        <motion.div
+          key="animatecontainer"
 
-        <div className={`lg:flex ${false && "lg:flex-row-reverse"} h-[calc(100vh-4rem)] items-start justify-start gap-4 `}>
+          onClick={() => setActive(c => !c)}
+          animate={{
+            scale: [0.7, 1.2, 0.8],
+            y: active ? "10" : "0"
+          }}
+          transition={{
+            duration: 2,
+            ease: "easeInOut",
+            times: [0, 0.2, 0.5, 0.8, 1],
+            repeat: Infinity,
+            repeatDelay: 1
+          }
+          }
+          className={`bottom-6
+          cursor-pointer
+          group
+          ${active && "active"}
+          left-1/2 
+          translate-x-1/2
+          lg:hidden
+                         fixed 
+                        flex-none 
+                        shadow-2xl button-add  top-auto bg-blue-400 
+w-[5rem]
+h-[5rem] 
+rounded-full 
+ 
+right-0
+ring-4
+z-10  `}
+        >
+          <div
+            className={`absolute w-[4.5rem]
+            h-[4.5rem]  bg-green-600 
+            -translate-y-1/2 top-1/2  rounded-full 
+         invisible group-[.active]:visible
+         left-0 
+         scale-0
+         group-[.active]:scale-100
+         transition-[visibility,left,right,]--
+         [transition:left_1s,visibility_0.3s,scale_0.2s]
+         group-[.active]:-left-[calc(100%+0.2rem)]
+         flex items-center justify-center
+            `}
+          >
+            <NavLink
+              to="/mailing"
+              
+            >
+              {({ isPending }) => <div className="flex items-center gap-x-4">
+                <MdOutlineForwardToInbox
+                  size={25}
+                />
+              </div>}
+            </NavLink>
+          </div>
+          <div
+            className={`absolute w-[4.5rem]
+             h-[4.5rem]  bg-yellow-600 
+             -translate-y-1/2 top-1/2  rounded-full 
+          invisible group-[.active]:visible
+          right-0 
+          scale-0
+          group-[.active]:scale-100
+          transition-[visibility,left,right,]--
+          [transition:right_1s,visibility_0.3s,scale_0.2s]
+          group-[.active]:-right-[calc(100%+0.2rem)]
+          flex items-center justify-center
+          
+             `}>
+          <NavLink
+                  to={`/booking`}
+                  
 
-          <div className="lg:w-[calc(100%-25rem)] max-h-full overflow-y-auto">
+                >
+                  {({ isPending }) => <div className="flex items-center gap-x-4">
+                    <BiBusSchool
+                      size={25}
+                    />
+                   
+                  </div>}
+
+                </NavLink>
+          </div>
+          <div className="flex h-full overflow-hidden w-full items-center -scale-animation justify-center ">
+
+            {
+              active ? <AiOutlineMinus
+                size={30} color="#fff" className="font-black " /> : <AiOutlinePlus
+                size={30} color="#fff" className="font-black " />
+            }
+
+          </div>
+        </motion.div>
+
+        <div className={`lg:flex ${false && "lg:flex-row-reverse"} h-[calc(100vh-4rem)]
+        
+        items-start justify-start gap-4 `}>
+
+          <div className="lg:w-[calc(100%-25rem)] max-h-full overflow-y-auto scrollto ">
             <div
               className='flex justify-center hidden-- items-center py-5 gap-x-4 px-2'
 
@@ -1183,12 +1271,12 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 </SwiperSlide>
 
               </Swiper>
-{
-isInUserPage?<div className="mt-10  md:mb-5">
+              {
+                isInUserPage ? <div className="mt-10  md:mb-5">
 
-<div
-  onClick={e => e.stopPropagation()}
-  className={`
+                  <div
+                    onClick={e => e.stopPropagation()}
+                    className={`
         mx-auto
 md:translate-x-0
 group-[.active]:translate-x-0
@@ -1205,116 +1293,79 @@ w-[min(calc(100%-40px),400px)]
 
 py-5 `}>
 
-  <AnimateText text="Please enter ticket id to get and edit tickett" className='!text-lg' />
-  <form
-    onSubmit={handleSubmit}
-    className='px-5 '
-  >
-    <div className="relative mb-6" data-te-input-wrapper-init>
-      <input
-        value={id}
-        onChange={(e) => setId(e.target.value)}
-        type="text"
-        className="peer block min-h-[auto] w-full 
-rounded 
-border-2
-focus:border-2
-focus:border-blue-400
-valid:border-blue-400
-bg-transparent
-px-3 py-[0.32rem]
-leading-[2.15] 
-outline-none
-transition-all 
-duration-200
-ease-linear
-focus:placeholder:opacity-100
-data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-        id="ticket_id"
-        placeholder="Password" required />
-      <label
-        htmlFor="ticket_id"
-        className="pointer-events-none 
-absolute left-3
-top-0 mb-0
-max-w-[90%]
-origin-[0_0]
-truncate 
-pt-[0.37rem] 
-leading-[2.15]
-text-neutral-500
-transition-all duration-200  
-ease-out 
-peer-focus:-translate-y-[1.15rem]
-peer-focus:scale-[0.8]
-peer-valid:scale-[0.8]
-peer-valid:text-blue-400
-peer-valid:-translate-y-[1.15rem]
-peer-focus:text-blue-400
-peer-focus:bg-white
-peer-valid:bg-white
-dark:peer-focus:bg-slate-800
-dark:peer-valid:bg-slate-800
-px-0
-bg-transparent
-peer-data-[te-input-state-active]:-translate-y-[1.15rem]
-rounded-sm
-peer-data-[te-input-state-active]:scale-[0.8]
-motion-reduce:transition-none
-dark:text-neutral-200
-dark:peer-focus:text-primary"
-      >
-        Enter Ticket Id
-      </label>
-    </div>
+                    <AnimateText text="Please enter ticket id to get and edit tickett" className='!text-lg' />
+                    <form
+                      onSubmit={handleSubmit}
+                      className='px-5 '
+                    >
+                      <div className="relative mb-6" data-te-input-wrapper-init>
+                        <InputBox
+                          value={id}
+                          onChange={(e) => setId(e.target.value)}
+                          type="text"
+                          name="Enter Ticket ID"
+                        />
 
-    <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
-      <motion.h1
-        className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> </motion.h1>
-    </div>
+                      </div>
+
+                      <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
+                        <motion.h1
+                          className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> </motion.h1>
+                      </div>
+
+                      <UiButton
+                        className="!bg-green-800 hover:!bg-green-800">
+                        check ticket details
+                      </UiButton>
 
 
-    <button
-      type="submit"
-      className="inline-block bg-blue-400
-w-full rounded bg-primary px-7
-pb-2.5 pt-3 text-sm font-medium
-uppercase leading-normal
-text-white
-shadow-[0_4px_9px_-4px_#3b71ca]
-transition duration-150
-ease-in-out hover:bg-primary-600
-hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:bg-primary-600 
-focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-focus:outline-none focus:ring-0 active:bg-primary-700 
-active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
-dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-      // disabled={loading}
-      data-te-ripple-init
-      data-te-ripple-color="light">
-      {/* {loading ? <Loadingbtn /> : "Change Password"}
-            */}
-      {"check ticket details"}
-    </button>
+                    </form>
+                  </div>
+
+                </div> : <div>
+                  <AnimateText text="Please enter Mailing Id to get Mail"
+                    className='!text-lg' />
+                  <form
+                    onSubmit={async (e) => {
+                      const formdata = new FormData(e.target)
+                      const mailingid = await formdata.get("Enter Mail Id")
+                      navigate(`/user/mail/${mailingid}`)
+                    }}
+                    className='px-5 '
+                  >
+                    <div className="relative mb-6" data-te-input-wrapper-init>
+                      <InputBox
+                        // value={id}
+                        type="text"
+                        name="Enter Mail Id"
+                      />
+
+                    </div>
+
+                    <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
+                      <motion.h1
+                        className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> </motion.h1>
+                    </div>
+
+                    <UiButton
+                      className="!bg-green-800 hover:!bg-green-800">
+                      check ticket details
+                    </UiButton>
 
 
-  </form>
-</div>
+                  </form>
+                </div>
+              }
 
-</div>:null
-}
 
-              
               <div>
-                <form onSubmit={e => {
-                  e.preventDefault()
-                  setIsOpen___(true)
-                  // refetch()
-                }}>
+                <form
+                  className='hidden'
+                  onSubmit={e => {
+                    e.preventDefault()
+                    setIsOpen___(true)
+                    // refetch()
+                  }}>
                   <CustomDatePicker
                     startDate={seatDate}
                     setStartDate={setSeatDate}

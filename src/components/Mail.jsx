@@ -37,6 +37,7 @@ const Mail = ({ id, _id, collected,
     status
 }) => {
     const createdDate = dayjs().format("MMM D, YYYY")
+   
     return (
         <motion.div
             variants={scalevariants}

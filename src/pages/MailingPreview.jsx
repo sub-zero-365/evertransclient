@@ -1,14 +1,14 @@
-import { RiDeleteBin6Line } from "react-icons/ri"
-import { useMailingContext } from "./Mailing"
+// import { RiDeleteBin6Line } from "react-icons/ri"
+// import { useMailingContext } from "./Mailing"
 import { Heading, Rounded } from "../components"
-import { useOutletContext, useLocation, useNavigate, Form, redirect, Navigate, useActionData } from "react-router-dom"
+import {  useLocation, useNavigate, Form, redirect, Navigate, useActionData } from "react-router-dom"
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai"
 import LoadingButton from "../components/LoadingButton"
 import AnimatedText from "../components/AnimateText"
 import { toast } from "react-toastify"
 import { GrCircleInformation } from "react-icons/gr"
 import { AnimatePresence, motion } from 'framer-motion'
-
+import { useEffect } from "react"
 import customFetch from "../utils/customFetch"
 export const loader = async () => {
     return null
@@ -47,6 +47,12 @@ export const action =
         };
 
 const MailingPreview = () => {
+    useEffect(()=>{
+        window.scrollTo({
+            top: 0,
+            behavior: "auto"
+        })
+    },[])
     const navigate = useNavigate()
     const location = useLocation()
     const { from, to,

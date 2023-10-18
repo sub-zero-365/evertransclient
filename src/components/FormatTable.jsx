@@ -6,7 +6,6 @@ import UiButton from "./UiButton";
 import { useSearchParams, Link } from 'react-router-dom'
 
 const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
-
     const [querySearch, setQuerySearch] = useSearchParams();
     const skip = querySearch.get("limit") || 100
     const currentPage = querySearch.get("page") || 1

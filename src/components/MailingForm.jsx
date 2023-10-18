@@ -1,4 +1,3 @@
-// import { style } from "../utils/reactselectOptionsStyles"
 import LoadingButton from '../components/LoadingButton'
 import { CiLocationOn } from "react-icons/ci"
 import { WiTime4 } from "react-icons/wi"
@@ -287,13 +286,7 @@ const MailingForm = () => {
                         isClearable options={priceOptions}
                         name='price'
                     />
-                    {/* <InputBox
-                        className="!min-h-[3rem]"
-                        name="price"
-                        defaultValue={state?.price}
-                        hidden
-                        type="number"
-                    /> */}
+                
                 </div>
                 <div className='px-2'>
                     <div className="flex items-end pb-2 justify-start gap-x-4">

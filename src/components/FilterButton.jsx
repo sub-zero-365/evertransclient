@@ -20,8 +20,9 @@ const FilterButton = ({
         !uppercase 
         !shadow-none
         dark:!text-white
+      
         !rounded-lg
-        ${isSelected && "!bg-green-900 !rounded-lg"}`}
+        ${isSelected && "!bg-green-900 text-white !rounded-lg"}`}
     > {props.label}</UiButton>
 
   )

@@ -17,6 +17,8 @@
   --color-blog: #042c54;
   --color-text: #b1affd;
   --color-subtext: #ffba71;
+  --scroll-to-height: 16px;
+  --scroll-to-width: 16px;
 }
 .react-datepicker__day.react-datepicker__day--disabled {
   @apply !text-gray-400 dark:!text-gray-500 !opacity-40;
@@ -194,8 +196,8 @@ html {
 }
 
 .scrollto::-webkit-scrollbar {
-  width: 12px;
   height: var(--scroll-to-height);
+  width: var(--scroll-to-width);
 }
 
 .scrollto::-webkit-scrollbar-thumb {
@@ -207,9 +209,6 @@ html {
 }
 *::-webkit-scrollbar-thumb {
   @apply border-slate-400 bg-slate-600 border-[3px] rounded-[20px];
-  /* background-color: #8f54a0; */
-  /* border-radius: 10px; */
-  /* border: 3px solid #ffffff; */
 }
 .scrollto::-webkit-scrollbar-thumb:hover {
   @apply bg-slate-600;
@@ -221,14 +220,18 @@ html {
 
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-  width: 16px;
+  --scroll-to-width: 5px;
+  background: red;
+  height: var(--scroll-to-height);
+  width: var(--scroll-to-width);
 }
 
 *::-webkit-scrollbar-track {
-  background: #ffffff;
+  background: red;
+  --scroll-to-width: 5px;
+  height: var(--scroll-to-height);
+  width: var(--scroll-to-width);
 }
-
-
 
 .scale-animation {
   animation: scale-animation 1s infinite;
@@ -446,10 +449,5 @@ html {
   @apply opacity-100 pointer-events-auto visible;
 }
 
-
-
-
-
 /* ===== Scrollbar CSS ===== */
-  /* Firefox */
- 
+/* Firefox */

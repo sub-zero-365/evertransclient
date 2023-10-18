@@ -1,53 +1,69 @@
-import axios from 'axios';
 import { motion } from 'framer-motion'
 import { AiOutlinePlus } from 'react-icons/ai'
-import { AddCities, } from '../components'
-import Alert from '../components/Alert'
+
 import { useEffect, useState } from 'react'
+import customFetch from '../utils/customFetch';
+import { useQuery } from '@tanstack/react-query';
+import EmptyModal from './ShowBuses'
+import InputBox from '../components/InputBox'
+import LoadingButton from '../components/LoadingButton'
+import { Form } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { UiButtonDanger } from '../components/UiButton'
+import AnimatedText from '../components/AnimateText'
+const citiesQuery = {
+  queryKey: ["cities"],
+  queryFn: async () => {
+    const res = await customFetch.get("/allcities");
+    return res.data
+  }
+}
 
-import { useSelector, useDispatch } from 'react-redux';
-import { setCities } from '../actions/adminData';
-import { Loader } from '../components';
+export const action = (queryClient) => async ({ request }) => {
+  // some great logic in here
+  try {
+    const formData = await request.formData();
+    console.log(formData);
+    const type = formData.get("type")
+    if (type == "addnewcity") {
+      const cityName = formData.get("city_name")
+      // run add new city here
+      await customFetch.post("/admin/city", { value: cityName })
+    }
+    else if (type == "deletecity") {
+      const id = formData.get("id")
+      const origin_city_name = formData.get("origin_city_name")
+      const city_name = formData.get("city_name")
+      if (origin_city_name?.toLowerCase() !== city_name?.toLowerCase()) {
+        toast.error("incorrect city name ")
+        return null
+      }
+
+      // run add new city here
+      await customFetch.delete("/admin/city/" + id)
+    }
+    else {
+      // run delete city here
+
+    }
+
+  } catch (err) {
+    toast.error(err?.response?.data || err.message)
+    return err?.response?.data || err.message
+  }
+  return null
+}
+
+export const loader = (queryClient) => async ({ }) => {
+  return await queryClient.ensureQueryData(citiesQuery)
+}
+
 const Cities = () => {
-  const dispatch = useDispatch();
-  const cities_ = useSelector(state => state.setAdminData.cities);
-  const _isLoading = useSelector(state => state.setAdminData.loading.cities)
-  // const token = localStorage.getItem("admin_token");
-  const token = localStorage.getItem("admin_token");
-
   const [toggle, setToggle] = useState(false)
   const [open, setOpen] = useState(false)
   const [city, setCity] = useState(false)
-  const [newCity, setNewCity] = useState(false)
   const [id, setId] = useState(null)
-  // const [cities, setCities] = useState([])
-  const [isLoading, setIsLoading] = useState(false);
-  const setCities_ = (payload) => {
-    return dispatch(setCities(payload))
-  }
-
-  async function getCities() {
-
-    const url = "/allcities";
-    if (token == null) {
-      alert("login to get accesstoken")
-    }
-    try {
-      const res = await axios.get(url, {
-        headers: {
-          'Authorization': "makingmoney " + token
-        }
-      })
-      setCities_(res?.data?.cities)
-    } catch (err) {
-      console.log(err)
-      alert("some error occurs")
-    }
-
-  }
-  useEffect(() => {
-    getCities();
-  }, [])
+  const { cities } = useQuery(citiesQuery)?.data || []
   useEffect(() => {
     if (!open) {
       if (edit) {
@@ -56,77 +72,10 @@ const Cities = () => {
     }
   }, [open])
   const [edit, setEdit] = useState(false)
-  const editFunc = async (e) => {
-    e.preventDefault()
-
-
-    if (!id) return
-    setIsLoading(true)
-    const url = "/admin/city/" + id;
-    try {
-      await axios.put(url, {
-        value: newCity
-      },
-        {
-          headers: {
-            'Authorization': "makingmoney " + token
-          }
-        })
-      getCities();
-      setOpen(!open)
-    } catch (err) {
-      alert(err.response.data)
-
-    }
-    setIsLoading(false)
-  }
-  const addFunc = async (e) => {
-    e.preventDefault()
-    const url = "/admin/city";
-    setIsLoading(true)
-
-    try {
-      await axios.post(url, {
-        value: newCity
-      },
-        {
-          headers: {
-            'Authorization': "makingmoney " + token
-          }
-        })
-      getCities();
-      setOpen(!open)
-
-    } catch (err) {
-      alert(err.response.data)
-
-    }
-    setIsLoading(false)
-
-  }
-  const confirmFunc = async () => {
-    if (!id) return
-    const url ="/admin/city/" + id;
-    try {
-      await axios.delete(url, {
-        headers: {
-          'Authorization': "makingmoney " + token
-        }
-      })
-      getCities();
-    } catch (err) {
-      alert(err.response.data)
-    }
-    setOpen(false)
-  }
+ 
   return (
     <div className="h-[calc(100vh-3rem)] overflow-y-auto w-full select-none">
-      {_isLoading && (<Loader toggle dark />)}
 
-      <Alert toggle={toggle} city={city}
-        setToggle={setToggle} confirmFunc={confirmFunc} 
-        
-        message={"Do you want to delete this City"} />
       <motion.div onClick={() => setOpen(true)}
         initial={{ x: "-50%" }}
         animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
@@ -148,21 +97,95 @@ z-10 fixed md:hidden "
           <AiOutlinePlus size={30} color="#fff" className="" />
         </div>
       </motion.div>
-      <AddCities
-        setVal={setNewCity}
-        city={city} toggle={open}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
-        edit={edit} setToggle={setOpen} addFunc={addFunc} editFunc={editFunc} edt />
+      <EmptyModal
+        isOpen={open}
+        setIsOpen={setOpen}
+        title="Add City"
+      >
+        <Form
+          method='post'
+          className='px-4'
+        >
+          <input
+            type="hidden"
+            name='type'
+            value="addnewcity"
+
+          />
+          <InputBox
+            name="city_name"
+            className="!min-h-[10rem]"
+          />
+          <LoadingButton
+            className="!w-[min(15rem,calc(100%-2.5rem))] 
+                !mx-auto !py-3.5 
+                !text-lg !rounded-xl"
+
+          >
+            Add City
+          </LoadingButton>
+
+        </Form>
+      </EmptyModal>
+      <EmptyModal
+        isOpen={toggle}
+        setIsOpen={setToggle}
+        title="Delete City"
+      >
+        <Form
+          method='post'
+          className='px-4'
+        >
+          <div
+            className='py-5'
+          >
+            <AnimatedText
+              text="Enter City Name to delete city"
+              className='!text-2xl'
+            />
+            <div
+              className='text-rose-700 font-black !text-center !text-3xl'
+            >{city}</div>
+          </div>
+          <input
+            type="hidden"
+            name='type'
+            value="deletecity"
+
+          />
+          <input
+            type="hidden"
+            name='id'
+            value={id}
+          />
+          <input
+            type="hidden"
+            name='origin_city_name'
+            value={cities?.find(({ _id }) => _id == id)?.value}
+          />
+
+          <InputBox
+            name="city_name"
+            className="!min-h-[10rem]"
+          />
+          <LoadingButton
+            className="!w-[min(15rem,calc(100%-2.5rem))] 
+            !bg-rose-700
+            hover:bg-rose-900
+                !mx-auto !py-3.5 
+                !text-lg !rounded-xl"
+
+          >
+            Delete City
+          </LoadingButton>
+
+        </Form>
+      </EmptyModal>
 
       <div className="flex items-center justify-between">
         <h1 className="text-center  md:text-start text-xl mx-auto w-full my-6 md:text-2xl">Cities </h1>
         <motion.div onClick={() => setOpen(true)}
-          // initial={{ x: "-50%" }}
           animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
-
-
-
           className="bottom-6 shadow-2xl button-add px-6 top-auto text-white items-center bg-blue-400 
 min-h-[2.5rem] rounded  
  hidden  md:flex "
@@ -174,7 +197,7 @@ min-h-[2.5rem] rounded
       </div>
 
       {
-        cities_.map((item, index) => (
+        cities.map((item, index) => (
 
           <motion.div
             key={index}
@@ -186,70 +209,24 @@ min-h-[2.5rem] rounded
             <div className='flex-1  justify-between flex'>
               <h1>{item.value} </h1>
               <span className='flex item-center gap-2'>
-                <button onClick={() => {
-                  setToggle(true)
-                  setCity(item.value)
-                  setId(item._id)
-                }}
-                  type="submit"
-                  className="block bg-red-700
-            mx-auto h-fit 
-            rounded bg-primary px-2 text-xs
-            py-1  font-medium
-            uppercase leading-normal
-            text-white
-            shadow-[0_4px_9px_-4px_#3b71ca]
-            transition duration-150
-            ease-in-out hover:bg-red-600
-            hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            focus:bg-red-600 
-            focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-            focus:outline-none focus:ring-0 active:bg-red-700 
-            active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
-            dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                  data-te-ripple-init
-                  data-te-ripple-color="light"
-
+                <UiButtonDanger
+                  onClick={() => {
+                    setToggle(true)
+                    setCity(item.value)
+                    setId(item._id)
+                  }}
                 >
-                  {/* {isLoading ? <Loadingbtn /> : "Add New City"} */}
-                  delete
-                </button>
-
-                <button
-                  type="submit"
-                  className="block bg-blue-700
-                // w-[min(calc(100vw-2.5rem),rem)]
-            mx-auto h-fit
-            rounded bg-primary px-2 text-xs
-            py-1  font-medium
-            uppercase leading-normal
-            text-white
-            shadow-[0_4px_9px_-4px_#3b71ca]
-            transition duration-150
-            ease-in-out hover:bg-primary-600
-            hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            focus:bg-primary-600 
-            focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
-            focus:outline-none focus:ring-0 active:bg-primary-700 
-            active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-            dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] 
-            dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]
-            dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                  data-te-ripple-init
-                  data-te-ripple-color="light" onClick={() => {
-                    setEdit(true)
+                  Delete
+                </UiButtonDanger>
+                {/* <UiButton
+                  onClick={() => {
                     setOpen(true)
                     setId(item._id)
                     setCity(item.value)
-                  }}>
-                  edit
-                </button>
-
-
+                  }}
+                >
+                  Edit
+                </UiButton> */}
               </span> </div>
           </motion.div>
         ))

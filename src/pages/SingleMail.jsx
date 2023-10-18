@@ -14,6 +14,7 @@ import { motion, useInView } from "framer-motion"
 import LoadingButton from "../components/LoadingButton"
 import { BsChevronCompactUp } from "react-icons/bs"
 import { useEffect, useRef, useState } from "react"
+import AnimatedText from "../components/AnimateText"
 const singleMail = (url, id) => {
     return ({
         queryKey: ["mail", id],
@@ -27,7 +28,6 @@ const singleMail = (url, id) => {
 }
 export const action = (queryClient) => async ({ request }) => {
     const formData = await request.formData()
-    console.log("form data is ", formData);
     const id = await formData.get("id")
     const status = await formData.get("status")
     if (status == null) {
@@ -77,7 +77,11 @@ const SingleMail = () => {
     const navigate = useNavigate()
     const { id, url } = useLoaderData()
     const isInView = useInView(ref)
-
+    const [isImageLoading, setIsImageLoading] = useState(true)
+    const handleLoadingImage = async (e) => {
+        console.log("there image is done loading here")
+        setIsImageLoading(false)
+    }
     useEffect(() => {
         if (isInView) {
             setIsOpen(true)
@@ -143,26 +147,46 @@ const SingleMail = () => {
 
                             mail?.imgUrl &&
 
-                            <a
-                                href={mail?.imgUrl}
-                                target="_blank"
-                                className="cursor-pointer  border "
-                            >
 
-                                <motion.img
-                                    whileHover={{
-                                        scale: 0.9, transition: {
-                                            duration: 0.4
-                                        }
-                                    }}
-                                    lazy
-                                    className="max-w-sm mx-auto h-[15rem] object-cover w-full"
-                                    src={mail?.imgUrl}
-                                    alt="product image"
+                            <div className="relative h-[15rem]">
+                                {
+                                    isImageLoading && <div
+                                        className="absolute top-1/2 -translate-y-1/2 inset-0 bg-slate-500/25"
+                                    >
+                                        <AnimatedText
+                                            text="loading image please wait.."
+                                            className="!text-3xl"
+                                        />
+                                    </div>
 
-                                />
+                                }
 
-                            </a>
+                                <a
+                                    href={mail?.imgUrl}
+                                    target="_blank" s
+                                    className="cursor-pointer  border "
+                                >
+
+                                    <motion.img
+
+                                        loading="lazy"
+                                        onLoad={handleLoadingImage}
+                                        whileHover={{
+                                            scale: 0.9, transition: {
+                                                duration: 0.4
+                                            }
+                                        }}
+                                        className="max-w-sm mx-auto h-[15rem] object-cover w-full"
+                                        src={mail?.imgUrl}
+                                        alt="product image"
+
+                                    />
+
+                                </a>
+
+                            </div>
+
+
                         }
 
                         <div className='flex items-center mb-5 mt-8  justify-center'>
@@ -275,6 +299,8 @@ const SingleMail = () => {
                 <div ref={ref} className="mt-56" />
             </div>
             <div className="lg:!sticky lg:top-[4rem] lg:flex-none lg:py-10 lg:!right-[2rem]--
+        
+            
                                      bottom-0
                                      fixed
                                      w-full
@@ -339,8 +365,8 @@ const SingleMail = () => {
 
                 <motion.div
                     className={`mx-auto
-                 ${isOpen ? "max-h-screen py-5" : "max-h-0 "}
-                 overflow-hidden
+                 ${isOpen ? "max-h-[calc(100vh-1rem)] overflow-y-auto py-5" : "max-h-0  overflow-hidden"}
+                 lg:overflow-hidden
                  lg:max-h-screen
                  transition-[max-height]
                   duration-300
@@ -421,11 +447,11 @@ const SingleMail = () => {
 
                         </ul>
                         {
-                            mail?.status!="recieved"&& <LoadingButton className="!block !my-5 !mx-auto !px-8 !py-2.5">
-                            Validate
-                        </LoadingButton >
+                            mail?.status != "recieved" && <LoadingButton className="!block !my-5 !mx-auto !px-8 !py-2.5">
+                                Validate
+                            </LoadingButton >
                         }
-                       
+
 
                     </Form>
                 </motion.div>

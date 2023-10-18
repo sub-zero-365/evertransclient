@@ -56,24 +56,25 @@ items-center justify-between border dark:border-slate-400 ">
             <div className='grid grid-cols-1 gap-x-1 place-items-center'>
                 <a
                     target='_blank'
-                    className='
+                    className=' max-w-[95%] mx-auto
 w-full
 font-medium
 shadow
 md:shadow-md
 shadow-blue-200
 dark:shadow-slate-800
-bg-blue-400
+bg-blue-800
 dark:bg-gray-700
-pt-1
+
+py-3.5
 mr-1
 rounded-sm
 text-white
 dark:font-semibold
 px-3
-pb-1.5
+
 place-items-center  
-hover:bg-blue-700
+hover:bg-blue-900
 ease 
 transition-colors
 duration-700

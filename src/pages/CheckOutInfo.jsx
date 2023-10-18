@@ -57,14 +57,17 @@ export const action = (queryClient) => async ({ request }) => {
 
 const BusSits = () => {
   const navigation = useNavigation()
-  const { userInformation: {
+  const params = Object.fromEntries([
+    ...new URL(window.location.href).searchParams.entries(),
+  ])
+  const {
     from, to, traveldate: date, sex,
     fullname, traveltime
     , type
     , seatposition,
     paymenttype, phone, age
 
-  } } = useLoaderData() ?? { userInformation: {} }
+  } = params || {}
   const constraintsRef = useRef(null);
 
   const [view, setView] = useState(false)

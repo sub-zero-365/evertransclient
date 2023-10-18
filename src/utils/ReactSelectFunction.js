@@ -5,18 +5,17 @@ const cities = [
     { value: "Douala", label: "Douala" },
 ]
 export const getCities = async (inputValue = "") => {
-    const wait = () => new Promise(r => setTimeout(() => {
-        r()
-    }, 200))
-    await wait()
-    return cities
-    // const res = await customFetch.get("/allcities", {
-    //     params: {
-    //         search: (inputValue || "")
-    //     }
-    // })
-
-    // return res?.data?.cities
+    // const wait = () => new Promise(r => setTimeout(() => {
+    //     r()
+    // }, 200))
+    // await wait()
+    // return cities
+    const res = await customFetch.get("/allcities", {
+        params: {
+            search: (inputValue || "")
+        }
+    })
+    return res?.data?.cities
 
 
 }

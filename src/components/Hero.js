@@ -1,6 +1,6 @@
 import AnimateText from './AnimateText'
 import herobg from '../Assets/images/herobg.jpg'
-import herooverlay from '../Assets/images/herooverlay.png'
+// import herooverlay from '../Assets/images/herooverlay.png'
 import UiButton from './UiButton';
 import { motion } from "framer-motion"
 import { Link, NavLink } from 'react-router-dom';
@@ -33,7 +33,7 @@ const Hero = () => {
                             }}
                     >
                         <AnimateText
-                            className="!text-5xl md:!text-6xl lg:leading-[1.3] !font-manrope
+                            className="!text-5xl md:!text-6xl lg:leading-[1.3] !font-poppins
                             lg:!text-left-- lg:!text-7xl !text-center    !py-6 !font-black"
                             text="Travel With Us For An Adventure-Filled Journey"
                         />

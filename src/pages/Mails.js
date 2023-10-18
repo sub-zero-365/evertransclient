@@ -61,19 +61,15 @@ const style = {
 }
 const Mails = () => {
   const [querySearch] = useSearchParams()
-  const { handleChange, handleFilterChange } = useFilter()
-
-
-
-
-
+  const {  handleFilterChange } = useFilter()
  
   const { searchValues } = useLoaderData()
   const { mails, nHits ,
     totalMailsSum,
     totalSentMails,
     totalPendingMails,
-    totalRecievedMails} = useQuery(allMailsQuery(searchValues)).data || []
+    totalRecievedMails} = 
+    useQuery(allMailsQuery(searchValues)).data || []
   return (
     <div>
       <Heading
@@ -85,7 +81,7 @@ const Mails = () => {
         className="!text-center !m-0 !p-0  !text-2xl "
       />
 
-      <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5">
+      <Scrollable className="!justify-start scrollto  !max-w-full !w-fit !mx-auto px-4 pb-5">
         {
           queryOptions.map((query) => <FilterButton
             name="mailStatus"

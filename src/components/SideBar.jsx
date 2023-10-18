@@ -1,12 +1,11 @@
 import { IoMdClose } from "react-icons/io"
 import { RxDashboard } from "react-icons/rx"
 import { TiMessages } from "react-icons/ti"
-import { CiLogout } from "react-icons/ci"
-// import { FcAssistant } from "react-icons/fc"
+import { CiLogout, CiRoute } from "react-icons/ci"
 import { useState } from 'react'
 import { GrBus } from "react-icons/gr"
 import { GiModernCity } from "react-icons/gi"
-import { NavLink, useNavigate, useOutletContext } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { actions } from '../actions/toggleSide'
 import { motion } from 'framer-motion'
@@ -17,14 +16,10 @@ import { BsSliders2Vertical } from 'react-icons/bs'
 import { MdOutlineSecurity } from 'react-icons/md'
 import { useravatar } from '../Assets/images';
 import { useDashBoardContext } from "./DashboardLayout"
+import { BiMailSend } from "react-icons/bi"
 
-// import { GrUserAdmin } from 'react-icons/gr'
-// import { AiOutlineMessage } from "react-icons/ai"
-
-// import { IoMdContacts } from "react-icons/io"
 const SideBar = () => {
   const { user } = useDashBoardContext()
-  // console.log(user)
   const dispatch = useDispatch()
   const toggleSideBar = () => dispatch(actions.toggleSideBar())
   const isSideOpen = useSelector((state) => state.sidebar.isOpen)
@@ -48,7 +43,7 @@ const SideBar = () => {
       },
       {
         name: "Mails",
-        icon: <TiMessages size={20} />
+        icon: <BiMailSend size={20} />
         , to: "/dashboard/mails?view=all&admin=true"
       },
       {
@@ -58,14 +53,16 @@ const SideBar = () => {
 
         , to: "/dashboard/users?admin=true"
       },
-
-      // {
-
-      //   name: "Cities",
-      //   icon: <GiModernCity size={20} />
-      //   , to: "/dashboard/cities"
-
-      // },
+      {
+        name: "Cities",
+        icon: <GiModernCity size={20} />
+        , to: "/dashboard/cities"
+      },
+      {
+        name: "Routes",
+        icon: <CiRoute size={20} />
+        , to: "/dashboard/routes"
+      },
       {
 
         name: "Cars",

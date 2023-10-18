@@ -55,6 +55,8 @@ import { loader as mailsLoader } from "./pages/Mails"
 import { action as carAction } from "./pages/EditBusPage"
 import { action as logoutAction } from "./pages/Assistant.user"
 import { loader as singleMailLoader, action as editSingleMailAction } from "./pages/SingleMail"
+import { loader as routesLoader, action as routesActions } from "./pages/RoutesPage"
+import {loader as citiesLoader ,action as cityActions} from "./pages/Cities"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
@@ -95,6 +97,7 @@ const Security = lazy(() => import("./pages/SecurityPage"))
 const Details = lazy(() => import("./pages/userDetails"));
 const SeatDetails = lazy(() => import("./pages/SeatDetails"));
 const BusDetails = lazy(() => import("./pages/BusDetails"));
+const Routes = lazy(() => import("./pages/RoutesPage"));
 const FindBus = lazy(() => import("./pages/FindBus"));
 const EditBusPage = lazy(() => import("./pages/EditBusPage"));
 axios.defaults.withCredentials = true;
@@ -430,6 +433,22 @@ const router = createBrowserRouter([
         action: usersAction(queryClient)
       },
       {
+        path: "cities",
+        element: <Suspense>
+          <Cities />
+        </Suspense>,
+        loader: citiesLoader(queryClient),
+        action: cityActions(queryClient)
+      },
+      {
+        path: "routes",
+        element: <Suspense>
+          <Routes />
+        </Suspense>,
+        loader: routesLoader(queryClient),
+        action: routesActions(queryClient)
+      },
+      {
         path: "details/:id",
         element: <Suspense>
           <Details />
@@ -533,7 +552,7 @@ const router = createBrowserRouter([
           </Suspense>,
         errorElement: <SingleTicketErrorElement />,
         loader: singleTicketLOader(queryClient),
-        
+
       },
       {
         element:
