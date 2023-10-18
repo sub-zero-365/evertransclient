@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import { useState } from "react"
 import EmptyModal from './ShowBuses'
 import LoadingButton from "../components/LoadingButton"
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Form } from "react-router-dom"
 import { AiOutlinePlus } from "react-icons/ai"
 import FromSelect from 'react-select/async'
@@ -26,14 +26,16 @@ const routesQuery = {
         return res.data
     }
 }
+
 export const action = (queryClient) => async ({ request }) => {
     // some great logic in here
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
     try {
-        await customFetch.post("/routes/new",data)
+        await customFetch.post("/routes/new", data)
+        // await queryClient.invalideQueries()
+        toast.success("successfully created new route")
         return null
-
     } catch (err) {
         toast.error(err?.response?.data || err.message)
         return err?.response?.data || err.message
@@ -46,9 +48,18 @@ export const loader = (queryClient) => async ({ }) => {
 }
 
 const RoutesPage = () => {
+    const queryClient = useQueryClient()
     const [open, setOpen] = useState(false)
     const { routes,
         nHits } = useQuery(routesQuery)?.data || []
+
+    const DeleteRouteMutation = useMutation({
+        mutationFn: async (id) => {
+            const res = await customFetch.delete("/routes/" + id);
+            return res.data
+        },
+        // mutationKey: ["delete"]
+    })
 
     return (
         <div
@@ -246,7 +257,22 @@ min-h-[2.5rem] rounded
 
                                     <td className="py-0 text-xs flex items-center"
                                     >
-                                        <UiButtonDanger>
+                                        <UiButtonDanger
+                                            onClick={() => DeleteRouteMutation.mutate(route?._id, {
+                                                onSuccess: () => {
+                                                    toast.success("delete route")
+                                                },
+                                                onError: error => {
+                                                    toast.error((error.response.data ?? "Oops something bad happen try again later !!"))
+                                                },
+                                                onSettled: () => {
+                                                    queryClient.invalidateQueries({
+                                                        queryKey: ["routes"]
+                                                    })
+                                                }
+                                            })}
+                                            disabled={DeleteRouteMutation.isLoading}
+                                        >
                                             Delete
                                         </UiButtonDanger>
                                         <UiButton

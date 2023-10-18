@@ -59,7 +59,7 @@ const BusDetail = ({ number_of_seats, name, _id, seat_positions, active, from, t
                 <div className="flex justify-between px-2 pt-3
 pb-2
 items-center place-items-center border-b ">
-                    <Heading text="Bus Details"
+                    <Heading text="Car Details"
                         className="!mb-0 !text-lg !text-start !mt-0 !pl-0 !ml-0 
 !font-semibold first-letter:text-xl first-letter:!font-semibold !font-montserrat" />
                     <h4 className='!text-xs text-slate-500 !mb-0 !pb-0'>
@@ -83,7 +83,7 @@ items-center place-items-center border-b ">
 
                 </div>
             </Link>
-            <Form
+            {/* <Form
                 method="post"
                 className='px-5'
             >
@@ -97,7 +97,7 @@ items-center place-items-center border-b ">
                 >
                     Delete Bus
                 </LoadingButton>
-            </Form>
+            </Form> */}
         </div>
 
 
@@ -287,8 +287,8 @@ z-10  "
                 <div className="flex-1 ">
                     <div className="flex px-5  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow bg-white dark:bg-slate-900 mx-4">
                         <div className="flex-1 ">
-                            <Heading text="Hey Add A New Bus" className="!mb-0 !pl-0 !font-black mt-0" />
-                            <AnimateText text="Hello admin add new bus to the app"
+                            <Heading text="Hey Add A New Car" className="!mb-0 !pl-0 !font-black mt-0" />
+                            <AnimateText text="Hello admin add new Car to the app"
                                 className={"!text-sm leading-tight md:!text-lg lg:!text-xl !font-light !text-start"} />
                         </div>
                         <motion.div onClick={() => {
@@ -574,22 +574,6 @@ z-10  "
 
             </div>
 
-            <div className='max-w-[15rem] mx-auto w-full'>
-
-                <Categories
-                    className="!text-center"
-                    defaultValue={{
-                        value: "all",
-                        label: "all types"
-                    }}
-                    isSearchable={false}
-                    options={catOptions}
-                    onChange={handleChangeCat}
-                    styles={style}
-                    components={components()}
-                />
-
-            </div>
             <div
 
                 className='w-full grid sm:grid-cols-2 justify-center lg:grid-cols-3  px-5  gap-x-2 gap-y-5 pt-10 '>
