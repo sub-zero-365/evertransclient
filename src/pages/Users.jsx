@@ -1,12 +1,15 @@
 import { useNavigate, Form, redirect } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios';
-import { LineChart, Number, PanigationButton } from '../components';
+import {
+    LineChart,
+    PanigationButton
+} from '../components';
 import AnimateText from '../components/AnimateText'
 import { MdOutlineClose } from 'react-icons/md'
 // import { useravatar } from '../Assets/images';
 import Alert from '../components/Alert'
-import { Loader, Button, Heading } from '../components';
+import { Button, Heading } from '../components';
 import { AiOutlinePlus } from 'react-icons/ai'
 import { motion } from 'framer-motion'
 import { UserData } from '../Assets/userdata';
@@ -18,7 +21,9 @@ import { SlOptions } from 'react-icons/sl';
 import ShowBuses from './ShowBuses';
 import customFetch from '../utils/customFetch'
 import { useQuery } from "@tanstack/react-query"
-import {toast } from "react-toastify"
+import { toast } from "react-toastify"
+import RoleSelect from "react-select"
+import { usersRoleOptions } from "../utils/sortedOptions"
 const usersQuery = {
     queryKey: ["user"],
     queryFn: async () => {
@@ -75,20 +80,23 @@ const Appointment = ({ skip, currentPage }) => {
     const phone = useRef(null)
     const fullnames = useRef(null)
     const email = useRef(null)
+    const [role, setRole] = useState("tickets")
     let [t, setT] = useState(false)
 
     const handleSubmit = async (e) => {
 
         e.preventDefault()
         setIsLoading(true)
+        // alert("enter  here")
         const url = "/auth/register"
         try {
-            const res = await axios.post(
+            await customFetch.post(
                 url, {
-                password: password.current.value,
+                password: password?.current?.value,
                 phone: phone.current.value,
                 fullname: fullnames.current.value,
                 email: email.current.value,
+                role
             },
 
             )
@@ -100,7 +108,7 @@ const Appointment = ({ skip, currentPage }) => {
         } catch (err) {
             console.log(err)
             setIsLoading(false)
-            setError(err.response.data);
+            setError(err?.response?.data || err?.message || "something went wrong!!");
             const timer = setTimeout(() => {
                 clearTimeout(timer)
                 setError("")
@@ -110,15 +118,8 @@ const Appointment = ({ skip, currentPage }) => {
 
     }
 
-    // 
 
-    // const users_ = useSelector(state => state.setAdminData.users);
     const navigate = useNavigate()
-
-    // const dispatch = useDispatch();
-    // const setUsers_ = (payload) => {
-    //     return dispatch(setUsers(payload))
-    // }
     const [text, setText] = useState("")
 
     useEffect(() => {
@@ -270,31 +271,38 @@ z-10  "
                     </span>
                     <AnimateText text="add a new route " className='!text-lg' />
                     <form
-                        // onSubmit={handleSubmit}
+                        onSubmit={handleSubmit}
                         className='px-5'
                     >
                         <InputBox
-                            inputRef={fullnames}
+                            ref={fullnames}
                             name={"Full Names"}
                         />
                         <InputBox
-                            inputRef={phone}
+                            ref={phone}
                             type={"tel"}
                             name={"Phone Number"}
                         />
 
                         <InputBox
-                            inputRef={email}
+                            ref={email}
                             type={"email"}
                             name={"Email Address"}
                         />
 
                         <InputBox
-                            inputRef={password}
+                            ref={password}
                             type={"password"}
                             name={"Password"}
                         />
-
+                        <h2>select user role</h2>
+                        <RoleSelect
+                            name="role"
+                            isSearchable={false}
+                            defaultValue={usersRoleOptions[0]}
+                            options={usersRoleOptions}
+                            onChange={({ value }) => setRole(value)}
+                        />
 
                         <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
 
@@ -308,6 +316,8 @@ z-10  "
 
                                 className="w-fit flex-none mx-auto tracking-[0.4rem] text-center ">  {error}</motion.h1>
                         </div>
+
+
                         <UiButton
                             type="submit"
                             className={"!text-lg !bg-blue-800 !w-[min(300px,calc(100%-30px))] !mx-auto pb-2 pt-1.5"}

@@ -254,7 +254,7 @@ const
                     }
                     errorToast()
                   }}
-                  className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
+                  className="!w-[min(30rem,calc(100%-0.5rem))] !ring-4 ring-blue-300 !mx-auto !py-3.5 !text-lg !rounded-xl"
                 >
                   Continue as Customer
                 </UiButton>
@@ -461,6 +461,8 @@ const
                           console.log(e.value)
 
                         }}
+                        isSearchable={false}
+                        
                         defaultValue={{
                           label: "male",
                           value: "male"
@@ -520,6 +522,7 @@ const
                           label: "Cash In",
                           value: "Cash In"
                         }}
+                        isSearchable={false}
                         required
                         menuPlacement="top"
                         components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
@@ -548,64 +551,7 @@ const
 
                   </div>
 
-                  <div className="relative w-[80px] flex-none" data-te-input-wrapper-init>
-                    <input
-                      value={userInfo.age}
-                      onChange={e => setUserInfo({ ...userInfo, age: e.target.value })}
-                      type="number"
-                      className="peer block min-h-[auto] w-full 
-                rounded
-                border-2
-                focus:border-2
-                focus:border-blue-400
-                valid:border-blue-400
-                bg-transparent
-                px-3 py-[0.32rem]
-                leading-[2.15] 
-                outline-none
-                transition-all 
-                duration-200
-                ease-linear
-                focus:placeholder:opacity-100
-                data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                      id="age"
-                      placeholder="age" required />
-                    <label
-                      htmlFor="age"
-                      className="pointer-events-none 
-                absolute left-3
-                top-0 mb-0
-                max-w-[90%]
-                origin-[0_0]
-                truncate 
-                pt-[0.37rem] 
-                leading-[2.15]
-                text-neutral-500
-                transition-all duration-200  
-                ease-out 
-                peer-focus:-translate-y-[1.15rem]
-                peer-focus:scale-[0.8]
-                peer-valid:scale-[0.8]
-                peer-valid:text-blue-400
-                peer-valid:-translate-y-[1.15rem]
-                peer-focus:text-blue-400
-                peer-focus:bg-color_light
-                peer-valid:bg-color_light
-                dark:peer-focus:bg-color_dark
-                dark:peer-valid:bg-color_dark
-                px-0
-                bg-transparent
-                peer-data-[te-input-state-active]:-translate-y-[1.15rem]
-                 rounded-sm
-                 peer-data-[te-input-state-active]:scale-[0.8]
-                motion-reduce:transition-none
-                dark:text-neutral-200
-                dark:peer-focus:text-primary"
 
-                    >
-                      Age
-                    </label>
-                  </div>
                 </div>
                 <UiButton
                   className="!w-[min(30rem,calc(100%-1.5rem))]  hidden md:block !mx-auto !py-3.5 !text-lg !rounded-xl"

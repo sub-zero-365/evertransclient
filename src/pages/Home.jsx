@@ -94,8 +94,7 @@ transition-all  ${up === 0 ? "active" : "--"}`} onClick={() => window.scrollTo({
                     <AiOutlineArrowUp size={30} />
                 </Rounded>
                 <Hero />
-
-                <Navigation />
+                {/* <Navigation /> */}
                 <OurServices />
                 <WhyChooseUs />
                 <FrequentlyAsked />

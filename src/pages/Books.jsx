@@ -58,7 +58,6 @@ import {
     useQuery
 } from '@tanstack/react-query'
 import customFetch from '../utils/customFetch'
-import { CiLogout } from 'react-icons/ci'
 import TicketDetail from '../components/TicketDetail'
 
 
@@ -114,7 +113,7 @@ const Books = () => {
     //     handleFilterChange("search", e.target.value)
     // }
     // const { user } = useOutletContext();
-    const { logoutUser, user } = useUserLayoutContext()
+    // const { logoutUser, user } = useUserLayoutContext()
     const { searchValues } = useLoaderData()
     const userData = useQuery(allTicketsQuery(searchValues))?.data
     let downloadbaseurl = null
@@ -139,35 +138,13 @@ const Books = () => {
                 >
                     <Heading text={"Recent Ticket(3)"} className={"!text-center !mb-2"} />
                     {
-                        userData?.tickets?.slice(0, 3).map((ticket, i) => <TicketDetail key={ticket._id}
+                        userData?.tickets?.slice(0, 2).map((ticket, i) => <TicketDetail key={ticket._id}
                             {...ticket}
                         />)
                     }
                 </div>
                 <div className='flex-1'>
-                    <div className="flex  items-center gap-x-4  mb-10  justify-between
-        py-2 mx-auto mt-5 w-full max-w-[30rem] rounded-xl shadow bg-white dark:bg-slate-950 px-6 ">
-                        <div className="flex-1">
-                            <Heading text={"greetingtext"} className="!mb-1 !font-black mt-0 !italic" />
-                            <p className="mb-3 text-sm font-montserrat px-6 uppercase italic !font-light">{(user?.fullname || "loading")} </p>
-                        </div>
-
-                        <UiButton
-                            onClick={() => logoutUser()}
-                            className=" hidden- lg:block
-                !mx-auto !py-2.5 !my-5 !text-lg !rounded-xl  !bg-red-400"
-                        >
-
-                            <div className='flex items-center justify-center gap-x-2 text-xs'>
-
-                                <CiLogout
-                                    size={25}
-                                /> LogOut
-                            </div>
-
-                        </UiButton>
-
-                    </div>
+                 
                     <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
 
                         <>

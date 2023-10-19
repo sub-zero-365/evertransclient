@@ -14,6 +14,7 @@ import UiButton from "./UiButton"
 import { useQueryClient } from "@tanstack/react-query";
 import customFetch from "../utils/customFetch";
 import { clearUser } from '../actions/User'
+import React from "react"
 const Navbar = ({ }) => {
     const queryClient = useQueryClient()
     const disatch = useDispatch()
@@ -30,17 +31,7 @@ const Navbar = ({ }) => {
         }
         localStorage.removeItem('theme');
     };
-
     const isLogin = user?.fullname
-    // const [isLogin, setIsLogin] = useState(userDetails?.phone ? true : false)
-    // useEffect(() => {
-    //     const islogin = userDetails?.phone ? true : false
-    //     if (islogin) {
-    //         setIsLogin(true)
-    //     } else {
-    //         setIsLogin(false)
-    //     }
-    // }, [userDetails])
     const navigate = useNavigate()
     const logoutUser = async () => {
         await customFetch.get('/auth/logout');
@@ -59,7 +50,11 @@ const Navbar = ({ }) => {
         navigate("/register")
         setIsOpen(false)
     }
-    const gotoUserPage = () => navigate("/user")
+    const gotoUserPage = () => {
+        const currentUserRole = user?.role;
+        if (currentUserRole == "tickets") navigate("/user")
+        else navigate("/user/mails")
+    }
     const [isOpen, setIsOpen] = useState(false)
 
     const toggleNavBar = () => {
@@ -100,8 +95,8 @@ const Navbar = ({ }) => {
                         className='text-3xl font-black '
                     >{process.env.REACT_APP_APP_NAME}</h1> */}
                     <img src={logotext}
-                    className="h-32 w-24"
-                    alt="logotext"
+                        className="h-32 w-24"
+                        alt="logotext"
                     />
 
                 </Link>
@@ -113,7 +108,22 @@ const Navbar = ({ }) => {
                             to="/?#ourservices"
                             className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                         >Our Services</NavLink></motion.li>
-                    <div className='group relative'>
+                    {
+                        isLogin &&
+                        (user?.role === "tickets" ?
+                            <motion.li whileHover={{ scaleX: 1.2 }} className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                                to="/booking"
+                                className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                            >Book A Seat</NavLink></motion.li> :
+                            <motion.li whileHover={{ scaleX: 1.2 }} className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                                to="/mailing"
+                                className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                            >Mail Here</NavLink></motion.li>
+                        )
+
+                    }
+
+                    {/* <div className='group relative'>
                         <h1
                             className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'
                         >Book Services</h1>
@@ -149,7 +159,7 @@ shadow
                             >Mail Here</NavLink></motion.li>
                         </div>
 
-                    </div>
+                    </div> */}
 
 
 
@@ -189,24 +199,34 @@ shadow
                             className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                         >Our Services</NavLink></motion.li>
 
-                    <motion.li
-                        initial={false}
-                        animate={{ x: isOpen ? 0 : -1000 }}
-                        transition={{ delay: 0.1 }}
 
-                        className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
-                            to="/booking"
-                            className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                        >Car Here</NavLink></motion.li>
-                    <motion.li
-                        initial={false}
-                        animate={{ x: isOpen ? 0 : -1000 }}
-                        transition={{ delay: 0.1 }}
+                    {
+                        isLogin &&
+                        (user?.role === "tickets" ?
 
-                        className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
-                            to="/mailing"
-                            className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                        >Mail Here</NavLink></motion.li>
+                            <motion.li
+                                initial={false}
+                                animate={{ x: isOpen ? 0 : -1000 }}
+                                transition={{ delay: 0.1 }}
+
+                                className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                                    to="/booking"
+                                    className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                                >Book A Seat</NavLink></motion.li> :
+                            <motion.li
+                                initial={false}
+                                animate={{ x: isOpen ? 0 : -1000 }}
+                                transition={{ delay: 0.1 }}
+
+                                className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                                    to="/mailing"
+                                    className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                                >Mail Service</NavLink></motion.li>
+                        )
+
+                    }
+
+
                     <motion.li
                         initial={false}
                         animate={{ x: isOpen ? 0 : -1000 }}
@@ -343,56 +363,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                         <Rounded className=" !flex-none group">
                                             <img src={useravatar} alt="user " className='w-[40px] h-[40px] rounded-full shadow-2xl ' onClick={gotoUserPage} />
                                         </Rounded>
-                                        <div
-                                            className='
-                                            absolute
-                                            top-[calc(100%+0.3rem)] 
-                                            translate-y-5
-                                            invisible 
-                                            opacity-0 group-hover:opacity-100
-                                            group-hover:visible
-                                            group-hover:translate-y-0
-                                            transition-all
-                                            duration-200
-                                            py-2
-                                            px-10
-                                            w-fit
-                                            bg-white 
-                                            left-0
-                                            -translate-x-[calc(calc(100%-50px)/2)]
-                                            rounded-sm
-                                            shadow
-                                            '
-                                        >
-
-                                            <ul
-                                                className='flex flex-col gap-y-1'
-                                            >
-                                                <li className='min-w-full group hover:text-blue-700 transition duration-500'>
-                                                    <Link
-                                                        to="/user"
-                                                    >
-                                                        Dashboard
-                                                    </Link>
-                                                    <div
-                                                        className='group-hover:w-full bg-blue-500 w-0 transition-all duration-700 h-[1px]'
-                                                    />
-                                                </li>
-
-                                                <li className='min-w-full group hover:text-blue-700 group transition duration-500'>
-                                                    <Link
-                                                        to="/user/mails"
-                                                    >
-                                                        Mails
-                                                    </Link>
-                                                    <div
-                                                        className='group-hover:w-full bg-blue-500 w-0 transition-all duration-700 h-[1px]'
-                                                    />
-                                                </li>
-
-                                            </ul>
-
-                                        </div>
+                               
                                     </div>
 
                                     <UiButton

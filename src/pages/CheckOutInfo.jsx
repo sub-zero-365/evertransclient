@@ -1,5 +1,5 @@
-import dayjs from "dayjs"
-import { useState, useEffect, useRef } from "react"
+// import dayjs from "dayjs"
+import { useState, useRef } from "react"
 import { NavLink, useSearchParams, useNavigate, Link, useLoaderData, Form, useNavigation, redirect } from "react-router-dom"
 import AlertBox from '../components/Alert'
 import { motion } from 'framer-motion'
@@ -22,14 +22,35 @@ import UiButton from "../components/UiButton"
 import { AiOutlineArrowRight } from "react-icons/ai"
 import { toast } from 'react-toastify'
 import customFetch from "../utils/customFetch"
+import { useQuery } from "@tanstack/react-query"
 
 const errorToast = (msg = "Please select a seat and continue !!!") => toast.error(msg)
 const successToast = () => toast.success("created successfully!!!")
-export const loader = ({ request }) => {
+const priceQuery = (params = {}) => {
+  return {
+    queryKey: ["price", params],
+    queryFn: async () => {
+      const res = await customFetch.get("/routes", {
+        params: params
+      })
+    }
+
+  }
+}
+export const loader = (queryClient) => async ({ request }) => {
   const params = Object.fromEntries([
     ...new URL(request.url).searchParams.entries(),
   ]);
-  return { userInformation: params }
+  const { from, to } = params;
+  try {
+    if (!from || !to) throw new Error('please provide both source and destination');
+    await queryClient.ensureQueryData(priceQuery({ from, to }))
+    return { searchValues: { from, to } }
+
+  } catch (err) {
+    const errorMessage = err?.response?.data || err?.message || "something went wrong"
+    return errorMessage
+  }
 }
 
 export const action = (queryClient) => async ({ request }) => {
@@ -62,10 +83,10 @@ const BusSits = () => {
   ])
   const {
     from, to, traveldate: date, sex,
-    fullname, traveltime
+    fullname
     , type
     , seatposition,
-    paymenttype, phone, age
+    phone
 
   } = params || {}
   const constraintsRef = useRef(null);
@@ -75,7 +96,17 @@ const BusSits = () => {
   const [error, setError] = useState(false)
   const [queryParameters] = useSearchParams()
   const [message] = useState("")
+  let price = null;
 
+  const { searchValues } = useLoaderData()
+  // if ("price" in searchValues) {
+  const routePrice = useQuery(priceQuery(searchValues)).data
+  if (type == "singletrip") {
+    price = routePrice?.singletripprice
+  } else {
+    price = routePrice?.roundtripprice
+  }
+  // }
 
 
   return (
@@ -223,18 +254,10 @@ z-10  "
                 <Heading text="Travel Date" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
                 <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{date}</div>
               </div>
-              <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-                <Heading text="Age" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{age} years</div>
-              </div>
-              <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
-                <Heading text="Travel Time" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{traveltime}</div>
-              </div>
-              <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
+              {/* <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Payment type" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
                 <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{paymenttype}</div>
-              </div>
+              </div> */}
 
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Phone Number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
@@ -244,7 +267,7 @@ z-10  "
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Travel Cost" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{type == "singletrip" ? "3500" : "6000"} frs</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{price} frs</div>
               </div>
 
             </div>

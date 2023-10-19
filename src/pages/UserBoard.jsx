@@ -36,7 +36,7 @@ import FromSelect from 'react-select/async'
 import ToSelect from 'react-select/async'
 import { Rounded } from '../components'
 
-// import { useUserLayoutContext } from "../components/UserLayout"
+import { useUserLayoutContext } from "../components/UserLayout"
 import {
   // AmountCount,
   // FormatTable,
@@ -61,6 +61,8 @@ import {
 } from '@tanstack/react-query'
 import customFetch from '../utils/customFetch'
 import InputBox from '../components/InputBox'
+import { CiLogout } from 'react-icons/ci'
+
 // import { CiLogout } from 'react-icons/ci'
 const seats = []
 
@@ -85,7 +87,7 @@ const style = {
 
 const Details = () => {
   const [active, setActive] = useState(false)
-
+  const { logoutUser } = useUserLayoutContext()
   const location = useLocation()
   const isInUserPage = location.pathname?.slice(1) == "user"
   // console.log("location path", location.pathname,isInUserPage)
@@ -914,7 +916,7 @@ const Details = () => {
                       </div>
                       <div>
                         <h2 className="text-center  text-lg md:text-xl font-medium  "> status</h2>
-                        <p className="text-center sidebar-- text-slate-500 mb-4 grid place-items-center"> {ticket?.active ?
+                        <p className="text-center  text-slate-500 mb-4 grid place-items-center"> {ticket?.active ?
 
 
                           ticket?.type == "roundtrip" ? <div className="flex gap-x-1">
@@ -1030,7 +1032,7 @@ z-10  "
           className={`bottom-6
           cursor-pointer
           group
-          ${active && "active"}
+      
           left-1/2 
           translate-x-1/2
           lg:hidden
@@ -1046,66 +1048,15 @@ ring-4
 z-10  `}
         >
           <div
-            className={`absolute w-[4.5rem]
-            h-[4.5rem]  bg-green-600 
-            -translate-y-1/2 top-1/2  rounded-full 
-         invisible group-[.active]:visible
-         left-0 
-         scale-0
-         group-[.active]:scale-100
-         transition-[visibility,left,right,]--
-         [transition:left_1s,visibility_0.3s,scale_0.2s]
-         group-[.active]:-left-[calc(100%+0.2rem)]
-         flex items-center justify-center
-            `}
-          >
-            <NavLink
-              to="/mailing"
-              
-            >
-              {({ isPending }) => <div className="flex items-center gap-x-4">
-                <MdOutlineForwardToInbox
-                  size={25}
-                />
-              </div>}
-            </NavLink>
-          </div>
-          <div
-            className={`absolute w-[4.5rem]
-             h-[4.5rem]  bg-yellow-600 
-             -translate-y-1/2 top-1/2  rounded-full 
-          invisible group-[.active]:visible
-          right-0 
-          scale-0
-          group-[.active]:scale-100
-          transition-[visibility,left,right,]--
-          [transition:right_1s,visibility_0.3s,scale_0.2s]
-          group-[.active]:-right-[calc(100%+0.2rem)]
-          flex items-center justify-center
-          
-             `}>
-          <NavLink
-                  to={`/booking`}
-                  
+            onClick={() => {
+              const currentUserRole = user?.role;
+              if (currentUserRole == "tickets") navigate("/booking")
+              else navigate("/mailing")
 
-                >
-                  {({ isPending }) => <div className="flex items-center gap-x-4">
-                    <BiBusSchool
-                      size={25}
-                    />
-                   
-                  </div>}
-
-                </NavLink>
-          </div>
-          <div className="flex h-full overflow-hidden w-full items-center -scale-animation justify-center ">
-
-            {
-              active ? <AiOutlineMinus
-                size={30} color="#fff" className="font-black " /> : <AiOutlinePlus
-                size={30} color="#fff" className="font-black " />
-            }
-
+            }}
+            className="flex h-full overflow-hidden w-full items-center -scale-animation justify-center ">
+            <AiOutlinePlus
+              size={30} color="#fff" className="font-black " />
           </div>
         </motion.div>
 
@@ -1114,72 +1065,37 @@ z-10  `}
         items-start justify-start gap-4 `}>
 
           <div className="lg:w-[calc(100%-25rem)] max-h-full overflow-y-auto scrollto ">
-            <div
-              className='flex justify-center hidden-- items-center py-5 gap-x-4 px-2'
 
-            >
-              <UiButton
-                className="!px-5 !flex-none
-                 !py-3 !text-lg !rounded-none
-                !bg-[#ffae02] !font-black"
-              >
-                <NavLink
-                  to={`/user?${querySearch.toString()}`}
-                  replace
-
-                >
-                  {({ isPending }) => <div className="flex items-center gap-x-4">
-                    <BiBusSchool
-                      size={25}
-                    />
-                    {isPending ? "loading please wait " : <p>Tickets</p>}
-                  </div>}
-
-                </NavLink>
-
-
-              </UiButton>
-              <UiButton
-                className="!px-5 !flex-none  
-                 !py-3 !text-lg !rounded-none
-                !bg-blue-700 !font-black"
-              >
-                <NavLink
-                  to="/user/mails"
-                  replace
-                >
-                  {({ isPending }) => <div className="flex items-center gap-x-4">
-                    <MdOutlineForwardToInbox
-                      size={25}
-                    />
-                    {isPending ? "loading please wait " : <p>Mails</p>}
-                  </div>}
-                </NavLink>
-              </UiButton>
-            </div>
             <Outlet />
           </div>
-          <div className={`flex-none lg:flex-1 py-5
-        sidebar m lg:rounded-lg shadow rounded-lg  
+          <div className={`flex-none lg:flex-1 py-5--
+        sidebar  lg:rounded-lg shadow rounded-lg  
         ${toggle ? "right-0" : "!-right-full"}
         duration-500
         transition-[right] shadow
         lg:shadow-none  lg:w-[25rem] 
         lg:max-w-full
-        text-center bg-white
-        dark:bg-slate-800 rounded-sm right-0 top-0 h-fit
-           w-[calc(100vw-3.5rem)] max-w-sm
-           z-20 fixed   lg:!static lg:static== lg:!top-[4rem] lg:h-[calc(100vh-4rem)] first-letter: px-4  `}>
-            <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
+        text-center bg-white/25
+        dark:bg-slate-800/25 rounded-sm right-0 top-0 
+            w-screen
+            // lg:max-w-sm--
+           z-20 fixed 
+           lg:!static  
+           lg:!top-[4rem] lg:h-[calc(100vh-4rem)]  h-screen
+            `}
+            onClick={() => setToggle(false)}
+          >
+            {/* <span className="absolute  w-[3.125rem] h-[3.125rem] top-0 
        text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 
        -left-[3.125rem] z-10 rounded-none flex items-center justify-center  font-black border-black"
               onClick={() => setToggle(false)}
             >
               <IoMdClose size={25} />
-            </span>
+            </span> */}
 
             <div
-              className=' overflow-y-auto max-h-[calc(100vh-0px)] lg:h-full overflow-x-hidden '
+              onClick={e => e.stopPropagation()}
+              className='w-[min(calc(100%-3.5rem),300px)] bg-white dark:bg-slate-800 ml-auto lg:w-full overflow-y-auto max-h-[calc(100vh-0px)] h-full overflow-x-hidden '
             >
 
               <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4--  !text-lg first-letter:text-2xl" />
@@ -1190,6 +1106,7 @@ z-10  `}
                 onClick={() => {
                   setIsOpen(true)
                 }} />
+
               <Swiper
                 className='my-6
                             px-4 
@@ -1199,15 +1116,8 @@ z-10  `}
                           
                             '
                 slidesPerView={1}
-              // onSlideChange={(e) => console.log(e)}
-              // modules={[]}
-              // navigation={{
-              //   prevEl: ".arrow__left",
-              //   nextEl: ".arrow__right",
-              // }}
+
               >
-                {/* <PrevButton className="!left-1.5" />
-                <NextButton className="!right-1.5" /> */}
 
 
                 <SwiperSlide className="group">
@@ -1381,6 +1291,22 @@ py-5 `}>
                 </form>
 
               </div>
+
+
+              <UiButton
+                onClick={() => logoutUser()}
+                className=" hidden- lg:block w-[min(calc(100%-20px),20rem)]
+                !mx-auto !py-2.5 !my-5  !text-lg !rounded-xl  !bg-red-400"
+              >
+
+                <div className='flex items-center justify-center gap-x-2 text-xs'>
+                  <CiLogout
+                    size={25}
+                  /> LogOut
+                </div>
+
+              </UiButton>
+
 
             </div>
 

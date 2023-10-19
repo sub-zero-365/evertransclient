@@ -4,7 +4,7 @@ import {
   AnimateError
 } from "../components"
 import { BiChevronDown } from 'react-icons/bi'
-import { useState, forwardRef} from "react"
+import { useState, forwardRef } from "react"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { AiOutlineArrowRight } from 'react-icons/ai'
@@ -41,10 +41,10 @@ const Booking = () => {
   const tripType = queryParams.get("type") || "singletrip";
   const [fromCities, setFromCities] = useState(queryParams.get("from"))
   const [toCities, setToCities] = useState(queryParams.get("to"))
-  const [time, setTime] = useState("7am")
+  // const [time, setTime] = useState("7am")
   const [isLine, setIsline] = useState(false)
   const navigate = useNavigate()
-  const gotoBusSits = () => navigate(`/bus?from=${fromCities}&to=${toCities}&traveldate=${dayjs(startDate).format("YYYY/MM/DD")}&type=${tripType}&traveltime=${time}`)
+  const gotoBusSits = () => navigate(`/bus?from=${fromCities}&to=${toCities}&traveldate=${dayjs(startDate).format("YYYY/MM/DD")}&type=${tripType}`)
   const [demoFetch, setDemoFetch] = useState(false);
   const loadDemoData = (evt) => {
     evt.preventDefault()
@@ -216,23 +216,7 @@ const Booking = () => {
               error={fromCities != null && fromCities === toCities}
               errorMessage={"cities should not be thesame"} />
 
-            <div className="flex items-center !mb-1 !mt-2 gap-x-2">
-              <WiTime4 size={20}
-                className="text-rose-600"
-              />
-              <Heading text="Time" className={"!m-0 !p-0 !text-lg first-letter:text-2xl first-letter:font-black"} />
-            </div>
-            <TimeSelect
-              styles={style}
-              isSearchable={false}
-              onChange={(evt) => setTime(evt.value)}
-              components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-              required className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl mb-6"
-              defaultValue={{
-                label: "7am",
-                value: "7am"
-              }}
-              options={timeOptions} />
+
 
             <div className="hidden min-h-8 md:flex items-center justify-center mt-auto">
               <LoadingButton

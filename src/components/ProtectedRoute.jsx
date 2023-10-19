@@ -24,22 +24,19 @@ export const loader = (queryClient) => async ({ request }) => {
     try {
         return await queryClient.ensureQueryData(userQuery);
     } catch (error) {
-        // console.log(error.response)
-        toast.error('please loggin to continue')
-        return redirect(`/login?message=something went wrong try again&from=${new URL(request.url).pathname}`);
+    const errorMessage=error?.response?.data || error?.message || "something went wrong try again later"
+        toast.error(errorMessage)
+        return redirect(`/login?message=${errorMessage}&from=${new URL(request.url).pathname}`);
     }
 };
 
-const ProtectedRoute = (queryClient) => {
+const ProtectedRoute = () => {
     const { setUserDetails, logoutUser } = useUserLayoutContext()
     const { user } = useQuery(userQuery).data || {}
     setUserDetails(user)
-    // const navigate = useNavigate()
     const [isAuthError, setIsAuthError] = useState(false);
     const navigation = useNavigation();
     const isPageLoading = navigation.state === 'loading'
-
-
     customFetch.interceptors.response.use(
         (response) => {
             // console.log("this is the response before the request is being sent ", response)

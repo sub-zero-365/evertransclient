@@ -172,23 +172,23 @@ const SecurityPage = ({ currentPage, skip }) => {
                     >
                         <InputBox
                             name={"Full Name"}
-                            inputRef={fullname}
+                            ref={fullname}
                             type={"text"}
                         />
                         <InputBox
                             name={"Phone Number"}
                             type={"tel"}
-                            inputRef={phone}
+                            ref={phone}
 
                         />
                         <InputBox
                             name={"password"}
-                            inputRef={password}
+                            ref={password}
                             type={"password"}
                         />
                         <InputBox
                             name={"Confirm Password"}
-                            inputRef={password2}
+                            ref={password2}
                             type={"password"}
                         />
                         <UiButton name={addAdmin.isLoading ? "Please Wait" : "Create Account"}
