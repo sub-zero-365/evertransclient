@@ -106,57 +106,35 @@ const Footer = () => {
             <li>
               <h1
                 className="text-white font-bold text-xl pb-6 tracking-wide"
-              >Services</h1>
+              >Our Services</h1>
             </li>
+
 
             <li className="pb-1.5 lg:pb-2.5">
               <Link
-                to="/about"
+                to="/mailing"
                 className="text-lg 
                   ease tracking-[0.5] hover:font-medium
                   text-white hover:text-[#ffae02] transition duration-700"
               >
-                Safety Guarantee
+                Mailing Service
               </Link>
 
 
             </li>
             <li className="pb-1.5 lg:pb-2.5">
               <Link
-                to="/about"
+                to="/booking"
                 className="text-lg 
                   ease tracking-[0.5] hover:font-medium
                   text-white hover:text-[#ffae02] transition duration-700"
               >
-                About us
+                Ticket Booking
               </Link>
 
 
             </li>
-            <li className="pb-1.5 lg:pb-2.5">
-              <Link
-                to="/about"
-                className="text-lg 
-                  ease tracking-[0.5] hover:font-medium
-                  text-white hover:text-[#ffae02] transition duration-700"
-              >
-                About us
-              </Link>
 
-
-            </li>
-            <li className="pb-1.5 lg:pb-2.5">
-              <Link
-                to="/about"
-                className="text-lg 
-                  ease tracking-[0.5] hover:font-medium
-                  text-white hover:text-[#ffae02] transition duration-700"
-              >
-                About us
-              </Link>
-
-
-            </li>
           </ul>
           <ul className="pb-4 col-span-12 md:col-span-4 lg:col-span-4">
 
@@ -167,7 +145,7 @@ const Footer = () => {
             </li>
 
             <li className="pb-1.5 lg:pb-2.5">
-              <Link
+              <div
                 to="/about"
                 className="text-lg 
                   ease tracking-[0.5] hover:font-medium
@@ -175,9 +153,9 @@ const Footer = () => {
               >
                 <div>
 
-                  <p>Jl Cempaka Wangi No 22 Jakarta - Indonesia</p>
+                  <p>Buea-southwest ,Cameroon</p>
                 </div>
-              </Link>
+              </div>
 
 
             </li>
@@ -193,30 +171,8 @@ const Footer = () => {
 
 
             </li>
-            <li className="pb-1.5 lg:pb-2.5">
-              <Link
-                to="/about"
-                className="text-lg 
-                  ease tracking-[0.5] hover:font-medium
-                  text-white hover:text-[#ffae02] transition duration-700"
-              >
-                About us
-              </Link>
-
-
-            </li>
-            <li className="pb-1.5 lg:pb-2.5">
-              <Link
-                to="/about"
-                className="text-lg 
-                  ease tracking-[0.5] hover:font-medium
-                  text-white hover:text-[#ffae02] transition duration-700"
-              >
-                About us
-              </Link>
-
-
-            </li>
+           
+           
             <li className="pb-1.5 pt-2.5 lg:pb-2.5 flex  items-center ">
 
               <h1

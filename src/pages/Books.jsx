@@ -145,7 +145,7 @@ const Books = () => {
                 </div>
                 <div className='flex-1'>
                  
-                    <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
+                    <div className="flex items-start pt-10 flex-wrap gap-x-4 gap-y-6 justify-center ">
 
                         <>
 
@@ -257,26 +257,6 @@ const Books = () => {
 
                                     className='!border-none !h-8 mt-0' />
                             </div>
-                            <div className='mt-0'>
-                                <div className="text-[0.8rem]
-          text-slate-300 dark:text-white uppercase
-          text-center font-semibold mb-1 font-montserrat"> Travel Time </div>
-                                <TimeSelect
-                                    options={timeOptions}
-                                    styles={style}
-                                    defaultValue={{
-                                        label: querySearch.get("traveltime") || "no time",
-                                        value: "no time"
-                                    }}
-                                    // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-                                    isSearchable={false}
-                                    onChange={(e) => handleChange(e, "traveltime")}
-
-                                    className='!border-none !h-8 mt-0' />
-                            </div>
-
-
                         </div>
 
 

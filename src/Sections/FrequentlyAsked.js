@@ -103,12 +103,29 @@ const FrequentlyAsked = () => {
         <div className="lg:col-span-4 lg:!sticky0
         
         !top-[4rem] ">
+          <div
+              className="relative w-full lg:hidden"
+            >
+              <h1 className="text-6xl text-center 
+              absolute- -z-1
+              w-full 
+              font-black text-gray-500 lg:text-9xl
+              bg-white/10-- uppercase opacity-30">
+             FAQS
+              </h1>
+
+              <AnimatedText
+                className="!text-3xl lg:!text-6xl !absolute top-1/2 !m-0 !p-0 -translate-y-1/2 w-full   z-1"
+                text={"Frequently asked questions "}
+              />
+
+            </div>
           <motion.h1
             variants={slideUp}
             viewport={{ once: true, amount: 0.8 }}
             initial="initial"
             whileInView="animate"
-            className='text-center capitalize text-4xl text-[#181e76] lg:text-5xl font-semibold'
+            className='text-center hidden lg:block capitalize text-4xl text-[#181e76] lg:text-5xl font-semibold'
           >Frequently asked questions </motion.h1>
           <motion.p
             ref={ref}

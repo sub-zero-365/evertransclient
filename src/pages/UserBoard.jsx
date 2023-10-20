@@ -1079,7 +1079,7 @@ z-10  `}
         dark:bg-slate-800/25 rounded-sm right-0 top-0 
             w-screen
             // lg:max-w-sm--
-           z-20 fixed 
+           z-[100] fixed 
            lg:!static  
            lg:!top-[4rem] lg:h-[calc(100vh-4rem)]  h-screen
             `}

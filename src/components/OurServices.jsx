@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { BsBusFront } from "react-icons/bs"
 import { MdOutlineForwardToInbox } from "react-icons/md"
 import Heading from './Headings'
+import AnimatedText from './AnimateText'
 export default function OurServices() {
   const slideUp = {
     initial: {
@@ -52,11 +53,10 @@ export default function OurServices() {
           duration: 1, mass: 20 + (index * 5), stiffness: "spring"
         }}
 
-        className='p-2 rounded-md border cursor-pointer  ppt  bg-gradient-to-b from-white  to-[#fcfcf7]'>
-        <div className='bg-[#eceff4] text-center p-4 py-10'>
-          {/* <div className='w-fit mx-auto mb-5'>{Icon}</div> */}
+        className='p-2 rounded-md border cursor-pointer group ppt  bg-gradient-to-b from-white  to-[#fcfcf7]'>
+        <div className='bg-[#eceff4] text-center p-4 py-10 group-hover:-translate-y-10 transition-all duration-500'>
           <img
-          className="mx-auto block  w-24 h-24"
+            className="mx-auto block  w-24 h-24 "
             src={imgUrl}
           />
           <Heading
@@ -73,9 +73,26 @@ export default function OurServices() {
   return (
 
     <div className=" lg:px-10 overflow-x-hidden px-6  text-black text-lg py-24 md:text-xl lg:text-xl bg-white" id="#ourservices">
-      <Heading className="text-center !text-black"
+      {/* <Heading className="text-center !text-black"
         text="OUR SERVICES"
-      />
+      /> */}
+      <div
+        className="relative w-full"
+      >
+        <h1 className="text-6xl text-center 
+              absolute- -z-1
+              w-full 
+              font-black text-gray-500 lg:text-9xl
+              bg-white/10-- uppercase opacity-30">
+          SERVICES
+        </h1>
+
+        <AnimatedText
+          className="!text-4xl lg:!text-6xl !absolute top-0 !m-0 translate-y-1/2    z-1"
+          text={"OUR SERVICES"}
+        />
+
+      </div>
       <motion.h1
         variants={slideUp}
         viewport={{ once: true, amount: 0.8 }}
@@ -113,16 +130,13 @@ export default function OurServices() {
           text="Our bus bookjing service herlo ot "
         />
         <Service index={1}
-          // icon={<MdOutlineForwardToInbox
-          //   size={30}
-          // />}
           imgUrl="https://www.svgrepo.com/show/499796/ticket-information.svg"
           title="Mailing"
           text="Our bus bookjing service herlo ot "
         />
         <Service index={1}
-
-          title="Bus Booking"
+          imgUrl="https://www.svgrepo.com/show/499796/ticket-information.svg"
+          title="Transport & Logistics"
           text="Our bus bookjing service herlo ot "
         />
 

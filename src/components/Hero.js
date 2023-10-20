@@ -1,14 +1,15 @@
 import AnimateText from './AnimateText'
-import herobg from '../Assets/images/herobg.jpg'
+import herobg from '../Assets/images/herobg.jpeg'
 // import herooverlay from '../Assets/images/herooverlay.png'
 import UiButton from './UiButton';
 import { motion } from "framer-motion"
 import { Link, NavLink } from 'react-router-dom';
 import Write from './Write';
+import AnimatedText from './AnimateText';
 const Hero = () => {
     return (
-        <div className=" h-[min(35rem,100vh)] text-white relative group">
-            <img className="absolute -z-0  inset-0 w-full h-full "
+        <div className=" h-[min(40rem,100vh)] text-white relative group">
+            <img className="absolute -z-0 max-w-7xl left-1/2 -translate-x-1/2 inset-0 w-full h-full "
                 src={herobg}
             />
             <div
@@ -19,7 +20,7 @@ const Hero = () => {
                     className=" h-full items-center  "
                 >
                     <motion.div
-                    className="max-w-5xl mx-auto"
+                        className="max-w-5xl mx-auto"
                         initial={{ y: 100, opacity: 0 }}
                         animate={{
                             y: 0, opacity
@@ -51,10 +52,10 @@ const Hero = () => {
                         >
 
                             <Write />
-                            {/* <p
-                                className='text-xl text-center lg:text-start lg:text-2xl font-medium my-4'
-                            >Luctus nisi pharetra mollis aliquet iaculis tempus potenti. Dictumst vestibulum luctus eget sit sag </p> */}
-
+                            <AnimatedText
+                                className='!text-4xl !text-center italic !uppercase '
+                                text="With the Fear of god"
+                            />
                             <div
                                 className='flex-- hidden gap-6  justify-start flex-wrap '
                             >
