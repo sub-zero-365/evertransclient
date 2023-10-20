@@ -86,6 +86,7 @@ const style = {
 
 
 const Details = () => {
+  const constraintsRef = useRef(null);
   const [active, setActive] = useState(false)
   const { logoutUser } = useUserLayoutContext()
   const location = useLocation()
@@ -159,7 +160,7 @@ const Details = () => {
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
-  const constraintsRef = useRef(null);
+  // const constraintsRef = useRef(null);
   const password1 = useRef(null);
   const password2 = useRef(null);
   const password3 = useRef(null);
@@ -985,7 +986,6 @@ focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-[0_8px_9px_-4p
         {/* ticket modal */}
 
         <motion.div
-          onClick={() => setToggle(true)}
           animate={{
             scale: [0.7, 1.2, 0.8],
           }}
@@ -1013,10 +1013,12 @@ z-10  "
           </div>
         </motion.div>
         {/* add mails or ticket button */}
-        <motion.div
+        {/* <motion.div
+          drag
+          dragConstraints={constraintsRef}
           key="animatecontainer"
 
-          onClick={() => setActive(c => !c)}
+    
           animate={{
             scale: [0.7, 1.2, 0.8],
             y: active ? "10" : "0"
@@ -1058,7 +1060,7 @@ z-10  `}
             <AiOutlinePlus
               size={30} color="#fff" className="font-black " />
           </div>
-        </motion.div>
+        </motion.div> */}
 
         <div className={`lg:flex ${false && "lg:flex-row-reverse"} h-[calc(100vh-4rem)]
         
@@ -1068,34 +1070,29 @@ z-10  `}
 
             <Outlet />
           </div>
-          <div className={`flex-none lg:flex-1 py-5--
+          <div className={`flex-none lg:flex-1 
+          
         sidebar  lg:rounded-lg shadow rounded-lg  
         ${toggle ? "right-0" : "!-right-full"}
         duration-500
         transition-[right] shadow
-        lg:shadow-none  lg:w-[25rem] 
+        lg:shadow-none  
+        lg:!w-[15rem] 
         lg:max-w-full
         text-center bg-white/25
         dark:bg-slate-800/25 rounded-sm right-0 top-0 
             w-screen
-            // lg:max-w-sm--
            z-[100] fixed 
            lg:!static  
            lg:!top-[4rem] lg:h-[calc(100vh-4rem)]  h-screen
             `}
             onClick={() => setToggle(false)}
           >
-            {/* <span className="absolute  w-[3.125rem] h-[3.125rem] top-0 
-       text-red-700 hover:bg-orange-500 rounded-e-md transition-all lg:hidden duration-500 
-       -left-[3.125rem] z-10 rounded-none flex items-center justify-center  font-black border-black"
-              onClick={() => setToggle(false)}
-            >
-              <IoMdClose size={25} />
-            </span> */}
+  
 
             <div
               onClick={e => e.stopPropagation()}
-              className='w-[min(calc(100%-3.5rem),300px)] bg-white dark:bg-slate-800 ml-auto lg:w-full overflow-y-auto max-h-[calc(100vh-0px)] h-full overflow-x-hidden '
+              className='w-[min(calc(100%-3.5rem),300px)] pt-5 bg-white dark:bg-slate-800 ml-auto lg:w-full overflow-y-auto max-h-[calc(100vh-0px)] h-full overflow-x-hidden '
             >
 
               <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4--  !text-lg first-letter:text-2xl" />

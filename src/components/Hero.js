@@ -8,7 +8,7 @@ import Write from './Write';
 import AnimatedText from './AnimateText';
 const Hero = () => {
     return (
-        <div className=" h-[min(40rem,100vh)] text-white relative group">
+        <div className=" h-[min(35rem,100vh)] text-white relative group">
             <img className="absolute -z-0 max-w-7xl left-1/2 -translate-x-1/2 inset-0 w-full h-full "
                 src={herobg}
             />
@@ -52,10 +52,7 @@ const Hero = () => {
                         >
 
                             <Write />
-                            <AnimatedText
-                                className='!text-4xl !text-center italic !uppercase '
-                                text="With the Fear of god"
-                            />
+                       
                             <div
                                 className='flex-- hidden gap-6  justify-start flex-wrap '
                             >

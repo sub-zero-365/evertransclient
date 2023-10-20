@@ -20,7 +20,7 @@ const TicketDetail = ({ fullname, traveldate, from, to, _id, createdAt }) => {
         <motion.div
             variants={scalevariants}
             whileHover="whileHover"
-            class="max-w-sm mb-1 dark:text-white  cursor-pointer
+            class="max-w-[20rem] mb-1 dark:text-white  cursor-pointer
 bg-white  border  border-gray-200 rounded-lg shadow-xl dark:shadow-sm 
 dark:shadow-black shadow-slate-300 dark:bg-gray-800 dark:border-gray-700">
 

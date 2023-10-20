@@ -105,20 +105,18 @@ const SideBar = () => {
         , to: "/dashboard/tickets?view=all&admin=true"
       },
       {
-
         name: "Employees",
         icon: <BsPersonLinesFill size={20} />
-
         , to: "/dashboard/users?admin=true"
       },
 
-      {
+      // {
 
-        name: "Cities",
-        icon: <GiModernCity size={20} />
-        , to: "/dashboard/cities"
+      //   name: "Cities",
+      //   icon: <GiModernCity size={20} />
+      //   , to: "/dashboard/cities"
 
-      },
+      // },
       {
 
         name: "Buses",

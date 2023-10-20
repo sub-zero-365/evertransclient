@@ -1,6 +1,6 @@
 import { useNavigate, Form, redirect } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
-import axios from 'axios';
+// import axios from 'axios';
 import {
     LineChart,
     PanigationButton
@@ -15,7 +15,7 @@ import { motion } from 'framer-motion'
 import { UserData } from '../Assets/userdata';
 import { Loadingbtn } from "../components";
 import InputBox from '../components/InputBox';
-import UiButton from '../components/UiButton';
+import UiButton, { UiButtonDanger } from '../components/UiButton';
 import dateFormater from '../utils/DateFormater';
 import { SlOptions } from 'react-icons/sl';
 import ShowBuses from './ShowBuses';
@@ -24,6 +24,11 @@ import { useQuery } from "@tanstack/react-query"
 import { toast } from "react-toastify"
 import RoleSelect from "react-select"
 import { usersRoleOptions } from "../utils/sortedOptions"
+// import EmptyBox from "../components"
+import EmptyBox from './ShowBuses'
+import LoadingButton from '../components/LoadingButton';
+import ToggleSwitch from '../components';
+import { useDashBoardContext } from '../components/DashboardLayout';
 const usersQuery = {
     queryKey: ["user"],
     queryFn: async () => {
@@ -37,28 +42,20 @@ const usersQuery = {
 export const action = (queryClient) => async ({ request }) => {
     try {
         const form = await request.formData()
-
-        const user_id = form.get("id")
-        var type = form.get("type")
-        type = "addrestricted" ? true : false;
-        if (type) {
-            await customFetch.post("/restricted", {
-                user_id
-            })
-        } else {
-            await customFetch.delete("/restricted", {
-                user_id
-            })
-        }
+        const id = await form.get("id")
+        const password = await form.get("password")
+        await customFetch.delete("/user/delete-user/" + id, {
+            data: { password }
+        })
         await queryClient.invalidateQueries({
             queryKey: ["users"]
         })
-        toast.success("all good")
+        toast.success("delete user success!")
         return null
     }
     catch (err) {
         console.log(err)
-        toast.warning("something went wrong try again")
+        toast.warning(err?.response?.data || err?.message || "something went wrong try again")
         return err
     }
 
@@ -68,11 +65,11 @@ export const loader = (queryClient) => async ({ params }) => {
 }
 
 const Appointment = ({ skip, currentPage }) => {
-
+    // const { user } = useDashBoardContext()
     const { userdetails: users } = useQuery(usersQuery)?.data || {}
     const data = {}
     const [selected, setSelected] = useState(null)
-    const setSelectedNull = () => setSelected(null)
+
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
 
@@ -87,7 +84,7 @@ const Appointment = ({ skip, currentPage }) => {
 
         e.preventDefault()
         setIsLoading(true)
-        // alert("enter  here")
+
         const url = "/auth/register"
         try {
             await customFetch.post(
@@ -119,7 +116,7 @@ const Appointment = ({ skip, currentPage }) => {
     }
 
 
-    const navigate = useNavigate()
+
     const [text, setText] = useState("")
 
     useEffect(() => {
@@ -169,21 +166,48 @@ const Appointment = ({ skip, currentPage }) => {
 
             className="max-w-full !flex-1 w-full   overflow-auto max-h-[calc(100vh-3rem)] pt-10 " >
             <Alert toggle={t} message="Created successfully" setToggle={setT} />
-            <ShowBuses
-                isOpen={selected ? true : false}
-                setIsOpen={setSelectedNull}
+            <EmptyBox
+                title="Delete  User Account"
+                isOpen={selected}
+                setIsOpen={setSelected}
             >
-                <form className='px-5'>
-                    <InputBox
-                        name={"Phone"}
+                <Form
+                    method='post'
+                    className='px-6'
+                >
+                    <input
+                        type='hidden'
+                        name='id'
+                        value={selected?._id}
                     />
+                    {selected && <AnimateText
+                        text="Enter Your Password to delete User"
+                        className='!text-center !text-3xl'
+                    />}
+                    <h2
+                        className='text-rose-500 font-black !text-center  !text-4xl line-clamp-1 mb-3 my-1'
+                    >
+                        {selected?.fullname}
+                    </h2>
                     <InputBox
-                        name={"password"}
-                        type={"text"}
-                    />
-                </form>
+                        className="!min-h-[3rem] capitalize
+                        !w-[min(300px,calc(100%-0.5rem))]
+                        "
+                        name="password"
+                        hidden
+                        type="password"
 
-            </ShowBuses>
+                    />
+
+                    <LoadingButton
+                        className="!w-[min(300px,calc(100%-0.5rem))] !mx-auto
+                        !rounded-none !py-4  !bg-red-900"
+                    >
+                        Confirm Delete Accout
+                    </LoadingButton>
+                </Form>
+            </EmptyBox>
+
             <div className="flex gap-x-1 items-center">
                 <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users?.length}</h2>
             </div>
@@ -440,58 +464,19 @@ dark:border-gray-600
 
                                             <td className="py-0 text-xs cursor-pointer hover:scale-110 transition-all duration-500 flex items-center justify-center"
                                             >
-                                                <SlOptions
-                                                    className="hidden"
-                                                    onClick={() => setSelected(user)}
-                                                    size={20}
-                                                />
+
                                                 <Button
                                                     className={"!max-w-[14rem] !w-full"}
                                                     name="View Employee"
                                                     href={`/dashboard/details/${_id || index}?admin=true&createdBy=${_id}`}
                                                 ></Button>
-                                                {
-                                                    user?.isrestricted ?
 
-                                                        <Form method="post">
-                                                            <input
-                                                                type="hidden"
-                                                                name="type"
-                                                                value="addrestricted"
-                                                            />
-                                                            <input
-                                                                type="hidden"
-                                                                name="id"
-                                                                value={user?._id}
-                                                            />
-                                                            <UiButton
-                                                                className="px-2 "
-                                                            >
-                                                                UnSuspend
-                                                            </UiButton>
-                                                        </Form>
-                                                        :
-
-                                                        <Form method="post">
-                                                            <input
-                                                                type="hidden"
-                                                                name="type"
-                                                                value="removerestricted"
-                                                            />
-                                                            <input
-                                                                type="hidden"
-                                                                name="id"
-                                                                value={user?._id}
-                                                            />
-                                                            <UiButton
-                                                                className="px-2 !bg-rose-800 hover:bg-red-900"
-                                                            >
-                                                                Suspend
-                                                            </UiButton>
-                                                        </Form>
-
-                                                }
-
+                                                <UiButtonDanger
+                                                    className="px-2 !flex !items-center"
+                                                    onClick={() => setSelected(user)}
+                                                >
+                                                    Delete Account
+                                                </UiButtonDanger>
 
                                             </td>
                                         </tr>

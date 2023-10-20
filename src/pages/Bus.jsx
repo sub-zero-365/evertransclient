@@ -1,36 +1,27 @@
 import { motion } from 'framer-motion'
 import { AiOutlinePlus } from 'react-icons/ai'
-import { Heading, ToggleSwitch } from '../components'
+import { Heading } from '../components'
 import AnimateText from '../components/AnimateText'
-import { useState, useEffect, useRef, forwardRef } from 'react'
+import { useState, useRef, forwardRef } from 'react'
 import { components, style } from "../utils/reactselectOptionsStyles"
-// import customFetch from 'axios'
 import { AnimateError } from '../components'
 import Seats from 'react-select'
 import Features from 'react-select'
 import { FiRefreshCcw } from 'react-icons/fi'
 import { MdOutlineClose } from 'react-icons/md'
 import Alert from '../components/Alert'
-import Categories from 'react-select'
-// import FromSelect from 'react-select/async'
-// import ToSelect from 'react-select/async'
-import { useNavigate, useSearchParams, Link, useLoaderData, Form } from 'react-router-dom'
+import { useSearchParams, Link, useLoaderData, Form } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import customFetch from "../utils/customFetch"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import LoadingButton from "../components/LoadingButton"
-// import DatePicker from 'react-datepicker'
 const allBusQuery = (params = {}) => {
     return ({
         queryKey: ["buses"],
         queryFn: async () => {
             const res = await customFetch.get("/bus", {
                 params: params
-
             })
-
             return res.data
-
         }
     })
 }
@@ -46,13 +37,13 @@ export const loader = (queryClient) => async ({ request }) => {
         })
 
     } catch (err) {
-        console.log("this is the error that causes the crases", err)
+        // console.log("this is the error that causes the crases", err)
         return err
     }
 }
-const BusDetail = ({ number_of_seats, name, _id, seat_positions, active, from, to, time, plate_number }) => {
+const BusDetail = ({ number_of_seats, name, _id, plate_number }) => {
     return (
-        <div className="max-w-sm border-b-2  border-gray-200 dark:border-gray-700 rounded-lg shadow">
+        <div className="max-w-[calc(100%-2rem)] mx-auto border-b-2 w-full border-gray-200 dark:border-gray-700 rounded-lg shadow">
             <Link to={`${_id}`}
                 key={_id}
                 class={` dark:bg-gray-800 dark:border-gray-700`}>
@@ -83,21 +74,7 @@ items-center place-items-center border-b ">
 
                 </div>
             </Link>
-            {/* <Form
-                method="post"
-                className='px-5'
-            >
-                <input
-                    type="hidden"
-                    name="id"
-                    value={_id}
-                />
-                <LoadingButton
-                    className="bg-rose-800"
-                >
-                    Delete Bus
-                </LoadingButton>
-            </Form> */}
+
         </div>
 
 
@@ -109,49 +86,18 @@ const Bus = () => {
     const newbustoast = () => toast.success("Add bus successfully  !", {
         position: toast.POSITION.BOTTOM_CENTER
     })
-   
+
 
 
     const focusRef = useRef(null)
-    // const navigate = useNavigate()
-
     const constraintsRef = useRef(null)
     const [toggle, setToggle] = useState(false)
     const [message, setMessage] = useState("")
     const [isLoading, setIsLoading] = useState(false)
 
-
-
-    const catOptions = [
-
-        {
-            label: "All Types",
-            value: "all"
-        },
-        {
-            label: "Normal Bus",
-            value: "Normal Bus"
-        },
-        {
-            label: "Vip Bus",
-            value: "Vip Bus"
-        },
-        {
-            label: "Vip+ Bus",
-            value: "Vip+ Bus"
-        },
-
-    ]
     const [isDisable, setIsAble] = useState(false)
     const [isOpen, setIsOpen] = useState(false);
     const [err, setErr] = useState(null)
-    // const [buses, setBuses] = useState([])
-    const [cat, setCat] = useState("all")
-    const handleChangeCat = (e) => {
-        if (e.value === cat) return
-        setCat(e.value)
-
-    }
 
     const { searchValues } = useLoaderData()
     const { buses } = useQuery(allBusQuery(searchValues))?.data || []
@@ -576,10 +522,16 @@ z-10  "
 
             <div
 
-                className='w-full grid sm:grid-cols-2 justify-center lg:grid-cols-3  px-5  gap-x-2 gap-y-5 pt-10 '>
-                {buses.map((arr, i) => {
+                className='w-full 
+                grid grid-cols-1 
+                sm:grid-cols-2 justify-center 
+                lg:grid-cols-3  px-5 
+                gap-x-2 gap-y-5 pt-10 '>
+                {buses.map((arr) => {
                     return (
-                        <BusDetail {...arr} />
+                        <BusDetail
+                            key={arr}
+                            {...arr} />
 
                     )
                 })}

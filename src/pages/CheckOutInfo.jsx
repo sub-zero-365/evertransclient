@@ -100,6 +100,7 @@ const BusSits = () => {
 
   const { searchValues } = useLoaderData()
   // if ("price" in searchValues) {
+  
   const routePrice = useQuery(priceQuery(searchValues)).data
   if (type == "singletrip") {
     price = routePrice?.singletripprice

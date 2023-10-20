@@ -136,7 +136,7 @@ const Books = () => {
           "
 
                 >
-                    <Heading text={"Recent Ticket(3)"} className={"!text-center !mb-2"} />
+                    <Heading text={"Recent Ticket(2)"} className={"!text-center !mb-2"} />
                     {
                         userData?.tickets?.slice(0, 2).map((ticket, i) => <TicketDetail key={ticket._id}
                             {...ticket}
@@ -144,12 +144,12 @@ const Books = () => {
                     }
                 </div>
                 <div className='flex-1'>
-                 
+
                     <div className="flex items-start pt-10 flex-wrap gap-x-4 gap-y-6 justify-center ">
 
                         <>
 
-                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
+                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} lg:!grid-cols-1 xl:!grid-cols-2 !transition-all !duration-[1s] `}>
                                 <TicketCounts counts={userData?.totalTickets}
                                     text={"Total Number Of Tickets"}
                                     icon={<AiOutlineSave />} />
@@ -161,7 +161,7 @@ const Books = () => {
                                     counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
 
                             </Scrollable>
-                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"}`}>
+                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 lg:!grid-cols-1 xl:!grid-cols-2 ${false && "!grid md:!grid-cols-2"}`}>
                                 <AmountCount
                                     className="!bg-blue-400"
                                     text="Total cost of all tickets"
