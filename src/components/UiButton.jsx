@@ -8,6 +8,7 @@ export const UiButtonDanger = ({ className, onClick, disabled, name, children })
             disabled={disabled}
             className={` ${className}
             ${disabled && "!cursor-wait !bg-gray-800"}
+            outline-none border-none
 font-medium
 shadow
 md:shadow-md

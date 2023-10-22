@@ -151,30 +151,11 @@ z-10  "
 
                     </div>
                     <div className="flex
-            flex-col lg:flex-row
+            flex-col lg:flex-row justify-center
             lg:mt-10 lg:px-8 max-w-full rounded-sm shadow-sm lg:mx-10
-            py-10 items-start justify-between lg:mb-14">
+            py-10 items-start justify-between-- lg:mb-14">
 
-                        <div className="
-                flex-none lg:w-[20rem]
-                w-full 
-                px-2 lg:px-0">
-                            <Scrollable className={`
-                    !px-5 
-                    !mb-10 
-                    !grid
-                    !grid-cols-1 gh
-                    !transition-all 
-                    !duration-[1s]`}>
-                                <TicketCounts counts={nHits || 0 === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
-                                    text={"Total Travels"}
-                                    icon={<AiOutlineSave />} />
-                                <TicketCounts counts={routes_count || 0 === 0 && "0" || <span className='text-xs font-black '>loading ...</span>}
-                                    text={"Total Routes"}
-                                    icon={<VscFolderActive />}
-                                />
-                            </Scrollable>
-                        </div>
+                     
 
                         <div className="flex-none flex flex-col my-6 lg:my-0 items-center w-full  lg:w-fit hidden- lg:block flex-end px-5 ">
                             <DatePicker
@@ -192,132 +173,13 @@ z-10  "
                                 }}
                             />
                             <UiButton onClick={handleDateRangeChange}
-                                name="query"
-                                className="!mx-auto !block !px-10 !mt-1 lg:px-10" />
+                                name="Date Query"
+                                className="!mx-auto !block  !py-3 !px-10 w-[min(calc(100%-0.5rem),200px)] !mt-1 lg:px-10" />
                         </div>
-                        <div className={`
-            ${isOpen ? "visible opacity-100 pointer-events-all " : "invisible opacity-0 pointer-events-none"}
-            fixed 
-            lg:static
-            lg:opacity-100
-            lg:visible
-            lg:!pointer-events-auto
-            transition-[opacity]
-            left-1/2
-            -translate-x-1/2
-            w-[min(calc(100%-2.5rem),25rem)]
-            min-h-[10rem]
-            bg-white
-            dark:bg-slate-800
-            dark:shadow-sm
-            dark:shadow-dark
-            z-20
-            rounded-2xl
-            top-1/2
-            -translate-y-1/2
-            lg:translate-x-0
-            lg:translate-y-0
-            shadow-xl
-            shadow-slate-400
-            py-5 pb-10`}>
-                            <span
-                                className='absolute lg:hidden
-                    w-8 h-8  hover:ring-red-500
-           
-            md:h-10 md:w-10 rounded-full
-            grid place-items-center
-            text-xs
-            hover:shadow-xl
-            mx-4
-            mt-2
-            bg-slate-100
-            hover:bg-red-400
-            ease duration-500
-            transition-colors
-            right-0 top-0 '
-                                onClick={() => setIsOpen(false)}
-                            >
-                                <MdOutlineClose
-                                    classNae="text-sm" />
-                            </span>
-                            <AnimateText text="create new employee" className='!text-lg' />
-                            <form
-
-                                className='px-5'
-                            >
-                                <InputBox
-
-                                    name={"Full Names"}
-                                />
-
-
-
-                                <LoadingButton >
-                                    add a new route here
-                                </LoadingButton>
-
-                            </form>
-                        </div>
+                       
 
                     </div>
-                    <Scrollable className="
-                    !overflow-visible
-                    !gap-x-4 
-                    !items-start 
-                    !flex-wrap
-                        !justify-center 
-                        !gap-y-5
-                        md:!justify-center">
-                        <div className="flex-none">
-                            <Heading text={"From"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
-                            <FromSelect
-                                defaultOptions
-                                catcheOptions
-                                loadOptions={getCities}
-                                required
-                                styles={{
-                                    ...style,
-                                    wdith: "100%",
-                                    fontSize: 10 + "px"
-                                }}
-                                onChange={(e) => handleChange(e, "from")}
-                                components={components()}
-                                className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
-                            />
-                        </div>
-                        <div className="flex-none ">
-                            <Heading text={"Destination"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
-                            <ToSelect
-                                defaultOptions
-                                catcheOptions
-                                loadOptions={getCities}
-                                required
-                                styles={{
-                                    ...style,
-                                    wdith: "100%",
-                                    fontSize: 10 + "px"
-                                }}
-                                components={components()}
-                                onChange={(e) => handleChange(e, "to")}
-                                className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
-                            />
-                        </div>
-                        <div className="flex-none">
-                            <Heading text={"Time"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
-                            <TimeSelect
-                                onChange={(e) => handleChange(e, "traveltime")}
-                                isSearchable={false}
-                                options={timeOptions}
-                                styles={{
-                                    ...style,
-                                    wdith: "100%",
-                                    fontSize: 10 + "px"
-                                }}
-                                components={components()}
-                                className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
-                            />
-                        </div>
-                    </Scrollable>
+                  
 
                     <ClearFilter keys={[
                         "sort,newest",
@@ -335,7 +197,7 @@ z-10  "
 
                                 <div className="relative xl:container 4xlmax-w- mx-auto overflow-x-auto
                     bg-white
-    shadow-md sm:rounded-lg w-full mb-6 ">
+ w-full mb-6 ">
                                     <table className="w-full text-sm text-left text-gray-500 
               dark:text-gray-400 transition-colors duration-[2s]">
                                         <thead className="text-xs text-gray-700 dark:bg-slate-800 uppercase dark:text-gray-400">

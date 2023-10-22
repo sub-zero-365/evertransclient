@@ -14,6 +14,7 @@ import FilterButton from "../components/FilterButton"
 import { AiOutlineSave } from "react-icons/ai"
 import { VscFolderActive } from "react-icons/vsc"
 import { BiCategory } from "react-icons/bi"
+import { useMemo } from "react"
 const allMailsQuery = (params = {}) => {
   const { search, sort, page, mailStatus } = params
   return {
@@ -42,34 +43,27 @@ export const loader =
       return { searchValues: { ...params } };
     };
 
-const style = {
-  control: (base, state) => {
-    // console.log(state.isFocused)
-    return ({
-      ...base,
-      boxShadow: "none",
-      backgroundColor: "transparent",
-      borderRadius: 0,
-      fontSize: 1 + "rem",
-      cursor: "pointer",
-      // backgroundColor: state.isSelected ? "red" : "green"
-    }
-    )
-  }
 
-
-}
 const Mails = () => {
+
+
   const [querySearch] = useSearchParams()
-  const {  handleFilterChange } = useFilter()
- 
+  const { handleFilterChange } = useFilter()
+
   const { searchValues } = useLoaderData()
-  const { mails, nHits ,
+  const { mails, nHits,
     totalMailsSum,
     totalSentMails,
     totalPendingMails,
-    totalRecievedMails} = 
+    totalRecievedMails } =
     useQuery(allMailsQuery(searchValues)).data || []
+  const search = useMemo(() => {
+    return queryOptions.map(({ value, label }, index) => {
+      if (index == 0) label += nHits
+      return { value, label }
+    })
+
+  }, [])
   return (
     <div>
       <Heading
@@ -82,46 +76,59 @@ const Mails = () => {
       />
 
       <Scrollable className="!justify-start scrollto  !max-w-full !w-fit !mx-auto px-4 pb-5">
-        {
-          queryOptions.map((query) => <FilterButton
-            name="mailStatus"
-            {...query} key={query} />)
-        }
+        {/* {
+          search.map((query) =>  */}
+
+        <FilterButton className="!shadow-none"
+          value="all"
+          label={`All (${nHits})`}
+          name="mailStatus"
+
+        // {...query} key={query} 
+
+        />
+        <FilterButton className="!shadow-none"
+          value="pending"
+          label={`Pending (${totalPendingMails})`}
+          name="mailStatus"
+        />
+        <FilterButton className="!shadow-none"
+          value="sent"
+          label={`Sent (${totalSentMails})`}
+          name="mailStatus"
+        />
+        <FilterButton
+          value="recieved"
+          label={`Recieved (${totalRecievedMails})`}
+          name="mailStatus"
+        />
+        {/* ) */}
+
+
+        {/* } */}
 
       </Scrollable>
-      {/* <Heading
-        text="Quick Date Sort"
-        className="!text-center !m-0 !p-0  !text-2xl "
-      />
 
-      <Scrollable className="!justify-start hidden !max-w-full !w-fit !mx-auto px-4 pb-5">
-        {
-          dateSortedOption.map((query) => <FilterButton
-            name="quickdatesort"
-            {...query} key={query} />)
-        }
 
-      </Scrollable> */}
-      
 
       <Form
         placeholder="search products, sendername ,recievername"
+        className="!mx-auto !max-w-lg w-full"
         onChange={search => handleFilterChange("search", search)}
       />
-      
-      <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
-                                <TicketCounts counts={nHits}
-                                    text={"Total Number Of Books"}
-                                    icon={<AiOutlineSave />} />
-                                <TicketCounts counts={totalSentMails}
-                                    text={"Total Number Of active Tickets"}
-                                    icon={<VscFolderActive />} />
-                                <TicketCounts
-                                    text={"Total Number Of Inactive Tickets"}
-                                    counts={totalSentMails} icon={<BiCategory />} />
 
-                            </Scrollable>
-      <div className="mx-auto text-4xl my-10 rounded-full  bg-orange-600 w-12 h-12 flex justify-center items-center ring-2 ring-blue-600">{nHits}</div>
+      {/* <Scrollable className={`!px-5 invisible md:!grid !hidden md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
+        <TicketCounts counts={nHits}
+          text={"Total Number Of Books"}
+          icon={<AiOutlineSave />} />
+        <TicketCounts counts={totalSentMails}
+          text={"Total Number Of active Tickets"}
+          icon={<VscFolderActive />} />
+        <TicketCounts
+          text={"Total Number Of Inactive Tickets"}
+          counts={totalSentMails} icon={<BiCategory />} />
+
+      </Scrollable> */}
       <div
         className="lg:px-24 px-8 gap-x-4 grid py-5 grid-cols-[repeat(auto-fit,minmax(min(calc(100%-20px),25rem),1fr))]"
 

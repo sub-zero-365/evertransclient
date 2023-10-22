@@ -17,12 +17,13 @@ const FilterButton = ({
         !py-2.5 !flex-none
         !text-xs lg:!text-xs 
         bg-transparent !border
+        !outline-none
         !uppercase 
         !shadow-none
         dark:!text-white
-      
+      hover:!text-white
         !rounded-lg
-        ${isSelected && "!bg-green-900 text-white !rounded-lg"}`}
+        ${isSelected && "!bg-green-900 !text-white !rounded-lg"}`}
     > {props.label}</UiButton>
 
   )

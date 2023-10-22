@@ -242,7 +242,6 @@ const Details = () => {
     })
   const { isLoading: loadingRoute, mutate } = useMutation(handleaddnewroute, {
     onSuccess: data => {
-      // refetch()
       setShowAdd(false)
       onSuccessToast("successfully added new bus to the routes!")
       if (showAdd) setShowAdd(false)
@@ -255,21 +254,14 @@ const Details = () => {
       queryClient.invalidateQueries("create")
     }
   })
-  const handleChangeText = (e) => {
-    handleFilterChange("search", e.target.value)
-  }
 
-  const handleBoardingRangeSearch = () => {
-    if (querySearch.get("daterange")) {
-      handleFilterChange("daterange", null)
-    }
-    handleFilterChange("boardingRange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
-  }
+
+
   const handleFilterSearch = () => {
     if (querySearch.get("boardingRange")) {
       handleFilterChange("boardingRange", null)
     }
-    handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
+    handleFilterChange("daterange", `start=${dayjs(startDate).format("YYYY/MM/DD")},end=${endDate?dayjs(endDate).format("YYYY/MM/DD") : null}`)
   }
 
 
@@ -986,6 +978,7 @@ focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-[0_8px_9px_-4p
         {/* ticket modal */}
 
         <motion.div
+          onClick={() => setToggle(true)}
           animate={{
             scale: [0.7, 1.2, 0.8],
           }}
@@ -1001,8 +994,8 @@ focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-[0_8px_9px_-4p
                         -translate-y-1/2 fixed 
                         flex-none 
                         shadow-2xl button-add  top-auto bg-blue-400 
-w-[2.5rem]
-h-[2.5rem] 
+w-[3.5rem]
+h-[3.5rem] 
 -rounded-full 
 overflow-hidden 
 right-0
@@ -1012,55 +1005,6 @@ z-10  "
             <AiOutlineSetting size={20} color="#fff" className="" />
           </div>
         </motion.div>
-        {/* add mails or ticket button */}
-        {/* <motion.div
-          drag
-          dragConstraints={constraintsRef}
-          key="animatecontainer"
-
-    
-          animate={{
-            scale: [0.7, 1.2, 0.8],
-            y: active ? "10" : "0"
-          }}
-          transition={{
-            duration: 2,
-            ease: "easeInOut",
-            times: [0, 0.2, 0.5, 0.8, 1],
-            repeat: Infinity,
-            repeatDelay: 1
-          }
-          }
-          className={`bottom-6
-          cursor-pointer
-          group
-      
-          left-1/2 
-          translate-x-1/2
-          lg:hidden
-                         fixed 
-                        flex-none 
-                        shadow-2xl button-add  top-auto bg-blue-400 
-w-[5rem]
-h-[5rem] 
-rounded-full 
- 
-right-0
-ring-4
-z-10  `}
-        >
-          <div
-            onClick={() => {
-              const currentUserRole = user?.role;
-              if (currentUserRole == "tickets") navigate("/booking")
-              else navigate("/mailing")
-
-            }}
-            className="flex h-full overflow-hidden w-full items-center -scale-animation justify-center ">
-            <AiOutlinePlus
-              size={30} color="#fff" className="font-black " />
-          </div>
-        </motion.div> */}
 
         <div className={`lg:flex ${false && "lg:flex-row-reverse"} h-[calc(100vh-4rem)]
         
@@ -1088,7 +1032,7 @@ z-10  `}
             `}
             onClick={() => setToggle(false)}
           >
-  
+
 
             <div
               onClick={e => e.stopPropagation()}
@@ -1208,20 +1152,19 @@ py-5 `}>
                       <div className="relative mb-6" data-te-input-wrapper-init>
                         <InputBox
                           value={id}
-                          onChange={(e) => setId(e.target.value)}
+                          onChange={(e) => setId(e.target.value)
+                          }
                           type="text"
                           name="Enter Ticket ID"
                         />
 
                       </div>
 
-                      <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
-                        <motion.h1
-                          className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> </motion.h1>
-                      </div>
-
                       <UiButton
-                        className="!bg-green-800 hover:!bg-green-800">
+                        className="!bg-green-800 !py-3 
+                        !w-[min(calc(100%-0.5rem),400px)]
+                        mx-auto
+                        hover:!bg-green-800">
                         check ticket details
                       </UiButton>
 

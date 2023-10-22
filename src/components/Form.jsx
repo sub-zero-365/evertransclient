@@ -1,12 +1,12 @@
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useFilter } from '../Hooks/FilterHooks'
-const Form = ({ onChange, params, placeholder }) => {
+const Form = ({ onChange, params, placeholder,className }) => {
   const [q] = useSearchParams()
   const { handleFilterChange } = useFilter()
 
   return (
-    <form className="px-4 md:px-6 my-5 max-w-5xl mx-auto" onSubmit={async (e) => {
+    <form className={`${className} px-4 md:px-6 my-5 max-w-5xl mx-auto`} onSubmit={async (e) => {
       const formData = new FormData(e.target)
       const search = await formData.get("search") || ""
       onChange(search)

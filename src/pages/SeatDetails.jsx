@@ -378,7 +378,7 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
                         </div>
                         <AnimatedText text={"Passenger manifest"} className="!uppercase !text-3xl lg:!text-4xl !mb-2" />
-                        <Heading text={`${seat?.traveldate ? dayjs(seat?.traveldate).format("DD/MM/YYYY") : null} at ${seat?.traveltime}`}
+                        <Heading text={`${seat?.traveldate ? dayjs(seat?.traveldate).format("MMMM D, YYYY") : null} `}
                             className={"!text-center !text-gray-950 dark:!text-white !mb-2"}
                         />
                         <div className="!max-w-sm mx-auto">
@@ -416,11 +416,13 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                                         className="pt-4 pb-12 text-xs md:text-sm"
                                     >
                                         {
-                                            tickets?.tickets?.map(({ fullname, seatposition, sex, email }, index) => (
-                                                <tr
-                                                    key={index}
-                                                    className={` ${index % 2 == 0
-                                                        ? "bg-slate-100" : "bg-white"}
+                                            tickets?.tickets
+                                                ?.sort((a, b) => a.seatposition - b.seatposition)
+                                                ?.map(({ fullname, seatposition, sex, email }, index) => (
+                                                    <tr
+                                                        key={index}
+                                                        className={` ${index % 2 == 0
+                                                            ? "bg-slate-100" : "bg-white"}
                                         hover:bg-slate-300
                         dark:hover:bg-slate-500
                 border-slate-100  text-xs
@@ -428,34 +430,34 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                 dark:bg-gray-900
                 dark:border-gray-600
                 `}
-                                                >
-                                                    <th className="px-2 py-4  flex items-center justify-center">
-                                                        {
-
-                                                            (index + 1)
-                                                        }
-                                                    </th>
-
-
-
-                                                    <td className="px-3 py-2">
-                                                        <span className="font-medium flex items-center justify-center min-w-fit" style={{
-                                                            workBreak: "none"
-                                                        }}>{fullname || "n/a"}</span>
-                                                    </td>
-                                                    <td className="px-3 py-2">
-                                                        <span className="font-medium ">{seatposition || "singletrip"}</span>
-                                                    </td>
-                                                    <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                        {email || "n/a"}
-                                                    </th>
-
-                                                    <td className="py-0 text-xs flex items-center"
                                                     >
-                                                        {sex || "n/a"}
-                                                    </td>
-                                                </tr>
-                                            ))
+                                                        <th className="px-2 py-4  flex items-center justify-center">
+                                                            {
+
+                                                                (index + 1)
+                                                            }
+                                                        </th>
+
+
+
+                                                        <td className="px-3 py-2">
+                                                            <span className="font-medium flex items-center justify-center min-w-fit" style={{
+                                                                workBreak: "none"
+                                                            }}>{fullname || "n/a"}</span>
+                                                        </td>
+                                                        <td className="px-3 py-2">
+                                                            <span className="font-medium ">{(seatposition + 1)}</span>
+                                                        </td>
+                                                        <th scope="row" className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                            {email || "n/a"}
+                                                        </th>
+
+                                                        <td className="py-0 text-xs flex items-center"
+                                                        >
+                                                            {sex || "n/a"}
+                                                        </td>
+                                                    </tr>
+                                                ))
                                         }
 
                                     </tbody>

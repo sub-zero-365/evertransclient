@@ -56,7 +56,7 @@ import { action as carAction } from "./pages/EditBusPage"
 import { action as logoutAction } from "./pages/Assistant.user"
 import { loader as singleMailLoader, action as editSingleMailAction } from "./pages/SingleMail"
 import { loader as routesLoader, action as routesActions } from "./pages/RoutesPage"
-import {loader as citiesLoader ,action as cityActions} from "./pages/Cities"
+import { loader as citiesLoader, action as cityActions } from "./pages/Cities"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"

@@ -171,10 +171,14 @@ shadow
                         to="/contact-us"
                         className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                     >Contact Us</NavLink></li>
-                    <li className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
-                        to="/seat"
-                        className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                    >Boarderaux</NavLink></li>
+
+                    {
+                        user?.role == "tickets" && <li className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                            to="/seat"
+                            className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                        >Boarderaux</NavLink></li>
+                    }
+
                     <li className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                         to="/dashboard"
                         className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
@@ -246,19 +250,21 @@ shadow
                             to="/contact-us"
                             className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                         >Contact Us</NavLink></motion.li>
+                    {
+                        user?.role == "tickets" &&
+                        <motion.li
+                            initial={false}
+                            animate={{ x: isOpen ? 0 : -1000 }}
+                            transition={{ delay: 0.2 }}
+
+                            className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                                to="/seat"
+                                className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
+                            >Boarderaux</NavLink></motion.li>
+                    }
 
 
 
-                    <motion.li
-
-                        initial={false}
-                        animate={{ x: isOpen ? 0 : -1000 }}
-                        transition={{ delay: 0.2 }}
-
-                        className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
-                            to="/seat"
-                            className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                        >Boarderaux</NavLink></motion.li>
 
                     <motion.li
 
@@ -363,7 +369,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                         <Rounded className=" !flex-none group">
                                             <img src={useravatar} alt="user " className='w-[40px] h-[40px] rounded-full shadow-2xl ' onClick={gotoUserPage} />
                                         </Rounded>
-                               
+
                                     </div>
 
                                     <UiButton
