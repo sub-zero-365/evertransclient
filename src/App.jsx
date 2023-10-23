@@ -58,6 +58,7 @@ import { loader as singleMailLoader, action as editSingleMailAction } from "./pa
 import { loader as routesLoader, action as routesActions } from "./pages/RoutesPage"
 import { loader as citiesLoader, action as cityActions } from "./pages/Cities"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
+import { loader as customerStatsloader } from "./pages/CustomerStats"
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
 import Mailing from './pages/Mailing'
@@ -100,6 +101,10 @@ const BusDetails = lazy(() => import("./pages/BusDetails"));
 const Routes = lazy(() => import("./pages/RoutesPage"));
 const FindBus = lazy(() => import("./pages/FindBus"));
 const EditBusPage = lazy(() => import("./pages/EditBusPage"));
+const UserStats = lazy(() => import("./pages/UserStats"));
+const TicketStats = lazy(() => import("./pages/TicketStats"));
+const MailsStat = lazy(() => import("./pages/MailsStat"));
+const CustomerStats = lazy(() => import("./pages/CustomerStats"));
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://evertrans.onrender.com"
 const checkDefaultTheme = () => {
@@ -330,6 +335,32 @@ const router = createBrowserRouter([
 
           },
           {
+            element: <Suspense
+              fallback={<FallBack />}
+            >
+              <UserStats />
+            </Suspense>,
+            path: "user/stats",
+            children: [
+              {
+                index: true,
+                element: <Suspense
+                  fallback={<FallBack />}
+                >
+                  <TicketStats />
+                </Suspense>
+              },
+              {
+                path: "mails",
+                element: <Suspense
+                  fallback={<FallBack />}
+                >
+                  <MailsStat />
+                </Suspense>
+              },
+            ]
+          },
+          {
             element:
               <Suspense fallback={<FallBack />}>
                 <Seat />
@@ -406,6 +437,13 @@ const router = createBrowserRouter([
           <Appointment />
         </Suspense>,
         loader: ticketsloader(queryClient),
+      },
+      {
+        path: "customerstats",
+        element: <Suspense>
+          <CustomerStats />
+        </Suspense>,
+        loader: customerStatsloader(queryClient),
       },
       {
         path: "mails",

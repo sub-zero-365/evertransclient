@@ -11,20 +11,20 @@ import { sortedDateOptions, queryOptions, dateSortedOption } from "../utils/sort
 import SelectSortDate from 'react-select';
 import Form from "../components/Form"
 import FilterButton from "../components/FilterButton"
-import { AiOutlineSave } from "react-icons/ai"
-import { VscFolderActive } from "react-icons/vsc"
-import { BiCategory } from "react-icons/bi"
-import { useMemo } from "react"
+// import { AiOutlineSave } from "react-icons/ai"
+// import { VscFolderActive } from "react-icons/vsc"
+// import { BiCategory } from "react-icons/bi"
+import { useCallback, useMemo } from "react"
 const allMailsQuery = (params = {}) => {
   const { search, sort, page, mailStatus } = params
+  const searchValues = { search: search ?? "", page: page ?? 1, sort: sort ?? "newest",/* mailStatus: mailStatus ?? "all" */ }
   return {
     queryKey: [
-      'mails', params
-      // { search: search ?? "", page: page ?? 1, sort: sort ?? "newest", mailStatus: mailStatus ?? "all" }
+      'mails', searchValues
     ],
     queryFn: async () => {
       const { data } = await customFetch.get('/mails', {
-        params,
+        params: searchValues
       });
       return data;
     },
@@ -39,6 +39,8 @@ export const loader =
       const params = Object.fromEntries([
         ...new URL(request.url).searchParams.entries(),
       ]);
+
+
       await queryClient.ensureQueryData(allMailsQuery(params));
       return { searchValues: { ...params } };
     };
@@ -64,6 +66,51 @@ const Mails = () => {
     })
 
   }, [])
+
+  const { obj, activeSearch } = useMemo(() => {
+    const obj = {
+      total: 0,
+      pending: {
+        counts: 0,
+        arr: []
+      },
+      sent: {
+        counts: 0,
+        arr: []
+      },
+      recieved: {
+        counts: 0,
+        arr: []
+      },
+    };
+
+    mails?.map((mail) => {
+      obj.total++
+      if (mail.status == "pending") {
+        obj.pending.arr.push(mail)
+        obj.pending.counts++
+      }
+      if (mail.status == "sent") {
+        obj.sent.arr.push(mail)
+        obj.sent.counts++
+      }
+      if (mail.status == "recieved") {
+        obj.recieved.arr.push(mail)
+        obj.recieved.counts++
+      }
+    })
+    return {
+      obj,
+      activeSearch: mails?.filter(({ status }) => {
+        const queryParams = querySearch.get("mailStatus")
+        if (queryParams == "all" || queryParams ==null) return true
+        if (status === queryParams) return true
+      })
+    }
+
+  }, [searchValues])
+
+  console.log("this is the email status", obj)
   return (
     <div>
       <Heading
@@ -76,15 +123,13 @@ const Mails = () => {
       />
 
       <Scrollable className="!justify-start scrollto  !max-w-full !w-fit !mx-auto px-4 pb-5">
-        {/* {
-          search.map((query) =>  */}
+
 
         <FilterButton className="!shadow-none"
           value="all"
           label={`All (${nHits})`}
           name="mailStatus"
 
-        // {...query} key={query} 
 
         />
         <FilterButton className="!shadow-none"
@@ -133,7 +178,7 @@ const Mails = () => {
         className="lg:px-24 px-8 gap-x-4 grid py-5 grid-cols-[repeat(auto-fit,minmax(min(calc(100%-20px),25rem),1fr))]"
 
       >
-        {mails?.map((mail) => <Mail key={mail._id}
+        {activeSearch?.map((mail) => <Mail key={mail._id}
           {...mail}
         />)}
         {

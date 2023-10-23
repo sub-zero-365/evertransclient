@@ -8,7 +8,7 @@ const FilterButton = ({
   const { handleFilterChange } = useFilter()
   const [querySearch] = useSearchParams()
   const { value } = props
-  const isSelected = value === querySearch.get(props.name)
+  const isSelected = value == querySearch.get(props.name)
   return (
     <UiButton
       onClick={() => handleFilterChange(props.name, value)}

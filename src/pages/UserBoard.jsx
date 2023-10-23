@@ -24,7 +24,7 @@ import { AiOutlineSetting } from 'react-icons/ai';
 import dateFormater from "../utils/DateFormater"
 import { BiBusSchool, BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { MdOutlineForwardToInbox, MdOutlinePriceChange } from 'react-icons/md'
+import { MdOutlineForwardToInbox, MdOutlinePriceChange, MdQueryStats } from 'react-icons/md'
 // import { Autoplay, Navigation, } from 'swiper'
 // import ClearFilter from '../components/ClearFilter'
 import UiButton from '../components/UiButton'
@@ -261,7 +261,7 @@ const Details = () => {
     if (querySearch.get("boardingRange")) {
       handleFilterChange("boardingRange", null)
     }
-    handleFilterChange("daterange", `start=${dayjs(startDate).format("YYYY/MM/DD")},end=${endDate?dayjs(endDate).format("YYYY/MM/DD") : null}`)
+    handleFilterChange("daterange", `start=${dayjs(startDate).format("YYYY/MM/DD")},end=${endDate ? dayjs(endDate).format("YYYY/MM/DD") : null}`)
   }
 
 
@@ -1231,11 +1231,29 @@ py-5 `}>
                 </form>
 
               </div>
+              <UiButton
+                // onClick={() => logoutUser()}
+                className=" hidden- lg:block w-[min(calc(100%-20px),20rem)]
+                !mx-auto !py-2.5 !my-5  !text-lg !rounded-none  !bg-blue-800"
+              >
+                <div className='flex items-center justify-center gap-x-2 text-sm lg:text-lg'
+                
+                onClick={()=>{
+                  const currentUserRole = user?.role;
+                                    if (currentUserRole == "tickets") navigate("/user/stats")
+                                    else navigate("/user/stats/mails")
+                }}
+                >
+                  <MdQueryStats
+                    size={25}
+                  /> User Stats
+                </div>
 
+              </UiButton>
 
               <UiButton
                 onClick={() => logoutUser()}
-                className=" hidden- lg:block w-[min(calc(100%-20px),20rem)]
+                className=" lg:hidden block w-[min(calc(100%-20px),20rem)]
                 !mx-auto !py-2.5 !my-5  !text-lg !rounded-xl  !bg-red-400"
               >
 

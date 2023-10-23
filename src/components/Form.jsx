@@ -7,12 +7,11 @@ const Form = ({ onChange, params, placeholder,className }) => {
 
   return (
     <form className={`${className} px-4 md:px-6 my-5 max-w-5xl mx-auto`} onSubmit={async (e) => {
+      // e.preventDefault()
       const formData = new FormData(e.target)
-      const search = await formData.get("search") || ""
+      const search =  formData.get("search") || ""
       onChange(search)
       e.preventDefault()
-      
-      // const text = await e.target.formData()
 
     }}>
       <div className="flex relative min-h-[40px]">

@@ -11,7 +11,7 @@ import { actions } from '../actions/toggleSide'
 import { motion } from 'framer-motion'
 import { BsPersonLinesFill } from "react-icons/bs"
 import { BsClipboardDataFill } from "react-icons/bs"
-import { FcAssistant } from 'react-icons/fc'
+import { FcAssistant, FcCustomerSupport } from 'react-icons/fc'
 import { BsSliders2Vertical } from 'react-icons/bs'
 import { MdOutlineSecurity } from 'react-icons/md'
 import { useravatar } from '../Assets/images';
@@ -57,6 +57,11 @@ const SideBar = () => {
         name: "Cities",
         icon: <GiModernCity size={20} />
         , to: "/dashboard/cities"
+      },
+      {
+        name: "customerStats",
+        icon: <FcCustomerSupport size={20} />
+        , to: "/dashboard/customerstats"
       },
       {
         name: "Routes",
@@ -110,13 +115,7 @@ const SideBar = () => {
         , to: "/dashboard/users?admin=true"
       },
 
-      // {
-
-      //   name: "Cities",
-      //   icon: <GiModernCity size={20} />
-      //   , to: "/dashboard/cities"
-
-      // },
+    
       {
 
         name: "Buses",

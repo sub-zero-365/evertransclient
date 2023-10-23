@@ -102,6 +102,7 @@ export const loader =
             const params = Object.fromEntries([
                 ...new URL(request.url).searchParams.entries(),
             ]);
+            
             await queryClient.ensureQueryData(allTicketsQuery(params));
             return { searchValues: { ...params } };
         };
@@ -109,11 +110,6 @@ export const loader =
 const Books = () => {
     const { handleFilterChange, handleChange } = useFilter()
     const [querySearch] = useSearchParams();
-    // const handleChangeText = (e) => {
-    //     handleFilterChange("search", e.target.value)
-    // }
-    // const { user } = useOutletContext();
-    // const { logoutUser, user } = useUserLayoutContext()
     const { searchValues } = useLoaderData()
     const userData = useQuery(allTicketsQuery(searchValues))?.data
     let downloadbaseurl = null

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
-import { AiOutlinePlus } from 'react-icons/ai'
-import { Heading } from '../components'
+import { AiOutlinePlus, AiOutlineSave } from 'react-icons/ai'
+import { Heading, Scrollable, TicketCounts, Form as SearchForm } from '../components'
 import AnimateText from '../components/AnimateText'
 import { useState, useRef, forwardRef } from 'react'
 import { components, style } from "../utils/reactselectOptionsStyles"
@@ -10,10 +10,12 @@ import Features from 'react-select'
 import { FiRefreshCcw } from 'react-icons/fi'
 import { MdOutlineClose } from 'react-icons/md'
 import Alert from '../components/Alert'
-import { useSearchParams, Link, useLoaderData, Form } from 'react-router-dom'
+import { Link, useLoaderData, Form } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import customFetch from "../utils/customFetch"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
+import FilterButton from '../components/FilterButton'
+import { useFilter } from '../Hooks/FilterHooks'
 const allBusQuery = (params = {}) => {
     return ({
         queryKey: ["buses"],
@@ -82,6 +84,7 @@ items-center place-items-center border-b ">
 
 }
 const Bus = () => {
+    const { handleFilterChange } = useFilter()
     const queryClient = useQueryClient()
     const newbustoast = () => toast.success("Add bus successfully  !", {
         position: toast.POSITION.BOTTOM_CENTER
@@ -100,7 +103,7 @@ const Bus = () => {
     const [err, setErr] = useState(null)
 
     const { searchValues } = useLoaderData()
-    const { buses } = useQuery(allBusQuery(searchValues))?.data || []
+    const { buses, nHits } = useQuery(allBusQuery(searchValues))?.data || []
 
 
 
@@ -231,7 +234,7 @@ z-10  "
             >
 
                 <div className="flex-1 ">
-                    <div className="flex px-5  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow bg-white dark:bg-slate-900 mx-4">
+                    <div className="flex px-5  items-center  mb-10 mt-5 !flex-wrap justify-between py-1 rounded-lg shadow bg-white dark:bg-slate-900 mx-4">
                         <div className="flex-1 ">
                             <Heading text="Hey Add A New Car" className="!mb-0 !pl-0 !font-black mt-0" />
                             <AnimateText text="Hello admin add new Car to the app"
@@ -266,6 +269,37 @@ z-10  "
                         </motion.div>
 
                     </div>
+                    <SearchForm
+                        onChange={search => handleFilterChange("search", search)}
+                    />
+                    <Heading
+                        text="Number of Seats "
+                        className=""
+                    />
+                    <Scrollable
+                        className="!mb-10 !flex-wrap-- !max-w-xl !mx-auto"
+                    >
+                        <FilterButton
+                            name="numberOfSeat"
+                            label={"All"}
+                            value={"all"} />
+                        {
+                            Array.from({ length: 10 },
+                                (arr, index) => <FilterButton
+                                    key={arr}
+                                    name="numberOfSeat"
+                                    label={index + 4}
+                                    value={index + 4} />)
+                        }
+
+                    </Scrollable>
+                    <Scrollable
+                    >
+                        <TicketCounts
+                            counts={nHits}
+                            text={"Total Number of Cars"}
+                            icon={<AiOutlineSave />} />
+                    </Scrollable>
                 </div>
                 <div className={`
             ${isOpen ? "visible opacity-100 pointer-events-all " : "invisible opacity-0 pointer-events-none"}
