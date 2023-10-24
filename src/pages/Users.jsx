@@ -1,9 +1,13 @@
-import { useNavigate, Form, redirect } from 'react-router-dom'
+import { useNavigate, Form, redirect, useSearchParams } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 // import axios from 'axios';
 import {
+    BarChart,
     LineChart,
-    PanigationButton
+    PanigationButton,
+    PieChart,
+    Scrollable,
+    TicketCounts
 } from '../components';
 import AnimateText from '../components/AnimateText'
 import { MdOutlineClose } from 'react-icons/md'
@@ -17,18 +21,19 @@ import { Loadingbtn } from "../components";
 import InputBox from '../components/InputBox';
 import UiButton, { UiButtonDanger } from '../components/UiButton';
 import dateFormater from '../utils/DateFormater';
-import { SlOptions } from 'react-icons/sl';
-import ShowBuses from './ShowBuses';
+// import { SlOptions } from 'react-icons/sl';
+// import ShowBuses from './ShowBuses';
 import customFetch from '../utils/customFetch'
 import { useQuery } from "@tanstack/react-query"
 import { toast } from "react-toastify"
 import RoleSelect from "react-select"
-import { usersRoleOptions } from "../utils/sortedOptions"
+import { chatsOptions, usersRoleOptions } from "../utils/sortedOptions"
 // import EmptyBox from "../components"
 import EmptyBox from './ShowBuses'
 import LoadingButton from '../components/LoadingButton';
 import ToggleSwitch from '../components';
 import { useDashBoardContext } from '../components/DashboardLayout';
+import FilterButton from '../components/FilterButton';
 const usersQuery = {
     queryKey: ["user"],
     queryFn: async () => {
@@ -65,6 +70,9 @@ export const loader = (queryClient) => async ({ params }) => {
 }
 
 const Appointment = ({ skip, currentPage }) => {
+    const [searchParams] = useSearchParams({
+        chartOption: "bar"
+    })
     // const { user } = useDashBoardContext()
     const { userdetails: users } = useQuery(usersQuery)?.data || {}
     const data = {}
@@ -211,7 +219,7 @@ const Appointment = ({ skip, currentPage }) => {
             <div className="flex gap-x-1 items-center">
                 <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users?.length}</h2>
             </div>
-            <div className="lg:flex lg:mb-14 w-full  lg:px-10">
+            <div className="lg:flex items-start lg:mb-14 w-full  lg:px-10">
                 <div className={` flex-1 relative  text-xs mx-0   rounded-lg `}
                 >
                     <div className="flex  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow
@@ -243,7 +251,34 @@ z-10  "
                         </motion.div>
 
                     </div>
-                    <LineChart chartData={userData} />
+                    <Scrollable
+                        className="!justify-center"
+                    >
+                        <TicketCounts
+                            className="!rounded-none !py-10"
+                            counts={users?.length}
+                            text="Total Number Of Employees"
+                        />
+                    </Scrollable>
+                    <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5 scrollto">
+                        {
+                            chatsOptions.map((query) => <FilterButton
+                                name="chartOption"
+                                {...query} key={query} />)
+                        }
+
+                    </Scrollable>
+                    {
+                        userData && (
+                            searchParams.get("chartOption") == "line" && <LineChart chartData={userData} />
+                            ||
+
+                            searchParams.get("chartOption") == "bar" && <BarChart chartData={userData} /> ||
+                            searchParams.get("chartOption") == "pie" && <PieChart chartData={userData} />
+
+                        )
+                    }
+                    {/* <LineChart chartData={userData} /> */}
                 </div>
                 {/* 
 */}
@@ -293,7 +328,7 @@ z-10  "
                         <MdOutlineClose
                             classNae="text-sm" />
                     </span>
-                    <AnimateText text="add a new route " className='!text-lg' />
+                    <AnimateText text="add a new Employee " className='!text-lg' />
                     <form
                         onSubmit={handleSubmit}
                         className='px-5'

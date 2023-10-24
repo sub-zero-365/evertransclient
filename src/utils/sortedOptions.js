@@ -159,5 +159,19 @@ export const usersRoleOptions = [
   },
 
 ]
+export const chatsOptions = [
+  {
+    value: "bar",
+    label: "Bar Charts"
+  },
+  {
+    value: "line",
+    label: "Line Charts"
+  },
+  {
+    value: "pie",
+    label: "Pie Charts"
+  },
+]
 
 export default 748

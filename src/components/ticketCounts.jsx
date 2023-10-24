@@ -15,7 +15,7 @@ const ticketCounts = ({ counts, icon, text, className }) => {
     bg-white 
     py-6 mb-4   
     overflow-hidden 
-    px-8 rounded-xl`}>
+    px-8 rounded-none`}>
             <div className="absolute top-0 h-1 w-0 left-0 transition-[width] bg-green-400 duration-700 group-hover:w-full"></div>
             <div className="w-10 h-10 rounded-full
    grid place-content-center

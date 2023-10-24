@@ -1,5 +1,5 @@
 
-const AmountCount = ({ amount, icon, text, className }) => {
+const AmountCount = ({ amount, icon, text, className,total }) => {
     return (
 
         <div className={`
@@ -11,10 +11,10 @@ const AmountCount = ({ amount, icon, text, className }) => {
                 </svg>
             </div>
             <div className="flex-grow flex flex-col ml-4">
-                <span className="text-xl font-bold">{amount} frs</span>
                 <div className="flex items-center justify-between">
                     <span className="text-gray-500">{text}</span>
                 </div>
+                <span className="text-xl font-bold">{amount} frs</span>
             </div>
         </div>
 

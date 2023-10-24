@@ -14,7 +14,6 @@ import { useFilter } from '../Hooks/FilterHooks'
 import { BsSearch } from 'react-icons/bs'
 import { BiChevronDown } from 'react-icons/bi'
 const topRankedQuery = (params) => {
-
     return (
         {
             queryKey: ["rankedusers", params],

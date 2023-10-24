@@ -11,13 +11,16 @@ import { sortedDateOptions, queryOptions, dateSortedOption } from "../utils/sort
 import SelectSortDate from 'react-select';
 import Form from "../components/Form"
 import FilterButton from "../components/FilterButton"
-// import { AiOutlineSave } from "react-icons/ai"
-// import { VscFolderActive } from "react-icons/vsc"
-// import { BiCategory } from "react-icons/bi"
-import { useCallback, useMemo } from "react"
-const allMailsQuery = (params = {}) => {
-  const { search, sort, page, mailStatus } = params
-  const searchValues = { search: search ?? "", page: page ?? 1, sort: sort ?? "newest",/* mailStatus: mailStatus ?? "all" */ }
+
+import { useMemo } from "react"
+const allMailsQuery = (params) => {
+  const { search, sort, page, quickdatesort } = params
+  const searchValues = {
+    search: search ?? "",
+    page: page ?? 1,
+    sort: sort ?? "newest",/* mailStatus: mailStatus ?? "all" */
+    quickdatesort: quickdatesort || ""
+  }
   return {
     queryKey: [
       'mails', searchValues
@@ -28,7 +31,7 @@ const allMailsQuery = (params = {}) => {
       });
       return data;
     },
-    keepPreviousData: true
+    // keepPreviousData: true
   };
 };
 
@@ -39,8 +42,6 @@ export const loader =
       const params = Object.fromEntries([
         ...new URL(request.url).searchParams.entries(),
       ]);
-
-
       await queryClient.ensureQueryData(allMailsQuery(params));
       return { searchValues: { ...params } };
     };
@@ -58,14 +59,8 @@ const Mails = () => {
     totalSentMails,
     totalPendingMails,
     totalRecievedMails } =
-    useQuery(allMailsQuery(searchValues)).data || []
-  const search = useMemo(() => {
-    return queryOptions.map(({ value, label }, index) => {
-      if (index == 0) label += nHits
-      return { value, label }
-    })
+    useQuery(allMailsQuery(searchValues)).data || {}
 
-  }, [])
 
   const { obj, activeSearch } = useMemo(() => {
     const obj = {
@@ -103,7 +98,7 @@ const Mails = () => {
       obj,
       activeSearch: mails?.filter(({ status }) => {
         const queryParams = querySearch.get("mailStatus")
-        if (queryParams == "all" || queryParams ==null) return true
+        if (queryParams == "all" || queryParams == null) return true
         if (status === queryParams) return true
       })
     }
@@ -162,18 +157,7 @@ const Mails = () => {
         onChange={search => handleFilterChange("search", search)}
       />
 
-      {/* <Scrollable className={`!px-5 invisible md:!grid !hidden md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
-        <TicketCounts counts={nHits}
-          text={"Total Number Of Books"}
-          icon={<AiOutlineSave />} />
-        <TicketCounts counts={totalSentMails}
-          text={"Total Number Of active Tickets"}
-          icon={<VscFolderActive />} />
-        <TicketCounts
-          text={"Total Number Of Inactive Tickets"}
-          counts={totalSentMails} icon={<BiCategory />} />
 
-      </Scrollable> */}
       <div
         className="lg:px-24 px-8 gap-x-4 grid py-5 grid-cols-[repeat(auto-fit,minmax(min(calc(100%-20px),25rem),1fr))]"
 

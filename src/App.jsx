@@ -348,7 +348,8 @@ const router = createBrowserRouter([
                   fallback={<FallBack />}
                 >
                   <TicketStats />
-                </Suspense>
+                </Suspense>,
+                
               },
               {
                 path: "mails",
@@ -356,7 +357,9 @@ const router = createBrowserRouter([
                   fallback={<FallBack />}
                 >
                   <MailsStat />
-                </Suspense>
+                </Suspense>,
+                loader: mailsLoader(queryClient)
+                
               },
             ]
           },

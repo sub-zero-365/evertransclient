@@ -1237,12 +1237,12 @@ py-5 `}>
                 !mx-auto !py-2.5 !my-5  !text-lg !rounded-none  !bg-blue-800"
               >
                 <div className='flex items-center justify-center gap-x-2 text-sm lg:text-lg'
-                
-                onClick={()=>{
-                  const currentUserRole = user?.role;
-                                    if (currentUserRole == "tickets") navigate("/user/stats")
-                                    else navigate("/user/stats/mails")
-                }}
+
+                  onClick={() => {
+                    const currentUserRole = user?.role;
+                    if (currentUserRole == "tickets") navigate("/user/stats")
+                    else navigate("/user/stats/mails?createdBy=" + user?._id)
+                  }}
                 >
                   <MdQueryStats
                     size={25}
