@@ -105,7 +105,6 @@ const Mails = () => {
 
   }, [searchValues])
 
-  console.log("this is the email status", obj)
   return (
     <div>
       <Heading

@@ -126,6 +126,16 @@ const Details = () => {
   const navigate = useNavigate()
 
   const [error, setError] = useState("")
+  const [value, setValue] = useState("")
+  useEffect(() => {
+    // window?.navigator?.clipboard?.readText().then((copiedText) => {
+    //   setValue(copiedText)
+    //   console.log(copiedText); // copied text will be shown here.
+    // // });
+    // window.clipboardData.getData('Text')
+
+  }, [])
+
   const [loading, setLoading] = useState(false)
   const handleChangePassWord = async (e) => {
     setLoading(true)
@@ -1177,8 +1187,10 @@ py-5 `}>
                     className='!text-lg' />
                   <form
                     onSubmit={async (e) => {
+
                       const formdata = new FormData(e.target)
                       const mailingid = await formdata.get("Enter Mail Id")
+                      
                       navigate(`/user/mail/${mailingid}`)
                     }}
                     className='px-5 '
@@ -1188,6 +1200,7 @@ py-5 `}>
                         // value={id}
                         type="text"
                         name="Enter Mail Id"
+                 
                       />
 
                     </div>

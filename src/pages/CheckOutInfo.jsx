@@ -26,13 +26,16 @@ import { useQuery } from "@tanstack/react-query"
 
 const errorToast = (msg = "Please select a seat and continue !!!") => toast.error(msg)
 const successToast = () => toast.success("created successfully!!!")
-const priceQuery = (params = {}) => {
+const priceQuery = (params) => {
+  console.log("this is the params oject here", params)
   return {
     queryKey: ["price", params],
     queryFn: async () => {
-      const res = await customFetch.get("/routes", {
+      const res = await customFetch.get("/routes/get", {
         params: params
       })
+      console.log("this is the price in the loader function", res.data, params)
+      return res.data
     }
 
   }
@@ -42,13 +45,16 @@ export const loader = (queryClient) => async ({ request }) => {
     ...new URL(request.url).searchParams.entries(),
   ]);
   const { from, to } = params;
+  console.log("this is from and to ", from, to)
   try {
     if (!from || !to) throw new Error('please provide both source and destination');
+    console.log("loader", from, to)
     await queryClient.ensureQueryData(priceQuery({ from, to }))
     return { searchValues: { from, to } }
 
   } catch (err) {
     const errorMessage = err?.response?.data || err?.message || "something went wrong"
+    alert(errorMessage)
     return errorMessage
   }
 }
@@ -99,13 +105,13 @@ const BusSits = () => {
   let price = null;
 
   const { searchValues } = useLoaderData()
+  const { route } = useQuery(priceQuery(searchValues)).data
   // if ("price" in searchValues) {
-  
-  const routePrice = useQuery(priceQuery(searchValues)).data
+  console.log("this is the price data from the server", route)
   if (type == "singletrip") {
-    price = routePrice?.singletripprice
+    price = route?.singletripprice
   } else {
-    price = routePrice?.roundtripprice
+    price = route?.roundtripprice
   }
   // }
 

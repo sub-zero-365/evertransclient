@@ -1,18 +1,11 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import dayjs from "dayjs"
 import { Link } from 'react-router-dom'
 import { MdPendingActions } from "react-icons/md"
 import UiButton from './UiButton'
 import { motion } from "framer-motion"
 import { scalevariants } from '../utils/framermotionanimate'
-const Status = ({ status }) => {
-    return (<div>
-        {status ? "collected" : <div className='flex items-end gap-x-2'>
-            <p>pending</p> <MdPendingActions size={15} />
-        </div>}
-    </div>)
 
-}
 let downloadbaseurl = null
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     downloadbaseurl = process.env.REACT_APP_LOCAL_URL
@@ -22,14 +15,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     downloadbaseurl = process.env.REACT_APP_PROD_URL
 
 }
-// const variants = {
-//     whileHover:{
-//         scale: 0.9, 
-//         transition: {
-//             duration: 0.4
-//         }
-//     }
-// }
+
 const Mail = ({ id, _id, collected,
     name, senderfullname, senderidcardnumber,
     senderphonenumber, recieverfullname,
@@ -37,7 +23,6 @@ const Mail = ({ id, _id, collected,
     status
 }) => {
     const createdDate = dayjs().format("MMM D, YYYY")
-   
     return (
         <motion.div
             variants={scalevariants}
@@ -50,6 +35,7 @@ const Mail = ({ id, _id, collected,
                 >
                     <h1 className='text-start text-2xl capitalize font-bold mb-2'>{name ?? "n/a"}</h1>
                     <p className='text-gray-600 '>#ID {id}</p>
+                 
                 </div>
                 <div className='flex justify-between py-2  items-start'>
                     <div>

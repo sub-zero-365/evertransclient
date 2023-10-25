@@ -252,7 +252,7 @@ const router = createBrowserRouter([
               </Suspense>
             ,
             path: "information",
-            loader: checkOutLoader,
+            loader: checkOutLoader(queryClient),
             action: checkOutAction(queryClient)
           },
           {

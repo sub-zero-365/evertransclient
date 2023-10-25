@@ -72,6 +72,7 @@ export const loader = (queryClient) => async ({ request, params }) => {
 
 
 const SingleMail = () => {
+    const inputRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
     const ref = useRef(null);
     const navigate = useNavigate()
@@ -79,7 +80,7 @@ const SingleMail = () => {
     const isInView = useInView(ref)
     const [isImageLoading, setIsImageLoading] = useState(true)
     const handleLoadingImage = async (e) => {
-        console.log("there image is done loading here")
+        // console.log("there image is done loading here")
         setIsImageLoading(false)
     }
     useEffect(() => {
@@ -119,7 +120,21 @@ const SingleMail = () => {
                             />
 
                         </Rounded>
-                        <h3 className="text-2xl font-bold flex-1 text-center ">#{mail?.id}</h3>
+                        <h3 className="text-2xl font-bold flex-1 text-center cursor-pointer "
+                            onClick={() => {
+                                window?.navigator?.clipboard?.writeText(mail?.id).then(() => {
+                                    alert("copy success")
+                                }).catch(err => alert("something went wrong"))
+                                // inputRef.current?.select();
+                                // // document.execCommand("copy");
+                                // document.execCommand('copy');
+                            }}
+                        >#{mail?.id}</h3>
+                        {/* <textarea type="text" value={id}
+                            ref={inputRef}
+                            id="GfGInput"
+                        // className='invisible w-0 h-0'
+                        /> */}
                         <UiButton
                             className="flex-none"
                         >
