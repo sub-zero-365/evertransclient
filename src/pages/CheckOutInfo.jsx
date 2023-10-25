@@ -3,7 +3,7 @@ import { useState, useRef } from "react"
 import { NavLink, useSearchParams, useNavigate, Link, useLoaderData, Form, useNavigation, redirect } from "react-router-dom"
 import AlertBox from '../components/Alert'
 import { motion } from 'framer-motion'
-import { Heading } from "../components"
+import { Heading, Scrollable } from "../components"
 import { BiCategory } from 'react-icons/bi'
 import "swiper/css"
 import "swiper/css/navigation"
@@ -23,6 +23,9 @@ import { AiOutlineArrowRight } from "react-icons/ai"
 import { toast } from 'react-toastify'
 import customFetch from "../utils/customFetch"
 import { useQuery } from "@tanstack/react-query"
+import FilterButton from "../components/FilterButton"
+import { BsCashCoin } from "react-icons/bs"
+import { MdOutlineWarehouse } from "react-icons/md"
 
 const errorToast = (msg = "Please select a seat and continue !!!") => toast.error(msg)
 const successToast = () => toast.success("created successfully!!!")
@@ -275,6 +278,36 @@ z-10  "
                 <Heading text="Travel Cost" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
                 <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{price} frs</div>
+              </div>
+              <div>
+                <h1 className="text-2xl text-center mb-2 font-semibold">Method of Payment</h1>
+                <Scrollable className="flex  gap-x-6 !justify-center">
+                  <FilterButton
+                    // className={}
+                    className={"!flex justify-center !items-center"}
+
+                    name="paymenttype"
+                    value="Cash In"
+                  >
+                    <p>Cash In </p>
+                    <BsCashCoin style={{ marginLeft: "1rem" }}
+                      size={20}
+                    />
+                  </FilterButton>
+                  <FilterButton
+                    className={"!flex justify-center gap-x-"}
+                    name="paymenttype"
+                    value="CM"
+                  // label="CM"
+                  >
+                    <p>Company MoMo </p>
+                    <MdOutlineWarehouse style={{ marginLeft: "1rem" }}
+                      size={20}
+                    />
+            
+                  </FilterButton>
+
+                </Scrollable>
               </div>
 
             </div>

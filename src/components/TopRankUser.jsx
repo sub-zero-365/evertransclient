@@ -10,7 +10,7 @@ const User = ({ total,
   const [searchQuery] =
     useSearchParams()
 
-  return (<Link to={`/information?fullname=${fullname}&phone=${phone}&sex=${sex}&email=${idcardnumber}&age=${age}&${searchQuery}`}
+  return (<Link to={`/information?fullname=${fullname}&phone=${phone}&sex=${sex}&email=${idcardnumber}&age=${age}&${searchQuery}&paymenttype=Cash In`}
     className="p-4 flex flex-col gap-y-4 cursor-pointer  mb-4 bg-white dark:bg-slate-800 dark:text-white max-w-2xl mx-auto">
     <div className="flex  justify-between items-center">
       <div className="">
