@@ -105,6 +105,7 @@ const UserStats = lazy(() => import("./pages/UserStats"));
 const TicketStats = lazy(() => import("./pages/TicketStats"));
 const MailsStat = lazy(() => import("./pages/MailsStat"));
 const CustomerStats = lazy(() => import("./pages/CustomerStats"));
+const AdminMailStat = lazy(() => import("./pages/AdminMailStat"));
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://evertrans.onrender.com"
 const checkDefaultTheme = () => {
@@ -451,7 +452,7 @@ const router = createBrowserRouter([
       {
         path: "mails",
         element: <Suspense fallback={<FallBack />}>
-          <Mails />
+          <AdminMailStat />
         </Suspense>,
         loader: mailsLoader(queryClient)
       },
