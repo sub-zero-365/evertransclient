@@ -7,7 +7,7 @@ import { chatsOptions, dateSortedOption } from '../utils/sortedOptions'
 const UserStats = () => {
   return (
     <div
-      className='flex '
+      className='lg:flex '
     >
 
       <div className='flex-none  w-full max-w-sm hidden lg:block px-4 border-r-2 shadow-sm'>
