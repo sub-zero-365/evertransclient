@@ -122,12 +122,12 @@ const MailsStat = () => {
 
   }, [searchValues])
   return (
-    <div className=' mx-auto pb-10'>
+    <div className=' mx-auto bg-rose-300-- pb-10'>
       <AnimatedText
         className=''
         text="Mail Stats"
       />
-      <Scrollable className="!justify-start !max-w-4xl  !w-fit !mx-auto px-4 pb-5 scrollto">
+      <Scrollable className="!justify-start !max-w-4xl  !w-fit !mx-auto px-4 pb-5 scrollto lg:hidden">
         {
           chatsOptions.map((query) => <FilterButton
             name="chartOption"
@@ -151,9 +151,8 @@ const MailsStat = () => {
 
       </div>
       <Scrollable
-        className="max-w-5xl mx-auto !mb-5 "
+        className="max-w-5xl mx-auto !mb-5 lg:hidden "
       >
-
         {
           dateSortedOption.map((query) => <FilterButton
             name="quickdatesort"
@@ -161,7 +160,7 @@ const MailsStat = () => {
         }
       </Scrollable>
       <Scrollable
-        className="!items-stretch mx-auto !max-w-4xl !grid grid-cols-1 lg:!grid-cols-2 gap-y-6 !px-4 "
+        className="!items-stretch mx-auto !max-w-4xl hidden -!grid grid-cols-1 lg:!grid-cols-2 gap-y-6 !px-4 "
       >
         <AmountCount
           className="!bg-blue-400 !flex-none !mb-0"

@@ -113,7 +113,7 @@ const checkDefaultTheme = () => {
   // return fals
   // }
   //   else
-  return false
+  // return false
   if (localStorage.theme === 'dark' || (
     window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark')

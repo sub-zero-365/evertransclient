@@ -26,7 +26,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-import { getCities } from "../utils/ReactSelectFunction";
+import { getCities, useCities } from "../utils/ReactSelectFunction";
 
 import { style } from "../utils/reactselectOptionsStyles"
 import LoadingButton from '../components/LoadingButton'
@@ -36,12 +36,13 @@ import { GiPathDistance } from "react-icons/gi"
 import dayjs from "dayjs"
 
 const Booking = () => {
+
+  const { data ,refetch} = useCities()
   const [queryParams] = useSearchParams()
   const [toggle, setToggle] = useState(false)
   const tripType = queryParams.get("type") || "singletrip";
   const [fromCities, setFromCities] = useState(queryParams.get("from"))
   const [toCities, setToCities] = useState(queryParams.get("to"))
-  // const [time, setTime] = useState("7am")
   const [isLine, setIsline] = useState(false)
   const navigate = useNavigate()
   const gotoBusSits = () => navigate(`/bus?from=${fromCities}&to=${toCities}&traveldate=${dayjs(startDate).format("YYYY/MM/DD")}&type=${tripType}`)

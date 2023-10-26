@@ -1,9 +1,26 @@
-import { useQuery } from '@tanstack/react-query'
+// import { useQuery } from '@tanstack/react-query'
 import customFetch from "./customFetch"
-const cities = [
-    { value: "Buea", label: "Buea" },
-    { value: "Douala", label: "Douala" },
-]
+// const cities = [
+//     { value: "Buea", label: "Buea" },
+//     { value: "Douala", label: "Douala" },
+// ]
+import { useQuery } from '@tanstack/react-query'
+const citiesQuery = (inputValue = "") => {
+    return {
+        queryKey: ["cities", inputValue],
+        queryFn: async () => {
+            const res = await customFetch.get("/allcities", {
+                params: {
+                    search: (inputValue || "")
+                }
+            })
+            return res.data
+        }
+    }
+}
+export const useCities = async(inputValue) => {
+    return useQuery(citiesQuery(inputValue))
+}
 export const getCities = async (inputValue = "") => {
     // const wait = () => new Promise(r => setTimeout(() => {
     //     r()
@@ -16,6 +33,7 @@ export const getCities = async (inputValue = "") => {
         }
     })
     return res?.data?.cities
+
 
 
 }

@@ -1,15 +1,18 @@
 // import { RiDeleteBin6Line } from "react-icons/ri"
 // import { useMailingContext } from "./Mailing"
-import { Heading, Rounded } from "../components"
-import {  useLocation, useNavigate, Form, redirect, Navigate, useActionData } from "react-router-dom"
+import { Heading, Rounded, Scrollable } from "../components"
+import { useLocation, useNavigate, Form, redirect, Navigate, useActionData } from "react-router-dom"
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai"
 import LoadingButton from "../components/LoadingButton"
 import AnimatedText from "../components/AnimateText"
 import { toast } from "react-toastify"
 import { GrCircleInformation } from "react-icons/gr"
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import customFetch from "../utils/customFetch"
+import UiButton from "../components/UiButton"
+import { BsCashCoin } from "react-icons/bs"
+import { MdOutlineWarehouse } from "react-icons/md"
 export const loader = async () => {
     return null
 }
@@ -47,12 +50,15 @@ export const action =
         };
 
 const MailingPreview = () => {
-    useEffect(()=>{
+    const [paymenttype,
+        setPaymenttype] =
+        useState("Cash In")
+    useEffect(() => {
         window.scrollTo({
             top: 0,
             behavior: "auto"
         })
-    },[])
+    }, [])
     const navigate = useNavigate()
     const location = useLocation()
     const { from, to,
@@ -92,6 +98,10 @@ const MailingPreview = () => {
                 )
 
             }
+            <input type="hidden"
+                name="paymenttype"
+                value={paymenttype}
+            />
 
             <div className="flex items-center px-5 gap-x-4 py-4">
                 <Rounded
@@ -235,6 +245,41 @@ const MailingPreview = () => {
 
                 </div>
             </div>
+            <div>
+                <h1 className="text-2xl text-center mb-2 font-semibold">Method of Payment</h1>
+                <Scrollable className="flex  gap-x-6 !justify-center mb-5">
+
+                    <UiButton
+
+                        onClick={() => setPaymenttype("Cash In")}
+
+                        className={`${paymenttype == "Cash In" && "!bg-green-900"} !flex justify-center !items-center`}
+
+                        // name="paymenttype"
+                        type="button"
+                        value="Cash In"
+                    >
+                        <p>Cash In </p>
+                        <BsCashCoin style={{ marginLeft: "1rem" }}
+                            size={20}
+                        />
+                    </UiButton>
+                    <UiButton
+                        onClick={() => setPaymenttype("CM")}
+                        className={`${paymenttype == "CM" && "!bg-green-900"} !flex justify-center gap-x-`}
+                        type="button"
+                        value="CM"
+                    >
+                        <p>Company MoMo </p>
+                        <MdOutlineWarehouse style={{ marginLeft: "1rem" }}
+                            size={20}
+                        />
+
+                    </UiButton>
+
+                </Scrollable>
+            </div>
+
             <LoadingButton
                 className="!w-[min(30rem,calc(100%-0.5rem))] !mx-auto !py-4 !text-lg !rounded-xl"
             >

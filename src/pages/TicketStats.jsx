@@ -1,7 +1,13 @@
+import AnimatedText from "../components/AnimateText"
 
 const TicketStats = () => {
   return (
-    <div>TicketStats</div>
+    <div>
+      <AnimatedText
+
+        text="UnderMaintainance here"
+      />
+    </div>
   )
 }
 

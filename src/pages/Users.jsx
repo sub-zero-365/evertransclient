@@ -34,6 +34,7 @@ import LoadingButton from '../components/LoadingButton';
 import ToggleSwitch from '../components';
 import { useDashBoardContext } from '../components/DashboardLayout';
 import FilterButton from '../components/FilterButton';
+import AnimatedText from '../components/AnimateText';
 const usersQuery = {
     queryKey: ["user"],
     queryFn: async () => {
@@ -217,7 +218,11 @@ const Appointment = ({ skip, currentPage }) => {
             </EmptyBox>
 
             <div className="flex gap-x-1 items-center">
-                <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users?.length}</h2>
+            <AnimatedText
+            text="Employees OverView"
+            className='!text-4xl lg:text-6xl lg:text-start'
+            />
+                {/* <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users?.length}</h2> */}
             </div>
             <div className="lg:flex items-start lg:mb-14 w-full  lg:px-10">
                 <div className={` flex-1 relative  text-xs mx-0   rounded-lg `}
