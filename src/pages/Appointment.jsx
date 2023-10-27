@@ -26,6 +26,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import EmptyModal from "../pages/ShowBuses"
 
 import {
     AmountCount, FormatTable,
@@ -38,7 +39,8 @@ import {
     PercentageBar,
     PrevButton,
     NextButton, PlaceHolderLoader,
-    DataDay
+    DataDay,
+    BarChart
 } from '../components';
 import { AiOutlineSave } from 'react-icons/ai';
 import { VscFolderActive } from 'react-icons/vsc';
@@ -46,6 +48,7 @@ import { BiCategory } from 'react-icons/bi';
 import { MdOutlinePriceChange } from 'react-icons/md';
 import { sortedDateOptions, sortTicketStatusOptions, skipOptions, timeOptions } from "../utils/sortedOptions"
 import customFetch from '../utils/customFetch'
+import UiButton from '../components/UiButton';
 
 const ticketsQuery = (params = {}) => {
     return ({
@@ -69,18 +72,20 @@ export const loader = (queryClient) => async ({ request }) => {
 const Appointment = () => {
     const ref = useRef(null);
 
-  
+    const [toggle,
+        setToggle] = useState(false)
 
     const [querySearch, setQuerySearch] = useSearchParams();
 
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
-  
+
     const { searchValues } = useLoaderData()
     const { data: ticketData,
-        isPreviousData } = useQuery(ticketsQuery(searchValues))
-   
+        isPreviousData,
+    } = useQuery(ticketsQuery(searchValues))
+
     const viewAll = querySearch.get("view");
 
     const handleSkipChange = (evt) => {
@@ -141,13 +146,42 @@ const Appointment = () => {
         handleFilterChange("page", 1)
         handleFilterChange("ticketStatus", evt.value)
     }
-  
+
     const [isOpen, setIsOpen] = useState(false);
-   
+
 
     return (
         <div className="pt-4 px-2 max-w-full overflow-x-auto select-none
         max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark" >
+            <EmptyModal
+                className="!z-[200]"
+                className2={"!w-[min(calc(100%-40px),700px)] !rounded-none"}
+                isOpen={toggle}
+                setIsOpen={setToggle}
+            >
+
+                {
+                    ticketData?.monthlyApplications && <>
+                        <div
+                        ></div>
+                        <BarChart chartData={
+                            {
+                                labels: ticketData?.monthlyApplications?.map(({ date }) => date),
+                                datasets: [
+                                    {
+                                        label: "Number vs Tickets Book",
+                                        // data: users?.map((v) => v.total)
+                                        data: ticketData?.monthlyApplications?.map(({ count }) => count)
+                                        // backgroundColor: ["red", "blue", "green"]
+                                    },
+                                ]
+                            }
+                        } />
+                    </>
+                }
+
+                {/* jopajsdf {JSON.stringify(stats)} */}
+            </EmptyModal>
             <motion.div
                 onClick={() => setIsOpen(true)}
                 animate={{
@@ -579,9 +613,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
                             </Swiper>
 
-
                             <div className="mb-10" />
-
                             {
                                 querySearch.get("daterange") && (
                                     <div>
@@ -591,7 +623,12 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                                 )
                             }
 
-
+                            <UiButton
+                                onClick={() => setToggle(c => !c)}
+                                className="w-[min(calc(100%-10px),500px)] mx-auto !py-4 !bg-blue-900"
+                            >
+                                6Months Stats
+                            </UiButton>
 
                         </div>
                     </div>
@@ -599,7 +636,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
             </div>
             <Form handleChangeText={handleChangeText}
-            params={querySearch} />
+                params={querySearch} />
             <Heading text={"Recent Regular Booking"} className="!mb-4 !text-center md:text-start first-letter:!text-4xl underline underline-offset-8" />
             {
                 false ? (<PlaceHolderLoader />) : (

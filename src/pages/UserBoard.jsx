@@ -1017,11 +1017,9 @@ z-10  "
         </motion.div>
 
         <div className={`lg:flex ${false && "lg:flex-row-reverse"} h-[calc(100vh-4rem)]
-        
         items-start justify-start gap-4 `}>
 
           <div className="lg:w-[calc(100%-25rem)] max-h-full overflow-y-auto scrollto ">
-
             <Outlet />
           </div>
           <div className={`flex-none lg:flex-1 
@@ -1050,6 +1048,8 @@ z-10  "
             >
 
               <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4--  !text-lg first-letter:text-2xl" />
+              <Heading text={"Full Name"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
+              <h4 className='text-lg  text-slate-500 font-black '>{user?.fullname || "n/a"}</h4>
               <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
               <h4 className='text-sm text-slate-500 font-medium '>{user?.phone || "n/a"}</h4>
               <UiButton

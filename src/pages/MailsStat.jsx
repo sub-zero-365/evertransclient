@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import AnimatedText from "../components/AnimateText"
 import PercentageCard from '../components/PercentageCard'
 import Mail from "../components/Mail"
@@ -21,6 +21,8 @@ import {
   usersRoleOptions
 } from "../utils/sortedOptions"
 import { useSearchParams } from "react-router-dom"
+import { useUserContext } from './UserStats'
+import UiButton from '../components/UiButton'
 const allMailsQuery = (params) => {
   const { search, sort, page, quickdatesort, createdBy } = params
   const searchValues = {
@@ -44,8 +46,22 @@ const allMailsQuery = (params) => {
   };
 };
 const MailsStat = () => {
+  const { setStats,setIsOpen } = useUserContext()
   // const [querySearch] = useSearchParams()
-
+  const statsQuery = useQuery({
+    queryKey: ["mailstats"],
+    queryFn: async () => {
+      const { data } = await customFetch.get('/mails/showstats', {
+        params: searchValues
+      });
+      return data;
+    },
+  })
+  console.log("this is the stats data here",statsQuery?.data)
+  useEffect(() => {
+    setStats(statsQuery?.data)
+  }, [statsQuery?.data])
+  // setStats("the man and the woman")
   const [searchParams] = useSearchParams({
     chartOption: "bar"
   })
@@ -127,6 +143,12 @@ const MailsStat = () => {
         className=''
         text="Mail Stats"
       />
+       <UiButton
+            onClick={() => setIsOpen(c => !c)}
+            className="w-[min(calc(100%-10px),500px)] mx-auto !py-4 !bg-blue-900 lg:hidden"
+          >
+            6Months Stats
+          </UiButton>
       <Scrollable className="!justify-start !max-w-4xl  !w-fit !mx-auto px-4 pb-5 scrollto lg:hidden">
         {
           chatsOptions.map((query) => <FilterButton
