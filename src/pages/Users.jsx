@@ -35,6 +35,7 @@ import ToggleSwitch from '../components';
 import { useDashBoardContext } from '../components/DashboardLayout';
 import FilterButton from '../components/FilterButton';
 import AnimatedText from '../components/AnimateText';
+import { AreaChart } from '../components/AreaChart';
 const usersQuery = {
     queryKey: ["user"],
     queryFn: async () => {
@@ -218,10 +219,10 @@ const Appointment = ({ skip, currentPage }) => {
             </EmptyBox>
 
             <div className="flex gap-x-1 items-center">
-            <AnimatedText
-            text="Employees OverView"
-            className='!text-4xl lg:text-6xl lg:text-start'
-            />
+                <AnimatedText
+                    text="Employees OverView"
+                    className='!text-4xl lg:text-6xl lg:text-start'
+                />
                 {/* <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users?.length}</h2> */}
             </div>
             <div className="lg:flex items-start lg:mb-14 w-full  lg:px-10">
@@ -279,7 +280,20 @@ z-10  "
                             ||
 
                             searchParams.get("chartOption") == "bar" && <BarChart chartData={userData} /> ||
-                            searchParams.get("chartOption") == "pie" && <PieChart chartData={userData} />
+                            searchParams.get("chartOption") == "pie" && <PieChart chartData={userData} /> ||
+                            searchParams.get("chartOption") == "area" && <AreaChart chartData={{
+                                ...userData,
+                                datasets: [
+                                    {
+                                        fill: true,
+                                        borderColor: 'rgb(53, 162, 235)',
+                                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                                        label: "ticket vs user data",
+                                        data: users?.map((v) => v.total)
+
+                                    },
+                                ]
+                            }} />
 
                         )
                     }

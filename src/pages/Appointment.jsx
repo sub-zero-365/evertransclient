@@ -40,7 +40,9 @@ import {
     PrevButton,
     NextButton, PlaceHolderLoader,
     DataDay,
-    BarChart
+    BarChart,
+    PieChart,
+    LineChart
 } from '../components';
 import { AiOutlineSave } from 'react-icons/ai';
 import { VscFolderActive } from 'react-icons/vsc';
@@ -49,6 +51,7 @@ import { MdOutlinePriceChange } from 'react-icons/md';
 import { sortedDateOptions, sortTicketStatusOptions, skipOptions, timeOptions } from "../utils/sortedOptions"
 import customFetch from '../utils/customFetch'
 import UiButton from '../components/UiButton';
+import { AreaChart } from '../components/AreaChart';
 
 const ticketsQuery = (params = {}) => {
     return ({
@@ -148,14 +151,15 @@ const Appointment = () => {
     }
 
     const [isOpen, setIsOpen] = useState(false);
-
+    const [chart, setChart] = useState("bar")
 
     return (
         <div className="pt-4 px-2 max-w-full overflow-x-auto select-none
         max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark" >
             <EmptyModal
                 className="!z-[200]"
-                className2={"!w-[min(calc(100%-40px),700px)] !rounded-none"}
+                
+                className2={"!w-[min(calc(100%-40px),700px)] max-h-[calc(100%-2.5rem)] !rounded-none !overflow-y-auto"}
                 isOpen={toggle}
                 setIsOpen={setToggle}
             >
@@ -164,7 +168,7 @@ const Appointment = () => {
                     ticketData?.monthlyApplications && <>
                         <div
                         ></div>
-                        <BarChart chartData={
+                        {chart == "bar" && <BarChart chartData={
                             {
                                 labels: ticketData?.monthlyApplications?.map(({ date }) => date),
                                 datasets: [
@@ -177,6 +181,86 @@ const Appointment = () => {
                                 ]
                             }
                         } />
+                        }
+                        {chart == "pie" && <PieChart chartData={
+                            {
+                                labels: ticketData?.monthlyApplications?.map(({ date }) => date),
+                                datasets: [
+                                    {
+                                        label: "Number vs Tickets Book",
+                                        // data: users?.map((v) => v.total)
+                                        data: ticketData?.monthlyApplications?.map(({ count }) => count)
+                                        // backgroundColor: ["red", "blue", "green"]
+                                    },
+                                ]
+                            }
+                        } />
+                        }
+                        {chart == "line" && <LineChart chartData={
+                            {
+                                labels: ticketData?.monthlyApplications?.map(({ date }) => date),
+                                datasets: [
+                                    {
+                                        label: "Number vs Tickets Book",
+                                        // data: users?.map((v) => v.total)
+                                        data: ticketData?.monthlyApplications?.map(({ count }) => count)
+                                        // backgroundColor: ["red", "blue", "green"]
+                                    },
+                                ]
+                            }
+                        } />
+                        }
+                        {chart == "area" && <AreaChart chartData={
+                            {
+                                labels: ticketData?.monthlyApplications?.map(({ date }) => date),
+                                datasets: [
+                                    {
+                                        fill: true,
+                                        borderColor: 'rgb(53, 162, 235)',
+                                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                                        label: "Number vs Tickets Book",
+                                        // data: users?.map((v) => v.total)
+                                        data: ticketData?.monthlyApplications?.map(({ count }) => count)
+                                        // backgroundColor: ["red", "blue", "green"]
+                                    },
+                                ]
+                            }
+                        } />
+                        }
+                        <Scrollable className="flex !mt-6  gap-x-6 !justify-center mb-5">
+
+                            <UiButton
+                                onClick={() => setChart("bar")}
+                                className={`${chart == "bar" && "!bg-green-900"} !flex justify-center !items-center`}
+                                type="button"
+                                value="Cash In"
+                            >
+                                <p>Bar Chart</p>
+                             
+                            </UiButton>
+                            <UiButton
+                                onClick={() => setChart("area")}
+                                className={`${chart == "area" && "!bg-green-900"} !flex justify-center gap-x-`}
+                                type="button"
+                                value="CM"
+                            >
+                                <p>Area Chart </p>
+                               
+
+                            </UiButton>
+                            <UiButton
+                                onClick={() => setChart("pie")}
+                                className={`${chart == "pie" && "!bg-green-900"} !flex justify-center gap-x-`}
+                                type="button"
+                                value="CM"
+                            >
+                                <p>Pie Chart </p>
+                               
+
+                            </UiButton>
+
+                        </Scrollable>
+
                     </>
                 }
 
@@ -291,7 +375,7 @@ z-10  "
                                     className='!border-none !h-8 mt-0' />
                             </div>
 
-                            <div className='mt-0 flex-none'>
+                            {/* <div className='mt-0 flex-none'>
                                 <Heading text={"sorted date"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
 
                                 <SelectSortDate
@@ -307,7 +391,7 @@ z-10  "
                                     isSearchable={false}
                                     onChange={handleSortTime}
                                     className='!border-none !h-8 mt-0' />
-                            </div>
+                            </div> */}
                             <div className='mt-0 flex-none'>
                                 <Heading text={"ticket status"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
                                 <Triptype
@@ -357,38 +441,7 @@ z-10  "
                                     }
                                     className='!border-none !h-8 mt-0' />
                             </div>
-                            <div className='mt-0 flex-none'>
-                                <Heading text={"Time Select"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />
-                                <Triptype
-                                    styles={{
-                                        control: base => ({
-                                            ...base,
-                                            border: 0,
-                                            borderBottom: "1px solid black",
-                                            boxShadow: "none",
-                                            background: "transparent",
-                                            color: "red",
-                                            borderRadius: 0,
-                                            fontSize: 1 + "rem"
-                                        }
-                                        )
-                                    }
-
-                                    }
-                                    components={components()}
-                                    options={
-                                        timeOptions
-                                    }
-                                    defaultValue={{
-                                        label: "select time",
-                                        value: "all"
-                                    }}
-                                    isSearchable={false}
-                                    onChange={
-                                        (e) => handleFilterChange("traveltime", e.value)
-                                    }
-                                    className='!border-none !h-8 mt-0' />
-                            </div>
+                      
                             <div>
 
                                 <Heading text={"N Column"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />

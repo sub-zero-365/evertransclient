@@ -84,7 +84,7 @@ const SeatDetails = () => {
         downloadbaseurl = process.env.REACT_APP_PROD_URL
     }
 
-    const [querySearch, setQuerySearch] = useSearchParams();
+    const [querySearch] = useSearchParams();
     const isadminuser = querySearch.get("admin")
     const [activeSeat, setActiveSeat] = useState(null);
 
@@ -104,6 +104,9 @@ const SeatDetails = () => {
 
     const tickets = useQuery(seatDetails(id)).data;
     const { seat } = useQuery(singleSeat(id)).data;
+    useEffect(() => {
+
+    }, [seat])
     const navigate = useNavigate()
 
     const [state, setState] = useState(false);
@@ -210,6 +213,7 @@ const SeatDetails = () => {
                                 <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                                 <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
                                     <h1 className="text-slate-400  font-medium text-xl md:text-2xl ">Seats Details</h1>
+
                                 </a>
                             </div>
                         </li>
@@ -221,8 +225,33 @@ const SeatDetails = () => {
 
                 <div className="lg:flex flex-row-reverse lg:flex-row gap-x-6">
                     <div className="flex-none lg:w-[25rem]">
+                        <a
+                            role='link'
+                            aria-disabled
+                            href={`${downloadbaseurl}/seat/download/${id}?${querySearch.toString()}`}
 
-                        <div className="flex-none w-[min(calc(100%-20px),200px)] mx-auto">
+                            target="_blank"
+
+                            data-te-ripple-init
+                            data-te-ripple-color="light"
+                            className={`uppercase
+        text-center
+                    w-[min(400px,calc(100%-2.5rem))]
+                     bottom-0
+                     pb-2
+                     block
+                     min-h-[2rem]
+                     mx-auto
+                    rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
+transition duration-150 ease-in-out hover:bg-blue-600
+hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:bg-blue-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
+focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]`}
+                        >
+                            download borderaux
+                        </a>
+                        {/* <div className="flex-none w-[min(calc(100%-20px),200px)] mx-auto">
                             <Heading text={"Assign a bus to seat"} className="!text-[0.8rem] !text-center !pl-0 !mb-0 uppercase text-slate-400" />
                             <BusSelect
                                 defaultOptions
@@ -242,8 +271,8 @@ const SeatDetails = () => {
                                 components={components()}
                                 className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
                             />
-                        </div>
-                        {
+                        </div> */}
+                        {/* {
                             querySearch.get("bus_id") !== null && (
                                 <a
                                     role='link'
@@ -272,9 +301,10 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                                     download borderaux
                                 </a>
                             )
-                        }
+                        } */}
 
                         <Heading text={"Seat Details"} className="!mb-3" />
+                        <h1>{seat?.bus?.bus}</h1>
 
                         <div className="flex justify-between px-2 pb-2">
                             <h1 className="text-xs lg:text- shadom-lg lg flex-1">

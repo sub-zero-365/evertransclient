@@ -36,12 +36,12 @@ const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus,
     return (
         <div
 
-            style={{
-                backgroundImage: `url(${logo})`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center center",
-                backgroundSize: "contain"
-            }}
+            // style={{
+            //     backgroundImage: `url(${logo})`,
+            //     backgroundRepeat: "no-repeat",
+            //     backgroundPosition: "center center",
+            //     backgroundSize: "contain"
+            // }}
             className="bg-white- shadow text-lg overflow-hidden w-full  min-[100px] mx-auto mb-5 py-5 px-4">
             <Form method='post'>
                 <input
@@ -84,29 +84,29 @@ const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus,
                     <div
                         className="flex items-end justify-start gap-x-4 mb-6"
                     >
-                        <h1
+                        {/* <h1
                             className='text-3xl font-bold  leading-8'
 
-                        >School Bus</h1>
+                        >School Bus</h1> */}
 
                     </div>
 
                     <div
                         className="flex flex-wrap items-end justify-start gap-x-6 leading-6 mb-6"
                     >
-                        <div className='flex gap-x-4'>
+                        {/* <div className='flex gap-x-4'>
                             <Heading
                                 className="!m-0 !p-0 !pb-0"
                                 text="Departure time : "
                             />
                             <p >{traveltime}</p>
-                        </div>
+                        </div> */}
                         <div className='flex gap-x-4'>
                             <Heading
                                 className="!m-0 !p-0 !pb-0"
                                 text="Departure Date : "
                             />
-                            <p >{traveltime}</p>
+                            <p >{dayjs(traveldate).format("YYYY/MM/DD")}</p>
                         </div>
                     </div>
                     <div

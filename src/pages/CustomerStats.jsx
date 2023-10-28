@@ -9,6 +9,7 @@ import {
 } from "../utils/sortedOptions"
 import FilterButton from "../components/FilterButton"
 import { useEffect, useState } from "react"
+import { AreaChart } from "../components/AreaChart"
 const topRankedQuery = (params) => {
     return (
         {
@@ -100,14 +101,31 @@ const CustomerStats = () => {
 
 
                 {
-                    customers && (
+                    customers && customers?.labels?.length > 0 ? (
                         searchParams.get("chartOption") == "line" && <LineChart chartData={customers} />
                         ||
 
                         searchParams.get("chartOption") == "bar" && <BarChart chartData={customers} /> ||
-                        searchParams.get("chartOption") == "pie" && <PieChart chartData={customers} />
+                        searchParams.get("chartOption") == "pie" && <PieChart chartData={customers} /> ||
+                        searchParams.get("chartOption") == "area" && <AreaChart chartData={{
+                            ...customers,
+                            datasets: [
+                                {
+                                    fill: true,
+                                    borderColor: 'rgb(53, 162, 235)',
+                                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                                    label: "ticket vs user data",
+                                    data: rankUsers?.map((v) => v.total)
+
+                                },
+                            ]
+                        }} />
 
                     )
+                        : <AnimatedText
+                            className="!text-4xl"
+                            text="Nothing to display here "
+                        />
                 }
 
 
@@ -136,14 +154,14 @@ const CustomerStats = () => {
 
 
                                 <th scope="col" className="px-3 py-3">
-                                TotalBooks
+                                    TotalBooks
                                 </th>
                                 <th scope="col" className="px-3 py-3">
                                     Phone Number
                                 </th>
 
 
-                               
+
 
 
                                 <th scope="col" className="px-3 py-3">

@@ -1,10 +1,10 @@
-import { PanigationButton, Scrollable, TicketCounts } from "../components"
+import { CustomDatePicker, PanigationButton, Scrollable, TicketCounts } from "../components"
 import { AiOutlineSave } from "react-icons/ai"
 import { VscFolderActive } from 'react-icons/vsc'
 import { useState, useEffect, useRef } from "react"
-import { useNavigate, useParams, useLoaderData } from 'react-router-dom'
+import { useNavigate, useParams, useLoaderData, Form } from 'react-router-dom'
 import { Heading } from '../components'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams,redirect } from 'react-router-dom'
 import {
     timeOptions
 } from "../utils/sortedOptions"
@@ -31,6 +31,9 @@ import { MdOutlineClose } from "react-icons/md"
 import { AiOutlinePlus } from "react-icons/ai"
 import InputBox from "../components/InputBox"
 import LoadingButton from "../components/LoadingButton"
+import EmptyModal from "../pages/ShowBuses"
+// import day from dayjs
+import dayjs from "dayjs"
 const seatsQuery = (params = {}) => ({
     queryKey: ["seats"],
     queryFn: async () => {
@@ -42,6 +45,11 @@ const seatsQuery = (params = {}) => ({
         return res.data
     }
 })
+export const action = async ({ request }) => {
+    const formdata = await request.formData()
+    const date = await formdata.get("date")
+    return redirect(`new?date=${dayjs(date || new Date()).format("YYYY/MM/DD")}`)
+}
 export const loader = (queryClient) => async ({ request }) => {
     const params = Object.fromEntries([
         ...new URL(request.url).searchParams.entries(),
@@ -84,13 +92,11 @@ const Seats = () => {
     }
 
     const [startDate, setStartDate] = useState(new Date());
+    // const [_startDate,_setStartDate]=useState(new Date())
     const [endDate, setEndDate] = useState(null);
+    const [seatDate, setSeatDate] = useState(new Date())
 
-    const handleChange = ({ value, label }, query) => {
-        if (querySearch.get(query) == value) return
-        handleFilterChange("page", 1)
-        handleFilterChange(query, value)
-    }
+
     const handleDateRangeChange = () => {
         handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
         handleFilterChange("page", 1)
@@ -118,7 +124,30 @@ const Seats = () => {
                     Borderaux
                 </title>
             </Helmet>
+            <EmptyModal
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+            >
+                <Form
+                    method="post"
+                >
+                    <CustomDatePicker
+                        startDate={seatDate}
+                        setStartDate={setSeatDate}
+                    />
+                    <input
+                        type="hidden"
+                        name="date"
+                        value={seatDate}
+                    />
+                    <UiButton
+                        className="!w-[min(400px,calc(100%-1rem))] !mx-auto line-clamp-1 !py-4 !-mb-4"
+                    >
+                        Show Available Seat for selected Date
+                    </UiButton>
 
+                </Form>
+            </EmptyModal>
             <div className="h-[calc(100vh-60px)] container mx-auto !flex-1 w-full overflow-y-auto">
                 <div className="max-w-4xl mx-auto">
                     <div className="flex  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow
@@ -155,7 +184,7 @@ z-10  "
             lg:mt-10 lg:px-8 max-w-full rounded-sm shadow-sm lg:mx-10
             py-10 items-start justify-between-- lg:mb-14">
 
-                     
+
 
                         <div className="flex-none flex flex-col my-6 lg:my-0 items-center w-full  lg:w-fit hidden- lg:block flex-end px-5 ">
                             <DatePicker
@@ -176,10 +205,10 @@ z-10  "
                                 name="Date Query"
                                 className="!mx-auto !block  !py-3 !px-10 w-[min(calc(100%-0.5rem),200px)] !mt-1 lg:px-10" />
                         </div>
-                       
+
 
                     </div>
-                  
+
 
                     <ClearFilter keys={[
                         "sort,newest",

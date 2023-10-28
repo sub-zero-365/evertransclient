@@ -48,10 +48,11 @@ export const getBuses = async (inputValue = "") => {
         )
         const { buses } = res.data;
 
-        const buses_name = buses.map(({ _id, name, feature }) => ({
+        const buses_name = buses.map(({ _id, name, feature,number_of_seats }) => ({
             label: name,
             value: _id,
-            feature: feature || "vip bus"
+            feature: feature || "vip bus",
+            number_of_seats: number_of_seats,
 
         }))
         return buses_name

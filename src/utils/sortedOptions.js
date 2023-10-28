@@ -172,6 +172,10 @@ export const chatsOptions = [
     value: "pie",
     label: "Pie Charts"
   },
+  {
+    value: "area",
+    label: "Area Charts"
+  },
 ]
 
 export default 748
