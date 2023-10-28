@@ -15,6 +15,7 @@ import { style, components } from "../utils/reactselectOptionsStyles"
 import LoadingButton from "../components/LoadingButton";
 import BusCard from "../components/BusCard";
 import dayjs from "dayjs";
+import { MdOutlineClose } from "react-icons/md";
 
 const busQuery = params => ({
     queryKey: ["buses", { params }],
@@ -72,7 +73,12 @@ const AddNewBusPage = () => {
                 text={`Available Buses for ${searchValues.date}`}
                 className="!text-4xl lg:!text-6xl"
             />
-
+            <UiButton
+                onClick={() => setIsOpen(true)}
+                className="lg:hidden !w-[min(400px,calc(100%-1rem))] !mx-auto line-clamp-1 !py-4 !my-10"
+            >
+                Add New Seat
+            </UiButton>
             {/* {JSON.stringify(seats)} */}
 
 
@@ -108,6 +114,26 @@ const AddNewBusPage = () => {
                   shadow-slate-400
                   py-5 pb-10`}
                 >
+                    <span
+                        className='absolute lg:hidden
+                    w-8 h-8  hover:ring-red-500
+           
+            md:h-10 md:w-10 rounded-full
+            grid place-items-center
+            text-xs
+            hover:shadow-xl
+            mx-4
+            mt-2
+            bg-slate-100
+            hover:bg-red-400
+            ease duration-500
+            transition-colors
+            right-0 top-0 '
+                        onClick={() => setIsOpen(false)}
+                    >
+                        <MdOutlineClose
+                            classNae="text-sm" />
+                    </span>
                     <Form method="post">
                         <AnimatedText
                             text="Add A New Bus"
@@ -233,7 +259,7 @@ const AddNewBusPage = () => {
                     {
                         seats?.length > 0 ?
                             <div
-                                className="lg:px-24 px-8 gap-x-4 grid grid-cols-[repeat(auto-fit,minmax(min(calc(100%-20px),25rem),1fr))]"
+                                className="lg:px-24 px-8 justify-center gap-x-4 grid grid-cols-[repeat(auto-fit,minmax(min(calc(100%-20px),25rem),1fr))]"
                             >
                                 {
                                     seats?.map(({ seat_positions
