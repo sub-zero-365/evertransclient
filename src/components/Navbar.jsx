@@ -286,8 +286,8 @@ shadow
                                         className="h-[80px] w-[80px]  mx-auto shadow-2xl border-2 overflow-hidden  rounded-full mt- p-0 ">
                                         <img src={useravatar} alt="user " onClick={gotoUserPage} className='w-full h-full m-0  object-cover scale-[1.3]' />
                                     </motion.div>
-                                    <p className="w-fit mx-auto capitalize">{userDetails?.fullname}</p>
-                                    <p className="w-fit mx-auto ">{userDetails?.phone}</p>
+                                    <p className="w-fit mx-auto capitalize">{user?.fullname}</p>
+                                    <p className="w-fit mx-auto ">{user?.phone}</p>
                                     <div className="flex justify-center pt-2 -hidden">
 
                                         <UiButton

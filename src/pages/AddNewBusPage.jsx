@@ -312,6 +312,7 @@ hover:rounded-lg`}
                                             >
                                                 <Link
                                                     to={`/seat/${_id}`}
+                                                    className="w-full h-full"
                                                 >
                                                     View More Details
 

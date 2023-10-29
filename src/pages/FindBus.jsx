@@ -48,21 +48,28 @@ const FindBus = () => {
     const [querySearch] = useSearchParams();
     const [selected, setSelected] = useState(querySearch.get("bus"));
     const { searchValues } = useLoaderData()
-    const data = useQuery(busQuery(searchValues)).data
+    const { seats, nHits } = useQuery(busQuery(searchValues)).data
     const [bus, setBus] = useState({})
 
     const navigate = useNavigate()
     const Next = async () => {
         return navigate(`/bussits/${selected}?${querySearch.toString()}`)
     }
-    const BusDetail = ({ _id, number_of_seats, seat_positions, from, to, bus, traveltime, traveldate }) => {
+    const BusDetail = (props) => {
+        const { _id, number_of_seats, seat_positions, from, to, bus, traveltime, traveldate } = props
         const busType = bus?.feature && bus.feature == "Normal Bus" || bus?.feature == "classic"
         const avalaibleseats = seat_positions?.filter(({ isTaken, isReserved }) => (isTaken == true || isReserved == true))?.length
         return (
             <div
                 onClick={() => {
-                    if (selected == _id) return setSelected(null)
+                    if (selected == _id) {
+                        setSelected(null)
+                        setBus(null)
+                        return
+                    }
                     setSelected(_id)
+                    setBus(props)
+
                 }}
                 className={`${selected === _id ? "bg-blue-200  dark:bg-slate-950" : busType ? "bg-rose-100 dark:bg-slate-600" : "bg-white dark:bg-slate-800"}
                border dark:text-white pt-5 w-full mx-1 ease duration-700 transition-colors rounded-lg mb-4
@@ -122,26 +129,26 @@ const FindBus = () => {
                                 <div className="flex items-center">
                                     <svg aria-hidden="true" className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                                     <a href="#" className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
-                                        <h1 className="text-slate-400  font-medium text-xl ">Select Car</h1>
+                                        <h1 className="text-slate-400  font-medium text-xl ">Select Car </h1>
                                     </a>
                                 </div>
                             </li>
 
                         </ol>
                     </nav>
-                    <AnimateText text="Select Car" className="!text-2xl " />
+                    <AnimateText text={`Available Cars (${nHits})`} className="!text-2xl " />
                     <AnimateText text={dayjs().format("DD-MM-YYYY")} className="!text-lg " />
-                    <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5">
+                    {/* <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5">
                         {
                             dateSortedOption.map((query) => <FilterButton
                                 name="quickdatesort"
                                 {...query} key={query} />)
                         }
 
-                    </Scrollable>
+                    </Scrollable> */}
                     {
 
-                        data?.seats?.map((arr, index) => {
+                        seats?.map((arr, index) => {
                             return (
                                 <BusDetail {...arr} key={index} />
                             )

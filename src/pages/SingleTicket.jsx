@@ -4,7 +4,8 @@ import { useSearchParams, useParams, NavLink, Link, useNavigate, useLocation, us
 import { useEffect, useState, useRef } from "react"
 import {
   Loader, Heading, ActiveStatusButton,
-  DeactiveStatusButton
+  DeactiveStatusButton,
+  Scrollable
 } from '../components'
 import dayjs from 'dayjs'
 import dateFormater from '../utils/DateFormater'
@@ -258,19 +259,37 @@ const User = () => {
               </div>
 
             </div>
-            {/* <Heading text="Bus Details" className={"!text-center !font-bold italic"} />
-            <div className='grid  grid-cols-2'>
+            <Heading text="Car Details" className={"!text-center !font-bold italic"} />
+            <div className='grid  grid-cols-2-- text-center'>
               <div>
                 <h2 className="text-center  text-lg md:text-xl font-medium  ">Name</h2>
                 <p className="text-center text-slate-500 mb-10 " >{ticket?.busdetails?.bus || "n/a"} </p>
               </div>
-              <div>
+              {/* <div>
                 <h2 className="text-center  text-lg md:text-xl font-medium  ">feature</h2>
                 <p className="text-center text-slate-500 mb-10 " >{ticket?.busdetails?.feature || "n/a"} </p>
 
-              </div>
+              </div> */}
 
-            </div> */}
+            </div>
+            <Heading text="Edited History" className={"!text-center !font-bold italic"} />
+
+            <ol class="relative border-l border-gray-200 dark:border-gray-700">
+
+              {
+                ticket?.editedBy?.map(({ full_name, user_id, date }) => <li class="ml-4 mb-4" key={user_id}>
+                  <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
+                  <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">{dayjs(date).format("dddd, MMMM D, YYYY h:mm A")}</time>
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Edited By:{full_name}</h3>
+                  <p class="text-base font-normal text-gray-500 dark:text-gray-400">Action:remove scanner on ticket</p>
+                </li>)
+              }
+
+            </ol>
+
+            <Scrollable>
+
+            </Scrollable>
 
 
             {
