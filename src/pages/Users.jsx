@@ -75,6 +75,8 @@ const Appointment = ({ skip, currentPage }) => {
     const [searchParams] = useSearchParams({
         chartOption: "bar"
     })
+    const { user } = useDashBoardContext()
+
     // const { user } = useDashBoardContext()
     const { userdetails: users } = useQuery(usersQuery)?.data || {}
     const data = {}
@@ -232,7 +234,9 @@ const Appointment = ({ skip, currentPage }) => {
                     bg-white dark:bg-slate-800 mx-4">
                         <div className="flex-1">
                             <Heading text="Add A New Employee" className="!mb-2 !font-black mt-0" />
-                            <p className="mb-3 text-sm  px-6">Employees added help to book ticket and give more data</p>
+                            <p className="mb-3 text-sm  px-6">
+                                {user?.role == "admin" ? "Inorder to add new employes login as normal admin" : " Employees added help to book ticket and give more data"}
+                            </p>
                         </div>
                         <motion.div onClick={() => setIsOpen(c => !c)}
                             initial={{ x: "-50%" }}
@@ -302,7 +306,7 @@ z-10  "
                 {/* 
 */}
 
-                <div className={`
+                <div className={`${user?.role == "admin" && "!invisible"}
             ${isOpen ? "visible opacity-100 pointer-events-all " : "invisible opacity-0 pointer-events-none"}
             fixed 
             lg:static
@@ -453,6 +457,9 @@ dark:text-gray-400 transition-colors duration-[2s]">
                                 <th scope="col" className="px-3 py-3">
                                     CreatedAt
                                 </th>
+                                <th scope="col" className="px-3 py-3">
+                                    Role
+                                </th>
 
                                 <th scope="col" className="px-3 py-3">
                                     N_Prints
@@ -474,7 +481,7 @@ dark:text-gray-400 transition-colors duration-[2s]">
                         >
                             {
                                 users?.map((user, index) => {
-                                    const { fullname, phone, createdAt, _id, total } = user
+                                    const { fullname, phone, createdAt, _id, total, role } = user
                                     return (
                                         <tr key={index}
                                             className={` ${index % 2 == 0
@@ -510,6 +517,9 @@ dark:border-gray-600
                                             <td className="px-3 py-2">
                                                 {dateFormater(createdAt).date}
                                             </td>
+                                            <td className="px-3 py-2">
+                                                {role}
+                                            </td>
 
 
                                             <td className="px-3 py-2">
@@ -518,12 +528,23 @@ dark:border-gray-600
 
                                             <td className="py-0 text-xs cursor-pointer hover:scale-110 transition-all duration-500 flex items-center justify-center"
                                             >
+                                                {
+                                                    role == "tickets" ? <Button
+                                                        className={"!max-w-[14rem] !w-full"}
+                                                        name="View Employee"
+                                                        href={`/dashboard/details/${_id}?admin=true&createdBy=${_id}`}
+                                                    ></Button> : <Button
+                                                        className={"!max-w-[14rem] !w-full"}
+                                                        name="View Employee"
+                                                        href={`/dashboard/mails?admin=true&createdBy=${_id}`}
+                                                    ></Button>
 
-                                                <Button
+                                                }
+                                                {/* <Button
                                                     className={"!max-w-[14rem] !w-full"}
                                                     name="View Employee"
                                                     href={`/dashboard/details/${_id || index}?admin=true&createdBy=${_id}`}
-                                                ></Button>
+                                                ></Button> */}
 
                                                 <UiButtonDanger
                                                     className="px-2 !flex !items-center"

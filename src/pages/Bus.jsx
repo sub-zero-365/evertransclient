@@ -269,10 +269,10 @@ z-10  "
                         </motion.div>
 
                     </div>
-                    <SearchForm
+                    {/* <SearchForm
                         onChange={search => handleFilterChange("search", search)}
-                    />
-                    <Heading
+                    /> */}
+                    {/* <Heading
                         text="Number of Seats "
                         className=""
                     />
@@ -292,7 +292,7 @@ z-10  "
                                     value={index + 4} />)
                         }
 
-                    </Scrollable>
+                    </Scrollable> */}
                     <Scrollable
                     >
                         <TicketCounts

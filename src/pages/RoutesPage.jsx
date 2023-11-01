@@ -32,10 +32,18 @@ export const action = (queryClient) => async ({ request }) => {
     // some great logic in here
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
+    const url = data?.action == "new" ? "/routes/new" : "/routes/update/" + data.id
+    const message = data?.action == "new" ? "successfully created new route" : "edited  route successfully"
+
     try {
-        await customFetch.post("/routes/new", data)
-        // await queryClient.invalideQueries()
-        toast.success("successfully created new route")
+        if (data.action == "new") {
+            await customFetch.post(url, data)
+
+        } else {
+
+            await customFetch.patch(url, data)
+        }
+        toast.success(message)
         return null
     } catch (err) {
         toast.error(err?.response?.data || err.message)
@@ -83,6 +91,16 @@ const RoutesPage = () => {
                         />
                         <Heading text="From" className={"!m-0 !p-0 !text-lg first-letter:text-2xl first-letter:font-black"} />
                     </div>
+                    <input type="hidden"
+
+                        name="action"
+                        value="edit"
+                    />
+                    <input type="hidden"
+
+                        name="id"
+                        value={selected?._id}
+                    />
                     <InputBox
                         disabled
                         className="!min-h-[3rem] disabled  disabled:!bg-gray-500"
@@ -111,18 +129,15 @@ const RoutesPage = () => {
 
                     <div className='px-2'>
                         <div className="flex items-end pb-2 justify-start gap-x-4">
-                            {/* <MdPriceCheck
-                                size={20}
-                            /> */}
+
                             <h1 className='text-xl  font-light '>Singletrip Price</h1> <span className='text-rose-700 text-2xl -mb-0.5'>*</span>
                         </div>
                         <InputBox
                             defaultValue={selected?.singletripprice}
                             className="!min-h-[3rem] disabled  disabled:!bg-gray-500"
-                            name="senderfullname"
+                            name="singletripprice"
                             hidden
-                            // defaultValue={state?.senderfullname}
-                            // value="from"
+
                             type="text"
                         />
                     </div>
@@ -133,11 +148,9 @@ const RoutesPage = () => {
                         </div>
                         <InputBox
                             className="!min-h-[3rem] disabled  disabled:!bg-gray-500"
-                            name="senderfullname"
+                            name="roundtripprice"
                             hidden
                             defaultValue={selected?.roundtripprice}
-
-
                             type="text"
                         />
 
@@ -218,6 +231,11 @@ min-h-[2.5rem] rounded
                             />
                             <Heading text="From" className={"!m-0 !p-0 !text-lg first-letter:text-2xl first-letter:font-black"} />
                         </div>
+                        <input type="hidden"
+
+                            name="action"
+                            value="new"
+                        />
                         <FromSelect
                             name="from"
                             defaultOptions

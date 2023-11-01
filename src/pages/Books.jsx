@@ -2,37 +2,39 @@ import { AiOutlineArrowLeft, AiOutlineCheck, AiOutlineClose } from 'react-icons/
 import { timeOptions } from '../utils/sortedOptions'
 import TimeSelect from 'react-select'
 import { onSuccessToast, onErrorToast, onWarningToast } from '../utils/toastpopup'
-import AnimateText from '../components/AnimateText'
+// import AnimateText from '../components/AnimateText'
 import 'react-datepicker/dist/react-datepicker.css'
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-datepicker';
 import { VscFolderActive } from 'react-icons/vsc'
 import Select from 'react-select';
 import SelectTrip from 'react-select';
 import SelectSortDate from 'react-select';
-import { useState, useEffect, useRef } from 'react';
+// import { useState, useEffect, useRef } from 'react';
 import { AiOutlineSave } from 'react-icons/ai';
-import { IoMdClose } from "react-icons/io"
+// import { IoMdClose } from "react-icons/io"
 import {
-    NavLink,
-    useSearchParams, useNavigate,
-    Link, useOutletContext,
-    useLoaderData, Outlet
+    // NavLink,
+    useSearchParams,
+    // useNavigate,
+    // Link, useOutletContext,
+    useLoaderData
+    // , Outlet
 } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { AiOutlineSetting } from 'react-icons/ai';
-import dateFormater from "../utils/DateFormater"
+// import { AiOutlineSetting } from 'react-icons/ai';
+// import dateFormater from "../utils/DateFormater"
 import { BiBusSchool, BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { MdOutlineForwardToInbox, MdOutlinePriceChange } from 'react-icons/md'
-import { Autoplay, Navigation, } from 'swiper'
+// import { Autoplay, Navigation, } from 'swiper'
 import ClearFilter from '../components/ClearFilter'
-import UiButton from '../components/UiButton'
+// import UiButton from '../components/UiButton'
 // import SelectTime from 'react-select'
-import { toast } from 'react-toastify'
-import { getBuses } from "../utils/ReactSelectFunction";
-import BusSelect from 'react-select/async'
-import FromSelect from 'react-select/async'
-import ToSelect from 'react-select/async'
+// import { toast } from 'react-toastify'
+// import { getBuses } from "../utils/ReactSelectFunction";
+// import BusSelect from 'react-select/async'
+// import FromSelect from 'react-select/async'
+// import ToSelect from 'react-select/async'
 // import { Button, Rounded } from '../components'
 
 import { useUserLayoutContext } from "../components/UserLayout"
@@ -42,12 +44,8 @@ import {
     Heading
     ,
     Scrollable, TicketCounts,
-    Loadingbtn,
     Form,
-    NextButton,
-    PrevButton,
-    PercentageBar
-    , CustomDatePicker
+
 } from '../components';
 
 // import { Helmet } from 'react-helmet'
@@ -102,7 +100,7 @@ export const loader =
             const params = Object.fromEntries([
                 ...new URL(request.url).searchParams.entries(),
             ]);
-            
+
             await queryClient.ensureQueryData(allTicketsQuery(params));
             return { searchValues: { ...params } };
         };
@@ -140,12 +138,12 @@ const Books = () => {
                     }
                 </div>
                 <div className='flex-1'>
-                 
+
                     <div className="flex items-start pt-10 flex-wrap gap-x-4 gap-y-6 justify-center ">
 
                         <>
 
-                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
+                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] !max-w-full `}>
                                 <TicketCounts counts={userData?.totalTickets}
                                     text={"Total Number Of Tickets"}
                                     icon={<AiOutlineSave />} />
@@ -157,7 +155,7 @@ const Books = () => {
                                     counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
 
                             </Scrollable>
-                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"}`}>
+                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} max-w-full`}>
                                 <AmountCount
                                     className="!bg-blue-400"
                                     text="Total cost of all tickets"
