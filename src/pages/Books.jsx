@@ -155,7 +155,7 @@ const Books = () => {
                                     counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
 
                             </Scrollable>
-                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} max-w-full`}>
+                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} !max-w-full`}>
                                 <AmountCount
                                     className="!bg-blue-400"
                                     text="Total cost of all tickets"

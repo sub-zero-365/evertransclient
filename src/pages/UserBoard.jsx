@@ -1,17 +1,14 @@
 import { AiOutlineArrowLeft, AiOutlineCheck, AiOutlineClose, AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { timeOptions } from '../utils/sortedOptions'
-import TimeSelect from 'react-select'
+// import TimeSelect from 'react-select'
 import { onSuccessToast, onErrorToast, onWarningToast } from '../utils/toastpopup'
 import AnimateText from '../components/AnimateText'
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker from 'react-datepicker';
-import { VscFolderActive } from 'react-icons/vsc'
-import Select from 'react-select';
-import SelectTrip from 'react-select';
-import SelectSortDate from 'react-select';
+
+
 import { useState, useEffect, useRef } from 'react';
-import { AiOutlineSave } from 'react-icons/ai';
-import { IoMdClose } from "react-icons/io"
+
 import {
   NavLink,
   useSearchParams, useNavigate,
@@ -24,9 +21,8 @@ import { AiOutlineSetting } from 'react-icons/ai';
 import dateFormater from "../utils/DateFormater"
 import { BiBusSchool, BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { MdOutlineForwardToInbox, MdOutlinePriceChange, MdQueryStats } from 'react-icons/md'
-// import { Autoplay, Navigation, } from 'swiper'
-// import ClearFilter from '../components/ClearFilter'
+import { MdFastfood, MdOutlineForwardToInbox, MdOutlinePriceChange, MdQueryStats } from 'react-icons/md'
+
 import UiButton from '../components/UiButton'
 import SelectTime from 'react-select'
 import { toast } from 'react-toastify'
@@ -113,6 +109,7 @@ const Details = () => {
 
 
   const { user } = useOutletContext();
+  const currentUserRole = user?.role
 
 
 
@@ -1020,6 +1017,57 @@ z-10  "
         items-start justify-start gap-4 `}>
 
           <div className="lg:w-[calc(100%-25rem)] max-h-full overflow-y-auto scrollto ">
+            <div
+              // variants={variants}
+              animate="show"
+              initial="hidden"
+              className='max-w-2xl !hidden mx-10 rounded-sm flex- gap-x-3 items-center my-5
+             z-10 relative
+            sm:mx-auto   px-5 '
+            >
+
+              <UiButton
+                className="!w-[min(30rem,calc(100%-0.5rem))]
+                !mx-auto !py-5 !text-lg !rounded-none
+                !bg-[#ffae02] !font-black"
+              >
+                <NavLink
+                  to={currentUserRole == "tickets" ? "/user" : "/user/mails"}
+                >
+                  {({ isPending }) => <div className="flex items-center gap-x-4">
+                    {
+                      currentUserRole === "tickets" ? <BiBusSchool
+                        size={25}
+                      /> :
+                        <MdOutlineForwardToInbox
+                          size={25}
+                        />
+                    }
+
+                    {isPending ? "loading please wait " : <p>{currentUserRole == "tickets" ? "Tickets" : "Mails"}</p>}
+                  </div>}
+
+                </NavLink>
+
+
+              </UiButton>
+              <UiButton
+                className="!w-[min(30rem,calc(100%-0.5rem))] 
+                !mx-auto !py-5 !text-lg !rounded-none
+                !bg-blue-700 !font-black"
+              >
+                <NavLink
+                  to="/restaurant"
+                >
+                  {({ isPending }) => <div className="flex items-center gap-x-4">
+                    <MdFastfood
+                      size={25}
+                    />
+                    {isPending ? "loading please wait " : <p>Restaurant</p>}
+                  </div>}
+                </NavLink>
+              </UiButton>
+            </div>
             <Outlet />
           </div>
           <div className={`flex-none lg:flex-1 
@@ -1190,7 +1238,7 @@ py-5 `}>
 
                       const formdata = new FormData(e.target)
                       const mailingid = await formdata.get("Enter Mail Id")
-                      
+
                       navigate(`/user/mail/${mailingid}`)
                     }}
                     className='px-5 '
@@ -1200,7 +1248,7 @@ py-5 `}>
                         // value={id}
                         type="text"
                         name="Enter Mail Id"
-                 
+
                       />
 
                     </div>

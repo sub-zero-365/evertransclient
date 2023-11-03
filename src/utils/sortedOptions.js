@@ -157,6 +157,10 @@ export const usersRoleOptions = [
     value: "mails",
     label: "mails"
   },
+  {
+    value: "restaurants",
+    label: "restaurants"
+  },
 
 ]
 export const chatsOptions = [

@@ -1,6 +1,7 @@
 
 
-import { useSearchParams, Form, useNavigation, redirect, useLoaderData, useActionData } from "react-router-dom"
+import { useSearchParams, Form, 
+redirect, useLoaderData, useActionData } from "react-router-dom"
 import LoadingButton from "../components/LoadingButton";
 import { toast } from "react-toastify"
 import customFetch from "../utils/customFetch";
@@ -22,9 +23,10 @@ export const action = (queryClient) => async ({ request }) => {
     queryClient.invalidateQueries();
     toast.success('Login successful');
     const role = res.data?.user?.role
-    console.log("this is the user role",role)
+    console.log("this is the user role", role)
     if (role == "tickets") from = data.from || "/user"
     else if (role == "mails") from = data.from || "/user/mails"
+    else if (role == "restaurants") from = data.from || "/restaurant"
     else from = data.from || "/assistant"
     return redirect(from, { replace: true })
   } catch (error) {

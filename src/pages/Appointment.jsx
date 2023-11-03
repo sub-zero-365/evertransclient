@@ -13,19 +13,11 @@ import TimeSelect from 'react-select';
 import { AiOutlineSetting } from 'react-icons/ai';
 // import formatQuery from "../utils/formatQueryStringParams"
 import { components, style } from "../utils/reactselectOptionsStyles"
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay, Navigation } from 'swiper'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+
 import { useQuery } from "@tanstack/react-query"
-import "swiper/css"
-import "swiper/css/navigation"
-import "swiper/css/pagination"
-import "swiper/css/autoplay"
-import "swiper/css/a11y"
-import "swiper/css/scrollbar"
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
+
 import EmptyModal from "../pages/ShowBuses"
 
 import {

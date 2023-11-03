@@ -10,7 +10,7 @@ import {
   Pagination,
   Navigation,
 
-} from 'swiper'
+} from 'swiper/modules'
 import Alert from "../components/Alert"
 import { Helmet } from 'react-helmet'
 import axios from 'axios'
@@ -18,16 +18,16 @@ import GenderSelect from 'react-select'
 import Marquee from 'react-fast-marquee'
 import AnimateText from '../components/AnimateText'
 import PaymentType from 'react-select'
-import "swiper/css"
-import "swiper/css/navigation"
-import "swiper/css/pagination"
-import "swiper/css/autoplay"
-import "swiper/css/a11y"
-import "swiper/css/scrollbar"
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
+// import "swiper/css"
+// import "swiper/css/navigation"
+// import "swiper/css/pagination"
+// import "swiper/css/autoplay"
+// import "swiper/css/a11y"
+// import "swiper/css/scrollbar"
+// import "swiper/css";
+// import "swiper/css/free-mode";
+// import "swiper/css/navigation";
+// import "swiper/css/thumbs";
 import formatQuery from "../utils/formatQueryStringParams"
 import { paymentOptions } from '../utils/sortedOptions'
 // import Loader from '../components/Load'

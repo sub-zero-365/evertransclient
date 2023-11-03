@@ -14,7 +14,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { Swiper } from 'swiper/react'
 import { SwiperSlide } from 'swiper/react'
-import { Autoplay, Navigation } from 'swiper'
+import { Autoplay, Navigation } from 'swiper/modules'
 import customFetch from '../utils/customFetch'
 
 const securityQuery = {

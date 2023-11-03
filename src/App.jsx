@@ -23,6 +23,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import "swiper/css/scrollbar"
 import "core-js/features/array/at";
 import {
   QueryClient,
@@ -40,7 +41,7 @@ import { loader as dashboardLayoutLoader } from "./components/DashboardLayout"
 import { loader as ticketsloader } from "./pages/Appointment"
 import { loader as usersLoader, action as usersAction } from "./pages/Users"
 import { loader as userLoader } from "./pages/userDetails"
-import { loader as seatsLoader,action as seatAction } from "./pages/Seats"
+import { loader as seatsLoader, action as seatAction } from "./pages/Seats"
 import { loader as ticketsLoader } from "./pages/Books"
 import { loader as busLoader } from "./pages/Bus"
 import { loader as singleBusLoader, action as singleBusAction } from "./pages/BusDetails"
@@ -59,7 +60,7 @@ import { loader as routesLoader, action as routesActions } from "./pages/RoutesP
 import { loader as citiesLoader, action as cityActions } from "./pages/Cities"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import { loader as customerStatsloader } from "./pages/CustomerStats"
-import {loader as newSeatloader,action as newSeatAction} from "./pages/AddNewBusPage"
+import { loader as newSeatloader, action as newSeatAction } from "./pages/AddNewBusPage"
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
 import Mailing from './pages/Mailing'
@@ -108,7 +109,9 @@ const TicketStats = lazy(() => import("./pages/TicketStats"));
 const MailsStat = lazy(() => import("./pages/MailsStat"));
 const CustomerStats = lazy(() => import("./pages/CustomerStats"));
 const AdminMailStat = lazy(() => import("./pages/AdminMailStat"));
+const Restaurant = lazy(() => import("./pages/Restaurant"));
 const NewBusPage = lazy(() => import("./pages/AddNewBusPage"));
+const ProductPage = lazy(() => import("./pages/Product"));
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://evertrans.onrender.com"
 const checkDefaultTheme = () => {
@@ -285,6 +288,18 @@ const router = createBrowserRouter([
             ]
 
           },
+          {
+            path: "restaurant",
+            element: <Suspense>
+              <Restaurant />
+            </Suspense>
+          },
+          {
+            path: "product/:id",
+            element: <Suspense>
+              <ProductPage />
+            </Suspense>
+          },
 
 
           {
@@ -353,7 +368,7 @@ const router = createBrowserRouter([
                 >
                   <TicketStats />
                 </Suspense>,
-                
+
               },
               {
                 path: "mails",
@@ -363,7 +378,7 @@ const router = createBrowserRouter([
                   <MailsStat />
                 </Suspense>,
                 loader: mailsLoader(queryClient)
-                
+
               },
             ]
           },
@@ -376,7 +391,7 @@ const router = createBrowserRouter([
             path: "seat",
             loader: seatsLoader(queryClient),
             errorElement: <SingleTicketErrorElement />,
-            action:seatAction
+            action: seatAction
 
           },
           {
@@ -399,10 +414,10 @@ const router = createBrowserRouter([
             path: "seat/new",
             loader: newSeatloader(queryClient),
             errorElement: <SingleTicketErrorElement />,
-            action:newSeatAction(queryClient)
+            action: newSeatAction(queryClient)
 
           },
-          
+
 
         ]
       }
@@ -596,7 +611,7 @@ const router = createBrowserRouter([
         path: "seat/new",
         loader: newSeatloader(queryClient),
         errorElement: <SingleTicketErrorElement />,
-        action:newSeatAction(queryClient)
+        action: newSeatAction(queryClient)
 
       },
       {

@@ -1,6 +1,5 @@
-import { useNavigate, Form, redirect, useSearchParams } from 'react-router-dom'
+import {  Form, redirect, useSearchParams } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
-// import axios from 'axios';
 import {
     BarChart,
     LineChart,
@@ -11,7 +10,6 @@ import {
 } from '../components';
 import AnimateText from '../components/AnimateText'
 import { MdOutlineClose } from 'react-icons/md'
-// import { useravatar } from '../Assets/images';
 import Alert from '../components/Alert'
 import { Button, Heading } from '../components';
 import { AiOutlinePlus } from 'react-icons/ai'
@@ -61,7 +59,7 @@ export const action = (queryClient) => async ({ request }) => {
         return null
     }
     catch (err) {
-        console.log(err)
+        // console.log(err)
         toast.warning(err?.response?.data || err?.message || "something went wrong try again")
         return err
     }

@@ -17,7 +17,7 @@ import axios from 'axios'
 import { BiCategory } from 'react-icons/bi'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { MdOutlinePriceChange } from 'react-icons/md'
-import { Autoplay, Navigation, Pagination } from 'swiper'
+import { Autoplay, Navigation, Pagination } from 'swiper/modules'
 import {
   useQuery,
 } from '@tanstack/react-query'

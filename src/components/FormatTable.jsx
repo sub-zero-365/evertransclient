@@ -185,11 +185,12 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                                     >
                                         <Button admin state={{
                                             ticket,
-                                            searchParams:querySearch.toString()
+                                            searchParams: querySearch.toString()
                                         }}
                                             disabled={(admin)}
                                             href={`/${admin ? "dashboard" : "user"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
                                         />
+                                       
                                         {(ticket?.active && !admin) && (
                                             <UiButton
 
@@ -203,6 +204,20 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                                                 </Link>
                                             </UiButton>
                                         )}
+                                         {
+                                            ticket?.active && ticket.type == "singletrip" &&!admin&&
+                                            <UiButton
+
+                                                className={"!bg-violet-900"}
+
+                                            >
+                                                <Link
+                                                    to={`/user/edit/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
+                                                >
+                                                    Upgrade 
+                                                </Link>
+                                            </UiButton>
+                                        }
                                     </td>
                                 </tr>
                             ))

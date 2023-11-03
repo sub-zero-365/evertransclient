@@ -1,0 +1,19 @@
+
+.productcart .swiper-pagination-bullet {
+    @apply !bg-black !mr-0.5 ;
+  }
+
+  .productcart
+    .swiper-pagination.swiper-pagination-bullets.swiper-pagination-horizontal {
+    @apply  justify-end !px-0 !bg-transparent  !flex !items-center  !h-fit  !absolute !right-0 !left-auto !top-0 !z-[10] !py-1  !max-w-[60px];
+  }
+  .productcart .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  

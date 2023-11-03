@@ -9,7 +9,7 @@ import {
 } from '../components'
 import dayjs from 'dayjs'
 import dateFormater from '../utils/DateFormater'
-
+import { toast } from "react-toastify"
 import Marquee from 'react-fast-marquee'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { Loadingbtn } from '../components'
@@ -117,6 +117,8 @@ const User = () => {
       queryClient.invalidateQueries(["ticket", id])
 
     } catch (err) {
+      const errorMessage = err?.response?.data || err?.message || "something went wrong "
+      toast.error(errorMessage)
       setLoadbtn(false)
     }
   }

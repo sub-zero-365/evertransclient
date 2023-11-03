@@ -7,6 +7,7 @@ module.exports = {
                 "poppins": ['Poppins', 'sans-serif'],
                 "manrope": ['Manrope', 'sans-serif'],
                 "montserrat": ['Montserrat', 'sans-serif'],
+                "bricolage": ["Bricolage Grotesque", 'sans-serif'],
                 'body': [
                     'Inter',
                     'ui-sans-serif',

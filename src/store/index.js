@@ -10,6 +10,7 @@ import data from '../actions/applications'
 import userData from '../actions/userData';
 import seatData from '../actions/seatsData';
 import User from '../actions/User';
+import cartItems from "../actions/cartItems";
 const store = configureStore({
     reducer: {
         sidebar: toggleSideBar.reducer,
@@ -21,7 +22,8 @@ const store = configureStore({
         setAdminData: adminData,
         userData,
         seatData,
-        User
+        User,
+        cartItems,
     }
 
 })
