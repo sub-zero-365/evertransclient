@@ -40,7 +40,7 @@ font-montserrat
 
 }
 
-const UiButton = ({ className, onClick, name, disabled, type, children }) => {
+const UiButton = ({ className, onClick, name, title, disabled, type, children }) => {
     return (
         <button
             onClick={onClick}
@@ -73,7 +73,7 @@ text-[0.7rem]
 md:text-sm
 font-montserrat
 `}
-        >{name || children || "Button"}</button>
+        >{name || title || children || "Button"}</button>
     )
 
 

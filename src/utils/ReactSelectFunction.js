@@ -18,7 +18,7 @@ const citiesQuery = (inputValue = "") => {
         }
     }
 }
-export const useCities = async(inputValue) => {
+export const useCities = async (inputValue) => {
     return useQuery(citiesQuery(inputValue))
 }
 export const getCities = async (inputValue = "") => {
@@ -48,7 +48,7 @@ export const getBuses = async (inputValue = "") => {
         )
         const { buses } = res.data;
 
-        const buses_name = buses.map(({ _id, name, feature,number_of_seats }) => ({
+        const buses_name = buses.map(({ _id, name, feature, number_of_seats }) => ({
             label: name,
             value: _id,
             feature: feature || "vip bus",
@@ -62,6 +62,40 @@ export const getBuses = async (inputValue = "") => {
     }
 
 }
+export const getCustomerName = async (inputValue = "") => {
+    try {
+        const res = await customFetch.get("/mails/ranked-users", {
+            params: {
+                search: inputValue
+            }
+        })
+        let users = res.data?.rankUsers;
+        console.log("this is the users", users)
+        users = users.map((obj) => ({ label: obj.senderfullname, value: obj.senderfullname ,obj}))
+        return users
+    } catch (err) {
+        console.log(`this is the error from the server `, err?.response?.data || err?.message)
+        return []
+    }
+
+}
+export const getCustomerPhone = async (inputValue = "") => {
+    try {
+        const res = await customFetch.get("/ranked-users", {
+            params: {
+                numberFilter: inputValue
+            }
+        })
+        let users = res.data?.rankUsers;
+        users = users.map(({ phone }) => ({ label: phone, value: phone }))
+        return users
+    } catch (err) {
+        return err.response.data
+    }
+
+}
+
+
 export default function useCity() {
 
     return useQuery({

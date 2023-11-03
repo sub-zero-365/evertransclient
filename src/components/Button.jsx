@@ -1,7 +1,7 @@
 import { useNavigate, Link } from 'react-router-dom'
 import UiButton from './UiButton';
 const
-    Button = ({ className, href, name, state }) => {
+    Button = ({ className, href, name, state,children }) => {
         const navigate = useNavigate();
         const navigateTo = (path = "/") => {
             return navigate(path)

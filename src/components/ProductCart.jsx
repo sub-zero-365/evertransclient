@@ -8,7 +8,7 @@ import useItem from '../utils/checkInCart.js';
 import { useDispatch } from 'react-redux';
 import { addToCart, removeFromCart } from '../actions/cartItems'
 import { useNavigate } from 'react-router-dom';
-
+import {toast } from "react-toastify"
 const variants = {
     show: {
         y: 0, opacity: 1,
@@ -125,6 +125,7 @@ const ProductCart = (props) => {
                                 e.stopPropagation()
                                 console.log(e)
                                 dispatch(removeFromCart(id))
+                                toast.success("remove from cart  !!!")
                             }}
                         /> : <Button
                             name="add to cart"
@@ -134,6 +135,8 @@ const ProductCart = (props) => {
                             onClick={e => {
                                 e.stopPropagation()
                                 dispatch(addToCart(item))
+                                toast.success("added to cart !!!")
+                                
                             }}
                         />
                     }

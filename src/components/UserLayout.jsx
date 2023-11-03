@@ -24,13 +24,13 @@ const UserLayout = ({ isDarkThemeEnabled }) => {
 
   const data = useQuery(userQuery)
 
-  const logoutUser = async () => {
+  const logoutUser = async (error = "") => {
     try {
       await customFetch.get('/auth/logout');
       // queryClient.invalidateQueries();
       queryClient.removeQueries()
       setUserDetails({})
-      navigate("/login")
+      navigate("/login?message=" + error)
     } catch (err) {
       console.log("this is the fail response here", err.response?.data)
     }

@@ -10,6 +10,8 @@ import { useUserLayoutContext } from "./UserLayout"
 import AppSpinner from './AppSpinner'
 import { useRef } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
+import NavFooter from './NavFooter';
+import CartModal from './CartModal';
 const ProtectedContext = createContext()
 
 const userQuery = {
@@ -47,14 +49,14 @@ const ProtectedRoute = () => {
         },
         (error) => {
             if (error?.response?.status === 401) {
-                setIsAuthError(true);
+                setIsAuthError(error?.response?.data);
             }
             return Promise.reject(error);
         }
     );
     useEffect(() => {
         if (!isAuthError) return;
-        logoutUser();
+        logoutUser(isAuthError);
     }, [isAuthError]);
     return (
         <ProtectedContext.Provider
@@ -124,6 +126,12 @@ z-10  `}
                     </>
                 }
             </div>
+            {
+                user?.role == "restaurants" && <>
+                    <CartModal />
+                    <NavFooter />
+                </>
+            }
 
 
         </ProtectedContext.Provider>

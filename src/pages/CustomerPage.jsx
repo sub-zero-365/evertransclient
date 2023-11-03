@@ -13,6 +13,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useFilter } from '../Hooks/FilterHooks'
 import { BsSearch } from 'react-icons/bs'
 import { BiChevronDown } from 'react-icons/bi'
+
+import AsyncCreatableSelect from 'react-select/async-creatable';
+import { getCustomerPhone } from '../utils/ReactSelectFunction'
 const topRankedQuery = (params) => {
     return (
         {
@@ -93,6 +96,13 @@ const CustomerPage = () => {
                                     className='flex-none mr-4'
                                 />
                             </button>
+                            {/* <AsyncCreatableSelect
+                                name="search"
+                                cacheOptions
+                                defaultOptions
+                                loadOptions={getCustomerPhone}
+                                type="tel"
+                            /> */}
                             <input
                                 name="search"
                                 defaultValue={querySearch.get("numberFilter")}

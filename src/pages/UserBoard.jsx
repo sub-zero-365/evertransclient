@@ -1013,10 +1013,12 @@ z-10  "
           </div>
         </motion.div>
 
-        <div className={`lg:flex ${false && "lg:flex-row-reverse"} h-[calc(100vh-4rem)]
+        <div className={`lg:flex 
+        ${false && "lg:flex-row-reverse"}
+        h-[calc(100vh-4rem)]
         items-start justify-start gap-4 `}>
 
-          <div className="lg:w-[calc(100%-25rem)] max-h-full overflow-y-auto scrollto ">
+          <div className="lg:w-[calc(100%-25rem)] max-h-full overflow-y-auto max-w-full ">
             <div
               // variants={variants}
               animate="show"

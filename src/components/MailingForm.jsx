@@ -3,7 +3,7 @@ import { CiLocationOn } from "react-icons/ci"
 import { WiTime4 } from "react-icons/wi"
 import { GiPathDistance } from "react-icons/gi"
 import InputBox from "../components/InputBox"
-import { getCities } from "../utils/ReactSelectFunction";
+import { getCities, getCustomerName } from "../utils/ReactSelectFunction";
 import { useNavigate, useSearchParams, Link, useNavigation, useLocation } from "react-router-dom"
 import {
     Heading,
@@ -14,7 +14,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { AiOutlineArrowRight, AiOutlineCloudUpload } from 'react-icons/ai'
 import FromSelect from 'react-select/async'
 import ToSelect from 'react-select/async'
-import TimeSelect from 'react-select'
+// import TimeSelect from 'react-select'
 import { timeOptions, priceOptions } from '../utils/sortedOptions'
 import { useMailingContext } from "../pages/Mailing"
 import { toast } from "react-toastify"
@@ -26,10 +26,12 @@ import { AnimatePresence, motion } from 'framer-motion'
 import AnimatedText from './AnimateText'
 import CreatableSelect from 'react-select/creatable'
 import imageCompression from 'browser-image-compression'
+import AsyncCreatableSelect from 'react-select/async-creatable';
 const MailingForm = () => {
     const location = useLocation()
     // const state = location.state || {};
-    const state = JSON.parse(localStorage.getItem("mailingdetails")) || location.state || {}
+    const [state, setState] = useState(JSON.parse(localStorage.getItem("mailingdetails")) || location.state || {})
+    // const state = JSON.parse(localStorage.getItem("mailingdetails")) || location.state || {}
 
     console.log("this is the state value ", state)
     const style = {
@@ -75,15 +77,15 @@ const MailingForm = () => {
         file, setFile } = useMailingContext()
 
 
-    const handleFileChange = async() => {
+    const handleFileChange = async () => {
         const file = fileRef.current.files[0]
         if (!file) return
         const options = {
             maxSizeMB: 0.4,
             maxWidthOrHeight: 1920,
             useWebWorker: true,
-          }
-          const compressedFile = await imageCompression(file, options);
+        }
+        const compressedFile = await imageCompression(file, options);
         setFile(compressedFile)
 
     }
@@ -239,23 +241,8 @@ const MailingForm = () => {
 
 
 
-                {/* <div className="flex items-center !mb-1 !mt-2 gap-x-2">
-                    <WiTime4 size={20}
-                        className="text-rose-600"
-                    />
-                    <Heading text="Time" className={"!m-0 !p-0 !text-lg first-letter:text-2xl first-letter:font-black"} />
-                </div> */}
-                {/* <TimeSelect
-                    name="time"
-                    styles={style}
-                    components={{ IndicatorSeparator: () => null }}
-                    isSearchable={false}
-                    required className="dark:bg-slate-900 mx-2 text-black text-xs min-h-8 md:text-xl mb-6"
-                    defaultValue={{
-                        label: "7am",
-                        value: "7am"
-                    }}
-                    options={timeOptions} /> */}
+
+                
                 <div className='px-2'>
                     <div className="flex items-end pb-2 justify-start gap-x-4">
                         <BsTelephoneMinus
@@ -286,7 +273,7 @@ const MailingForm = () => {
                         isClearable options={priceOptions}
                         name='price'
                     />
-                
+
                 </div>
                 <div className='px-2'>
                     <div className="flex items-end pb-2 justify-start gap-x-4">
@@ -323,12 +310,34 @@ const MailingForm = () => {
                         <h1 className='text-xl  font-light '>FullName</h1> <span className='text-rose-700 text-2xl -mb-0.5'>*</span>
                     </div>
 
-                    <InputBox
+                    {/* <InputBox
                         className="!min-h-[3rem]"
                         name="senderfullname"
                         hidden
                         defaultValue={state?.senderfullname}
                         type="text"
+                    /> */}
+                    <AsyncCreatableSelect
+                        onSelect={(e) => {
+                            console.log("this field was selected ", e)
+                        }}
+                        name="senderfullname"
+                        onChange={(e) => {
+                            console.log(`this is the e ${e}`, e.__isNew__)
+                            if (!e.__isNew__) {
+                                setState({
+                                    ...e.obj
+                                })
+                            }
+                        }}
+                        cacheOptions
+                        defaultOptions
+                        loadOptions={getCustomerName}
+                        styles={{
+                            ...style,
+                            wdith: "100%",
+                            fontSize: 10 + "px"
+                        }}
                     />
                 </div>
                 <div className='px-2'>

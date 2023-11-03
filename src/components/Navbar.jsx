@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext } from 'react'
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
 import { IoMdClose } from 'react-icons/io'
-import { BsMoonStars, BsSearch, BsSun } from 'react-icons/bs';
+import { BsBag, BsMoonStars, BsSearch, BsSun } from 'react-icons/bs';
 import { useNavigate, NavLink, Link } from 'react-router-dom';
 import { useravatar } from '../Assets/images';
 import logo from "../Assets/images/logo.png"
@@ -18,8 +18,8 @@ import React from "react"
 import SearchResultContainer from './SearchResult';
 import SeachContainer from './SearchContainer';
 import { useQuery } from "@tanstack/react-query"
+import useToggleCartSlider from '../utils/useToggleCartSlider';
 const SearchContext = createContext()
-
 const allTicketsQuery = (params = {}) => {
     // console.log("this is the params", params)
     const { search, sort, page } = params
@@ -44,7 +44,7 @@ const allTicketsQuery = (params = {}) => {
 };
 const Navbar = ({ }) => {
     const [toggle, setToggle] = useState(false)
-
+    const { open } = useToggleCartSlider()
     const queryClient = useQueryClient()
     const disatch = useDispatch()
     const { isDarkThemeEnabled, user } = useUserLayoutContext()
@@ -91,8 +91,16 @@ const Navbar = ({ }) => {
         setIsOpen(c => !c)
 
     }
-
-    const { data, isPreviousData } = useQuery(allTicketsQuery({ search }))
+    const { totalAmount } = useSelector(state => state.cartItems)
+    const [isCartEmpty, setIsCartEmpty] = useState(false)
+    useEffect(() => {
+        if (totalAmount > 0) {
+            setIsCartEmpty(true)
+        } else {
+            setIsCartEmpty(false)
+        }
+    }, [totalAmount])
+    // const { data, isPreviousData } = useQuery(allTicketsQuery({ search }))
 
     // console.log("this is the search data", data)
     const container = {
@@ -110,8 +118,8 @@ const Navbar = ({ }) => {
 
     return (
         <SearchContext.Provider value={{
-            setToggle, search, setSeach, isPreviousData,
-            data
+            setToggle, search, setSeach, isPreviousData: false,
+            data: []
         }}>
 
             <div className="sticky
@@ -414,6 +422,29 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
                                     </motion.div>
                                 }
+                            </motion.div>
+                        </Rounded>
+                        <Rounded>
+
+                            <motion.div className='relative'
+                                whileHover={{
+                                    scale: 1.2
+                                }}
+                            >
+                                {
+                                    isCartEmpty && <div
+                                        className='w-2.5 h-2.5 bg-rose-800 rounded-full right-0 absolute -top-0.5' />
+                                }
+
+                                <BsBag
+                                    onClick={() => {
+                                        open()
+                                    }}
+                                    className='text-gray-700'
+                                    size={20}
+                                />
+
+
                             </motion.div>
                         </Rounded>
                         <Rounded className="!w-10 !h-10"
