@@ -8,7 +8,7 @@ import useItem from '../utils/checkInCart.js';
 import { useDispatch } from 'react-redux';
 import { addToCart, removeFromCart } from '../actions/cartItems'
 import { useNavigate } from 'react-router-dom';
-import {toast } from "react-toastify"
+import { toast } from "react-toastify"
 const variants = {
     show: {
         y: 0, opacity: 1,
@@ -20,7 +20,13 @@ const variants = {
 
 const ProductCart = (props) => {
 
-    const { _id: id = 1, className, product_price: price, product_desc: decription, product_imgUrl, product_name, hidden } = props
+    const { _id: id = 1,
+
+        className,
+        price,
+        product_desc: decription,
+        product_imgUrl,
+        productname: product_name, hidden } = props
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const item = {
@@ -108,7 +114,7 @@ const ProductCart = (props) => {
                 </p>
                 <h1
                     className='text-black leading-8 font-bold '
-                >${price}</h1>
+                >FCFA {price}</h1>
             </div>
             {
                 !hidden && <div
@@ -136,7 +142,7 @@ const ProductCart = (props) => {
                                 e.stopPropagation()
                                 dispatch(addToCart(item))
                                 toast.success("added to cart !!!")
-                                
+
                             }}
                         />
                     }

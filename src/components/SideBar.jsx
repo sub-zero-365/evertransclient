@@ -68,6 +68,7 @@ const SideBar = () => {
         icon: <CiRoute size={20} />
         , to: "/dashboard/routes"
       },
+
       {
 
         name: "Cars",
@@ -115,7 +116,7 @@ const SideBar = () => {
         , to: "/dashboard/users?admin=true"
       },
 
-    
+
       {
 
         name: "Buses",
@@ -139,7 +140,20 @@ const SideBar = () => {
     ]
 
   }
+  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    // downloadbaseurl = process.env.REACT_APP_LOCAL_URL
+    // dev code
+    // router.push
+    navLinks.splice(4, 0, {
+      name: "Add Product",
+      icon: <CiRoute size={20} />
+      , to: "/dashboard/product/add"
+    },)
+  } else {
+    // production code
+    // downloadbaseurl = process.env.REACT_APP_PROD_URL
 
+  }
   const [view, setView] = useState(false)
   const handleChangeView = () => {
     if (view) return setView(false)

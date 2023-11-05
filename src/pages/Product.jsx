@@ -1,7 +1,7 @@
 import { useLoaderData, useNavigate } from "react-router-dom"
 import { data } from '../constants/demoData';
 import Heading from "../components/Headings"
-import Button from "../components/Button"
+import Button from "../components/UiButton"
 import { FreeMode, Navigation, Pagination, Scrollbar, A11y, Autoplay, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { useState, useRef } from 'react'

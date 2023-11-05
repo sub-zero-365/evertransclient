@@ -99,7 +99,7 @@ w-full md:flex- md:max-w-3xl md:rounded-lg mx-auto fixed-- -bg-white rounded-t-2
 
                                 <Button title="Place Order"
                                     onClick={() => {
-                                        navigate("/shopping-bag")
+                                        navigate("/shopping-bag?paymenttype=Cash In")
                                         close()
                                     }}
                                     className="

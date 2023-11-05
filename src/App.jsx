@@ -61,6 +61,7 @@ import { loader as citiesLoader, action as cityActions } from "./pages/Cities"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import { loader as customerStatsloader } from "./pages/CustomerStats"
 import { loader as newSeatloader, action as newSeatAction } from "./pages/AddNewBusPage"
+import { action as addProductAction } from "./pages/AddProduct"
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
 import Mailing from './pages/Mailing'
@@ -112,6 +113,9 @@ const AdminMailStat = lazy(() => import("./pages/AdminMailStat"));
 const Restaurant = lazy(() => import("./pages/Restaurant"));
 const NewBusPage = lazy(() => import("./pages/AddNewBusPage"));
 const ProductPage = lazy(() => import("./pages/Product"));
+const ShoppingBagPage = lazy(() => import("./pages/ShoppingBag"));
+const CheckOutPage = lazy(() => import("./pages/CheckOut"));
+const AddProductPage = lazy(() => import("./pages/AddProduct"));
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://evertrans.onrender.com"
 const checkDefaultTheme = () => {
@@ -295,6 +299,18 @@ const router = createBrowserRouter([
             </Suspense>
           },
           {
+            path: "shopping-bag",
+            element: <Suspense>
+              <ShoppingBagPage />
+            </Suspense>
+          },
+          {
+            path: "checkout",
+            element: <Suspense>
+              <CheckOutPage />
+            </Suspense>
+          },
+          {
             path: "product/:id",
             element: <Suspense>
               <ProductPage />
@@ -473,6 +489,14 @@ const router = createBrowserRouter([
           <Appointment />
         </Suspense>,
         loader: ticketsloader(queryClient),
+      },
+
+      {
+        path: "product/add",
+        element: <Suspense>
+          <AddProductPage />
+        </Suspense>,
+        loader: addProductAction(queryClient),
       },
       {
         path: "customerstats",
@@ -660,6 +684,16 @@ const router = createBrowserRouter([
 
 ]
 )
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+  // downloadbaseurl = process.env.REACT_APP_LOCAL_URL
+  // dev code
+  // router.push
+} else {
+  // production code
+  // downloadbaseurl = process.env.REACT_APP_PROD_URL
+
+}
+
 function App() {
   return (
     <>

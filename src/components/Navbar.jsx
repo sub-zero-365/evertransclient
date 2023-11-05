@@ -424,29 +424,32 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                 }
                             </motion.div>
                         </Rounded>
-                        <Rounded>
+                        {
+                            user?.role == "restaurants" &&
+                            <Rounded>
 
-                            <motion.div className='relative'
-                                whileHover={{
-                                    scale: 1.2
-                                }}
-                            >
-                                {
-                                    isCartEmpty && <div
-                                        className='w-2.5 h-2.5 bg-rose-800 rounded-full right-0 absolute -top-0.5' />
-                                }
-
-                                <BsBag
-                                    onClick={() => {
-                                        open()
+                                <motion.div className='relative'
+                                    whileHover={{
+                                        scale: 1.2
                                     }}
-                                    className='text-gray-700'
-                                    size={20}
-                                />
+                                >
+                                    {
+                                        isCartEmpty && <div
+                                            className='w-2.5 h-2.5 bg-rose-800 rounded-full right-0 absolute -top-0.5' />
+                                    }
+
+                                    <BsBag
+                                        onClick={() => {
+                                            open()
+                                        }}
+                                        className='text-gray-700'
+                                        size={20}
+                                    />
 
 
-                            </motion.div>
-                        </Rounded>
+                                </motion.div>
+                            </Rounded>
+                        }
                         <Rounded className="!w-10 !h-10"
                             onClick={toggleDarkTheme}
                         >

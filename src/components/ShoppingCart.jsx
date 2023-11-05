@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { AnimatePresence, motion } from 'framer-motion'
 import IncrementDecrementButton from "./IncrementDecrementButton.js";
 export default function ShoppingCart(props) {
-    const { _id: id = 1, total, product_price: price, product_name: productname, product_imgUrl } = props
+    const { _id: id = 1, total, price, productname, product_imgUrl } = props
     const dispatch = useDispatch()
     const incrementCounter = (id) => {
         dispatch(increaseItem(id))
@@ -23,7 +23,7 @@ export default function ShoppingCart(props) {
                 transition: {
                     duration: 0.3,
                     mass: 25,
-                    
+
                 }
             }}
             className={` border-[0.0925rem] select-none border-[#e8e8e8]   w-full py-4 px-2 md:px-2.5 lg:px-3 `}
@@ -51,7 +51,7 @@ export default function ShoppingCart(props) {
                         <p
                             className='font-medium lg:hidden  uppercase leading-tight text-gray-500 text-sm'
                         >
-                            ${price * (total ?? 1)}
+                            FCFA{price * (total ?? 1)}
                         </p>
                         <p
                             className='font-medium -mt-0.5 uppercase text-black leading-tight text-sm'
@@ -91,7 +91,9 @@ export default function ShoppingCart(props) {
 
                 </div>
             </div>
-            <AnimatePresence>
+            <AnimatePresence
+                initial={false}
+            >
                 {
                     total > 9 && (
                         <motion.p
