@@ -143,32 +143,35 @@ const Books = () => {
 
                         <>
 
-                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] !max-w-full `}>
+                            <Scrollable className={`!px-5 !justify-center !grid !grid-cols-1 md:!grid md:!grid-cols-2 ${true && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] !w-full !max-w-full `}>
                                 <TicketCounts counts={userData?.totalTickets}
+                                className="!max-w-lg !mx-auto !w-full "
                                     text={"Total Number Of Tickets"}
                                     icon={<AiOutlineSave />} />
                                 <TicketCounts counts={userData?.totalActiveTickets}
+                                className="!max-w-lg !mx-auto !w-full"
                                     text={"Total Number Of active Tickets"}
                                     icon={<VscFolderActive />} />
                                 <TicketCounts
                                     text={"Total Number Of Inactive Tickets"}
-                                    counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
+                                    counts={userData?.totalInActiveTickets}
+                                    className="!max-w-lg !mx-auto !w-full"icon={<BiCategory />} />
 
                             </Scrollable>
-                            <Scrollable className={`!px-5 md:!grid md:!grid-cols-2 ${false && "!grid md:!grid-cols-2"} !max-w-full`}>
+                            <Scrollable className={`!px-5 !justify-center !grid-cols-1   !grid !w-full md:!grid md:!grid-cols-2 ${true && "!grid md:!grid-cols-2"} !max-w-full`}>
                                 <AmountCount
-                                    className="!bg-blue-400"
+                                    className="!max-w-lg !mx-auto !w-full !bg-blue-400"
                                     text="Total cost of all tickets"
                                     icon={<MdOutlinePriceChange />}
                                     amount={userData?.totalPrice} />
                                 <AmountCount
-                                    className="!bg-green-400"
+                                    className="!max-w-lg !mx-auto !w-full !bg-green-400"
 
                                     text="Total cost of all active tickets"
 
                                     icon={<BiCategory />} amount={userData?.totalActivePrice} />
                                 <AmountCount
-                                    className="!bg-red-400 !text-black"
+                                    className="!max-w-lg !mx-auto !w-full !bg-red-400 !text-black"
 
                                     text="Total cost of all inactive tickets"
 

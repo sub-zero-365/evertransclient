@@ -36,7 +36,7 @@ import { loader as checkOutLoader, action as checkOutAction } from './pages/Chec
 import { loader as loginLoader, action as loginAction } from './pages/Login'
 import { loader as protectLoader } from "./components/ProtectedRoute"
 import { loader as singleTicketLOader } from "./pages/SingleTicket"
-import { loader as singleSeatLoader } from "./pages/SeatDetails"
+import { loader as singleSeatLoader,action as singleSeatAction } from "./pages/SeatDetails"
 import { loader as dashboardLayoutLoader } from "./components/DashboardLayout"
 import { loader as ticketsloader } from "./pages/Appointment"
 import { loader as usersLoader, action as usersAction } from "./pages/Users"
@@ -264,7 +264,9 @@ const router = createBrowserRouter([
             ,
             path: "information",
             loader: checkOutLoader(queryClient),
-            action: checkOutAction(queryClient)
+            action: checkOutAction(queryClient),
+            errorElement: <SingleTicketErrorElement />,
+            
           },
           {
             element:
@@ -418,6 +420,7 @@ const router = createBrowserRouter([
             ,
             path: "seat/:id",
             loader: singleSeatLoader(queryClient),
+            action: singleSeatAction(queryClient),
             errorElement: <SingleTicketErrorElement />
 
           },
@@ -623,6 +626,7 @@ const router = createBrowserRouter([
         ,
         path: "seat/:id",
         loader: singleSeatLoader(queryClient),
+        action: singleSeatAction(queryClient),
         errorElement: <SingleTicketErrorElement />
 
       },

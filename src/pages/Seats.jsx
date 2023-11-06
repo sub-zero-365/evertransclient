@@ -4,7 +4,7 @@ import { VscFolderActive } from 'react-icons/vsc'
 import { useState, useEffect, useRef } from "react"
 import { useNavigate, useParams, useLoaderData, Form } from 'react-router-dom'
 import { Heading } from '../components'
-import { useSearchParams,redirect } from 'react-router-dom'
+import { useSearchParams, redirect } from 'react-router-dom'
 import {
     timeOptions
 } from "../utils/sortedOptions"
@@ -34,8 +34,11 @@ import LoadingButton from "../components/LoadingButton"
 import EmptyModal from "../pages/ShowBuses"
 // import day from dayjs
 import dayjs from "dayjs"
+// import { useMemo } from "react"
+import FilterButton from "../components/FilterButton"
 const seatsQuery = (params = {}) => ({
-    queryKey: ["seats"],
+    queryKey: ["seats",
+        params],
     queryFn: async () => {
         const res = await customFetch.get("/seat", {
             params: {
@@ -72,9 +75,10 @@ const Seats = () => {
 
     }
     const ref = useRef(null);
-
+    // const routesQuery = useMemo(() => [...new Set([...seats?.map(({ from, to }) => `${from.toLowerCase()}-${to.toLowerCase()}`)])], [searchValues])
     // const isInView = useInView(ref)
-
+    const routesQuery = [...new Set([...seats?.map(({ from, to }) => `${from?.toLowerCase()}-${to?.toLowerCase()}`)])]
+    // console.log(routesQuery)
 
 
     const [querySearch, setQuerySearch] = useSearchParams();
@@ -88,15 +92,10 @@ const Seats = () => {
             }
             return preParams
         })
-
     }
-
     const [startDate, setStartDate] = useState(new Date());
-    // const [_startDate,_setStartDate]=useState(new Date())
     const [endDate, setEndDate] = useState(null);
     const [seatDate, setSeatDate] = useState(new Date())
-
-
     const handleDateRangeChange = () => {
         handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
         handleFilterChange("page", 1)
@@ -208,7 +207,29 @@ z-10  "
 
 
                     </div>
+                    <Scrollable className="!justify-start scrollto  !max-w-full !w-fit !mx-auto px-4 pb-5">
+                        <FilterButton className="!shadow-none"
+                            value={null}
+                            label={`All`}
+                            name="routequery"
 
+                        />
+                        {routesQuery?.map((route) => <FilterButton className="!shadow-none"
+                            value={`${route}`}
+                            label={`${route}`}
+                            name="routequery"
+
+
+                        />)}
+
+
+
+                        {/* ) */}
+
+
+                        {/* } */}
+
+                    </Scrollable>
 
                     <ClearFilter keys={[
                         "sort,newest",
@@ -218,6 +239,7 @@ z-10  "
                         "boardingRange,*",
                         "traveltime,all",
                         "limit,100",
+                        "routequery,*"
                     ]} />
                     {
                         false ? <PlaceHolderLoader /> : (
@@ -240,9 +262,9 @@ z-10  "
                                                 <th scope="col" className="px-3 py-3">
                                                     to
                                                 </th>
-                                                <th scope="col" className="px-3 py-3">
+                                                {/* <th scope="col" className="px-3 py-3">
                                                     Departure Date
-                                                </th>
+                                                </th> */}
 
                                                 <th scope="col" className="px-3 py-3">
                                                     Departure Time
@@ -304,10 +326,6 @@ z-10  "
                                                             {traveldate ?
                                                                 dateFormater(traveldate).date : "n/a"}
                                                         </td>
-                                                        <td className="px-3 py-2 ">
-                                                            {traveltime ?
-                                                                traveltime : "n/a"}
-                                                        </td>
 
                                                         <td className="px-3 py-2">
                                                             {bus ?
@@ -319,6 +337,29 @@ z-10  "
                                                             <UiButton
                                                                 className={"!bg-green-800"}
                                                                 onClick={() => navigate(`${_id}?${isadminuser && "admin=true"}`)} name="details" />
+
+                                                            {
+                                                                bus?.bus !== "Demo Car" ?
+                                                                    <UiButton
+                                                                        className={"!bg-blue-900"}
+                                                                    // onClick={() => navigate(`${_id}?${isadminuser && "admin=true"}`)} 
+                                                                    >
+                                                                        <a
+                                                                            role='link'
+                                                                            aria-disabled
+                                                                            href={`${downloadbaseurl}/seat/download/${_id}`}
+                                                                            target="_blank"
+                                                                            className="w-full"
+
+                                                                        >Download</a>
+                                                                    </UiButton> :
+                                                                    <UiButton
+                                                                        className={"!bg-blue-950"}
+                                                                        title="Edit"
+                                                                        onClick={() => navigate(`${_id}?${isadminuser && "admin=true"}&edited=true`)}  />
+
+
+                                                            }
 
                                                         </td>
                                                     </tr>

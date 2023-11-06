@@ -21,7 +21,7 @@ const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus,
     const { id } = useOutletContext()
     const checkBusAvailabity = (isTaken, isReserved, id, flag = null) => {
         if (0 == id && isTaken == false && isReserved == false) {
-            setSelected(0)
+            setSelected(id)
             return
         }
         if (isTaken == true || isReserved == true) {
@@ -166,7 +166,9 @@ const BusCard = ({ seat_positions, traveldate, traveltime, number_of_seats, bus,
 
                 >
                     {
-                        selected && <motion.div
+
+
+                        (selected == 0 || selected) && <motion.div
                             initial={{ y: 100, opacity: 0 }}
                             animate={{
                                 y: 0, opacity: 1

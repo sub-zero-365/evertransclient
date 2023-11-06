@@ -47,7 +47,7 @@ const ClearFilter = ({ keys }) => {
                         className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
 font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
 
-                        <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
+                        <span className='absolute cursor-pointer left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
                             onClick={() => {
                                 if(window.navigator.vibrate) window.navigator.vibrate([20])
                                 handleFilterChange(value)

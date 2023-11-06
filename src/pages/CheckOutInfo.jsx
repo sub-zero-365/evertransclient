@@ -1,5 +1,5 @@
 // import dayjs from "dayjs"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect, useLayoutEffect } from "react"
 import { NavLink, useSearchParams, useNavigate, Link, useLoaderData, Form, useNavigation, redirect } from "react-router-dom"
 import AlertBox from '../components/Alert'
 import { motion } from 'framer-motion'
@@ -26,6 +26,7 @@ import { useQuery } from "@tanstack/react-query"
 import FilterButton from "../components/FilterButton"
 import { BsCashCoin } from "react-icons/bs"
 import { MdOutlineWarehouse } from "react-icons/md"
+// import error from "../../../server/error"
 
 const errorToast = (msg = "Please select a seat and continue !!!") => toast.error(msg)
 const successToast = () => toast.success("created successfully!!!")
@@ -57,8 +58,11 @@ export const loader = (queryClient) => async ({ request }) => {
 
   } catch (err) {
     const errorMessage = err?.response?.data || err?.message || "something went wrong"
-    alert(errorMessage)
-    return errorMessage
+    // return {
+    //   errorMessage,
+    //   error: true
+    // }
+    throw new Error(errorMessage)
   }
 }
 
@@ -102,15 +106,24 @@ const BusSits = () => {
 
   const [view, setView] = useState(false)
   // const navigate = useNavigate()
+  const loaderdata = useLoaderData()
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (loaderdata?.error == true) {
+      toast.error(loaderdata?.errorMessage)
+      return navigate(-1)
+    }
+
+  }, [])
   const [error, setError] = useState(false)
   const [queryParameters] = useSearchParams()
   const [message] = useState("")
   let price = null;
 
-  const { searchValues } = useLoaderData()
-  const { route } = useQuery(priceQuery(searchValues)).data
-  // if ("price" in searchValues) {
-  console.log("this is the price data from the server", route)
+
+
+  const { route } = useQuery(priceQuery(loaderdata?.searchValues)).data || {}
+
   if (type == "singletrip") {
     price = route?.singletripprice
   } else {
@@ -304,7 +317,7 @@ z-10  "
                     <MdOutlineWarehouse style={{ marginLeft: "1rem" }}
                       size={20}
                     />
-            
+
                   </FilterButton>
 
                 </Scrollable>
