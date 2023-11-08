@@ -49,19 +49,15 @@ const Navbar = ({ }) => {
     const queryClient = useQueryClient()
     const disatch = useDispatch()
     const { isDarkThemeEnabled, user } = useUserLayoutContext()
-    const [isDarkTheme, setIsDarkTheme] = useState(isDarkThemeEnabled);
+    // const [isDarkTheme, setIsDarkTheme] = useState(isDarkThemeEnabled);
     const [search, setSeach] = useState("")
     const toggleDarkTheme = (theme = "light") => {
-        const newDarkTheme = !isDarkTheme;
-        setIsDarkTheme(newDarkTheme);
+        // const newDarkTheme = !isDarkTheme;
+        // setIsDarkTheme(newDarkTheme);
         document.documentElement.className = ""
         document.documentElement.classList.add(theme)
         document.documentElement.setAttribute("data-theme", theme)
-        // if (newDarkTheme) {
-        //     localStorage.setItem('theme', "dark");
-        //     return
-        // }
-        // localStorage.removeItem('theme');
+        localStorage.setItem("theme",theme)
     };
     const isLogin = user?.fullname
     const navigate = useNavigate()
@@ -126,27 +122,17 @@ const Navbar = ({ }) => {
         }}>
 
             <div className="sticky
-     bg-white/70 text-black gold:bg-yellow-500 dark:bg-slate-900 dark:text-white shadow-gray-200
+     bg-white/70 text-black gold:bg-[var(--color-primary)] dark:bg-slate-900 dark:text-white shadow-gray-200
         top-0 left-0 shadow-sm dark:shadow-black dark:shadow-sm select-none
          z-20">
 
                 <div className="lg:container  mx-auto  h-[4rem] items-center  px-4 flex justify-between relative  ">
                     <Link to="/">
-                        {/* <img
-                        className='h-12 w-20'
-                        src={logo}
-
-                    /> */}
-                        {/* <h1
-                        className='text-3xl font-black '
-                    >{process.env.REACT_APP_APP_NAME}</h1> */}
                         <img src={logotext}
                             className="h-32 w-24"
                             alt="logotext"
                         />
-
                     </Link>
-                    {/* <div className="text-2xl font-montserrat cursor-pointer font-black hover:text-slate-950 dark:hover:text-white duration-300 hover:font-light transition-[color] " onClick={navigateToHome}>{process.env.REACT_APP_APP_NAME || "EvansTrans"}</div> */}
                     <ul className="hidden flex-col lg:flex-row  lg:flex items-center">
                         <motion.li
                             initial={false}
@@ -324,6 +310,7 @@ shadow
                             >Dashboard</NavLink></motion.li>
                         <ThemeToggler
                             toggleDarkTheme={toggleDarkTheme}
+                            isDarkThemeEnabled={isDarkThemeEnabled}
                         />
                         <div className='md:hidden'>
                             {
@@ -436,6 +423,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                         }
                         <ThemeToggler
                             toggleDarkTheme={toggleDarkTheme}
+                            isDarkThemeEnabled={isDarkThemeEnabled}
                         />
 
                         {/* <Rounded className="!w-10 !h-10"
@@ -454,7 +442,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
                                     <>
 
-                                        <div className=" relative flex gap-4 items-center group  " >
+                                        <div className=" relative flex gap-4 items-center group   " >
                                             <Rounded className=" !flex-none group">
                                                 <img src={useravatar} alt="user " className='w-[40px] h-[40px] rounded-full shadow-2xl ' onClick={gotoUserPage} />
                                             </Rounded>
@@ -462,7 +450,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                         </div>
 
                                         <UiButton
-                                            className="bg-red-400"
+                                            className="bg-red-400 !hidden xl:block "
                                             onClick={() => logoutUser()}>
                                             Logout
                                         </UiButton>

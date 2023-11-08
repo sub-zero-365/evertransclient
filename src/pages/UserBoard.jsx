@@ -334,8 +334,7 @@ const Details = () => {
       </Helmet>
       <div
         className=' overflow-x-hidden 
-      mx-auto
-    max-h-[calc(100vh-4rem)]-- overflow-y-auto-- bg-color_light dark:bg-color_dark'
+      mx-auto'
         ref={constraintsRef}>
 
 
@@ -1082,7 +1081,9 @@ z-10  "
         lg:!w-[15rem] 
         lg:max-w-full
         text-center bg-white/25
-        dark:bg-slate-800/25 rounded-sm right-0 top-0 
+        dark:bg-slate-800/25
+        gold:bg-color_gold/25
+        rounded-sm right-0 top-0 
             w-screen
            z-[100] fixed 
            lg:!static  
@@ -1094,7 +1095,7 @@ z-10  "
 
             <div
               onClick={e => e.stopPropagation()}
-              className='w-[min(calc(100%-3.5rem),300px)] pt-5 bg-white dark:bg-slate-800 ml-auto lg:w-full overflow-y-auto max-h-[calc(100vh-0px)] h-full overflow-x-hidden '
+              className='w-[min(calc(100%-3.5rem),300px)] pt-5 bg-white gold:bg-yellow-200 dark:bg-slate-800 ml-auto lg:w-full overflow-y-auto max-h-[calc(100vh-0px)] h-full overflow-x-hidden '
             >
 
               <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4--  !text-lg first-letter:text-2xl" />
@@ -1198,6 +1199,7 @@ md:group-[.active]:translate-y-0
 group-[.active]:opacity-100
 bg-white
 dark:bg-slate-800
+gold:bg-color_gold
 shadow-sm
 rounded-lg
 w-[min(calc(100%-40px),400px)]

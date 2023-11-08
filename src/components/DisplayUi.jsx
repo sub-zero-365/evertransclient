@@ -7,7 +7,7 @@ const DisplayUi = ({ from, to }) => {
             <div className="flex-1 mx-1 relative min-h-[40px] 
                       border-2 flex items-center rounded-lg px-4">
                 <span className="absolute left-[15px] px-2
-                          rounded-sm h-[30px] bg-color_light
+                          rounded-sm h-[15px] bg-color_light gold:bg-color_gold/75
                       dark:bg-color_dark top-[-10px]">
                     From
                 </span>
@@ -19,7 +19,9 @@ const DisplayUi = ({ from, to }) => {
             <AiOutlineArrowRight size={20} className='text-slate-400 dark:text-white flex-none' />
             <div className="flex-1 mx-1 relative min-h-[40px]
                       text-xs border-2 flex items-center rounded-lg px-4">
-                <span className="absolute left-[10px] px-2 rounded-sm h-[30px] bg-color_light
+                <span className="absolute left-[10px] px-2 rounded-sm h-[15px] 
+                bg-color_light
+                gold:bg-color_gold/75
                       dark:bg-color_dark top-[-10px] ">
                     To
                 </span>

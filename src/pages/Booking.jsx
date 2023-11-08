@@ -10,11 +10,11 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { AiOutlineArrowRight } from 'react-icons/ai'
 import FromSelect from 'react-select/async'
 import ToSelect from 'react-select/async'
-import TimeSelect from 'react-select'
+// import TimeSelect from 'react-select'
 import React from 'react';
 import Alert from '../components/Alert'
 import { motion } from 'framer-motion'
-import { timeOptions } from '../utils/sortedOptions'
+// import { timeOptions } from '../utils/sortedOptions'
 import { Helmet } from 'react-helmet'
 import "swiper/css"
 import "swiper/css/navigation"
@@ -31,13 +31,13 @@ import { getCities, useCities } from "../utils/ReactSelectFunction";
 import { style } from "../utils/reactselectOptionsStyles"
 import LoadingButton from '../components/LoadingButton'
 import { CiLocationOn } from "react-icons/ci"
-import { WiTime4 } from "react-icons/wi"
+// import { WiTime4 } from "react-icons/wi"
 import { GiPathDistance } from "react-icons/gi"
 import dayjs from "dayjs"
 
 const Booking = () => {
 
-  const { data ,refetch} = useCities()
+  // const { data ,refetch} = useCities()
   const [queryParams] = useSearchParams()
   const [toggle, setToggle] = useState(false)
   const tripType = queryParams.get("type") || "singletrip";
@@ -143,7 +143,7 @@ const Booking = () => {
                   key={(tripType)}
                 >
                   <Heading className="dark:!text-white !p-0 "
-                    text={tripType == "round" ? "Round Trip" : "Single Trip"}
+                    text={tripType == "roundtrip" ? "Round Trip" : "Single Trip"}
                   />
                 </motion.div>
                 <span className="!w-5 !h-5 grid items-center rounded-sm justify-center mb-0.5" onClick={() => setIsline(!isLine)} >
@@ -221,7 +221,7 @@ const Booking = () => {
 
             <div className="hidden min-h-8 md:flex items-center justify-center mt-auto">
               <LoadingButton
-                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
+                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none"
               >
                 <>Find Available Car <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
               </LoadingButton>
@@ -230,7 +230,7 @@ const Booking = () => {
             <div className="md:hidden min-h-8
            flex items-center justify-center mt-5 sticky left-0 bottom-8 w-full">
               <LoadingButton
-                className="!w-[min(30rem,calc(100%-1.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
+                className="!w-[min(30rem,calc(100%-1.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none"
               >
                 <>Find Available Car <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
               </LoadingButton>

@@ -40,7 +40,7 @@ const UserLayout = ({ isDarkThemeEnabled }) => {
     <UserLayoutContext.Provider
       value={{
         user: data?.data?.user,
-        isDarkThemeEnabled: { isDarkThemeEnabled },
+        isDarkThemeEnabled: isDarkThemeEnabled,
         logoutUser,
         setUserDetails
       }}

@@ -1,5 +1,6 @@
 import { useCustomerContext } from "../pages/CustomerPage"
 import { Link, useSearchParams } from "react-router-dom"
+import AnimatedText from "./AnimateText"
 
 const User = ({ total,
   fullname,
@@ -11,7 +12,7 @@ const User = ({ total,
     useSearchParams()
 
   return (<Link to={`/information?fullname=${fullname}&phone=${phone}&sex=${sex}&email=${idcardnumber}&age=${age}&${searchQuery}&paymenttype=Cash In`}
-    className="p-4 flex flex-col gap-y-4 cursor-pointer  mb-4 bg-white dark:bg-slate-800 dark:text-white max-w-2xl mx-auto">
+    className="p-4 flex flex-col gap-y-4 cursor-pointer gold:bg-color_gold/10   mb-4 bg-white dark:bg-slate-800 dark:text-white max-w-2xl mx-auto">
     <div className="flex  justify-between items-center">
       <div className="">
         <p>#customer name</p>
@@ -52,11 +53,14 @@ function TopRankUser() {
   const { data } = useCustomerContext()
   return (
     <div className="py-4 flex-1 overflow-y-auto  scrollto">
-      {
+      {data?.rankUsers?.length > 0 ?
         data?.rankUsers?.map(arr => <User
           key={arr.phone}
           {...arr}
-        />)
+        />) : <AnimatedText
+          className="!text-4xl"
+          text="No Items matches your query "
+        />
       }
     </div>
   )

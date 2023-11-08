@@ -124,7 +124,6 @@ const CustomerPage = () => {
                                 />
                             </div>
                         </div>
-
                     </form>
                     {/* end of header here */}
                     <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5 scrollto">

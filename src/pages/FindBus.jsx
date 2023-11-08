@@ -72,8 +72,8 @@ const FindBus = () => {
 
                 }}
                 className={`${selected === _id ? "bg-blue-200  dark:bg-slate-950" : busType ? "bg-rose-100 dark:bg-slate-600" : "bg-white dark:bg-slate-800"}
-               border dark:text-white pt-5 w-full mx-1 ease duration-700 transition-colors rounded-lg mb-4
-                dark:shadow-sm dark:shadow-black shadow shadow-white pb-5   min-h-[3rem]`}>
+               border gold:border-none dark:text-white pt-5 px-3 w-full mx-1 ease duration-700 transition-colors rounded-lg mb-4
+                dark:shadow-sm dark:shadow-black shadow shadow-white pb-5   min-h-[3rem] gold:bg-color_gold/25`}>
 
                 <h2 className='font-black !text-2xl capitalize leading-9 px-5 py-5'>
                     {bus?.bus}

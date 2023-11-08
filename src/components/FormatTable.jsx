@@ -68,10 +68,10 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
             </AnimatePresence>
             <div className={`relative max-w-full overflow-x-auto
                     bg-white
-    shadow-md sm:rounded-lg w-full mb-6 ${isPreviousData && "opacity-60"} `}>
+    shadow-md sm:rounded-lg- w-full mb-6 ${isPreviousData && "opacity-60"} `}>
                 <table className="w-full text-sm text-left text-gray-500 
               dark:text-gray-400 transition-colors duration-[2s]">
-                    <thead className="text-xs text-gray-700 dark:bg-slate-800 uppercase dark:text-gray-400">
+                    <thead className="text-xs text-gray-700 dark:bg-slate-800 gold:bg-color_gold uppercase dark:text-gray-400">
                         <tr>
                             <th scope="col" className="px-2 py-3">
                                 Index
@@ -91,9 +91,9 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                                 date
                             </th>
 
-                            <th scope="col" className="px-3 py-3 hidden lg:block">
+                            {/* <th scope="col" className="px-3 py-3 hidden lg:block">
                                 time
-                            </th>
+                            </th> */}
                             <th scope="col" className="px-3 py-3">
                                 createdAt
                             </th>
@@ -127,7 +127,7 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                             ticketData?.tickets?.map((ticket, index) => (
                                 <tr key={index}
                                     className={` ${index % 2 == 0
-                                        ? "bg-slate-100" : "bg-white"}
+                                        ? "bg-slate-100 gold:bg-color_gold/30 " : "bg-white gold:bg-color_gold/10 dark:bg-slate-700"}
                                         hover:bg-slate-300
                         dark:hover:bg-slate-500
                 border-slate-100  text-xs
@@ -161,10 +161,10 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                                         {ticket?.traveldate ?
                                             dateFormater(ticket?.traveldate).date : "n/a"}
                                     </td>
-                                    <td className="px-3 py-2 hidden lg:block">
+                                    {/* <td className="px-3 py-2 hidden lg:block">
                                         {ticket?.traveltime ?
                                             ticket?.traveltime : "n/a"}
-                                    </td>
+                                    </td> */}
                                     <td className="px-3 py-2">
                                         {ticket?.createdAt ?
                                             dateFormater(ticket?.createdAt).date : "n/a"}
@@ -190,7 +190,7 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                                             disabled={(admin)}
                                             href={`/${admin ? "dashboard" : "user"}/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
                                         />
-                                       
+
                                         {(ticket?.active && !admin) && (
                                             <UiButton
 
@@ -204,17 +204,17 @@ const FormatTable = ({ ticketData, admin, hidePanigation, isPreviousData }) => {
                                                 </Link>
                                             </UiButton>
                                         )}
-                                         {
-                                            ticket?.active && ticket.type == "singletrip" &&!admin&&
+                                        {
+                                            ticket?.active && ticket.type == "singletrip" && !admin &&false&&
                                             <UiButton
 
-                                                className={"!bg-violet-900"}
+                                                className={"!bg-violet-900 "}
 
                                             >
                                                 <Link
                                                     to={`/user/edit/${ticket?._id || index}${admin ? "?admin=true" : ""}`}
                                                 >
-                                                    Upgrade 
+                                                    Upgrade
                                                 </Link>
                                             </UiButton>
                                         }

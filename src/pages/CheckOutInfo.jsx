@@ -231,12 +231,13 @@ z-10  "
             <AnimateText text="User Information"
               className={"!text-sm md:!text-lg lg:!text-2xl !text-center"} />
 
-            <div method="post" className="border-2 pr-4  bg-white
-          dark:bg-slate-800  shadow-xl 
+            <div method="post" className="border-2 pr-4  bg-white gold:bg-color_gold/30 px-4
+          dark:bg-slate-800   gold:border-color_gold
+          shadow-xl 
           
           py-5 pt-8 rounded-lg mt-5 relative">
 
-              <span className="absolute left-1/2 py-2 -translate-x-1/2 border px-10 rounded-lg shadow  min-h-[35px]  bg-color_light
+              <span className="absolute left-1/2 py-2 -translate-x-1/2 border px-10 rounded-lg shadow  min-h-[35px]  bg-color_light gold:bg-color_gold/75
                       dark:bg-color_dark top-[-15px] text-montserrat  font-semibold">
                 {
                   (type === "singletrip" ? "Single Trip" : "Round Trip")
@@ -246,51 +247,51 @@ z-10  "
             group justify-center mb-1 items-center `}>
                 <Heading text="Fullname"
                   className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                <div className=" line-clamp-2 group-[.active]:!text-center capitalize pl-2 border-b-2"> {fullname}</div>
+                <div className=" line-clamp-2 group-[.active]:!text-center capitalize pl-2 border-b-2 gold:border-color_gold"> {fullname}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active " : "grid-cols-2"} group justify-center- mb-1 items-center `}>
                 <Heading text="ID number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center"> {queryParameters.get("email")}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 gold:border-color_gold group-[.active]:!text-center"> {queryParameters.get("email")}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="From" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{from}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 gold:border-color_gold group-[.active]:!text-center">{from}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="To" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center"> {to}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 gold:border-color_gold group-[.active]:!text-center"> {to}</div>
               </div>
 
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Gender" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{sex}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 gold:border-color_gold group-[.active]:!text-center">{sex}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Seat" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{(Number(seatposition) + 1)}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 gold:border-color_gold group-[.active]:!text-center">{(Number(seatposition) + 1)}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Travel Date" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{date}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 gold:border-color_gold group-[.active]:!text-center">{date}</div>
               </div>
               {/* <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Payment type" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{paymenttype}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 gold:border-color_gold group-[.active]:!text-center">{paymenttype}</div>
               </div> */}
 
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Phone Number" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{phone}</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 gold:border-color_gold group-[.active]:!text-center">{phone}</div>
               </div>
               <div className={`grid ${view ? "grid-cols-1 active" : "grid-cols-2"} group justify-center mb-1 items-center `}>
                 <Heading text="Travel Cost" className={"!mb-1 !mt-2 group-[.active]:!text-center dark:text-white !text-lg first-letter:text-2xl first-letter:font-semibold"} />
 
-                <div className=" line-clamp-2 capitalize pl-2 border-b-2 group-[.active]:!text-center">{price} frs</div>
+                <div className=" line-clamp-2 capitalize pl-2 border-b-2 gold:border-color_gold group-[.active]:!text-center">{price} frs</div>
               </div>
               <div>
                 <h1 className="text-2xl text-center mb-2 font-semibold">Method of Payment</h1>
@@ -328,7 +329,7 @@ z-10  "
             <div className="hidden h-[80px] md:flex items-center justify-center mt-auto">
               <UiButton
                 disabled={(navigation.state == "submitting" ? true : false)}
-                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
+                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none gold:text-color_gold !font-black"
               >
                 {
                   navigation.state == "submitting" ? "Loading please wait !!" : <> Book Ticket <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
@@ -341,7 +342,7 @@ z-10  "
             </div>
             <div className="md:hidden z-10 h-[50px] flex items-center justify-center mt-5 fixed bottom-8 w-full">
               <UiButton
-                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
+                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none gold:text-color_gold !font-black"
                 disabled={(navigation.state == "submitting" ? true : false)}
 
               >

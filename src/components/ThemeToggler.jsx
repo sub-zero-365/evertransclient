@@ -1,31 +1,34 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { useState } from 'react';
-const ThemeToggler = ({ toggleDarkTheme }) => {
+const ThemeToggler = ({ toggleDarkTheme, 
+isDarkThemeEnabled }) => {
     const toggleStates = [
         "light", "dark", "gold"
     ]
     // const [thumbsSwiper, setThumbsSwiper] = useState(null);
-    const Button = ({ name }) => {
-        return (<div className='bg-orange-400'>
-            {name}
-        </div>)
-    }
-    const [swiperRef, setSwiperRef] = useState(null);
-    const nextSlide = () => {
-        swiperRef.slideNext();
-    };
-    const prevSlide = () => {
-        swiperRef.slidePrev();
-    };
-    const [activeIndex, setActiveIndex] = useState(0)
+    // const Button = ({ name }) => {
+    //     return (<div className='bg-orange-400'>
+    //         {name}
+    //     </div>)
+    // }
+    // const [swiperRef, setSwiperRef] = useState(null);
+    // const nextSlide = () => {
+    //     swiperRef.slideNext();
+    // };
+    // const prevSlide = () => {
+    //     swiperRef.slidePrev();
+    // };
+    const [activeIndex, setActiveIndex] = useState(toggleStates?.findIndex((item) => isDarkThemeEnabled == item))
     // console.log(swiperRef)
+    // console.log(isDarkThemeEnabled)
+    // alert(toggleStates?.findIndex((item) => isDarkThemeEnabled == item))
     return (
         <div
             onClick={e => e.stopPropagation()}
             className='max-w-fit flex-col mx-2 border- flex justify-center items-center -p-2 rounded-lg'
         >
-           
+            {/* {isDarkThemeEnabled} */}
 
 
             <div

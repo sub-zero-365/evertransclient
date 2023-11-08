@@ -38,7 +38,7 @@ export const action =
 
                 await customFetch.post('/mails/new', formData);
                 queryClient.invalidateQueries(['mails']);
-                toast.success('Profile updated successfully');
+                toast.success('Mail Created Successfully');
                 localStorage.removeItem("mailingdetails")
                 return redirect('/user/mails');
             } catch (error) {

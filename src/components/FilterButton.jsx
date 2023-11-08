@@ -3,7 +3,7 @@ import { useFilter } from '../Hooks/FilterHooks'
 import UiButton from './UiButton'
 
 const FilterButton = ({
-  className,children,
+  className, children,
   ...props }) => {
   const { handleFilterChange } = useFilter()
   const [querySearch] = useSearchParams()
@@ -21,9 +21,10 @@ const FilterButton = ({
         !uppercase 
         !shadow-none
         dark:!text-white
+        dark:bg-slate-600
       hover:!text-white
         !rounded-lg
-        ${isSelected && "!bg-green-900 !text-white !rounded-lg"}`}
+        ${isSelected && "!bg-green-900 dark:!bg-slate-950 gold:!bg-color_gold gold:!text-black font-medium !text-white !rounded-lg"}`}
     > {props.label || children}</UiButton>
 
   )

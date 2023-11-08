@@ -155,7 +155,7 @@ const
                 time={queryParameters.get("traveltime")} />
               <AnimateText text="Please Select Seat"
                 className={"!text-lg md:!text-lg lg:!text-2xl !text-center"} />
-              <div className="flex justify-between px-2 pb-2">
+              <div className="flex justify-between px-6 pb-2">
                 <h1 className="text-xs lg:text- shadom-lg lg flex-1">
                   <span className="w-[10px] mr-1 h-[10px] inline-block bg-green-400 rounded-full "></span>Available</h1>
                 <h1 className="text-xs lg:text- shadom-lg lg flex-1">
@@ -166,7 +166,7 @@ const
                   Not Available
                 </h1>
               </div>
-              <div className="grid grid-cols-2 mb-2">
+              <div className="grid grid-cols-2 mb-2 px-5">
                 <Heading text={"Capacity"} className="!mb-0 !text-sm !font-semibold" />
                 <Heading text={"Seat Consumed"} className="!mb-0 !text-sm !font-semibold" />
                 <Heading text={seat?.number_of_seats} className="!mb-0 !text-sm" />
@@ -215,12 +215,12 @@ const
                               }
                               }
                               className={`${(isTaken) ? "bg-orange-400 group-hover:bg-orange-800" : isReserved ? "!bg-blue-500 group-hover:bg-blue-800" : "bg-green-500 group-hover:bg-green-800"} peer
-                ${selected == _id ? "border-2 border-black dark:border-white" : ""} transition duration-200  group w-full h-full  relative max-w-[4.5rem] mx-auto
+                ${selected == _id ? "border-2 border-black dark:border-white gold:border-color_gold/50" : ""} transition duration-200  group w-full h-full  relative max-w-[4.5rem] mx-auto
                 rounded-lg flex items-center justify-center`}>
                               <motion.div
                                 initial={false}
                                 animate={{ y: selected == _id ? "1.3rem" : 0 }}
-                                className={`absolute group-hover:!translate-y-[1.3rem] transition-all duration-300 top-[-10px] bg-color_light text-[12px] dark:bg-color_dark shadow-lg
+                                className={`absolute group-hover:!translate-y-[1.3rem] transition-all duration-300 top-[-10px] bg-color_light text-[12px] dark:bg-color_dark gold:bg-color_gold  shadow-lg
                 px-2 rounded-sm `}>{_id + 1}</motion.div>
                               {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
                             </motion.div>
@@ -254,7 +254,15 @@ const
                     }
                     errorToast()
                   }}
-                  className="!w-[min(30rem,calc(100%-0.5rem))] !ring-4 ring-blue-300 !mx-auto !py-3.5 !text-lg !rounded-xl"
+                  className="!w-[min(30rem,calc(100%-0.5rem))] 
+                  !ring-4
+                  ring-blue-300 !mx-auto !py-3.5 !text-lg 
+                  !font-medium
+                  !font-bricolage
+                  gold:ring-color_gold
+                  !rounded-xl
+                  
+                  gold:text-color_gold"
                 >
                   Continue as Customer
                 </UiButton>
@@ -462,7 +470,7 @@ const
 
                         }}
                         isSearchable={false}
-                        
+
                         defaultValue={{
                           label: "male",
                           value: "male"

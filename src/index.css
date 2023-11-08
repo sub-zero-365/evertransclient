@@ -20,10 +20,13 @@
   --color-subtext: #ffba71;
   --scroll-to-height: 16px;
   --scroll-to-width: 16px;
+  --color-primary: #FFD700;
+  /* --color-primary: #ffae02; */
 }
 @layer base {
   :root {
     --color-neutral-50: theme("colors.gray.50");
+    
     /* --color-dark: theme("colors.slate"); */
   }
 }
@@ -78,7 +81,7 @@
 body,
 html {
   @apply font-poppins !font-light !text-xs  md:!text-sm;
-  @apply bg-color_light  dark:bg-color_dark dark:text-white;
+  @apply bg-color_light  dark:bg-color_dark gold:bg-color_gold/10 dark:text-white;
 }
 
 .links-item {

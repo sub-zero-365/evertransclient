@@ -36,7 +36,7 @@ import { loader as checkOutLoader, action as checkOutAction } from './pages/Chec
 import { loader as loginLoader, action as loginAction } from './pages/Login'
 import { loader as protectLoader } from "./components/ProtectedRoute"
 import { loader as singleTicketLOader } from "./pages/SingleTicket"
-import { loader as singleSeatLoader,action as singleSeatAction } from "./pages/SeatDetails"
+import { loader as singleSeatLoader, action as singleSeatAction } from "./pages/SeatDetails"
 import { loader as dashboardLayoutLoader } from "./components/DashboardLayout"
 import { loader as ticketsloader } from "./pages/Appointment"
 import { loader as usersLoader, action as usersAction } from "./pages/Users"
@@ -119,18 +119,38 @@ const AddProductPage = lazy(() => import("./pages/AddProduct"));
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://evertrans.onrender.com"
 const checkDefaultTheme = () => {
-  // if(localStorage.theme){
-  // return fals
-  // }
-  //   else
-  return false
-  if (localStorage.theme === 'dark' || (
-    window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  if (localStorage.theme === 'dark'
+  ) {
+    document.documentElement.className = ""
     document.documentElement.classList.add('dark')
-    return true
-  } else {
-    document.documentElement.classList.remove('dark')
-    return true
+    document.documentElement.setAttribute("data-theme", "dark")
+    return "dark"
+  } else if (localStorage.theme === 'light') {
+    document.documentElement.className = ""
+    document.documentElement.classList.add("light")
+    document.documentElement.setAttribute("data-theme", "light")
+    return "light"
+  }
+  else if (localStorage.theme === 'gold') {
+    document.documentElement.className = ""
+    document.documentElement.classList.add("gold")
+    document.documentElement.setAttribute("data-theme", "gold")
+    return "gold"
+  }
+  else {
+    if ((
+      window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.className = ""
+      document.documentElement.classList.add('dark')
+      document.documentElement.setAttribute("data-theme", "dark")
+      return "dark"
+
+    } else {
+      document.documentElement.className = ""
+      document.documentElement.classList.add("light")
+      document.documentElement.setAttribute("data-theme", "light")
+      return "light"
+    }
   }
 
 };
@@ -266,7 +286,7 @@ const router = createBrowserRouter([
             loader: checkOutLoader(queryClient),
             action: checkOutAction(queryClient),
             errorElement: <SingleTicketErrorElement />,
-            
+
           },
           {
             element:

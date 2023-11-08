@@ -5,12 +5,14 @@ const ticketCounts = ({ counts, icon, text, className }) => {
             className={`
             ${className}
             placeholder:shadow-lg 
+            
             dark:shadow-sm
             dark:bg-slate-900
             dark:text-white
             dark:shadow-black
             shadow-slate-300 flex-none  
     flex relative
+    gold:bg-[var(--color-primary)]
     group
     bg-white 
     py-6 mb-4   

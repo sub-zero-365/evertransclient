@@ -100,7 +100,7 @@ export default function OurServices() {
         viewport={{ once: true, amount: 0.8 }}
         initial="initial"
         whileInView="animate"
-        className='text-center text-4xl text-[#181e76] gold:text-color-dark lg:text-5xl font-semibold'
+        className='text-center text-4xl text-[#181e76] gold:text-[var(--color-primary)] lg:text-5xl font-semibold'
       >We Provide Best Services For You</motion.h1>
       <motion.p
 
