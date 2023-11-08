@@ -123,7 +123,7 @@ const Books = () => {
     return (
         <div>
             <div
-                className='flex w-full md:pl-5'
+                className='flex w-full md:pl-5 '
             >
                 <div
                     className="flex-none md:w-[15rem] lg:w-[18rem] hidden md:block

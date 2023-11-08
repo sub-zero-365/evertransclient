@@ -14,7 +14,7 @@ const Hero = () => {
             />
             <div
                 className='h-full 
-                  bg-opacity-80 px-5 lg:p-20 sm:px-10  py-10 relative z-1 bg-[#1a1f6f]'
+                  bg-opacity-80 px-5 lg:p-20 sm:px-10  py-10 relative z-1 bg-[#1a1f6f] gold:bg-yellow-400/20'
             >
                 <div
                     className=" h-full items-center  "
@@ -27,10 +27,8 @@ const Hero = () => {
                                 : 1
                         }}
                         transition={
-
                             {
                                 duration: 1
-
                             }}
                     >
                         <AnimateText

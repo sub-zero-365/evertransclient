@@ -50,11 +50,13 @@ export default function OurServices() {
         whileInView={{ y: 0, opacity: 100 }}
         viewport={{ once: true, amount: 0.6 }}
         transition={{
-          duration: 1, mass: 20 + (index * 5), stiffness: "spring"
+          duration: 1,
+          mass: 20 + (index * 5),
+          stiffness: "spring"
         }}
 
         className='p-2 rounded-md border cursor-pointer group ppt  bg-gradient-to-b from-white  to-[#fcfcf7]'>
-        <div className='bg-[#eceff4] text-center p-4 py-10 group-hover:-translate-y-10 transition-all duration-500'>
+        <div className='bg-[#eceff4] gold:bg-orange-100 dark:bg-slate-400 text-center p-4 py-10 group-hover:-translate-y-10 transition-all duration-500'>
           <img
             className="mx-auto block  w-24 h-24 "
             src={imgUrl}
@@ -72,10 +74,10 @@ export default function OurServices() {
 
   return (
 
-    <div className=" lg:px-10 overflow-x-hidden px-6  text-black text-lg py-24 md:text-xl lg:text-xl bg-white" id="#ourservices">
-      {/* <Heading className="text-center !text-black"
-        text="OUR SERVICES"
-      /> */}
+    <div className=" lg:px-10 overflow-x-hidden px-6  text-black text-lg py-24 md:text-xl lg:text-xl
+    bg-white 
+    gold:bg-color-dark/10---" id="#ourservices">
+
       <div
         className="relative w-full"
       >
@@ -88,7 +90,7 @@ export default function OurServices() {
         </h1>
 
         <AnimatedText
-          className="!text-4xl lg:!text-6xl !absolute top-0 !m-0 translate-y-1/2    z-1"
+          className="!text-4xl  lg:!text-6xl !absolute top-0 !m-0 translate-y-1/2    z-1"
           text={"OUR SERVICES"}
         />
 
@@ -98,7 +100,7 @@ export default function OurServices() {
         viewport={{ once: true, amount: 0.8 }}
         initial="initial"
         whileInView="animate"
-        className='text-center text-4xl text-[#181e76] lg:text-5xl font-semibold'
+        className='text-center text-4xl text-[#181e76] gold:text-color-dark lg:text-5xl font-semibold'
       >We Provide Best Services For You</motion.h1>
       <motion.p
 

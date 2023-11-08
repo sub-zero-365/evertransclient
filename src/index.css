@@ -21,6 +21,24 @@
   --scroll-to-height: 16px;
   --scroll-to-width: 16px;
 }
+@layer base {
+  :root {
+    --color-neutral-50: theme("colors.gray.50");
+    /* --color-dark: theme("colors.slate"); */
+  }
+}
+.theme-gold {
+  --color-primary-50: theme("colors.green.500");
+}
+.theme-dark {
+  --color-primary-50: theme("colors.green.200");
+}
+.theme-red {
+  --color-primary-50: theme("colors.red.500");
+}
+.theme-light {
+  --neutralBg: theme("colors.white");
+}
 .react-datepicker__day.react-datepicker__day--disabled {
   @apply !text-gray-400 dark:!text-gray-500 !opacity-40;
 }

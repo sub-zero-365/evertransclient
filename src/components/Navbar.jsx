@@ -19,6 +19,7 @@ import SearchResultContainer from './SearchResult';
 import SeachContainer from './SearchContainer';
 import { useQuery } from "@tanstack/react-query"
 import useToggleCartSlider from '../utils/useToggleCartSlider';
+import ThemeToggler from './ThemeToggler';
 const SearchContext = createContext()
 const allTicketsQuery = (params = {}) => {
     // console.log("this is the params", params)
@@ -50,15 +51,17 @@ const Navbar = ({ }) => {
     const { isDarkThemeEnabled, user } = useUserLayoutContext()
     const [isDarkTheme, setIsDarkTheme] = useState(isDarkThemeEnabled);
     const [search, setSeach] = useState("")
-    const toggleDarkTheme = () => {
+    const toggleDarkTheme = (theme = "light") => {
         const newDarkTheme = !isDarkTheme;
         setIsDarkTheme(newDarkTheme);
-        document.documentElement.classList.toggle('dark')
-        if (newDarkTheme) {
-            localStorage.setItem('theme', "dark");
-            return
-        }
-        localStorage.removeItem('theme');
+        document.documentElement.className = ""
+        document.documentElement.classList.add(theme)
+        document.documentElement.setAttribute("data-theme", theme)
+        // if (newDarkTheme) {
+        //     localStorage.setItem('theme', "dark");
+        //     return
+        // }
+        // localStorage.removeItem('theme');
     };
     const isLogin = user?.fullname
     const navigate = useNavigate()
@@ -123,7 +126,7 @@ const Navbar = ({ }) => {
         }}>
 
             <div className="sticky
-     bg-white/70 text-black dark:bg-slate-900 dark:text-white shadow-gray-200
+     bg-white/70 text-black gold:bg-yellow-500 dark:bg-slate-900 dark:text-white shadow-gray-200
         top-0 left-0 shadow-sm dark:shadow-black dark:shadow-sm select-none
          z-20">
 
@@ -319,37 +322,18 @@ shadow
                                 to="/dashboard"
                                 className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                             >Dashboard</NavLink></motion.li>
+                        <ThemeToggler
+                            toggleDarkTheme={toggleDarkTheme}
+                        />
                         <div className='md:hidden'>
                             {
-                                isLogin ? (
-                                    <>
-                                        <motion.div
-                                            initial={false}
-                                            animate={{ y: isOpen ? 0 : -1000 }}
-                                            className="h-[80px] w-[80px]  mx-auto shadow-2xl border-2 overflow-hidden  rounded-full mt- p-0 ">
-                                            <img src={useravatar} alt="user " onClick={gotoUserPage} className='w-full h-full m-0  object-cover scale-[1.3]' />
-                                        </motion.div>
-                                        <p className="w-fit mx-auto capitalize">{user?.fullname}</p>
-                                        <p className="w-fit mx-auto ">{user?.phone}</p>
-                                        <div className="flex justify-center pt-2 -hidden">
-
-                                            <UiButton
-                                                className="!bg-rose-700"
-                                                onClick={() => logoutUser()}>
-                                                logout
-                                            </UiButton>
-
-                                        </div>
-
-                                    </>
-                                ) :
-
-                                    (<div className="flex ">
-                                        <button
-                                            type="button"
-                                            a data-te-ripple-init
-                                            data-te-ripple-color="light"
-                                            className="inline-block rounded bg-blue-400 px-6 pb-2 pt-2.5 ml-5 my-4 text-xs font-medium uppercase
+                                !isLogin &&
+                                (<div className="flex ">
+                                    <button
+                                        type="button"
+                                        a data-te-ripple-init
+                                        data-te-ripple-color="light"
+                                        className="inline-block rounded bg-blue-400 px-6 pb-2 pt-2.5 ml-5 my-4 text-xs font-medium uppercase
 leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150
 ease-in-out hover:bg-primary-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
@@ -358,16 +342,16 @@ focus:outline-none focus:ring-0 active:bg-primary-700
 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
 dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                                            onClick={gotoLoginPage}
-                                        >
-                                            Login
-                                        </button>
+                                        onClick={gotoLoginPage}
+                                    >
+                                        Login
+                                    </button>
 
-                                        <button
-                                            type="button"
-                                            data-te-ripple-init
-                                            data-te-ripple-color="light"
-                                            className="inline-block rounded bg-red-400 px-6 pb-2 pt-2.5 ml-5 my-4 text-xs font-medium uppercase
+                                    <button
+                                        type="button"
+                                        data-te-ripple-init
+                                        data-te-ripple-color="light"
+                                        className="inline-block rounded bg-red-400 px-6 pb-2 pt-2.5 ml-5 my-4 text-xs font-medium uppercase
 leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150
 ease-in-out hover:bg-primary-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
@@ -376,12 +360,12 @@ focus:outline-none focus:ring-0 active:bg-primary-700
 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
 dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                                            onClick={gotoRegisterPage}
-                                        >
-                                            Register
-                                        </button>
-                                    </div>
-                                    )
+                                        onClick={gotoRegisterPage}
+                                    >
+                                        Register
+                                    </button>
+                                </div>
+                                )
                             }
 
                         </div>
@@ -450,13 +434,17 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                 </motion.div>
                             </Rounded>
                         }
-                        <Rounded className="!w-10 !h-10"
+                        <ThemeToggler
+                            toggleDarkTheme={toggleDarkTheme}
+                        />
+
+                        {/* <Rounded className="!w-10 !h-10"
                             onClick={toggleDarkTheme}
                         >
                             {
                                 isDarkTheme ? <BsMoonStars size={25} /> : <BsSun size={25} />
                             }
-                        </Rounded>
+                        </Rounded> */}
 
 
 
@@ -516,9 +504,9 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
                     </div>
 
-                    <div className='flex md:hidden' >
+                    <div className='flex md:hidden gap-x-2 items-center' >
+
                         <Rounded
-                            // className={"!h-[50px] !w-[50px]"}
                             className="!w-10 !h-10"
                         >
                             <motion.div
@@ -529,8 +517,8 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                         scale: 1.2
                                     }}
                                 >
-                                    {
-                                        !toggle && currentUserRole == "restaurants" ?
+                                    {currentUserRole == "restaurants" &&
+                                        (!toggle ?
                                             <BsSearch
                                                 onClick={() => setToggle(true)}
                                                 className='text-[#9773ce]'
@@ -540,18 +528,28 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                                 onClick={() => setToggle(false)}
                                                 className='text-gray-700'
                                                 size={20}
-                                            />
+                                            />)
                                     }
 
                                 </motion.div>
                             </motion.div>
                         </Rounded>
-                        <div className='hover:bg-slate-300  w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={toggleDarkTheme}>
-
+                        {/* <div className='hover:bg-slate-300  w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={toggleDarkTheme}>
                             {
                                 isDarkTheme ? <BsMoonStars size={25} /> : <BsSun size={25} />
                             }
-                        </div>
+                        </div> */}
+                        {
+                            isLogin && <Rounded
+                                className="!w-[40px] !h-[40px] !rounded-full !overflow-hidden"
+                            >
+                                <img
+                                    src={useravatar}
+                                    alt="user "
+                                    onClick={gotoUserPage}
+                                    className='w-full h-full m-0  object-cover' />
+                            </Rounded>
+                        }
                         <div className="md:hidden h-[50px] w-[50px] rounded-full flex items-center justify-center hover:bg-slate-300" onClick={toggleNavBar}>
 
                             {

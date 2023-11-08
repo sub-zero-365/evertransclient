@@ -3,7 +3,7 @@ import UiButton from '../components/UiButton'
 import { useSearchParams, useParams, NavLink, Link, useNavigate, useLocation, useLoaderData } from "react-router-dom"
 import { useEffect, useState, useRef } from "react"
 import {
-  Loader, Heading, ActiveStatusButton,
+  Heading, ActiveStatusButton,
   DeactiveStatusButton,
   Scrollable
 } from '../components'
