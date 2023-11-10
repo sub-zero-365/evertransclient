@@ -458,13 +458,19 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
                                         <div className=" relative flex gap-4 items-center group   " >
                                             <NavLink
+                                                end
                                                 to={redirectLink}
                                                 className={({ isActive, isPending }) => isPending ? "text-blue-500 pending" : isActive ? "text-blue-500" : ""}
                                             >
                                                 {({ isPending,
                                                     isActive }) => (
                                                     <Rounded className={` !flex-none group !ring-4 !relative !w-10 !h-10`}>
-                                                        {isPending ? <div class="lds-roller !w-10 !h-10">
+                                                        {isPending ? <div class="lds-roller !w-10 !h-10"
+                                                            style={{
+                                                                height: "40px",
+                                                                width: "40px"
+                                                            }}
+                                                        >
                                                             <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                                                             :
                                                             <img src={useravatar} alt="user " className={`w-[40px] h-[40px] rounded-full shadow-2xl ${isActive && ""} `} onClick={gotoUserPage} />
@@ -558,12 +564,19 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                         {
                             isLogin && <NavLink
                                 to={redirectLink}
+                                // relative='p'
+                                end
                                 className={({ isActive, isPending }) => isPending ? "text-blue-500 pending" : isActive ? "text-blue-500" : ""}
                             >
                                 {({ isPending,
                                     isActive }) => (
                                     <Rounded className={` !flex-none  !relative `}>
-                                        {isPending ? <div class="lds-roller !w-10 !h-10">
+                                        {isPending ? <div class="lds-roller "
+                                            style={{
+                                                height: "40px",
+                                                width: "40px"
+                                            }}
+                                        >
                                             <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                                             :
                                             <img src={useravatar} alt="user " className={`w-[40px] h-[40px] rounded-full shadow-2xl ${isActive && ""} `} onClick={gotoUserPage} />
