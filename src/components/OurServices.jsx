@@ -75,7 +75,7 @@ export default function OurServices() {
   return (
 
     <div className=" lg:px-10 overflow-x-hidden px-6  text-black text-lg py-24 md:text-xl lg:text-xl
-    bg-white 
+    bg-white-- 
     gold:bg-color-dark/10---" id="#ourservices">
 
       <div
@@ -90,7 +90,7 @@ export default function OurServices() {
         </h1>
 
         <AnimatedText
-          className="!text-4xl  lg:!text-6xl !absolute top-0 !m-0 translate-y-1/2    z-1"
+          className="!text-4xl dark:text-white lg:!text-6xl !absolute top-0 !m-0 translate-y-1/2    z-1"
           text={"OUR SERVICES"}
         />
 
@@ -109,7 +109,7 @@ export default function OurServices() {
 
         initial="initial"
         whileInView="animate"
-        className='text-center my-3 pt-3 leading-snug max-w-3xl mx-auto'
+        className='text-center my-3 pt-3 leading-snug max-w-3xl mx-auto dark:text-white'
       >
         At  the heart of Arriva is an ambition to make passenger
         transport the best choice as we look to connect people with our

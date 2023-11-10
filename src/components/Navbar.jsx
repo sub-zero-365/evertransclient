@@ -57,7 +57,7 @@ const Navbar = ({ }) => {
         document.documentElement.className = ""
         document.documentElement.classList.add(theme)
         document.documentElement.setAttribute("data-theme", theme)
-        localStorage.setItem("theme",theme)
+        localStorage.setItem("theme", theme)
     };
     const isLogin = user?.fullname
     const navigate = useNavigate()
@@ -112,7 +112,17 @@ const Navbar = ({ }) => {
             }
         }
     }
-
+    // const currentUserRole = user?.role;
+    var redirectLink = "/user"
+    if (currentUserRole == "tickets") {
+        redirectLink = "/user"
+    }
+    else if (currentUserRole == "restaurants") {
+        redirectLink = "/restaurant"
+    }
+    else {
+        redirectLink = "/user/mails"
+    }
 
 
     return (
@@ -224,7 +234,7 @@ shadow
 
                         className={`${!isOpen ? " max-h-0" :
                             " max-h-screen"} overflow-hidden transition-[max-height] duration-500 border-b-0 
-                    lg:hidden absolute top-[4rem] left-0 bg-color_light  dark:bg-color_dark dark:text-white  w-full `}>
+                    lg:hidden absolute gold:bg-yellow-100 top-[4rem] left-0 bg-color_light  dark:bg-color_dark dark:text-white  w-full `}>
                         <motion.li
 
                             initial={false}
@@ -308,9 +318,13 @@ shadow
                                 to="/dashboard"
                                 className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                             >Dashboard</NavLink></motion.li>
+                        <h1 className='text-xl font-medium px-2 mb-1'>Toggle Multipe themes</h1>
                         <ThemeToggler
                             toggleDarkTheme={toggleDarkTheme}
                             isDarkThemeEnabled={isDarkThemeEnabled}
+                        />
+                        <div
+                            className='my-4'
                         />
                         <div className='md:hidden'>
                             {
@@ -443,9 +457,23 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                     <>
 
                                         <div className=" relative flex gap-4 items-center group   " >
-                                            <Rounded className=" !flex-none group">
-                                                <img src={useravatar} alt="user " className='w-[40px] h-[40px] rounded-full shadow-2xl ' onClick={gotoUserPage} />
-                                            </Rounded>
+                                            <NavLink
+                                                to={redirectLink}
+                                                className={({ isActive, isPending }) => isPending ? "text-blue-500 pending" : isActive ? "text-blue-500" : ""}
+                                            >
+                                                {({ isPending,
+                                                    isActive }) => (
+                                                    <Rounded className={` !flex-none group !ring-4 !relative !w-10 !h-10`}>
+                                                        {isPending ? <div class="lds-roller !w-10 !h-10">
+                                                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                                                            :
+                                                            <img src={useravatar} alt="user " className={`w-[40px] h-[40px] rounded-full shadow-2xl ${isActive && ""} `} onClick={gotoUserPage} />
+
+                                                        }
+                                                    </Rounded>
+                                                )}
+
+                                            </NavLink>
 
                                         </div>
 
@@ -528,15 +556,23 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                             }
                         </div> */}
                         {
-                            isLogin && <Rounded
-                                className="!w-[40px] !h-[40px] !rounded-full !overflow-hidden"
+                            isLogin && <NavLink
+                                to={redirectLink}
+                                className={({ isActive, isPending }) => isPending ? "text-blue-500 pending" : isActive ? "text-blue-500" : ""}
                             >
-                                <img
-                                    src={useravatar}
-                                    alt="user "
-                                    onClick={gotoUserPage}
-                                    className='w-full h-full m-0  object-cover' />
-                            </Rounded>
+                                {({ isPending,
+                                    isActive }) => (
+                                    <Rounded className={` !flex-none  !relative `}>
+                                        {isPending ? <div class="lds-roller !w-10 !h-10">
+                                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                                            :
+                                            <img src={useravatar} alt="user " className={`w-[40px] h-[40px] rounded-full shadow-2xl ${isActive && ""} `} onClick={gotoUserPage} />
+
+                                        }
+                                    </Rounded>
+                                )}
+
+                            </NavLink>
                         }
                         <div className="md:hidden h-[50px] w-[50px] rounded-full flex items-center justify-center hover:bg-slate-300" onClick={toggleNavBar}>
 

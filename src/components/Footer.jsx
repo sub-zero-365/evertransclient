@@ -40,7 +40,7 @@ const Footer = () => {
             >
               <a
                 className='w-full h-full'
-                href='tel:672301714'>672301714</a>
+                href='tel:6xxxxxx23'>6xxxxxx23</a>
             </UiButton>
 
           </div>

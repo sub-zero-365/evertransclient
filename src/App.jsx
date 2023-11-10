@@ -118,38 +118,31 @@ const CheckOutPage = lazy(() => import("./pages/CheckOut"));
 const AddProductPage = lazy(() => import("./pages/AddProduct"));
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://evertrans.onrender.com"
+const setTheme = (theme) => {
+  document.documentElement.className = ""
+  document.documentElement.classList.add(theme)
+  document.documentElement.setAttribute("data-theme", theme)
+  return theme
+}
 const checkDefaultTheme = () => {
   if (localStorage.theme === 'dark'
   ) {
-    document.documentElement.className = ""
-    document.documentElement.classList.add('dark')
-    document.documentElement.setAttribute("data-theme", "dark")
-    return "dark"
+    return setTheme("dark")
+
   } else if (localStorage.theme === 'light') {
-    document.documentElement.className = ""
-    document.documentElement.classList.add("light")
-    document.documentElement.setAttribute("data-theme", "light")
-    return "light"
+
+    return setTheme("light")
   }
   else if (localStorage.theme === 'gold') {
-    document.documentElement.className = ""
-    document.documentElement.classList.add("gold")
-    document.documentElement.setAttribute("data-theme", "gold")
-    return "gold"
+
+    return setTheme("gold")
   }
   else {
     if ((
       window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.className = ""
-      document.documentElement.classList.add('dark')
-      document.documentElement.setAttribute("data-theme", "dark")
-      return "dark"
-
+      return setTheme("dark")
     } else {
-      document.documentElement.className = ""
-      document.documentElement.classList.add("light")
-      document.documentElement.setAttribute("data-theme", "light")
-      return "light"
+      return setTheme("light")
     }
   }
 

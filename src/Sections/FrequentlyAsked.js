@@ -97,7 +97,7 @@ const FrequentlyAsked = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.4 })
   return (
-    <section className="py-24 overflow-x-hidden bg-white text-black lg:px-10 px-5 ">
+    <section className="py-24 overflow-x-hidden bg-white-- dark:text-white text-black lg:px-10 px-5 ">
       <div className="grid gap-x-8 grid-cols-1 lg:grid-cols-12">
 
         <div className="lg:col-span-4 lg:!sticky0

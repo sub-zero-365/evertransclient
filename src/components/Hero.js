@@ -32,7 +32,7 @@ const Hero = () => {
                             }}
                     >
                         <AnimateText
-                            className="!text-5xl md:!text-6xl lg:leading-[1.3] !font-poppins
+                            className="!text-6xl md:!text-7xl lg:leading-[1.3] !font-poppins-- !font-bricolage
                             lg:!text-left-- lg:!text-7xl !text-center    !py-6 !font-black"
                             text="Travel With Us For An Adventure-Filled Journey"
                         />
