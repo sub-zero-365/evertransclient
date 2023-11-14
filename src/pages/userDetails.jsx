@@ -19,7 +19,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { MdOutlinePriceChange } from 'react-icons/md'
 import { Autoplay, Navigation, Pagination } from 'swiper/modules'
 import {
-  useQuery,
+  useQuery, useMutation, useQueries
 } from '@tanstack/react-query'
 import "swiper/css"
 import "swiper/css/navigation"
@@ -92,6 +92,28 @@ const Details = () => {
     })
 
   }
+  // const [currentUser, setCurrentUser] = useState({})
+  const currentUser = useQuery({
+    // queries: [
+    // {
+    queryKey: ["current-user", id], queryFn: async () => {
+      try {
+        const { data } = await customFetch.get("/admin/current-user/" + id);
+        // console.log(data)
+        return data?.user || {}
+      } catch (err) {
+        console.log("this is the error here", err)
+
+      }
+    },
+    staleTime: Infinity
+    // }
+    // ]
+  })?.data
+  const [isUserBlock,
+  setIsUserBlock] = useState(false
+  )
+  
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
   const constraintsRef = useRef(null)
@@ -188,17 +210,7 @@ const Details = () => {
       createdBy: id
     }
   }
-  async function getData() {
-    const url = "/admin/alltickets"
-    try {
-      const res = await axios.get(url, config)
-      return res.data
-    } catch (err) {
-      console.log(err)
-    }
-    // setIsActiveIndexLoading(false)
 
-  }
 
   // const userData = {}
 
@@ -363,15 +375,16 @@ z-10  "
             <Heading text={"Employee Details"} className="!font-semibold !mb-5 underline underline-offset-4  !text-lg first-letter:text-2xl" />
             <Heading text={"Full Name"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '
-            >{userInfo?.fullname || "n/a"}</h4>
+            >{currentUser?.fullname || "n/a"}</h4>
 
             <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
-            <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.phone || "n/a"}</h4>
+            <h4 className='text-sm text-slate-500 font-medium '>{currentUser?.phone || "n/a"}</h4>
             <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
-            <h4 className='text-sm text-slate-500 font-medium '>{userInfo?.createdAt && (dateFormater().date) || "n/a"}</h4>
+            <h4 className='text-sm text-slate-500 font-medium '>{currentUser?.createdAt && (dateFormater().date) || "n/a"}</h4>
             <ToggleSwitch
               onChange={() => 0}
               message={"User is block from printing tickets"}
+              initialMessage={"user is block from priinting tickets"}
               state={querySearch.get("account_block") ? true : false}
             />
             <Swiper

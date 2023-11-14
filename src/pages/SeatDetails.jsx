@@ -107,7 +107,9 @@ const SeatDetails = () => {
 
     const [querySearch] = useSearchParams();
     const isadminuser = querySearch.get("admin")
-    const [activeSeat, setActiveSeat] = useState(null);
+    const ticket_seat = querySearch.get("ticket_seat");
+
+    const [activeSeat, setActiveSeat] = useState(ticket_seat);
     const [
         isOpen_,
         setIsOpen_] = useState(querySearch.get("edited") == "true")
@@ -115,7 +117,7 @@ const SeatDetails = () => {
 
     useEffect(() => {
         let timer = null
-
+        ref?.current?.scrollIntoView({ behavior: "smooth" })
         if (activeSeat) {
             timer = setTimeout(() => {
                 setActiveSeat(null)
@@ -327,7 +329,7 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                         >
                             download borderaux
                         </a>
-                        
+
 
                         {/* <Heading text={"Seat Details"} className="!mb-3" /> */}
                         <AnimatedText text={"Seat Details"} className="!uppercase !text-3xl lg:!text-4xl !mb-2" />
@@ -361,9 +363,11 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                             {
 
                                 seat?.seat_positions?.map(({ isTaken, isReserved, _id }, index) => {
+                                    const itemsProps = activeSeat == index ? { ref: ref } : {};
                                     return (
                                         <motion.button
-                                            ref={activeSeat == index ? ref : null}
+                                            // ref={activeSeat == index ? ref : null}
+                                            {...itemsProps}
                                             animate={{
                                                 scale: activeSeat == index ? [0.8, 1, 0.9] : null
                                             }}
