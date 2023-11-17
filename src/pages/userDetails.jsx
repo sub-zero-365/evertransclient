@@ -111,9 +111,71 @@ const Details = () => {
     // ]
   })?.data
   const [isUserBlock,
-  setIsUserBlock] = useState(false
-  )
-  
+    setIsUserBlock] = useState(true
+    )
+
+  const { refetch, isLoading } = useQuery({
+    // queries: [
+    // {
+    queryKey: ["current-user-status", id], queryFn: async () => {
+      try {
+        await customFetch.get("/restricted/" + id);
+        // console.log(data)
+        setIsUserBlock(true)
+
+      } catch (err) {
+        setIsUserBlock(false)
+        console.log("this is the error here", err)
+
+      }
+    },
+
+  })
+  const { refetch: AddRestrictedUser, isFetching: addFetching } = useQuery({
+    // queries: [
+    // {
+    queryKey: ["addrestricteduser", id], queryFn: async () => {
+      try {
+        await customFetch.post("/restricted", {
+          user_id: id
+        });
+
+      } catch (err) {
+        // setIsUserBlock(false)
+        console.log("this is the error here", err)
+
+      } finally {
+        refetch()
+      }
+    },
+    // staleTime: Infinity,
+    enabled: false
+    // }
+    // ]
+  })
+  const { refetch: removeRestrictedUser, isFetching: rmFetching } = useQuery({
+    // queries: [
+    // {
+    queryKey: ["rmrestricteduser", id], queryFn: async () => {
+      try {
+        await customFetch.delete("/restricted/" + id, {});
+        // console.log(data)
+        // setIsUserBlock(true)
+
+      } catch (err) {
+        // setIsUserBlock(false)/
+        console.log("this is the error here", err)
+
+      }
+      finally {
+        refetch()
+      }
+    },
+    enabled: false
+    // staleTime: Infinity
+    // }
+    // ]
+  })
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
   const constraintsRef = useRef(null)
@@ -186,10 +248,7 @@ const Details = () => {
     }
     handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
   }
-  const checkPages = (index) => {
-    if (querySearch.get("page") == index) return
-    handleFilterChange("page", index)
-  }
+
   const handleSortTime = (evt) => {
     if (querySearch.get("sort") == evt.value) return
     handleFilterChange("sort", evt.value)
@@ -198,18 +257,7 @@ const Details = () => {
     if (querySearch.get("ticketStatus") == evt.value) return
     handleFilterChange("ticketStatus", evt.value)
   }
-  const token = localStorage.getItem("admin_token");
 
-  const [userInfo, setUserInfo] = useState({});
-  const config = {
-    headers: {
-      'Authorization': "makingmoney " + token
-    },
-    params: {
-      ...formatQuery(querySearch.toString()),
-      createdBy: id
-    }
-  }
 
 
   // const userData = {}
@@ -217,24 +265,7 @@ const Details = () => {
 
 
 
-  // useEffect(() => {
-  //   async function getUserInfo() {
-  //     const url = "/admin/staticuser/" + `${id}`;
 
-  //     try {
-  //       const { data } = await axios.get(url, config);
-  //       setUserInfo(data?.user)
-
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-
-  //   }
-
-
-  //   getData()
-  //   getUserInfo()
-  // }, [window.location.href])
 
   const [toggle, setToggle] = useState(false);
 
@@ -382,10 +413,19 @@ z-10  "
             <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '>{currentUser?.createdAt && (dateFormater().date) || "n/a"}</h4>
             <ToggleSwitch
-              onChange={() => 0}
+              onChange={() => {
+                if (isUserBlock) {
+                  removeRestrictedUser()
+                  // refetch()
+                } else {
+                  AddRestrictedUser()
+                }
+
+              }}
               message={"User is block from printing tickets"}
               initialMessage={"user is block from priinting tickets"}
-              state={querySearch.get("account_block") ? true : false}
+              state={isUserBlock}
+              disabled={(addFetching || rmFetching)}
             />
             <Swiper
               className='my-6

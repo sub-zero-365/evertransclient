@@ -148,7 +148,7 @@ export const seatOptions = [
     }))
 
 ]
-export const usersRoleOptions = [
+const __ = [
   {
     value: "tickets",
     label: "tickets"
@@ -157,10 +157,15 @@ export const usersRoleOptions = [
     value: "mails",
     label: "mails"
   },
-  {
+]
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+  __.push({
     value: "restaurants",
     label: "restaurants"
-  },
+  },)
+}
+export const usersRoleOptions = [
+  ...__
 
 ]
 export const chatsOptions = [
