@@ -1,11 +1,10 @@
-import AnimateText from './AnimateText'
-import herobg from '../Assets/images/herobg.jpeg'
+import herobg from '../Assets/images/herobg.jpeg';
+import AnimateText from './AnimateText';
 // import herooverlay from '../Assets/images/herooverlay.png'
-import UiButton from './UiButton';
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 import { Link, NavLink } from 'react-router-dom';
+import UiButton from './UiButton';
 import Write from './Write';
-import AnimatedText from './AnimateText';
 const Hero = () => {
     return (
         <div className=" h-[min(35rem,100vh)] text-white relative group">
@@ -14,7 +13,7 @@ const Hero = () => {
             />
             <div
                 className='h-full 
-                  bg-opacity-80 px-5 lg:p-20 sm:px-10  py-10 relative z-1 bg-[#1a1f6f] gold:bg-yellow-400/20'
+                  bg-opacity-80 px-5 lg:p-20 sm:px-10  py-10 relative z-1 dark:bg-slate-700/80 bg-[#1a1f6f] gold:bg-yellow-400/20'
             >
                 <div
                     className=" h-full items-center  "
@@ -31,12 +30,20 @@ const Hero = () => {
                                 duration: 1
                             }}
                     >
-                        <AnimateText
-                            className="!text-6xl md:!text-7xl lg:leading-[1.3] !font-poppins-- !font-bricolage
-                            lg:!text-left-- lg:!text-7xl !text-center    !py-6 !font-black"
-                            text="Travel With Us For An Adventure-Filled Journey"
-                        />
 
+
+                        <AnimateText
+                            className="!text-6xl md:!text-7xl lg:leading-tight !font-poppins-- !font-bricolage
+                            lg:!text-left-- lg:!text-7xl !text-center    !pt-6 !font-black"
+                            text="Travel With Us For An Adventure-Filled"
+                        />
+                        <div className='text-blue-600 
+                        gold:text-color_gold 
+                        !text-6xl md:!text-7xl
+                        font-black text-center
+                        !font-bricolage'>
+                            Journey
+                        </div>
                         <motion.div
                             initial={{ y: 100, opacity: 0 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -50,7 +57,7 @@ const Hero = () => {
                         >
 
                             <Write />
-                       
+
                             <div
                                 className='flex-- hidden gap-6  justify-start flex-wrap '
                             >
