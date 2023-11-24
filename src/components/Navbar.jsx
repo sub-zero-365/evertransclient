@@ -49,16 +49,13 @@ const Navbar = ({ }) => {
     const queryClient = useQueryClient()
     const disatch = useDispatch()
     const { isDarkThemeEnabled, user } = useUserLayoutContext()
-    // const [isDarkTheme, setIsDarkTheme] = useState(isDarkThemeEnabled);
     const [search, setSeach] = useState("")
-    const toggleDarkTheme = (theme = "light") => {
-        // const newDarkTheme = !isDarkTheme;
-        // setIsDarkTheme(newDarkTheme);
-        document.documentElement.className = ""
-        document.documentElement.classList.add(theme)
-        document.documentElement.setAttribute("data-theme", theme)
-        localStorage.setItem("theme", theme)
-    };
+    // const toggleDarkTheme = (theme = "light") => {
+    //     document.documentElement.className = ""
+    //     document.documentElement.classList.add(theme)
+    //     document.documentElement.setAttribute("data-theme", theme)
+    //     localStorage.setItem("theme", theme)
+    // };
     const isLogin = user?.fullname
     const navigate = useNavigate()
     const logoutUser = async () => {
@@ -118,7 +115,7 @@ const Navbar = ({ }) => {
         redirectLink = "/user"
     }
     else if (currentUserRole == "restaurants") {
-        redirectLink = "/restaurant"
+        redirectLink = "/user/restaurant"
     }
     else {
         redirectLink = "/user/mails"
@@ -320,7 +317,7 @@ shadow
                             >Dashboard</NavLink></motion.li>
                         <h1 className='text-xl font-medium px-2 mb-1'>Toggle Multipe themes</h1>
                         <ThemeToggler
-                            toggleDarkTheme={toggleDarkTheme}
+                            // toggleDarkTheme={toggleDarkTheme}
                             isDarkThemeEnabled={isDarkThemeEnabled}
                         />
                         <div
@@ -436,18 +433,11 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                             </Rounded>
                         }
                         <ThemeToggler
-                            toggleDarkTheme={toggleDarkTheme}
+                            // toggleDarkTheme={toggleDarkTheme}
                             isDarkThemeEnabled={isDarkThemeEnabled}
                         />
 
-                        {/* <Rounded className="!w-10 !h-10"
-                            onClick={toggleDarkTheme}
-                        >
-                            {
-                                isDarkTheme ? <BsMoonStars size={25} /> : <BsSun size={25} />
-                            }
-                        </Rounded> */}
-
+            
 
 
                         {
@@ -556,11 +546,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                 </motion.div>
                             </motion.div>
                         </Rounded>
-                        {/* <div className='hover:bg-slate-300  w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={toggleDarkTheme}>
-                            {
-                                isDarkTheme ? <BsMoonStars size={25} /> : <BsSun size={25} />
-                            }
-                        </div> */}
+                      
                         {
                             isLogin && <NavLink
                                 to={redirectLink}

@@ -113,6 +113,7 @@ const AdminMailStat = lazy(() => import("./pages/AdminMailStat"));
 const Restaurant = lazy(() => import("./pages/Restaurant"));
 const NewBusPage = lazy(() => import("./pages/AddNewBusPage"));
 const ProductPage = lazy(() => import("./pages/Product"));
+const RestaurantUserPage = lazy(() => import("./pages/RestaurantUser"));
 const ShoppingBagPage = lazy(() => import("./pages/ShoppingBag"));
 const CheckOutPage = lazy(() => import("./pages/CheckOut"));
 const AddProductPage = lazy(() => import("./pages/AddProduct"));
@@ -278,6 +279,18 @@ const router = createBrowserRouter([
             path: "information",
             loader: checkOutLoader(queryClient),
             action: checkOutAction(queryClient),
+            errorElement: <SingleTicketErrorElement />,
+
+          },
+          {
+            element:
+              <Suspense fallback={<FallBack />}>
+                <RestaurantUserPage />
+              </Suspense>
+            ,
+            path: "user/restaurant",
+            // loader: checkOutLoader(queryClient),
+            // action: checkOutAction(queryClient),
             errorElement: <SingleTicketErrorElement />,
 
           },

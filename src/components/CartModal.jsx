@@ -104,8 +104,8 @@ w-full md:flex- md:max-w-3xl md:rounded-lg mx-auto fixed-- -bg-white rounded-t-2
                                     }}
                                     className="
 !w-[min(400px,calc(100%-40px))] 
-!rounded-full
-block mx-auto
+!rounded-md
+block !mx-auto
 !bg-black hover:!bg-white 
 hover:!text-black 
 hover:!border-black
@@ -116,7 +116,8 @@ transition-colors
 focus:!border-2
 focus:!border-black
 duration-500
-!pt-3 !pb-3.5
+!pt-4 !pb-4
+!text-lg
 "
                                 />
 

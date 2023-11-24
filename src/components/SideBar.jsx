@@ -17,8 +17,9 @@ import { MdOutlineSecurity } from 'react-icons/md'
 import { useravatar } from '../Assets/images';
 import { useDashBoardContext } from "./DashboardLayout"
 import { BiMailSend } from "react-icons/bi"
+import ThemeToggler from "./ThemeToggler"
 
-const SideBar = () => {
+const SideBar = ({ isDarkThemeEnabled }) => {
   const { user } = useDashBoardContext()
   const dispatch = useDispatch()
   const toggleSideBar = () => dispatch(actions.toggleSideBar())
@@ -221,6 +222,10 @@ const SideBar = () => {
 
         }
       </div>
+      <ThemeToggler
+        className={`${view && "!hidden"} md:!hidden`}
+        isDarkThemeEnabled={isDarkThemeEnabled}
+      />
       {/*  */}
 
       <div

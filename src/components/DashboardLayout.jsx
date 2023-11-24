@@ -89,11 +89,15 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
             logoutUser
         }}>
             <OnlineDetector />
-            <Header />
+            <Header 
+            
+            isDarkThemeEnabled={isDarkThemeEnabled}
+            />
             <div className="overflow-x-hidden xl:container mx-auto">
 
                 <div className={`flex ${view && "lg:flex-row-reverse"} ease duration-500 transition-all`}>
                     <SideBar
+                    isDarkThemeEnabled={isDarkThemeEnabled}
                     />
                     {
                         isPageLoading ? <AppSpinner /> : <Outlet

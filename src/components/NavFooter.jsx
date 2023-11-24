@@ -63,7 +63,7 @@ const NavFooter = () => {
                 >
                     <div className="flex sm:justify-center sm:items-center sm:flex-col grid-flow-col gap-4 px-4">
 
-                        <NavLinkContainer to={"/"}
+                        <NavLinkContainer to={"/restaurant"}
                             text={"Home"}
                             icon={MdHome}
 
@@ -94,7 +94,7 @@ const NavFooter = () => {
 
                                 className="absolute -top-0 text-white -right-0 w-4 h-4 flex justify-center items-center rounded-full text-xs bg-red-400">{totalAmount}</motion.div>
                         </div>
-                        <NavLinkContainer to={"/user"}
+                        <NavLinkContainer to={"/user/restaurant"}
                             text={"user"}
                             icon={AiOutlineUser}
 

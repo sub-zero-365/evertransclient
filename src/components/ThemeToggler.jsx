@@ -1,9 +1,11 @@
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+
 import { useState } from 'react';
 import { BsLightbulb, BsMoonStars, BsSun } from 'react-icons/bs';
-const ThemeToggler = ({ toggleDarkTheme,
+import themeToggler from '../utils/themeToggler';
+
+const ThemeToggler = ({ className,
     isDarkThemeEnabled }) => {
+    
     const toggleStates = [
         {
             Icon: BsSun,
@@ -28,7 +30,7 @@ const ThemeToggler = ({ toggleDarkTheme,
     return (
         <div
             onClick={e => e.stopPropagation()}
-            className='max-w-fit flex-col mx-2 border- flex justify-center items-center -p-2 rounded-lg'
+            className={`${className} max-w-fit flex-col mx-2 border- flex justify-center items-center -p-2 rounded-lg`}
         >
 
             <div
@@ -39,7 +41,7 @@ const ThemeToggler = ({ toggleDarkTheme,
                     key={idx}
 
                     onClick={() => {
-                        toggleDarkTheme(title)
+                        themeToggler(title)
                         setActiveIndex(idx)
                     }}
                     className={`border p-1.5  justify-center items-center cursor-pointer flex gap-x-0.5  rounded-sm my-1

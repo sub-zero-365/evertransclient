@@ -1,4 +1,4 @@
-import {  AiOutlineMenu } from "react-icons/ai"
+import { AiOutlineMenu } from "react-icons/ai"
 import { useNavigation, Link, redirect, useNavigate, } from "react-router-dom"
 import { motion } from 'framer-motion'
 import { useravatar } from '../Assets/images';
@@ -6,12 +6,16 @@ import { BsMoonStars, BsSun } from 'react-icons/bs';
 import UiButton from "../components/UiButton"
 import { Rounded } from './'
 import { useDashBoardContext } from "./DashboardLayout"
+import themeToggler from '../utils/themeToggler';
+import ThemeToggler from './ThemeToggler';
 
-export default function Header() {
+export default function Header({ isDarkThemeEnabled}) {
     const navigate = useNavigate()
     const { user,
         toggleSideBar,
-        view, setView, toggleDarkTheme, isDarkTheme, logoutUser
+        view, setView
+       
+        ,logoutUser
     } = useDashBoardContext()
     return (
 
@@ -55,14 +59,10 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                 >
                     view site
                 </button>
-                <Rounded
-                    className={"!w-[40px] !h-[40px]"}
-                    onClick={toggleDarkTheme}
-                >
-                    {
-                        isDarkTheme ? <BsMoonStars size={25} /> : <BsSun size={25} />
-                    }
-                </Rounded>
+                <ThemeToggler
+                className="hidden md:block"
+                    isDarkThemeEnabled={isDarkThemeEnabled}
+                />
 
                 <button
                     data-te-ripple-init
