@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from 'react'
+import { useState, useEffect, createContext, useContext, useRef } from 'react'
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
 import { IoMdClose } from 'react-icons/io'
 import { BsBag, BsMoonStars, BsSearch, BsSun } from 'react-icons/bs';
@@ -17,9 +17,11 @@ import { clearUser } from '../actions/User'
 import React from "react"
 import SearchResultContainer from './SearchResult';
 import SeachContainer from './SearchContainer';
-import { useQuery } from "@tanstack/react-query"
+// import { useQuery } from "@tanstack/react-query"
 import useToggleCartSlider from '../utils/useToggleCartSlider';
 import ThemeToggler from './ThemeToggler';
+import useOutsideAlerter from "../Hooks/click-outside-hook"
+import userRole from "../utils/userRole"
 const SearchContext = createContext()
 const allTicketsQuery = (params = {}) => {
     // console.log("this is the params", params)
@@ -44,18 +46,15 @@ const allTicketsQuery = (params = {}) => {
     };
 };
 const Navbar = ({ }) => {
+    const navRef = useRef(null)
+    const { toggle: outside } = useOutsideAlerter(navRef)
     const [toggle, setToggle] = useState(false)
     const { open } = useToggleCartSlider()
     const queryClient = useQueryClient()
     const disatch = useDispatch()
     const { isDarkThemeEnabled, user } = useUserLayoutContext()
     const [search, setSeach] = useState("")
-    // const toggleDarkTheme = (theme = "light") => {
-    //     document.documentElement.className = ""
-    //     document.documentElement.classList.add(theme)
-    //     document.documentElement.setAttribute("data-theme", theme)
-    //     localStorage.setItem("theme", theme)
-    // };
+
     const isLogin = user?.fullname
     const navigate = useNavigate()
     const logoutUser = async () => {
@@ -75,11 +74,41 @@ const Navbar = ({ }) => {
         navigate("/register")
         setIsOpen(false)
     }
+    useEffect(() => {
+        if (outside) {
+            setIsOpen(false)
+        }
+    }, [outside])
+    const [lastScrollY, setLastScrollY] = useState(0);
+    const controlNavbar = () => {
+        if (window.scrollY > lastScrollY) { // if scroll down hide the navbar
+          setIsOpen(false); 
+        } 
+        
+        // else { // if scroll up show the navbar
+        //   setIsOpen(true);  
+        // }
+    
+        // remember current page location to use in the next move
+        setLastScrollY(window.scrollY); 
+      };
+    
+      useEffect(() => {
+        window.addEventListener('scroll', controlNavbar);
+    
+        // cleanup function
+        return () => {
+           window.removeEventListener('scroll', controlNavbar);
+        };
+      }, [lastScrollY]);
+    
+    
     const gotoUserPage = () => {
-        const currentUserRole = user?.role;
-        if (currentUserRole == "tickets") navigate("/user")
-        else if (currentUserRole == "restaurants") navigate("/restaurant")
-        else navigate("/user/mails")
+        const userrole = userRole(user);
+        // if (currentUserRole == "tickets") navigate("/user")
+        // else if (currentUserRole == "restaurants") navigate("/restaurant")
+        // else navigate("/user/mails")
+        navigate(userrole)
     }
     const [isOpen, setIsOpen] = useState(false)
     const currentUserRole = user?.role
@@ -110,16 +139,16 @@ const Navbar = ({ }) => {
         }
     }
     // const currentUserRole = user?.role;
-    var redirectLink = "/user"
-    if (currentUserRole == "tickets") {
-        redirectLink = "/user"
-    }
-    else if (currentUserRole == "restaurants") {
-        redirectLink = "/user/restaurant"
-    }
-    else {
-        redirectLink = "/user/mails"
-    }
+    var redirectLink = userRole(user)
+    // if (currentUserRole == "tickets") {
+    //     redirectLink = "/user"
+    // }
+    // else if (currentUserRole == "restaurants") {
+    //     redirectLink = "/user/restaurant"
+    // }
+    // else {
+    //     redirectLink = "/user/mails"
+    // }
 
 
     return (
@@ -128,7 +157,10 @@ const Navbar = ({ }) => {
             data: []
         }}>
 
-            <div className="sticky
+            <div
+                ref={navRef}
+
+                className="sticky
      bg-white/70 text-black gold:bg-[var(--color-primary)] dark:bg-slate-900 dark:text-white shadow-gray-200
         top-0 left-0 shadow-sm dark:shadow-black dark:shadow-sm select-none
          z-20">
@@ -325,13 +357,13 @@ shadow
                         />
                         <div className='md:hidden'>
                             {
-                                !isLogin &&
-                                (<div className="flex ">
-                                    <button
-                                        type="button"
-                                        a data-te-ripple-init
-                                        data-te-ripple-color="light"
-                                        className="inline-block rounded bg-blue-400 px-6 pb-2 pt-2.5 ml-5 my-4 text-xs font-medium uppercase
+                                !isLogin ?
+                                    (<div className="flex ">
+                                        <button
+                                            type="button"
+                                            a data-te-ripple-init
+                                            data-te-ripple-color="light"
+                                            className="inline-block rounded bg-blue-400 px-6 pb-2 pt-2.5 ml-5 my-4 text-xs font-medium uppercase
 leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150
 ease-in-out hover:bg-primary-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
@@ -340,16 +372,16 @@ focus:outline-none focus:ring-0 active:bg-primary-700
 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
 dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                                        onClick={gotoLoginPage}
-                                    >
-                                        Login
-                                    </button>
+                                            onClick={gotoLoginPage}
+                                        >
+                                            Login
+                                        </button>
 
-                                    <button
-                                        type="button"
-                                        data-te-ripple-init
-                                        data-te-ripple-color="light"
-                                        className="inline-block rounded bg-red-400 px-6 pb-2 pt-2.5 ml-5 my-4 text-xs font-medium uppercase
+                                        <button
+                                            type="button"
+                                            data-te-ripple-init
+                                            data-te-ripple-color="light"
+                                            className="inline-block rounded bg-red-400 px-6 pb-2 pt-2.5 ml-5 my-4 text-xs font-medium uppercase
 leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150
 ease-in-out hover:bg-primary-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
@@ -358,12 +390,24 @@ focus:outline-none focus:ring-0 active:bg-primary-700
 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] 
 dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
-                                        onClick={gotoRegisterPage}
-                                    >
-                                        Register
-                                    </button>
-                                </div>
-                                )
+                                            onClick={gotoRegisterPage}
+                                        >
+                                            Register
+                                        </button>
+                                    </div>
+                                    ) : <UiButton
+                                        onClick={async (e) => {
+                                            e.stopPropagation()
+                                            await logoutUser()
+                                        }}
+                                        className="!bg-rose-800 !py-3.5 !rounded-none !text-lg !mx-auto !w-[min(250px,calc(100%-0.5rem))] mb-5  "
+                                    >Logout: <span
+                                        className="!text-slate-800 uppercase !font-medium !ml-0.5 pl-4"
+                                    >{
+
+                                                // trying to prevent overflow when the name exceed 8 characters long
+                                                user?.fullname?.length > 8 ?
+                                                    user?.fullname?.slice(0, 8) + " ...?" : user?.fullname}</span> </UiButton>
                             }
 
                         </div>
@@ -435,9 +479,9 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                         <ThemeToggler
                             // toggleDarkTheme={toggleDarkTheme}
                             isDarkThemeEnabled={isDarkThemeEnabled}
-                        />
+                        />+
 
-            
+
 
 
                         {
@@ -546,7 +590,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                 </motion.div>
                             </motion.div>
                         </Rounded>
-                      
+
                         {
                             isLogin && <NavLink
                                 to={redirectLink}

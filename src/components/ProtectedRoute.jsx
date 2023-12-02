@@ -99,7 +99,9 @@ const ProtectedRoute = () => {
           lg:hidden
                          fixed 
                         flex-none 
-                        shadow-2xl button-add  top-auto bg-blue-400 
+                        shadow-2xl button-add  top-auto
+                        ring-blue-300 gold:ring-yellow-300 dark:ring-slate-300
+                        bg-blue-400 gold:bg-yellow-500 dark:bg-slate-950
 w-[5rem]
 h-[5rem] 
 rounded-full 

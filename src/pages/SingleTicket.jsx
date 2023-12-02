@@ -267,7 +267,7 @@ const User = () => {
                 <h2 className="text-center  text-lg md:text-xl font-medium  ">Name</h2>
                 <p className="text-center text-slate-500 mb-10 " >{ticket?.busdetails?.bus || "n/a"} </p>
               </div>
-    
+
 
             </div>
             <Heading text="Edited History" className={"!text-center !font-bold italic"} />
@@ -278,12 +278,41 @@ const User = () => {
                 ticket?.editedBy?.map(({ full_name,
                   user_id,
                   date,
-                  action }) => <li class="ml-4 mb-4" key={user_id}>
+                  action,
+                  transferseatdetail
+                }) => {
+                  const isSeatTransfer = action?.toLowerCase()?.includes("transfer") && transferseatdetail?.previousSeatId;
+               
+                  return (<li class="ml-4 mb-4" key={user_id}>
                     <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
                     <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">{dayjs(date).format("dddd, MMMM D, YYYY h:mm A")}</time>
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Edited By:{full_name}</h3>
                     <p class="text-base font-normal text-gray-500 dark:text-gray-400">Action:{action}</p>
+                    {isSeatTransfer&&
+                    <div className="py-2">
+                      <UiButton
+                        className="!bg-rose-400"
+                      >
+                        <Link
+                          to={`/seat/${transferseatdetail?.previousSeatId}`}
+                        >
+                          Previous Seat
+                        </Link>
+                      </UiButton>
+                      <UiButton
+                        className="!bg-green-400 mt-2"
+                      >
+                        <Link
+                          to={`/seat/${transferseatdetail?.currentSeatId}?rd_from=assistant&ticket_id=${ticket?._id}&ticket_seat=${ticket.seatposition}`}
+                        >
+                          Transfer Seat
+                        </Link>
+                      </UiButton>
+
+                    </div>
+                    }
                   </li>)
+                })
               }
 
             </ol>
@@ -300,7 +329,7 @@ const User = () => {
                   to={`/${isadminuser ? "dashboard/seat" : "seat"}/${ticket?.seat_id}?rd_from=assistant&ticket_id=${ticket?._id}&ticket_seat=${ticket.seatposition}&${isadminuser ? "admin=true" : null}`}
                 >
                   <UiButton
-                    className="!bg-green-600 !mt-5 !text-sm !mx-auto !w-[min(100%,calc(100%-60px))]"
+                    className="!bg-green-600 !py-3 dark:!bg-slate-950 dark:!text-white gold:!bg-yellow-500 gold:text-black !mt-5 !text-sm !mx-auto !w-[min(100%,calc(100%-60px))]"
                     name="Locate Borderaux"
                   />
                 </Link>
@@ -337,7 +366,7 @@ const User = () => {
                                      block
                                      min-h-[2rem]
                                      mx-auto
-                                    rounded bg-blue-500   px-2 py-1 text-xs font-montserrat font-medium 
+                                    rounded bg-blue-500 gold:bg-yellow-500 gold:text-black  px-2 py-1 text-xs font-montserrat font-medium 
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
   transition duration-150 ease-in-out hover:bg-blue-600
   hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
@@ -382,6 +411,7 @@ const User = () => {
 w-[min(25rem,calc(100%-1rem))]
 bg-white
 dark:bg-slate-800
+gold:bg-yellow-200
 mb-5
 rounded-lg
 shadow-xl
@@ -608,16 +638,18 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                   <a
                     href={`${downloadbaseurl}/downloadticket/${id}?payload=79873ghadsguy&requ`}
                     target="_blank"
-                    className="inline---block 
+                    className="inline---block
+                    dark:!bg-slate-950 dark:!text-white
+                    gold:bg-yellow-600 gold:!text
                         w-[min(300px,calc(100%-2.5rem))]
                          bottom-0
-                         pb-2.5
+                         py-3.5
                          block
                          min-h-[2rem]
                          mx-auto
-                         pt-2
+                         
                          text-center
-                        rounded bg-green-500   px-2 py-1 text-xs font-montserrat font-medium 
+                        rounded bg-green-500   px-2  text-xs font-montserrat font-medium 
 leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3
 transition duration-150 ease-in-out hover:bg-green-600
 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]

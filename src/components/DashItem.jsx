@@ -4,9 +4,10 @@ import {Button,Heading} from "./"
 const DashItem = ({ icon, Counts, href, Name }) => {
     return (
         <div className="p-4 mb-4 relative group z-1
-        md:w-full mx-auto md:mx-initial overflow-hidden  shadow-sm  md:rounded-lg lg:rounded-xl
+        md:w-full mx-auto md:mx-initial overflow-hidden  shadow-sm  
+        md:rounded-lg lg:rounded-xl
         shadow-slate-200 dark:shadow-black rounded-lg
-        bg-white dark:bg-slate-800">
+        bg-white gold:gold:bg-color_gold dark:bg-slate-800">
             <div className="flex justify-between mb-2 items-start">
             <Heading text={Name || "loading"} className="!pl-0 first-letter:!text-2xl
             !text-lg !mb-0 !font-black !uppercase "/>

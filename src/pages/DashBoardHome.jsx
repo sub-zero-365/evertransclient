@@ -14,10 +14,10 @@ import axios from "axios"
 
 
 const DashboardHome = () => {
-    const [users, setUsers] = useState([])
+    // const [users, setUsers] = useState([])
     const token = localStorage.getItem("admin_token");
     const ticketData = useSelector(state => state.setAdminData.ticketdata);
-    const cities = useSelector(state => state.userCity.cities);
+    // const cities = useSelector(state => state.userCity.cities);
     const dispatch = useDispatch();
     const setTicketDataFunction = (payload) => {
         return dispatch(setTicketData(payload))
@@ -91,7 +91,7 @@ const DashboardHome = () => {
                     href={"tickets"}
                     Counts={ticketData.totalTickets}
                     icon={<BsTicketPerforated className='text-3xl' />} />
-                <DashItem Name={"Buses"}
+                <DashItem Name={"Cars"}
                     href={"bus"}
                     Counts={b_count}
                     icon={<BiBus className='text-3xl' />} />

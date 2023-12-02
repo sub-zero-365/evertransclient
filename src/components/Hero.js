@@ -5,15 +5,26 @@ import { motion } from "framer-motion";
 import { Link, NavLink } from 'react-router-dom';
 import UiButton from './UiButton';
 import Write from './Write';
+import { SiYourtraveldottv } from "react-icons/si";
+import { useUserLayoutContext } from './UserLayout';
+import userRole from "../utils/userRole"
 const Hero = () => {
+    const { user } = useUserLayoutContext()
+   const userrole= userRole(user)
+    // let userRole = "/login"
+    // if (user?.role == "tickets") userRole = "/user"
+    // else if (user?.role == "mails") userRole = "/user/mails"
+    // else if (user?.role == "restaurants") userRole = "/restaurant"
+    // else userRole = "/login?message=please login to continue "
+
     return (
-        <div className=" h-[min(35rem,100vh)] text-white relative group">
-            <img className="absolute -z-0 max-w-7xl left-1/2 -translate-x-1/2 inset-0 w-full h-full "
+        <div className=" h-[min(35rem,100vh)]-- mb-10 text-white relative group ">
+            {/* <img className="absolute -z-0 max-w-7xl left-1/2 -translate-x-1/2 inset-0 w-full h-full "
                 src={herobg}
-            />
+            /> */}
             <div
                 className='h-full 
-                  bg-opacity-80 px-5 lg:p-20 sm:px-10  py-10 relative z-1 dark:bg-slate-700/80 bg-[#1a1f6f] gold:bg-yellow-400/20'
+                  bg-opacity-80 px-5 lg:p-20 sm:px-10  py-10 relative z-1 dark:bg-slate-700/80-- bg-[#1a1f6f]-- gold:bg-yellow-400/20--'
             >
                 <div
                     className=" h-full items-center  "
@@ -33,16 +44,19 @@ const Hero = () => {
 
 
                         <AnimateText
-                            className="!text-6xl md:!text-7xl lg:leading-tight !font-poppins-- !font-bricolage
-                            lg:!text-left-- lg:!text-7xl !text-center    !pt-6 !font-black"
+                            className="!text-5xl md:!text-6xl lg:leading-tight !font-poppins-- !font-bricolage
+                            lg:!text-left-- lg:!text-7xl !text-center  !text-black  !pt-6 !font-black"
                             text="Travel With Us For An Adventure-Filled"
                         />
                         <div className='text-blue-600 
                         gold:text-color_gold 
                         !text-6xl md:!text-7xl
-                        font-black text-center
+                        font-black text-center flex justify-center items-center 
                         !font-bricolage'>
-                            Journey
+                            Journey <SiYourtraveldottv
+                                className="ml-1"
+                                size={30}
+                            />.
                         </div>
                         <motion.div
                             initial={{ y: 100, opacity: 0 }}
@@ -56,20 +70,23 @@ const Hero = () => {
                                 }}
                         >
 
-                            <Write />
+                            <Write
+                                className="!text-black !text-xl sm:!text-2xl text-muted-foreground"
+                            />
 
                             <div
-                                className='flex-- hidden gap-6  justify-start flex-wrap '
+                                className='flex  gap-y-2 w-full  items-center sm:flex-row
+                                flex-wrap flex-col justify-center'
                             >
                                 <UiButton
-                                    className="!bg-[#ffae02] flex-none !my-10 !py-3 lg:!py-3.5
-                    !px-8 !text-lg hover:!bg-purple-600 
-                    transition duration-500
+                                    className="!bg-[#ffae02]-- !bg-blue-600 !w-fit !flex-none  !py-3 lg:!py-3.5
+                    !px-14 !text-lg hover:!bg-purple-600 
+                    transition duration-500 !rounded-md
                     "
                                 >
                                     <NavLink
 
-                                        to="/booking"
+                                        to={userrole}
                                     >{
                                             ({ isPending }) => isPending ? "please wait..." : "   Get Started"
 
@@ -78,8 +95,8 @@ const Hero = () => {
                                     </NavLink>
                                 </UiButton>
                                 <UiButton
-                                    className="bg-transparent  border-2 !border-[#ffae02] flex-none !my-10 !py-3 lg:!py-3.5
-                    !px-8 !text-lg hover:!bg-purple-600  hover:!border-white
+                                    className="bg-transparent !w-fit  border-none !border-[#ffae02] !flex-none  !py-3 lg:!py-3.5
+                    !px-14 !text-lg hover:!bg-purple-600  hover:!border-white !text-black
                     transition duration-500
                     "
                                 >

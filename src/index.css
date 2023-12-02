@@ -18,28 +18,27 @@
   --color-blog: #042c54;
   --color-text: #b1affd;
   --color-subtext: #ffba71;
-  --scroll-to-height: 16px;
-  --scroll-to-width: 16px;
+  --scroll-to-height: 5px;
+  --scroll-to-width: 5px;
   --color-primary: #ffd700;
   /* --color-primary: #ffae02; */
 }
 @layer base {
   :root {
     --color-neutral-50: theme("colors.gray.50");
+    --color-primary-50: theme("colors.green.500");
 
     /* --color-dark: theme("colors.slate"); */
   }
 }
-.theme-gold {
-  --color-primary-50: theme("colors.green.500");
+.gold {
+  --color-primary-50: theme("colors.yellow.500");
 }
-.theme-dark {
+.dark {
   --color-primary-50: theme("colors.green.200");
 }
-.theme-red {
-  --color-primary-50: theme("colors.red.500");
-}
-.theme-light {
+
+.light {
   --neutralBg: theme("colors.white");
 }
 .react-datepicker__day.react-datepicker__day--disabled {
@@ -223,17 +222,17 @@ html {
 }
 
 .scrollto::-webkit-scrollbar-thumb {
-  @apply border-slate-400 bg-slate-600 border-[3px] rounded-[20px];
+  @apply border-slate-400 bg-[var(--color-primary-50)] border-[3px] rounded-[20px];
 }
 
 .scrollto:hover::-webkit-scrollbar-thumb {
   @apply bg-slate-400;
 }
 *::-webkit-scrollbar-thumb {
-  @apply border-slate-400 bg-slate-600 border-[3px] rounded-[20px];
+  @apply border-slate-400 bg-[var(--color-primary-50)] border-[3px] rounded-[20px];
 }
 .scrollto::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-600;
+  @apply bg-[var(--color-primary-50)];
 }
 * {
   scrollbar-width: auto;

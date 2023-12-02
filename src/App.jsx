@@ -5,6 +5,7 @@ import {
 import "react-toastify/dist/ReactToastify.css"
 import axios from "axios"
 import { UserLayout, DashboardLayout, ProtectedRoute } from "./components";
+import RestaurantLayout from "./components"
 import { Home, Auth, SingleTicket } from "./pages";
 import {
   RouterProvider,
@@ -61,6 +62,7 @@ import { loader as citiesLoader, action as cityActions } from "./pages/Cities"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import { loader as customerStatsloader } from "./pages/CustomerStats"
 import { loader as newSeatloader, action as newSeatAction } from "./pages/AddNewBusPage"
+import { loader as singleRecieptLoader } from "./pages/SingleReciept"
 import { action as addProductAction } from "./pages/AddProduct"
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
@@ -117,6 +119,7 @@ const RestaurantUserPage = lazy(() => import("./pages/RestaurantUser"));
 const ShoppingBagPage = lazy(() => import("./pages/ShoppingBag"));
 const CheckOutPage = lazy(() => import("./pages/CheckOut"));
 const AddProductPage = lazy(() => import("./pages/AddProduct"));
+const SingleRecieptPage = lazy(() => import("./pages/SingleReciept"));
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://evertrans.onrender.com"
 const setTheme = (theme) => {
@@ -317,6 +320,13 @@ const router = createBrowserRouter([
                 </Suspense>,
                 loader: mailsLoader(queryClient)
               },
+              {
+                path: "reciept/:id",
+                element: <Suspense>
+                  <SingleRecieptPage />
+                </Suspense>,
+                loader: singleRecieptLoader(queryClient)
+              },
             ]
 
           },
@@ -344,6 +354,8 @@ const router = createBrowserRouter([
               <ProductPage />
             </Suspense>
           },
+
+
 
 
           {

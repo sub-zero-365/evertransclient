@@ -134,7 +134,7 @@ export default function OurServices() {
         <Service index={1}
           imgUrl="https://www.svgrepo.com/show/499796/ticket-information.svg"
           title="Mailing"
-          text="Our bus bookjing service herlo ot "
+          text="Get your assets delivered in just a few minutes  "
         />
         <Service index={1}
           imgUrl="https://www.svgrepo.com/show/499796/ticket-information.svg"

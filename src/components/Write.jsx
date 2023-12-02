@@ -28,7 +28,7 @@ const Write = ({ message, className }) => {
 
         >
             <p
-                className={`${className} text-2xl text-center lg:text-start- lg:text-3xl font-medium my-4`}
+                className={`${className} text-2xl  text-center lg:text-start- lg:text-3xl font-medium my-4`}
             >
 
                 {text}
