@@ -4,7 +4,27 @@ import { BsBusFront } from "react-icons/bs"
 import { MdOutlineForwardToInbox } from "react-icons/md"
 import Heading from './Headings'
 import AnimatedText from './AnimateText'
+import { ArrowDownToLine, CheckCircle, Leaf,BusFront } from "lucide-react";
+import WriteInView from './WriteInView'
+{/* <BusFront /> */}
 export default function OurServices() {
+  const perks = [
+    {
+      name: "Instant Delivery.",
+      icon: BusFront,
+      description: "Get  your assets delivered to your email in seconds and download them right away"
+    },
+    {
+      name: "Guranteed  Quality.",
+      icon: CheckCircle,
+      description: "Every assets on our platfprm is verified by our team to ensure our highest quality standards.Not happy we offer a 30-day refund guarantee."
+    },
+    {
+      name: "For the Planet.",
+      icon: Leaf,
+      description: "We pledge 1% of the sales to the preservation of the natural environment."
+    },
+  ]
   const slideUp = {
     initial: {
       y: 100, opacity: 0
@@ -74,9 +94,8 @@ export default function OurServices() {
 
   return (
 
-    <div className=" lg:px-10 overflow-x-hidden px-6  text-black text-lg py-24 md:text-xl lg:text-xl
-    bg-white-- 
-    gold:bg-color-dark/10---" id="#ourservices">
+    <div className=" lg:px-10 overflow-x-hidden px-6  text-black-- text-lg py-24 md:text-xl lg:text-xl
+    " id="#ourservices">
 
       <div
         className="relative w-full"
@@ -100,7 +119,7 @@ export default function OurServices() {
         viewport={{ once: true, amount: 0.8 }}
         initial="initial"
         whileInView="animate"
-        className='text-center text-4xl text-[#181e76] gold:text-[var(--color-primary)] lg:text-5xl font-semibold'
+        className='text-center text-4xl text-[#181e76] dark:text-blue-600 gold:text-[var(--color-primary)] lg:text-5xl font-semibold'
       >We Provide Best Services For You</motion.h1>
       <motion.p
 
@@ -117,31 +136,63 @@ export default function OurServices() {
         to them -safety,reliably,and sustainably
       </motion.p>
 
+
       <div
-        className='grid  py-10        grid-cols-[repeat(auto-fit,minmax(min(25rem,calc(100%-20px)),1fr))]
-        gap-x-4
-        gap-y-6'
-
+        className="grid grid-cols-1  gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3  lg:gap-x-8 lg:gap-y-0"
       >
-        <Service index={1}
-          // icon={<BsBusFront
-          //   size={30}
-          // />}
-          imgUrl="https://www.svgrepo.com/show/522773/bus.svg"
-          title="Bus Booking"
-          text="Our bus bookjing service herlo ot "
-        />
-        <Service index={1}
-          imgUrl="https://www.svgrepo.com/show/499796/ticket-information.svg"
-          title="Mailing"
-          text="Get your assets delivered in just a few minutes  "
-        />
-        <Service index={1}
-          imgUrl="https://www.svgrepo.com/show/499796/ticket-information.svg"
-          title="Transport & Logistics"
-          text="Our bus bookjing service herlo ot "
-        />
+        {
+          perks.map(({ icon: Icon, description, name }, index) =>
 
+            <motion.div
+              style={{
+                transformOrigin: "bottom"
+              }}
+              whileHover={{
+                scale: 0.9,
+                transition: {
+                  duration: 0.3
+                }
+              }}
+              initial={{
+                y: index & 1 ? 100 : 50,
+                opacity: 0
+              }}
+              whileInView={{ y: 0, opacity: 100 }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{
+                duration: 1,
+                mass: 20 + (index * 5),
+                stiffness: "spring"
+              }}
+              key={index}
+              className="text-center md:flex md:items-start md:text-left lg:block lg:text-center"
+            >
+              <div
+                className="md:flex-shrink-0 flex justify-center"
+              >
+                <div className="h-16 w-16 flex items-center justify-center rounded-full bg-blue-100 text-blue-900">
+                  <Icon
+                    className="w-1/3 h-1/3"
+                  />
+                </div>
+              </div>
+              <div
+                className="mt-6 md:ml-4 md:mt-0 lg:ml-0 lg:mt-0"
+              >
+                <WriteInView
+                  message={name}
+                />
+                {/* <h3
+                  className="text-base font-medium text-gray-900"
+                >{name}
+
+                </h3> */}
+                <p
+                  className="mt-3 text-sm lg:text-lg text-muted-foreground"
+                >{description}</p>
+              </div>
+            </motion.div>)
+        }
 
       </div>
     </div>

@@ -120,6 +120,7 @@ const ShoppingBagPage = lazy(() => import("./pages/ShoppingBag"));
 const CheckOutPage = lazy(() => import("./pages/CheckOut"));
 const AddProductPage = lazy(() => import("./pages/AddProduct"));
 const SingleRecieptPage = lazy(() => import("./pages/SingleReciept"));
+const ProductPreviewPage = lazy(() => import("./pages/ProductPreviewPage"));
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://evertrans.onrender.com"
 const setTheme = (theme) => {
@@ -538,6 +539,13 @@ const router = createBrowserRouter([
           <AddProductPage />
         </Suspense>,
         loader: addProductAction(queryClient),
+      },
+      {
+        path: "product/preview",
+        element: <Suspense>
+          <ProductPreviewPage />
+        </Suspense>,
+        // loader: addProductAction(queryClient),
       },
       {
         path: "customerstats",

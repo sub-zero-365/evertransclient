@@ -283,10 +283,18 @@ const AddProductPage = () => {
                         >
 
                             <Button
-                                title="Preview"
+                                // title="Preview"
                                 type="button"
-                                className="!block  !mt-5 !bg-green-800 !rounded-lg "
-                            />
+                                className="!block  !mt-5 !px-10 !py-3.5 !bg-green-800 !rounded-lg "
+                            >
+                            
+                            <Link
+                            to={"/dashboard/product/preview"}
+                            >
+                            Preview Product
+                            </Link>
+                            
+                            </Button>
                             <LoadingButton
                                 message="publishing ..."
                                 type="submit"

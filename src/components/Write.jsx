@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-const Write = ({ message, className }) => {
+const Write = ({ message, className ,initial}) => {
     const initialText = message || "Together we are focused on delevering our vital services in a better way every day: great service today - even better service tomorrow."
     const [text, setText] = useState("")
     useEffect(() => {
@@ -19,7 +19,8 @@ const Write = ({ message, className }) => {
     return (
         <motion.div
             className="max-w-3xl mx-auto"
-            initial={{ y: 200, opacity: 0 }}
+            initial={{ y:initial?0:200,
+            opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{
                 duration: 2,

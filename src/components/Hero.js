@@ -11,17 +11,10 @@ import userRole from "../utils/userRole"
 const Hero = () => {
     const { user } = useUserLayoutContext()
    const userrole= userRole(user)
-    // let userRole = "/login"
-    // if (user?.role == "tickets") userRole = "/user"
-    // else if (user?.role == "mails") userRole = "/user/mails"
-    // else if (user?.role == "restaurants") userRole = "/restaurant"
-    // else userRole = "/login?message=please login to continue "
 
     return (
         <div className=" h-[min(35rem,100vh)]-- mb-10 text-white relative group ">
-            {/* <img className="absolute -z-0 max-w-7xl left-1/2 -translate-x-1/2 inset-0 w-full h-full "
-                src={herobg}
-            /> */}
+      
             <div
                 className='h-full 
                   bg-opacity-80 px-5 lg:p-20 sm:px-10  py-10 relative z-1 dark:bg-slate-700/80-- bg-[#1a1f6f]-- gold:bg-yellow-400/20--'
@@ -45,7 +38,7 @@ const Hero = () => {
 
                         <AnimateText
                             className="!text-5xl md:!text-6xl lg:leading-tight !font-poppins-- !font-bricolage
-                            lg:!text-left-- lg:!text-7xl !text-center  !text-black  !pt-6 !font-black"
+                            lg:!text-left-- lg:!text-7xl !text-center  !text-black dark:!text-white  !pt-6 !font-black"
                             text="Travel With Us For An Adventure-Filled"
                         />
                         <div className='text-blue-600 
@@ -71,7 +64,7 @@ const Hero = () => {
                         >
 
                             <Write
-                                className="!text-black !text-xl sm:!text-2xl text-muted-foreground"
+                                className="!text-black dark:!text-white !text-xl sm:!text-2xl text-muted-foreground"
                             />
 
                             <div
@@ -85,7 +78,7 @@ const Hero = () => {
                     "
                                 >
                                     <NavLink
-
+className='w-full h-full'
                                         to={userrole}
                                     >{
                                             ({ isPending }) => isPending ? "please wait..." : "   Get Started"
@@ -96,11 +89,11 @@ const Hero = () => {
                                 </UiButton>
                                 <UiButton
                                     className="bg-transparent !w-fit  border-none !border-[#ffae02] !flex-none  !py-3 lg:!py-3.5
-                    !px-14 !text-lg hover:!bg-purple-600  hover:!border-white !text-black
+                    !px-14 !text-lg hover:!bg-purple-600 dark:!text-white  hover:!border-white !text-black
                     transition duration-500
                     "
                                 >
-                                    <Link
+                                    <Link className='w-full h-full'
 
                                         to="/about-us"
                                     >

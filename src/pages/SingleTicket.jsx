@@ -364,7 +364,7 @@ const User = () => {
                                      bottom-0
                                      pb-2
                                      block
-                                     min-h-[2rem]
+                                     min-h-[3rem]
                                      mx-auto
                                     rounded bg-blue-500 gold:bg-yellow-500 gold:text-black  px-2 py-1 text-xs font-montserrat font-medium 
   leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] mb-3

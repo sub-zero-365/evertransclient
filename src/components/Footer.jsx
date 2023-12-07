@@ -6,6 +6,10 @@ import logo from "../Assets/images/logo.png"
 import { motion } from 'framer-motion';
 
 import { FiFacebook } from "react-icons/fi"
+import { GrMailOption } from 'react-icons/gr';
+import { AiFillTwitterCircle } from 'react-icons/ai';
+import { BsFacebook, BsInstagram } from 'react-icons/bs';
+import PopOver from './PopOver';
 const Footer = () => {
   return (
     <footer
@@ -31,7 +35,10 @@ const Footer = () => {
             />
             <p
               className="my-5 text-lg text-white leading-[1.4rem] tracking-loose"
-            >Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni doloremque itaque reprehenderit incidunt ut tempore quo. Aspernatur inventore perferendis aperiam.</p>
+            >
+              we provide the best service to our customers
+
+              .</p>
             <UiButton
               className="!bg-[#ffae02] !my-10 !py-2.5
                     !px-8 !text-lg hover:!bg-purple-600 
@@ -64,6 +71,7 @@ const Footer = () => {
 
 
             </li>
+         
             <li className="pb-1.5 lg:pb-2.5">
               <Link
                 to="/about"
@@ -71,35 +79,12 @@ const Footer = () => {
                   ease tracking-[0.5] hover:font-medium
                   text-white hover:text-[#ffae02] transition duration-700"
               >
-                Leader ship
+                Contact us
               </Link>
 
 
             </li>
-            <li className="pb-1.5 lg:pb-2.5">
-              <Link
-                to="/about"
-                className="text-lg 
-                  ease tracking-[0.5] hover:font-medium
-                  text-white hover:text-[#ffae02] transition duration-700"
-              >
-                About us
-              </Link>
-
-
-            </li>
-            <li className="pb-1.5 lg:pb-2.5">
-              <Link
-                to="/about"
-                className="text-lg 
-                  ease tracking-[0.5] hover:font-medium
-                  text-white hover:text-[#ffae02] transition duration-700"
-              >
-                About us
-              </Link>
-
-
-            </li>
+          
           </ul>
           <ul className="pb-4 col-span-6 md:col-span-4 lg:col-span-2">
 
@@ -171,27 +156,66 @@ const Footer = () => {
 
 
             </li>
-           
-           
-            <li className="pb-1.5 pt-2.5 lg:pb-2.5 flex  items-center ">
+            <li
+                                className='flex py-4 space-x-2 lg:space-x-4 flex-wrap  my-5 place-items-center justify-center'
+                            >
+                                <div
+                                    className='group lg:gap-x-4 gap-x-2
+                                    w-8 relative flex items-center 
+                                    justify-center h-8 
+                                    rounded-full bg-gray-80'
+                                >
+                                    <PopOver>
+                                        follow us on    FaceBook
+                                    </PopOver>
+                                    <BsFacebook
+                                    className='text-[#ffae02]'
+                                        size={25}
+                                    />
 
-              <h1
-                className='font-bold 
-              text-[1rem]
-              text-white
-              
-              '
-              >Follow Us</h1>
+                                </div>
+                                <div
+                                    className='group w-8 relative flex items-center justify-center h-8 rounded-full bg-gray-80'
+                                >
+                                    <PopOver>
+                                        follow us on  Instagram
+                                    </PopOver>
+                                    <BsInstagram
+                                    className='text-[#ffae02]'
+                                    
+                                        size={25}
+                                    />
 
-              <motion.span
-                className='text-[#ffae02]'
-              >
-                <FiFacebook
-                  size={20}
-                />
-              </motion.span>
+                                </div>
+                                <div
+                                    className='group w-8 relative flex items-center justify-center h-8 rounded-full bg-gray-80'
+                                >
+                                    <PopOver>
+                                        follow us on  Twitter
+                                    </PopOver>
+                                    <AiFillTwitterCircle
+                                    className='text-[#ffae02]'
+                                    
+                                        size={25}
+                                    />
 
-            </li>
+                                </div>
+                                <div
+                                    className='group w-8 relative flex items-center justify-center h-8 rounded-full bg-gray-80'
+                                >
+                                    <PopOver>
+                                        send us email
+                                    </PopOver>
+                                    <GrMailOption size={20}
+                                                                          className='text-[#ffae02]'
+
+                                    />
+
+                                </div>
+                       
+                            </li>
+
+       
           </ul>
         </div>
 

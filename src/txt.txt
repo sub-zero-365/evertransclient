@@ -1,0 +1,27 @@
+ <div
+        className='grid  py-10        grid-cols-[repeat(auto-fit,minmax(min(25rem,calc(100%-20px)),1fr))]
+        gap-x-4
+        gap-y-6'
+
+      >
+        <Service index={1}
+          // icon={<BsBusFront
+          //   size={30}
+          // />}
+          imgUrl="https://www.svgrepo.com/show/522773/bus.svg"
+          title="Bus Booking"
+          text="Our bus bookjing service herlo ot "
+        />
+        <Service index={1}
+          imgUrl="https://www.svgrepo.com/show/499796/ticket-information.svg"
+          title="Mailing"
+          text="Get your assets delivered in just a few minutes  "
+        />
+        <Service index={1}
+          imgUrl="https://www.svgrepo.com/show/499796/ticket-information.svg"
+          title="Transport & Logistics"
+          text="Our bus bookjing service herlo ot "
+        />
+
+
+      </div>
