@@ -105,9 +105,6 @@ const Navbar = ({ }) => {
     
     const gotoUserPage = () => {
         const userrole = userRole(user);
-        // if (currentUserRole == "tickets") navigate("/user")
-        // else if (currentUserRole == "restaurants") navigate("/restaurant")
-        // else navigate("/user/mails")
         navigate(userrole)
     }
     const [isOpen, setIsOpen] = useState(false)
@@ -395,19 +392,20 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                             Register
                                         </button>
                                     </div>
-                                    ) : <UiButton
-                                        onClick={async (e) => {
-                                            e.stopPropagation()
-                                            await logoutUser()
-                                        }}
-                                        className="!bg-rose-800 !py-3.5 !rounded-none !text-lg !mx-auto !w-[min(250px,calc(100%-0.5rem))] mb-5  "
-                                    >Logout: <span
-                                        className="!text-slate-800 uppercase !font-medium !ml-0.5 pl-4"
-                                    >{
+                                    ) : null
+                                    // <UiButton
+                                    //     onClick={async (e) => {
+                                    //         e.stopPropagation()
+                                    //         await logoutUser()
+                                    //     }}
+                                    //     className="!bg-rose-800 !py-3.5 !rounded-none !text-lg !mx-auto !w-[min(250px,calc(100%-0.5rem))] mb-5  "
+                                    // >Logout: <span
+                                    //     className="!text-slate-800 uppercase !font-medium !ml-0.5 pl-4"
+                                    // >{
 
-                                                // trying to prevent overflow when the name exceed 8 characters long
-                                                user?.fullname?.length > 8 ?
-                                                    user?.fullname?.slice(0, 8) + " ...?" : user?.fullname}</span> </UiButton>
+                                    //             // trying to prevent overflow when the name exceed 8 characters long
+                                    //             user?.fullname?.length > 8 ?
+                                    //                 user?.fullname?.slice(0, 8) + " ...?" : user?.fullname}</span> </UiButton>
                             }
 
                         </div>

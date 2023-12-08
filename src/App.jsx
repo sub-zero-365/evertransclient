@@ -59,6 +59,7 @@ import { action as logoutAction } from "./pages/Assistant.user"
 import { loader as singleMailLoader, action as editSingleMailAction } from "./pages/SingleMail"
 import { loader as routesLoader, action as routesActions } from "./pages/RoutesPage"
 import { loader as citiesLoader, action as cityActions } from "./pages/Cities"
+import { loader as restaurantuserloader } from "./pages/RestaurantUser"
 import SingleTicketErrorElement from './components/SingleTicketErrorElement'
 import { loader as customerStatsloader } from "./pages/CustomerStats"
 import { loader as newSeatloader, action as newSeatAction } from "./pages/AddNewBusPage"
@@ -286,18 +287,7 @@ const router = createBrowserRouter([
             errorElement: <SingleTicketErrorElement />,
 
           },
-          {
-            element:
-              <Suspense fallback={<FallBack />}>
-                <RestaurantUserPage />
-              </Suspense>
-            ,
-            path: "user/restaurant",
-            // loader: checkOutLoader(queryClient),
-            // action: checkOutAction(queryClient),
-            errorElement: <SingleTicketErrorElement />,
 
-          },
           {
             element:
               <Suspense fallback={<FallBack />}>
@@ -322,11 +312,15 @@ const router = createBrowserRouter([
                 loader: mailsLoader(queryClient)
               },
               {
-                path: "reciept/:id",
-                element: <Suspense>
-                  <SingleRecieptPage />
-                </Suspense>,
-                loader: singleRecieptLoader(queryClient)
+                element:
+                  <Suspense fallback={<FallBack />}>
+                    <RestaurantUserPage />
+                  </Suspense>
+                ,
+                path: "restaurant",
+                errorElement: <SingleTicketErrorElement />,
+                loader: restaurantuserloader(queryClient)
+
               },
             ]
 
@@ -409,6 +403,13 @@ const router = createBrowserRouter([
               },
             ]
 
+          },
+          {
+            path: "user/reciept/:id",
+            element: <Suspense>
+              <SingleRecieptPage />
+            </Suspense>,
+            loader: singleRecieptLoader(queryClient)
           },
           {
             element: <Suspense
@@ -734,15 +735,6 @@ const router = createBrowserRouter([
 
 ]
 )
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-  // downloadbaseurl = process.env.REACT_APP_LOCAL_URL
-  // dev code
-  // router.push
-} else {
-  // production code
-  // downloadbaseurl = process.env.REACT_APP_PROD_URL
-
-}
 
 function App() {
   return (

@@ -16,13 +16,14 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 
 }
 
-const Reciept = ({ id, _id, collected,
-    name, senderfullname, senderidcardnumber,
-    senderphonenumber, recieverfullname,
-    recieverphonenumber, recieveridcardnumber,
-    status
+const Reciept = ({ id,
+_id,
+    senderidcardnumber,
+    status,
+    createdAt,
+    quantity,total_price
 }) => {
-    const createdDate = dayjs().format("MMM D, YYYY")
+    const createdDate = dayjs(createdAt).format("MMM D, YYYY")
     return (
         <motion.div
             variants={scalevariants}
@@ -33,8 +34,8 @@ const Reciept = ({ id, _id, collected,
                 {/* <div
                     className='flex justify-between py-2  items-start'
                 > */}
-                    <h1 className='text-start text-3xl sm:text-4xl capitalize font-bold mb-2'>{"#yy8y43" ?? "n/a"}</h1>
-                    {/* <p className='text-gray-600 '>#ID {id}</p> */}
+                <h1 className='text-start text-3xl sm:text-4xl capitalize font-bold mb-2'>{id}</h1>
+                {/* <p className='text-gray-600 '>#ID {id}</p> */}
 
                 {/* </div> */}
                 <div className='flex justify-between py-2  items-start'>
@@ -47,18 +48,12 @@ const Reciept = ({ id, _id, collected,
 
                 <h2 className='font-bold '>Reciept Info </h2>
                 <div className='flex justify-between py-2  items-start'>
-                    <p className='text-gray-600 '>Quantity : {senderfullname ?? "n/a"}</p>
-                    <p className='text-gray-600 '>Price : {senderphonenumber}</p>
+                    <p className='text-gray-600 '>Quantity : {quantity ?? "n/a"}</p>
+                    <p className='text-gray-600 '>Price : {total_price}</p>
                     <p className='text-gray-600 '>#ID : {senderidcardnumber}</p>
                 </div>
 
-                {/* <h2 className='font-bold '>Reciever Info </h2> */}
-                {/* <div className='flex justify-between py-2  items-start'>
-
-                    <p className='text-gray-600 '>Name : {recieverfullname ?? "n/a"}</p>
-                    <p className='text-gray-600 '>phone : {recieverphonenumber}</p>
-                    <p className='text-gray-600 '>#ID : {recieveridcardnumber}</p>
-                </div> */}
+               
 
 
 

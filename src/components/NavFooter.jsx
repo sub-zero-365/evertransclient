@@ -17,6 +17,7 @@ const NavFooter = () => {
     const dotshowhere = [
         "auth",
         "user",
+        "user/restaurant"
     ]
     useEffect(() => {
         if (dotshowhere.some(x => x == path)) {
@@ -59,9 +60,9 @@ const NavFooter = () => {
         <motion.div>
             {
                 !isNotShoppingCart && <div
-                    className="fixed pt-4 md:hidden z bottom-0 sm:py-4 z-10 w-full sm:w-fit sm:translate-y-1/2 sm:rounded-md sm:left-6 sm:bottom-1/2 min-h-[3rem] pb-4 bg-white shadow left-0"
+                    className="fixed pt-4 sm:max-w-md  sm:translate-x-1/2  z bottom-0 lg:py-4 z-10 w-full lg:w-fit lg:translate-y-1/2 lg:rounded-md lg:left-6 lg:bottom-1/2 min-h-[3rem] pb-4 bg-white shadow left-0"
                 >
-                    <div className="flex sm:justify-center sm:items-center sm:flex-col grid-flow-col gap-4 px-4">
+                    <div className="flex lg:justify-center lg:items-center lg:flex-col grid-flow-col gap-4 px-4">
 
                         <NavLinkContainer to={"/restaurant"}
                             text={"Home"}
@@ -79,10 +80,10 @@ const NavFooter = () => {
                             className="justify-center 
            font-montserrat font-medium
            tracking-tight bg-black
-           relative shadow sm:shadow-2xl 
+           relative shadow lg:shadow-2xl 
            flex-none h-[60px] rounded-full
-           mt-[-25px] sm:mr-[-60px] sm:w-[60px]
-           sm:mt-0 text-white hover:bg-opacity-80
+           mt-[-25px] lg:mr-[-60px] lg:w-[60px]
+           lg:mt-0 text-white hover:bg-opacity-80
            transition-all duration-300  w-[60px]  
            items-center flex flex-col " to={"/cart"} >
                             <AiOutlineShoppingCart size={25} />

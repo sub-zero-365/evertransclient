@@ -53,11 +53,12 @@ import { useFilter } from '../Hooks/FilterHooks'
 import ShowBuses from './ShowBuses'
 import Marquee from 'react-fast-marquee'
 import {
-  useQuery, useMutation, useQueryClient
+  useMutation, useQueryClient
 } from '@tanstack/react-query'
 import customFetch from '../utils/customFetch'
 import InputBox from '../components/InputBox'
 import { CiLogout } from 'react-icons/ci'
+import userRole from "../utils/userRole"
 
 // import { CiLogout } from 'react-icons/ci'
 const seats = []
@@ -83,7 +84,7 @@ const style = {
 
 const Details = () => {
   const constraintsRef = useRef(null);
-  const [active, setActive] = useState(false)
+  // const [active, setActive] = useState(false)
   const { logoutUser } = useUserLayoutContext()
   const location = useLocation()
   const isInUserPage = location.pathname?.slice(1) == "user"
@@ -123,15 +124,7 @@ const Details = () => {
   const navigate = useNavigate()
 
   const [error, setError] = useState("")
-  const [value, setValue] = useState("")
-  useEffect(() => {
-    // window?.navigator?.clipboard?.readText().then((copiedText) => {
-    //   setValue(copiedText)
-    //   console.log(copiedText); // copied text will be shown here.
-    // // });
-    // window.clipboardData.getData('Text')
 
-  }, [])
 
   const [loading, setLoading] = useState(false)
   const handleChangePassWord = async (e) => {
@@ -274,12 +267,7 @@ const Details = () => {
 
   const [showAdd, setShowAdd] = useState(false)
 
-  const [greetingtext, setGreetingText] = useState("GOOD MORNING")
 
-  // const getCount = ({ from, to, traveltime, _id }, arr) => {
-  //   const count = arr?.filter((item) => item.from == from && item.to == to && item.traveltime == traveltime)
-  //   return count.length
-  // }
   const [err, setErr] = useState("")
   const [id, setId] = useState("")
   const [ticket, setTicket] = useState({})
@@ -320,11 +308,117 @@ const Details = () => {
   };
 
   const [toggle, setToggle] = useState(false);
-  const getCount = ({ from, to, traveltime, _id }, arr) => {
-    const count = arr?.filter((item) => item.from == from && item.to == to && item.traveltime == traveltime)
-    return count.length
-  }
+  // const getCount = ({ from, to, traveltime, _id }, arr) => {
+  //   const count = arr?.filter((item) => item.from == from && item.to == to && item.traveltime == traveltime)
+  //   return count.length
+  // }
+  const SearchQueryUser = ({user}) => {
+    const role = user?.role
+    if (role === "tickets") {
+      return (
 
+        <div className="mt-10  md:mb-5">
+
+          <div
+            onClick={e => e.stopPropagation()}
+            className={`
+  mx-auto
+  md:translate-x-0
+  group-[.active]:translate-x-0
+  duration-700
+  ease 
+  transition-all
+  md:group-[.active]:translate-y-0
+  group-[.active]:opacity-100
+  bg-white
+  dark:bg-slate-800
+  gold:bg-color_gold
+  shadow-sm
+  rounded-lg
+  w-[min(calc(100%-40px),400px)]
+  
+  py-5 `}>
+
+            <AnimateText text="Please enter ticket id to get and edit tickett" className='!text-lg' />
+            <form
+              onSubmit={handleSubmit}
+              className='px-5 '
+            >
+              <div className="relative mb-6" data-te-input-wrapper-init>
+                <InputBox
+                  value={id}
+                  onChange={(e) => setId(e.target.value)
+                  }
+                  type="text"
+                  name="Enter Ticket ID"
+                />
+
+              </div>
+
+              <UiButton
+                className="!bg-green-800 !py-3 
+          !w-[min(calc(100%-0.5rem),400px)]
+          mx-auto
+          hover:!bg-green-800">
+                check ticket details
+              </UiButton>
+
+
+            </form>
+          </div>
+
+        </div>
+      )
+    }
+    if (role ==="mails" || role === "restaurants") {
+    const whichuserlogin=role == "mails"
+      return (
+        <div>
+          <AnimateText text="Please enter Mailing Id to get Mail"
+            className='!text-lg' />
+          <form
+            onSubmit={async (e) => {
+              // check if the user is logged in as mailer or restauarant to enable search for tickets 
+              const formdata = new FormData(e.target)
+              const mailingid = await formdata.get("Enter Mail Id")
+              if (whichuserlogin)  navigate(`/user/mail/${mailingid}`)
+              else navigate(`/user/reciept/${mailingid}`)
+            }}
+            className='px-5 '
+          >
+            <div className="relative mb-6" data-te-input-wrapper-init>
+              <InputBox
+                // value={id}
+                type="text"
+                name="Enter Mail Id"
+
+              />
+
+            </div>
+
+            <div className="mb-6 flex items-center justify-between  text-sm font-medium md:text-xl text-orange-600">
+              <motion.h1
+                className="w-fit flex-none mx-auto tracking-[0.4rem] text-center "> </motion.h1>
+            </div>
+
+            <UiButton
+              className="!bg-green-800 !w-full !py-3.5 hover:!bg-green-800">
+              {
+              whichuserlogin?"check ticket details":"Submit"
+              }
+              
+            </UiButton>
+
+
+          </form>
+        </div>
+      )
+
+    }
+    return (<div>nothing to display</div>)
+
+
+  }
   return (
     <>
       <Helmet>
@@ -339,334 +433,6 @@ const Details = () => {
 
 
 
-        <ShowBuses isOpen={isOpen___}
-          className2="!w-[min(40rem,calc(100%-30px))]"
-          setIsOpen={setIsOpen___}
-          title={(slide ? "Select bus" : "Avalible Buses")}
-        >
-          < >
-            {
-              slide ? (<div
-                key="ihsiadhfp"
-
-              >
-                <Rounded
-                  className={`!w-8 !h-8 !ml-4`}
-                  onClick={() => setSlide(false)}>
-                  <AiOutlineArrowLeft size={20}
-                    className="flex-none pl-1 " />
-                </Rounded>
-                <form onSubmit={(e) => {
-                  e.preventDefault()
-                  Demoadd.mutate()
-
-                }} >
-                  <div className='mx-auto mb-6 w-[min(300px,calc(100%-2.5rem))]'>
-                    <BusSelect
-                      defaultOptions
-                      catcheOptions
-                      loadOptions={
-                        async () => {
-
-                          const data = await getBuses()
-                          const formateddata = data?.map(({ label, value, feature }) => {
-                            return ({
-                              label: `Name : ${label}----Feature: ${feature}`,
-                              value: value,
-                            })
-
-                          })
-                          return formateddata
-
-                        }
-
-                      }
-                      required
-                      isSearchable={false}
-                      onChange={(e) => {
-                        setSelectedIds((pre) => {
-                          return ({
-                            ...pre,
-                            bus_id: e.value
-
-                          })
-
-                        })
-                      }}
-
-                      className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
-                    />
-
-
-                  </div>
-                  <Marquee play pauseOnClick pauseOnHover className="italic text-blue-600 dark:text-blue-500 py-6 mb-4 text-xs font-extrabold leading-none  px-5   max-w-5xl">
-                    go to bus detail page to check bus specification
-                  </Marquee>
-                  <UiButton
-                    disabled={Demoadd.isLoading}
-                    name={Demoadd.isLoading ? "creating ..." : "Submit  "}
-                    className={`!block !bg-purple-900 ${Demoadd.isLoading && "!bg-black !text-white"}
-                    w-[min(200px,calc(100%-2.5rem))]
-                    !mx-auto
-                    !pb-2.5
-                    !pt-2
-                    !mb-5`}
-
-                  />
-                </form>
-              </div>) : (
-                <div
-                  key="jiofhsa f"
-                  className={` `}>
-                  <div>
-                    {
-                      makeUnique(seats, ["traveltime", "from", "to"])?.map(({ traveltime, from, to, _id: seat_id }, idx) => {
-                        const count = getCount({
-                          from, to, traveltime
-                        }, seats)
-                        return (
-                          <div className='flex justify-between  flex-col  md:flex-row px-4 space-x-6 items-center border-b border-slate-200 pb-2 mb-1'>
-                            <div className='flex-none flex space-x-5 space-y-2 items-center'>
-                              <div className="flex-none">
-                                {from}
-                              </div>
-                              <div className="flex-none">
-                                {to}
-                              </div>
-                              <div className="flex-none">
-                                {traveltime}
-                              </div>
-                            </div>
-                            <div className="flex-1 flex  space-x-2 items-center">
-                              {
-                                Array.from({ length: count }, (arr, index) => {
-                                  return (
-                                    <Link to={`/seat/${seat_id}?from=`}
-
-                                      className='h-10 w-10 border border-green-900 grid 
-                        place-items-center rounded-md shadow-lg text-sm 
-                        ml-4 hover:bg-green-800
-                        '
-                                    >
-                                      {index + 1}
-                                    </Link>
-                                  )
-                                }
-                                )
-
-                              }
-                              <div
-                                onClick={() => {
-
-                                  setSlide(true)
-                                  setSelectedIds((pre) => {
-                                    return ({
-                                      ...pre,
-                                      seat_id: seat_id
-
-                                    })
-
-                                  })
-                                }
-                                }
-                                className='h-10 w-10 border border-gray-50 grid 
-                        place-items-center rounded-md shadow-lg text-sm
-                        ml-4 hover:bg-slate-500
-                        
-                        '
-
-                              >+</div>
-                            </div>
-                          </div>
-
-                        )
-                      })
-                    }
-                    <form onSubmit={e => {
-                      e.preventDefault()
-                      mutate()
-
-                    }}>
-                      {
-
-                        showAdd && (
-
-                          <>
-
-
-                            <Scrollable className="!overflow-visible !justify-center !items-center">
-                              <div>
-                                <Heading text="From" className={"!mb-1 !mt-2 !text-sm first-letter:text-2xl first-letter:font-black"} />
-                                <FromSelect
-
-                                  onChange={(e) => {
-                                    setQueryObj(
-                                      (prev) => {
-                                        return ({
-                                          ...prev, from: e.value
-
-                                        })
-                                      }
-                                    )
-                                  }}
-                                  menuPlacement='top'
-                                  defaultOptions
-                                  catcheOptions
-                                  loadOptions={getCities}
-                                  required
-
-                                  styles={{
-                                    ...style,
-                                    wdith: "100%",
-                                    fontSize: 10 + "px"
-                                  }}
-
-                                  // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-                                  className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
-                                // onChange={evt => setFromCities(evt.value)}
-                                />
-
-                              </div>
-                              <div>
-                                <Heading text="To" className={"!mb-1 !mt-2 !text-sm first-letter:text-2xl first-letter:font-black"} />
-                                <ToSelect
-                                  onChange={(e) => {
-                                    setQueryObj(
-                                      (prev) => {
-                                        return ({
-                                          ...prev, to: e.value
-
-                                        })
-                                      }
-                                    )
-                                  }}
-                                  defaultOptions
-                                  catcheOptions
-                                  loadOptions={getCities}
-                                  required
-
-                                  styles={{
-                                    ...style,
-                                    wdith: "100%",
-                                    fontSize: 10 + "px"
-                                  }}
-
-                                  // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-                                  className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
-                                />
-
-                              </div>
-                              <div>
-                                <Heading text="time" className={"!mb-1 !mt-2 !text-lg first-letter:text-2xl first-letter:font-black"} />
-                                <div className='mt-0'>
-
-                                  <SelectTime
-                                    options={timeOptions}
-                                    styles={style}
-                                    defaultValue={{
-                                      label: querySearch.get("traveltime") || "no time",
-                                      value: "no time"
-                                    }}
-                                    // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-                                    isSearchable={false}
-
-                                    onChange={(e) => {
-                                      setQueryObj(
-                                        (prev) => {
-                                          return ({
-                                            ...prev, traveltime: e.value
-
-                                          })
-                                        }
-                                      )
-                                    }}
-
-                                    className='!border-none !h-8 mt-0' />
-                                </div>
-
-                              </div>
-
-                            </Scrollable>
-                            <div className='mx-auto mb-6 w-[min(300px,calc(100%-2.5rem))] mt-4'>
-                              <BusSelect
-                                defaultOptions
-                                catcheOptions
-                                loadOptions={
-                                  async () => {
-                                    const data = await getBuses()
-                                    const formateddata = data?.map(({ label, value, feature }) => {
-                                      return ({
-                                        label: `Name : ${label}----Feature: ${feature}`,
-                                        value: value,
-                                      })
-
-                                    })
-                                    return formateddata
-
-                                  }
-
-                                }
-                                required
-                                isSearchable={false}
-
-                                onChange={(e) => {
-                                  setQueryObj(
-                                    (prev) => {
-                                      return ({
-                                        ...prev,
-                                        bus_id: e.value
-
-                                      })
-                                    }
-                                  )
-                                }}
-                                className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
-                              />
-
-
-                            </div>
-                          </>
-                        )
-                      }
-                      {
-
-                        showAdd && <>
-                          <UiButton name={loadingRoute ? "please wait " : "continue "} disabled={loadingRoute}
-                            className={"!w-[min(400px,calc(100%-30px))] !mx-auto !pb-2 pt-1.5 !mt-5 !bg-green-900"}
-                          />
-                          <p
-
-                            className='text-blue-700 px-10 text-center !text-sm pt-2'
-                            onClick={() => setShowAdd(false)}> go back </p>
-                        </>
-
-                      }
-
-
-                    </form>
-                    {!showAdd && <>
-                      <UiButton
-                        type="button"
-
-                        name="choose another route " onClick={() => setShowAdd(!showAdd)}
-                        className={"!w-[min(400px,calc(100%-30px))] !mx-auto !pb-2 pt-1.5 !mt-5 !bg-blue-900"}
-                      />
-                    </>}
-                  </div>
-
-                </div>
-              )
-            }
-
-
-          </>
-
-
-
-        </ShowBuses>
         <ShowBuses isOpen={isOpen}
           setIsOpen={setIsOpen}
           title="Change Password"
@@ -1183,7 +949,10 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 </SwiperSlide>
 
               </Swiper>
-              {
+              <SearchQueryUser
+                user={user}
+              />
+              {/* {
                 isInUserPage ? <div className="mt-10  md:mb-5">
 
                   <div
@@ -1270,7 +1039,7 @@ py-5 `}>
 
                   </form>
                 </div>
-              }
+              } */}
 
 
               <div>

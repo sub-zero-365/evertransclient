@@ -8,7 +8,7 @@ import { data } from '../constants/demoData';
 import { useSelector } from 'react-redux/es/hooks/useSelector';
 import EmptyCart from '../components/EmptyCart';
 import Heading from '../components/Headings';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FreeMode, Navigation, Pagination, Scrollbar, A11y, Autoplay, Thumbs, EffectCreative } from "swiper/modules";
 import ProductCart from '../components/ProductCart';
 import { AnimatePresence } from 'framer-motion';
@@ -17,8 +17,25 @@ import { calculateTotal } from '../actions/cartItems';
 import FilterButton from '../components/FilterButton';
 import { MdOutlineWarehouse } from 'react-icons/md';
 import { Scrollable } from '../components';
+import { toast } from "react-toastify"
+
 // import Accordians from '../components/Accordians';
+import {
+    useQuery, useMutation, QueryClient
+} from '@tanstack/react-query'
+import customFetch from '../utils/customFetch'
+
 const ShoppingBag = () => {
+    const navigate = useNavigate()
+    const queryClient = new QueryClient();
+    const createNewRecieptMutation = useMutation({
+        mutationFn: async (data = {}) => {
+            const res = await customFetch.post("/reciepts/new",
+                { ...data });
+            return res.data
+        },
+        // mutationKey: ["delete"]
+    })
     const { cartItem, amount, total } = useSelector(state => state.cartItems)
     const iscartempty = cartItem?.length > 0
     const [swiperRef, setSwiperRef] = useState(null);
@@ -35,7 +52,7 @@ const ShoppingBag = () => {
     };
     return (
         <div
-            className='bg-white'
+            className='bg-white pb-28'
         >
 
 
@@ -48,7 +65,7 @@ const ShoppingBag = () => {
             <Heading className="font-semibold"
                 text={"Cart"}
             />
-
+            {JSON.stringify(cartItem)}
             {
                 iscartempty ?
                     <div className='lg:flex  justify-between items-start lg:flex-row max-w-6xl mx-auto  gap-x-4'>
@@ -77,39 +94,18 @@ const ShoppingBag = () => {
                             <div
                                 className=' w-full !font-medium bg-[#f7f7f7] py-2 px-4 border rounded-md'
                             >
-                                <div
-                                    className='flex justify-between items-center'
-                                >
-                                    <p>Subtotal</p>
-                                    <Heading
-                                        className={"!text-sm !font-semibold"}
-                                        text={`$${amount}`}
-                                    />
-                                </div>
-                                {/* <Accordians text="shopping " text2={"calculate price"}>
-                                    ashdifhoasjdf asdfnskonsdaf fighsadoidfh isadhf iladsjhfijdh jiduifgs diu
-                                </Accordians> */}
 
                                 <div
                                     className='flex justify-between items-center'
                                 >
-                                    <p>Tax</p>
+                                    <p className='text-lg font-medium'>Total</p>
                                     <Heading
-                                        className={"!text-sm  !font-normal"}
-                                        text={`Taxes will be calculated at checkout`}
-                                    />
-                                </div>
-                                <div
-                                    className='flex justify-between items-center'
-                                >
-                                    <p>Total</p>
-                                    <Heading
-                                        className={"!text-xl !font-semibold"}
+                                        className={"!text-xl !p-0 !m-0 !font-semibold"}
                                         text={`$${amount}`}
                                     />
                                 </div>
                             </div>
-                            <Scrollable className="flex  gap-x-6 !justify-center !my-4">
+                            <Scrollable className="flex !flex-col sm:!flex-row gap-y-4   gap-x-6 !justify-center !my-4">
                                 <FilterButton
                                     // className={}
                                     className={"!flex justify-center !items-center"}
@@ -136,20 +132,37 @@ const ShoppingBag = () => {
                                 </FilterButton>
 
                             </Scrollable>
-                            <Link to="/checkout"
+                            {/* <Link to="/checkout"
                                 className='mt-10  !block w-full'
-                            >
-                                <Button
-                                    className="!w-full !rounded-lg !block !bg-[#4ca84a] !py-3 "
-                                    title="Proceed to checkout"
-                                />
-                            </Link>
+                            > */}
+                            <Button
+                                onClick={() => createNewRecieptMutation.mutate({ items: cartItem }, {
+                                    onSuccess: (data) => {
+                                        const { id } = data
+                                        toast.success("created successfully");
+                                        console.log("this is the succcess data", data)
+                                        navigate(`/user/reciept/${id}`)
+                                    },
+                                    onError: error => {
+                                        toast.error((error.response.data ?? "Oops something bad happen try again later !!"))
+                                    },
+                                    onSettled: () => {
+                                        queryClient.invalidateQueries({
+                                            queryKey: ["reciepts"]
+                                        })
+                                    }
+                                })}
+                                className="!w-full !text-sm !rounded-none !block !bg-[#4ca84a] !py-3.5 "
+                                title="Book Reciept"
+                                disable={createNewRecieptMutation.isLoading}
+                            />
+                            {/* </Link> */}
 
 
                         </div>
                     </div> : <EmptyCart />
             }
-            <section className='py-10 max-w-6xl mx-auto'>
+            <section className='py-10 max-w-6xl mx-auto hidden'>
                 <div className="flex items-center justify-between px-2">
                     <Heading
                         className="!text-2xl lg:!text-3xl"
