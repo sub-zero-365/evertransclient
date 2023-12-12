@@ -13,6 +13,7 @@ import { useUserLayoutContext } from './UserLayout';
 import UiButton from "./UiButton"
 import { useQueryClient } from "@tanstack/react-query";
 import customFetch from "../utils/customFetch";
+
 import { clearUser } from '../actions/User'
 import React from "react"
 import SearchResultContainer from './SearchResult';
@@ -22,29 +23,33 @@ import useToggleCartSlider from '../utils/useToggleCartSlider';
 import ThemeToggler from './ThemeToggler';
 import useOutsideAlerter from "../Hooks/click-outside-hook"
 import userRole from "../utils/userRole"
+import {
+    useQuery
+} from '@tanstack/react-query'
 const SearchContext = createContext()
-const allTicketsQuery = (params = {}) => {
-    // console.log("this is the params", params)
-    const { search, sort, page } = params
-    return {
-        queryKey: [
-            'tickets',
-            // { search: search ?? "", page: page ?? 1, sort: sort ?? "newest" }
-            {
-                search: search ?? ""
-            }
-        ],
-        queryFn: async () => {
-            const { data } = await customFetch.get('/ticket', {
-                params: {
-                    search: search ?? ""
-                },
-            });
-            return data;
-        },
-        keepPreviousData: true
-    };
-};
+const allRecieptsQuery = (params = {}, enable = false) => {
+    return (
+        {
+            queryKey: ["reciepts", {
+                ...params
+            }],
+            queryFn: async () => {
+                const { data } = await customFetch.get('/reciepts', {
+
+                    ...params,
+                    limits: 5
+                    ,
+                });
+                return data;
+            },
+            enable: enable
+
+
+        }
+    )
+
+}
+
 const Navbar = ({ }) => {
     const navRef = useRef(null)
     const { toggle: outside } = useOutsideAlerter(navRef)
@@ -82,27 +87,27 @@ const Navbar = ({ }) => {
     const [lastScrollY, setLastScrollY] = useState(0);
     const controlNavbar = () => {
         if (window.scrollY > lastScrollY) { // if scroll down hide the navbar
-          setIsOpen(false); 
-        } 
-        
+            setIsOpen(false);
+        }
+
         // else { // if scroll up show the navbar
         //   setIsOpen(true);  
         // }
-    
+
         // remember current page location to use in the next move
-        setLastScrollY(window.scrollY); 
-      };
-    
-      useEffect(() => {
+        setLastScrollY(window.scrollY);
+    };
+
+    useEffect(() => {
         window.addEventListener('scroll', controlNavbar);
-    
+
         // cleanup function
         return () => {
-           window.removeEventListener('scroll', controlNavbar);
+            window.removeEventListener('scroll', controlNavbar);
         };
-      }, [lastScrollY]);
-    
-    
+    }, [lastScrollY]);
+
+
     const gotoUserPage = () => {
         const userrole = userRole(user);
         navigate(userrole)
@@ -122,7 +127,9 @@ const Navbar = ({ }) => {
             setIsCartEmpty(false)
         }
     }, [totalAmount])
-    // const { data, isPreviousData } = useQuery(allTicketsQuery({ search }))
+    const { data, isPreviousData } =
+        useQuery(allRecieptsQuery({ search },
+             user?.role === "restaurants"))
 
     // console.log("this is the search data", data)
     const container = {
@@ -150,8 +157,11 @@ const Navbar = ({ }) => {
 
     return (
         <SearchContext.Provider value={{
-            setToggle, search, setSeach, isPreviousData: false,
-            data: []
+            setToggle, 
+            search,
+            setSeach,
+            isPreviousData,
+            data
         }}>
 
             <div
@@ -393,19 +403,19 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                         </button>
                                     </div>
                                     ) : null
-                                    // <UiButton
-                                    //     onClick={async (e) => {
-                                    //         e.stopPropagation()
-                                    //         await logoutUser()
-                                    //     }}
-                                    //     className="!bg-rose-800 !py-3.5 !rounded-none !text-lg !mx-auto !w-[min(250px,calc(100%-0.5rem))] mb-5  "
-                                    // >Logout: <span
-                                    //     className="!text-slate-800 uppercase !font-medium !ml-0.5 pl-4"
-                                    // >{
+                                // <UiButton
+                                //     onClick={async (e) => {
+                                //         e.stopPropagation()
+                                //         await logoutUser()
+                                //     }}
+                                //     className="!bg-rose-800 !py-3.5 !rounded-none !text-lg !mx-auto !w-[min(250px,calc(100%-0.5rem))] mb-5  "
+                                // >Logout: <span
+                                //     className="!text-slate-800 uppercase !font-medium !ml-0.5 pl-4"
+                                // >{
 
-                                    //             // trying to prevent overflow when the name exceed 8 characters long
-                                    //             user?.fullname?.length > 8 ?
-                                    //                 user?.fullname?.slice(0, 8) + " ...?" : user?.fullname}</span> </UiButton>
+                                //             // trying to prevent overflow when the name exceed 8 characters long
+                                //             user?.fullname?.length > 8 ?
+                                //                 user?.fullname?.slice(0, 8) + " ...?" : user?.fullname}</span> </UiButton>
                             }
 
                         </div>

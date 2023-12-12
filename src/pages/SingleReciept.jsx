@@ -50,11 +50,13 @@ const SingleReciept = () => {
                                 key={index}
                                 className="mb-1 border-b "
                             >
-                                <div className="flex gap-x-2 justify-between p-1">
+                                <div className="flex gap-x-2 justify-between p-1 mb-0.5">
 
                                     <h3 className="font-medium text-lg"><span
                                         className="text-gray-800 font-medium"
-                                    >({index + 1})&nbsp;&nbsp;</span>{productname}&nbsp;&nbsp;*&nbsp;&nbsp;{total} </h3>
+                                    >({index + 1})&nbsp;&nbsp;
+                                    </span>{productname}<br />&nbsp;&nbsp;{total}&nbsp;&nbsp;*&nbsp;&nbsp;{price}
+                                    </h3>
                                     <p className="font-[500] text-lg">fcfa {price * total}</p>
                                 </div>
 

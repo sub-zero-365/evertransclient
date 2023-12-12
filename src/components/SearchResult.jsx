@@ -6,7 +6,9 @@ import { Link } from 'react-router-dom'
 // import { data } from '../constants/demoData'
 
 const SearchResultContainer = () => {
-    const { products, setToggle, isPreviousData, data } = useSearchContext()
+    const { products, 
+    setToggle,
+    isPreviousData, data } = useSearchContext()
     return (
         <div
 
@@ -17,7 +19,7 @@ const SearchResultContainer = () => {
                 className='grid  grid-cols-[repeat(auto-fit,minmax(min(11rem,calc(100%-60px)),_1fr))]  lg:grid-cols-[repeat(auto-fit,minmax(min(17rem,calc(100%-30px)),_1fr))] !w-full   !container mx-auto lg:px-6 gap-x-1 lg:gap-x-0'
             >
                 {
-                    data?.tickets?.slice(0, 10)?.map((product, index) => <ProductCart hidden
+                    data?.reciepts?.map((product, index) => <ProductCart hidden
                         {
                         ...product
                         }

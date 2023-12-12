@@ -77,8 +77,6 @@ const ProtectedRoute = () => {
                             drag
                             dragConstraints={constraintsRef}
                             key="animatecontainer"
-
-
                             animate={{
                                 scale: [0.7, 1.2, 0.8],
                             }}
