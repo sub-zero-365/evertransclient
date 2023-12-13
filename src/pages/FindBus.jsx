@@ -137,7 +137,8 @@ const FindBus = () => {
                         </ol>
                     </nav>
                     <AnimateText text={`Available Cars (${nHits})`} className="!text-2xl " />
-                    <AnimateText text={dayjs().format("DD-MM-YYYY")} className="!text-lg " />
+                    <AnimateText text={dayjs(new Date(querySearch.get("traveldate")))
+                    .format("dddd, MMMM D, YYYY")} className="!text-lg " />
                     {/* <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5">
                         {
                             dateSortedOption.map((query) => <FilterButton

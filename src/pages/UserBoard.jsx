@@ -1,64 +1,52 @@
-import { AiOutlineArrowLeft, AiOutlineCheck, AiOutlineClose, AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
-import { timeOptions } from '../utils/sortedOptions'
+import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 // import TimeSelect from 'react-select'
-import { onSuccessToast, onErrorToast, onWarningToast } from '../utils/toastpopup'
-import AnimateText from '../components/AnimateText'
+import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import DatePicker from 'react-datepicker';
+import AnimateText from '../components/AnimateText'
+import { onErrorToast, onSuccessToast } from '../utils/toastpopup'
 
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react'
 
+import { motion } from 'framer-motion'
+import { AiOutlineSetting } from 'react-icons/ai'
+import { BiBusSchool } from 'react-icons/bi'
+import { MdFastfood, MdOutlineForwardToInbox, MdQueryStats } from 'react-icons/md'
 import {
   NavLink,
-  useSearchParams, useNavigate,
-  Link, useOutletContext,
+  Outlet,
   useLocation,
-  Outlet
-} from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { AiOutlineSetting } from 'react-icons/ai';
-import dateFormater from "../utils/DateFormater"
-import { BiBusSchool, BiCategory } from 'react-icons/bi'
+  useNavigate,
+  useOutletContext,
+  useSearchParams
+} from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { MdFastfood, MdOutlineForwardToInbox, MdOutlinePriceChange, MdQueryStats } from 'react-icons/md'
+import dateFormater from "../utils/DateFormater"
 
-import UiButton from '../components/UiButton'
-import SelectTime from 'react-select'
 import { toast } from 'react-toastify'
-import { getBuses } from "../utils/ReactSelectFunction";
-import BusSelect from 'react-select/async'
-import FromSelect from 'react-select/async'
-import ToSelect from 'react-select/async'
-import { Rounded } from '../components'
+import UiButton from '../components/UiButton'
 
-import { useUserLayoutContext } from "../components/UserLayout"
 import {
+  CustomDatePicker,
   // AmountCount,
   // FormatTable,
-  Heading
-  ,
-  Scrollable,
+  Heading,
   Loadingbtn
+} from '../components'
+import { useUserLayoutContext } from "../components/UserLayout"
 
-
-  , CustomDatePicker
-} from '../components';
-
-import dayjs from "dayjs"
-import { Helmet } from 'react-helmet'
-import { getCities } from "../utils/ReactSelectFunction"
-import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
-import { useFilter } from '../Hooks/FilterHooks'
-import ShowBuses from './ShowBuses'
-import Marquee from 'react-fast-marquee'
 import {
   useMutation, useQueryClient
 } from '@tanstack/react-query'
-import customFetch from '../utils/customFetch'
-import InputBox from '../components/InputBox'
+import dayjs from "dayjs"
+import { Helmet } from 'react-helmet'
 import { CiLogout } from 'react-icons/ci'
-import userRole from "../utils/userRole"
+import InputBox from '../components/InputBox'
+import { useFilter } from '../Hooks/FilterHooks'
+import customFetch from '../utils/customFetch'
+import ShowBuses from './ShowBuses'
+import getdates from '../utils/getdates'
+import useGetdates from '../utils/getdates'
 
 // import { CiLogout } from 'react-icons/ci'
 const seats = []
@@ -155,11 +143,10 @@ const Details = () => {
 
 
   }
+  const { startdate,enddate} = useGetdates("daterange")
 
-
-
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState(startdate);
+  const [endDate, setEndDate] = useState(enddate);
   // const constraintsRef = useRef(null);
   const password1 = useRef(null);
   const password2 = useRef(null);
@@ -295,24 +282,11 @@ const Details = () => {
 
 
   }
-  const makeUnique = (array = [], keys = []) => {
-    if (!keys.length || !array.length) return [];
 
-    return array.reduce((list, item) => {
-      const hasItem = list.find(listItem =>
-        keys.every(key => listItem[key] === item[key])
-      );
-      if (!hasItem) list.push(item);
-      return list;
-    }, []);
-  };
 
   const [toggle, setToggle] = useState(false);
-  // const getCount = ({ from, to, traveltime, _id }, arr) => {
-  //   const count = arr?.filter((item) => item.from == from && item.to == to && item.traveltime == traveltime)
-  //   return count.length
-  // }
-  const SearchQueryUser = ({user}) => {
+
+  const SearchQueryUser = ({ user }) => {
     const role = user?.role
     if (role === "tickets") {
       return (
@@ -370,8 +344,8 @@ const Details = () => {
         </div>
       )
     }
-    if (role ==="mails" || role === "restaurants") {
-    const whichuserlogin=role == "mails"
+    if (role === "mails" || role === "restaurants") {
+      const whichuserlogin = role == "mails"
       return (
         <div>
           <AnimateText text="Please enter Mailing Id to get Mail"
@@ -381,7 +355,7 @@ const Details = () => {
               // check if the user is logged in as mailer or restauarant to enable search for tickets 
               const formdata = new FormData(e.target)
               const mailingid = await formdata.get("Enter Mail Id")
-              if (whichuserlogin)  navigate(`/user/mail/${mailingid}`)
+              if (whichuserlogin) navigate(`/user/mail/${mailingid}`)
               else navigate(`/user/reciept/${mailingid}`)
             }}
             className='px-5 '
@@ -404,9 +378,9 @@ const Details = () => {
             <UiButton
               className="!bg-green-800 !w-full !py-3.5 hover:!bg-green-800">
               {
-              whichuserlogin?"check ticket details":"Submit"
+                whichuserlogin ? "check ticket details" : "Submit"
               }
-              
+
             </UiButton>
 
 
@@ -430,7 +404,6 @@ const Details = () => {
         className=' overflow-x-hidden 
       mx-auto'
         ref={constraintsRef}>
-
 
 
         <ShowBuses isOpen={isOpen}

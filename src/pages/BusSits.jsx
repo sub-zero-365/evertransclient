@@ -5,6 +5,7 @@ import { NavLink, useSearchParams, useParams, Link } from 'react-router-dom'
 import { motion } from "framer-motion"
 import { TbArmchair2, TbArmchairOff } from 'react-icons/tb'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import dayjs from "dayjs"
 import {
   Scrollbar,
   Pagination,
@@ -72,7 +73,7 @@ const
       gender: (formatQuery(queryParameters.toString()).gender || "male"),
       type: (formatQuery(queryParameters.toString()).type || "singletrip"),
     })
-    console.log(userInfo)
+    // console.log(userInfo)
 
     const navigate = useNavigate()
     const [selected, setSelected] = useState(queryParameters.get("seatposition"))
@@ -150,9 +151,11 @@ const
                 </ol>
               </nav>
               <DisplayUi from={queryParameters.get("from")} to={queryParameters.get("to")} />
-              <DateUi
-                date={queryParameters.get("traveldate")}
-                time={queryParameters.get("traveltime")} />
+              <h1
+                className="text-4xl font-bold text-center leading-tight tracking-wide my-2 underline underline-offset-8"
+              >{seat?.bus?.bus}</h1>
+              <AnimateText text={dayjs(new Date(queryParameters.get("traveldate")))
+                .format("dddd, MMMM D, YYYY")} className="!text-lg " />
               <AnimateText text="Please Select Seat"
                 className={"!text-lg md:!text-lg lg:!text-2xl !text-center"} />
               <div className="flex justify-between px-6 pb-2">

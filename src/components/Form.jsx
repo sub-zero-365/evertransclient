@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useFilter } from '../Hooks/FilterHooks'
-const Form = ({ onChange, params, placeholder,className }) => {
+const Form = ({ onChange, params, placeholder, className }) => {
   const [q] = useSearchParams()
   const { handleFilterChange } = useFilter()
 
@@ -9,7 +9,7 @@ const Form = ({ onChange, params, placeholder,className }) => {
     <form className={`${className} px-4 md:px-6 my-5 max-w-5xl mx-auto`} onSubmit={async (e) => {
       // e.preventDefault()
       const formData = new FormData(e.target)
-      const search =  formData.get("search") || ""
+      const search = formData.get("search") || ""
       onChange(search)
       e.preventDefault()
 
@@ -26,7 +26,7 @@ const Form = ({ onChange, params, placeholder,className }) => {
             name="search"
             // value={(q.get("search") || "")}
             defaultValue={(q.get("search") || "")}
-
+            // onChange={(e) => onChange(e.target.value)}
             className="block outline-none flex-1 !rounded-none focus:outline-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg  rounded-l-none
                         border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
             placeholder={placeholder || "Hey Search me "} required />

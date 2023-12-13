@@ -129,7 +129,7 @@ const Navbar = ({ }) => {
     }, [totalAmount])
     const { data, isPreviousData } =
         useQuery(allRecieptsQuery({ search },
-             user?.role === "restaurants"))
+            user?.role === "restaurants"))
 
     // console.log("this is the search data", data)
     const container = {
@@ -157,7 +157,7 @@ const Navbar = ({ }) => {
 
     return (
         <SearchContext.Provider value={{
-            setToggle, 
+            setToggle,
             search,
             setSeach,
             isPreviousData,
@@ -354,7 +354,10 @@ shadow
                                 to="/dashboard"
                                 className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                             >Dashboard</NavLink></motion.li>
-                        <h1 className='text-xl font-medium px-2 mb-1'>Toggle Multipe themes</h1>
+                        {/* <div
+                            className='mb-2'
+                        /> */}
+                        <h1 className='text-xl font-medium px-2 mb-1'>Toggle themes</h1>
                         <ThemeToggler
                             // toggleDarkTheme={toggleDarkTheme}
                             isDarkThemeEnabled={isDarkThemeEnabled}
@@ -426,38 +429,42 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
                     </motion.ul>
                     <div className='hidden md:flex gap-3 items-center'>
-                        <Rounded
-                            // className=className="!w-10 !h-10"
-                            className="!w-10 !h-10"
-                        >
-                            <motion.div
+
+                        {
+                            currentUserRole == "restaurants" &&
+                            <Rounded
+                                // className=className="!w-10 !h-10"
+                                className="!w-10 !h-10"
+                            >
+                                {/* <motion.div
 
                                 className='cursor-pointer    border-[#7d7d7d] '>
-                                {
-                                    currentUserRole == "restaurants" &&
-                                    <motion.div
-                                        whileHover={{
-                                            scale: 1.2
-                                        }}
-                                    >
-                                        {
-                                            !toggle && currentUserRole == "restaurants" ?
-                                                <BsSearch
-                                                    onClick={() => setToggle(true)}
-                                                    className='text-[#9773ce]'
-                                                    size={20}
-                                                />
-                                                : <AiOutlineClose
-                                                    onClick={() => setToggle(false)}
-                                                    className='text-gray-700'
-                                                    size={20}
-                                                />
-                                        }
+                           */}
 
-                                    </motion.div>
-                                }
-                            </motion.div>
-                        </Rounded>
+                                <motion.div
+                                    whileHover={{
+                                        scale: 1.2
+                                    }}
+                                >
+                                    {
+                                        !toggle && currentUserRole == "restaurants" ?
+                                            <BsSearch
+                                                onClick={() => setToggle(true)}
+                                                className='text-[#9773ce]'
+                                                size={20}
+                                            />
+                                            : <AiOutlineClose
+                                                onClick={() => setToggle(false)}
+                                                className='text-gray-700'
+                                                size={20}
+                                            />
+                                    }
+
+                                </motion.div>
+
+                                {/* </motion.div> */}
+                            </Rounded>
+                        }
                         {
                             user?.role == "restaurants" &&
                             <Rounded>
@@ -487,7 +494,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                         <ThemeToggler
                             // toggleDarkTheme={toggleDarkTheme}
                             isDarkThemeEnabled={isDarkThemeEnabled}
-                        />+
+                        />
 
 
 
@@ -625,6 +632,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
                             </NavLink>
                         }
+
                         <div className="md:hidden h-[50px] w-[50px] rounded-full flex items-center justify-center hover:bg-slate-300" onClick={toggleNavBar}>
 
                             {

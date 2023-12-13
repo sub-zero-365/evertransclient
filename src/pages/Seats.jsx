@@ -36,6 +36,7 @@ import EmptyModal from "../pages/ShowBuses"
 import dayjs from "dayjs"
 // import { useMemo } from "react"
 import FilterButton from "../components/FilterButton"
+import useGetdates from "../utils/getdates"
 const seatsQuery = (params = {}) => ({
     queryKey: ["seats",
         params],
@@ -93,8 +94,10 @@ const Seats = () => {
             return preParams
         })
     }
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(null);
+    const { startdate,enddate} = useGetdates("daterange")
+    const [startDate, setStartDate] = useState(startdate);
+    const [endDate, setEndDate] = useState(enddate);
+    // ending here
     const [seatDate, setSeatDate] = useState(new Date())
     const handleDateRangeChange = () => {
         handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
@@ -148,8 +151,8 @@ const Seats = () => {
                 </Form>
             </EmptyModal>
             <div className="h-[calc(100vh-60px)] container mx-auto !flex-1 w-full overflow-y-auto">
-                <div className="max-w-4xl mx-auto">
-                    <div className="flex  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow
+                <div className="max-w-4xl mx-auto ">
+                    <div className="flex p-4 items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow
                     bg-white dark:bg-slate-800 mx-4">
                         <div className="flex-1">
                             <Heading text="hey you can add a new route " className="!mb-2 !font-black mt-0" />

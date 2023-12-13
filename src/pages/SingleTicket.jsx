@@ -1,26 +1,27 @@
 
-import UiButton from '../components/UiButton'
-import { useSearchParams, useParams, NavLink, Link, useNavigate, useLocation, useLoaderData } from "react-router-dom"
-import { useEffect, useState, useRef } from "react"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import dayjs from 'dayjs'
+import { AnimatePresence, motion, useInView } from 'framer-motion'
+import { useEffect, useRef, useState } from "react"
+import Marquee from 'react-fast-marquee'
+import { Helmet } from 'react-helmet'
+import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
+import { BsChevronCompactUp } from 'react-icons/bs'
+import { MdOutlineReportOff } from 'react-icons/md'
+import QRCode from "react-qr-code"
+import { Link, useLoaderData, useLocation } from "react-router-dom"
+import { toast } from "react-toastify"
 import {
-  Heading, ActiveStatusButton,
+  ActiveStatusButton,
   DeactiveStatusButton,
+  Heading,
+  Loadingbtn,
   Scrollable
 } from '../components'
-import dayjs from 'dayjs'
+import UiButton from '../components/UiButton'
 import dateFormater from '../utils/DateFormater'
-import { toast } from "react-toastify"
-import Marquee from 'react-fast-marquee'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { Loadingbtn } from '../components'
-import { MdOutlineReportOff } from 'react-icons/md'
-import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
-import QRCode from "react-qr-code";
-import { BsChevronCompactUp } from 'react-icons/bs'
-import succcesssound from '../utils/successsound.mp3'
-import { Helmet } from 'react-helmet'
-import { useQuery, useQueryClient } from "@tanstack/react-query"
 import customFetch from '../utils/customFetch'
+import succcesssound from '../utils/successsound.mp3'
 
 const singleTicket = (url, id) => {
   return ({
@@ -33,6 +34,9 @@ const singleTicket = (url, id) => {
   })
 
 }
+// const wait = (ms = 5000) => new Promise((r) => setTimeout(() => {
+//   r()
+// }, ms))
 export const loader = (queryClient) => async ({ request, params }) => {
   const searchParams = Object.fromEntries([
     ...new URL(request.url).searchParams.entries(),
@@ -53,6 +57,7 @@ export const loader = (queryClient) => async ({ request, params }) => {
 
     }
     // try to get the previous page from user being
+    // await wait(100)//wait for 10s testing 
     const { ticket: { active } } = await queryClient.ensureQueryData(singleTicket(url, params.id));
     const audio = new Audio(succcesssound)
     if (active) {
@@ -282,34 +287,34 @@ const User = () => {
                   transferseatdetail
                 }) => {
                   const isSeatTransfer = action?.toLowerCase()?.includes("transfer") && transferseatdetail?.previousSeatId;
-               
+
                   return (<li class="ml-4 mb-4" key={user_id}>
                     <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
                     <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">{dayjs(date).format("dddd, MMMM D, YYYY h:mm A")}</time>
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Edited By:{full_name}</h3>
                     <p class="text-base font-normal text-gray-500 dark:text-gray-400">Action:{action}</p>
-                    {isSeatTransfer&&
-                    <div className="py-2">
-                      <UiButton
-                        className="!bg-rose-400"
-                      >
-                        <Link
-                          to={`/seat/${transferseatdetail?.previousSeatId}`}
+                    {isSeatTransfer &&
+                      <div className="py-2">
+                        <UiButton
+                          className="!bg-rose-400"
                         >
-                          Previous Seat
-                        </Link>
-                      </UiButton>
-                      <UiButton
-                        className="!bg-green-400 mt-2"
-                      >
-                        <Link
-                          to={`/seat/${transferseatdetail?.currentSeatId}?rd_from=assistant&ticket_id=${ticket?._id}&ticket_seat=${ticket.seatposition}`}
+                          <Link
+                            to={`/seat/${transferseatdetail?.previousSeatId}`}
+                          >
+                            Previous Seat
+                          </Link>
+                        </UiButton>
+                        <UiButton
+                          className="!bg-green-400 mt-2"
                         >
-                          Transfer Seat
-                        </Link>
-                      </UiButton>
+                          <Link
+                            to={`/seat/${transferseatdetail?.currentSeatId}?rd_from=assistant&ticket_id=${ticket?._id}&ticket_seat=${ticket.seatposition}`}
+                          >
+                            Transfer Seat
+                          </Link>
+                        </UiButton>
 
-                    </div>
+                      </div>
                     }
                   </li>)
                 })

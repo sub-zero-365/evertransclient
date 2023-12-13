@@ -4,7 +4,7 @@ import OnlineDetector from './OnlineDetector';
 import customFetch from '../utils/customFetch';
 import { toast } from "react-toastify"
 import { createContext, useContext } from 'react';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery, useIsFetching } from '@tanstack/react-query';
 import { motion } from "framer-motion"
 import { useUserLayoutContext } from "./UserLayout"
 import AppSpinner from './AppSpinner'
@@ -12,6 +12,7 @@ import { useRef } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import NavFooter from './NavFooter';
 import CartModal from './CartModal';
+
 const ProtectedContext = createContext()
 
 const userQuery = {
@@ -33,6 +34,7 @@ export const loader = (queryClient) => async ({ request }) => {
 };
 
 const ProtectedRoute = () => {
+
     const navigate = useNavigate()
     const { logoutUser } = useUserLayoutContext()
     const { user } = useQuery(userQuery).data || {}
@@ -59,10 +61,10 @@ const ProtectedRoute = () => {
         logoutUser(isAuthError);
     }, [isAuthError]);
     return (
+
         <ProtectedContext.Provider
             value={{
                 logoutUser,
-
             }}
         >
             <div
@@ -70,9 +72,12 @@ const ProtectedRoute = () => {
             >
 
                 <OnlineDetector />
+                {isPageLoading && <AppSpinner />}
 
                 {
-                    isPageLoading ? <AppSpinner /> : <>
+                    // isPageLoading ? <AppSpinner /> : 
+
+                    <>
                         <motion.div
                             drag
                             dragConstraints={constraintsRef}
