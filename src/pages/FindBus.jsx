@@ -172,7 +172,6 @@ const FindBus = () => {
                                     }}
                                     exit={{
                                         y: 10,
-
                                         opacity: 0
                                     }}
                                     transitions={{ duration: 2 }}
@@ -180,7 +179,7 @@ const FindBus = () => {
                                     className="lg:hidden min-h-8
     flex items-center justify-center mt-5 fixed left-0 bottom-8 w-full">
                                     <LoadingButton onClick={Next}
-                                        className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
+                                        className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none"
                                     >
                                         Next <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " />
                                     </LoadingButton>
@@ -202,7 +201,7 @@ const FindBus = () => {
 
                     </motion.div>
                     <LoadingButton onClick={Next}
-                        className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
+                        className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none"
                     >
                         Next <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " />
                     </LoadingButton>

@@ -11,6 +11,7 @@ const FilterButton = ({
   const isSelected = value == querySearch.get(props.name)
   return (
     <UiButton
+      type={props.type}
       onClick={() => handleFilterChange(props.name, value)}
       className={`${className} !px-8
         !text-black

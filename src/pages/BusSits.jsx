@@ -1,24 +1,19 @@
-import { useState, useEffect } from "react"
-import { Modal, DisplayUi, DateUi, PrevButton, NextButton, Heading } from "../components"
-import { useLoaderData, useNavigate } from "react-router-dom"
-import { NavLink, useSearchParams, useParams, Link } from 'react-router-dom'
-import { motion } from "framer-motion"
-import { TbArmchair2, TbArmchairOff } from 'react-icons/tb'
-import { Swiper, SwiperSlide } from 'swiper/react'
 import dayjs from "dayjs"
-import {
-  Scrollbar,
-  Pagination,
-  Navigation,
-
-} from 'swiper/modules'
-import Alert from "../components/Alert"
-import { Helmet } from 'react-helmet'
-import axios from 'axios'
-import GenderSelect from 'react-select'
+import { motion } from "framer-motion"
+import { useState } from "react"
 import Marquee from 'react-fast-marquee'
+import { Helmet } from 'react-helmet'
+import { CiEdit } from "react-icons/ci"
+import { TbArmchair2, TbArmchairOff } from 'react-icons/tb'
+import { Link, NavLink, useLoaderData, useNavigate, useSearchParams } from "react-router-dom"
+import { default as GenderSelect, default as PaymentType } from 'react-select'
+import {
+  Navigation,
+  Pagination
+} from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { DisplayUi, Heading } from "../components"
 import AnimateText from '../components/AnimateText'
-import PaymentType from 'react-select'
 // import "swiper/css"
 // import "swiper/css/navigation"
 // import "swiper/css/pagination"
@@ -32,11 +27,11 @@ import PaymentType from 'react-select'
 import formatQuery from "../utils/formatQueryStringParams"
 import { paymentOptions } from '../utils/sortedOptions'
 // import Loader from '../components/Load'
-import customFetch from "../utils/customFetch"
 import { useQuery } from "@tanstack/react-query"
+import { RiSteering2Line } from "react-icons/ri"
 import { toast } from "react-toastify"
 import UiButton from "../components/UiButton"
-import { RiSteering2Line } from "react-icons/ri"
+import customFetch from "../utils/customFetch"
 // import CustomerPage from "./CustomerPage"
 const singleSeat = (id) => {
   return ({
@@ -153,7 +148,9 @@ const
               <DisplayUi from={queryParameters.get("from")} to={queryParameters.get("to")} />
               <h1
                 className="text-4xl font-bold text-center leading-tight tracking-wide my-2 underline underline-offset-8"
-              >{seat?.bus?.bus}</h1>
+              >{seat?.bus?.bus} <Link to={`/seat/${id}?rd_from=busseatpage&edited=true&from=${userInfo?.from}&to=${userInfo?.to}&traveldate=${userInfo?.traveldate}&type=${userInfo.type}`}>
+                  <CiEdit className="inline-block ml-1" size={20} />
+                </Link></h1>
               <AnimateText text={dayjs(new Date(queryParameters.get("traveldate")))
                 .format("dddd, MMMM D, YYYY")} className="!text-lg " />
               <AnimateText text="Please Select Seat"

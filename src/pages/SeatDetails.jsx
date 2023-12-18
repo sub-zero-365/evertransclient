@@ -60,6 +60,9 @@ export const action = (queryClient) => async ({ request }) => {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
     const id = data.id
+    const params = Object.fromEntries([
+        ...new URL(request.url).searchParams.entries(),
+    ]);
     try {
         await customFetch.
             patch(`/seat/update/${id}`
@@ -67,6 +70,13 @@ export const action = (queryClient) => async ({ request }) => {
         queryClient.invalidateQueries(['seat', id]);
         toast.success('successfully edited seat');
         // return redirect('/dashboard/bus?rd_from=editpage');
+        if (params.rd_from == "busseatpage") {
+            const formquery = Object.keys(params)
+                .filter(y => !(["rd_from", "edited"].includes(y)))
+                .map(x => `${x}=${params[x]}&`).join("");
+            // alert(formquery)
+            return redirect(`/bussits/${id}?${formquery}`)
+        }
         return null
     } catch (error) {
         toast.error(error?.response?.data || "some thing went wrong");

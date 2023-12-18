@@ -297,6 +297,7 @@ z-10  "
                 <h1 className="text-2xl text-center mb-2 font-semibold">Method of Payment</h1>
                 <Scrollable className="flex  gap-x-6 !justify-center">
                   <FilterButton
+                    type="button"
                     // className={}
                     className={"!flex justify-center !items-center"}
 
@@ -309,6 +310,7 @@ z-10  "
                     />
                   </FilterButton>
                   <FilterButton
+                    type="button"
                     className={"!flex justify-center gap-x-"}
                     name="paymenttype"
                     value="CM"

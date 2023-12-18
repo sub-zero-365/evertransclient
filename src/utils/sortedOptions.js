@@ -47,6 +47,7 @@ export const timeOptions = [
   { label: "10am", value: "10am" },
   { label: "10pm", value: "10pm" },
 ]
+
 export const paymentOptions = [
   { label: "Cash In", value: "Cash In" },
   { label: "CM", value: "CM" },

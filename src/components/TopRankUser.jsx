@@ -50,19 +50,22 @@ const User = ({ total,
 
 
 function TopRankUser() {
-  const { data } = useCustomerContext()
+  const { data, isPreviousData } = useCustomerContext()
   return (
-    <div className="py-4 flex-1 overflow-y-auto  scrollto">
-      {data?.rankUsers?.length > 0 ?
-        data?.rankUsers?.map(arr => <User
-          key={arr.phone}
-          {...arr}
-        />) : <AnimatedText
-          className="!text-4xl"
-          text="No Items matches your query "
-        />
-      }
-    </div>
+    <>
+      {isPreviousData && <div>Please wait refetching data</div>}
+      <div className={`py-4 flex-1 overflow-y-auto  scrollto transition-opacity duration-300 ${isPreviousData && "!opacity-70"}`}>
+        {data?.rankUsers?.length > 0 ?
+          data?.rankUsers?.map(arr => <User
+            key={arr.phone}
+            {...arr}
+          />) : <AnimatedText
+            className="!text-4xl"
+            text="No Items matches your query "
+          />
+        }
+      </div>
+    </>
   )
 }
 

@@ -46,7 +46,7 @@ import {
 import { useFilter } from '../Hooks/FilterHooks'
 import TicketDetail from '../components/TicketDetail'
 import customFetch from '../utils/customFetch'
-import { sortTicketStatusOptions, sortedDateOptions } from "../utils/sortedOptions"
+import { paymentOptions, sortTicketStatusOptions, sortedDateOptions } from "../utils/sortedOptions";
 let downloadbaseurl = null
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     downloadbaseurl = process.env.REACT_APP_LOCAL_URL
@@ -61,21 +61,20 @@ const wait = (ms = 5000) => new Promise((r) => setTimeout(() => {
 const allTicketsQuery = (params = {}) => {
     // console.log("this is the params", params)
     const { search, sort, page } = params
-    return {
+    return ({
         queryKey: [
             'tickets',
             // { search: search ?? "", page: page ?? 1, sort: sort ?? "newest" }
             { ...params }
         ],
         queryFn: async () => {
-            // await wait()
             const { data } = await customFetch.get('/ticket', {
                 params,
             });
             return data;
         },
         keepPreviousData: true
-    };
+    })
 };
 
 const style = {
@@ -105,9 +104,8 @@ export const loader =
             // await wait();
             // await queryClient.ensureQueryData(allTicketsQuery(params));
             return defer({
-                searchValues: { ...params },
-                bookData:
-                    queryClient.ensureQueryData(allTicketsQuery(params))
+                // searchValues: { ...params },
+                bookData: queryClient.ensureQueryData(allTicketsQuery(params))
             }
             );
         };
@@ -183,7 +181,7 @@ const BookUi = () => {
                         </Scrollable>
                     </>
 
-                    <div className="flex justify-between lg:justify-center  gap-x-4 gap-y-8 lg:gap-x-6
+                    <div className="flex justify-between relative z-[200] lg:justify-center  gap-x-4 gap-y-8 lg:gap-x-6
 flex-wrap pr-5 items-start mb-10">
 
 
@@ -231,6 +229,29 @@ text-center font-semibold mb-1 font-montserrat"> trip type </div>
                                 styles={style}
                                 defaultValue={{
                                     label: querySearch.get("triptype") || "all trip",
+                                    value: "all"
+                                }}
+                                // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+
+                                isSearchable={false}
+                                // onChange={handleSortTime}
+                                className='!border-none !h-8 mt-0' />
+                        </div>
+                        <div className='mt-0'>
+                            <div className="text-[0.8rem]
+text-slate-300 dark:text-white uppercase
+text-center font-semibold mb-1 font-montserrat"> payment method </div>
+                            <SelectTrip
+
+                                onChange={(e) => handleChange(e, "paymenttype")}
+                                options={
+                                    [{ label: "All", value: "all" },
+                                    { label: "Cash In", value: "Cash In" },
+                                    { label: "CM", value: "CM" },
+                                    ]}
+                                styles={style}
+                                defaultValue={{
+                                    label: querySearch.get("paymenttype") || "all",
                                     value: "all"
                                 }}
                                 // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
@@ -291,8 +312,7 @@ text-center font-semibold mb-1 font-montserrat"> sorted date </div>
     </>
 }
 const Books = () => {
-    const { searchValues,
-        bookData } = useLoaderData()
+    const { bookData } = useLoaderData()
     // const isFetching = useIsFetching()
 
     // const loaderBooks = useQuery(allTicketsQuery(searchValues))?.data
