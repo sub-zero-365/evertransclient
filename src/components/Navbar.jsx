@@ -513,7 +513,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                             >
                                                 {({ isPending,
                                                     isActive }) => (
-                                                    <Rounded className={` !flex-none group !ring-4 !relative !w-10 !h-10`}>
+                                                    <Rounded className={` !flex-none group  !relative !w-10 !h-10`}>
                                                         {isPending ? <div class="lds-roller !w-10 !h-10"
                                                             style={{
                                                                 height: "40px",

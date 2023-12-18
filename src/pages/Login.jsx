@@ -59,7 +59,9 @@ const Login = () => {
           </div>
 
           <div className="md:w-8/12 lg:ml-6 lg:w-5/12">
-            <Form method="post">
+            <Form method="post"
+            replace
+            >
               {errorMessageFromLoader && <p
                 className="text-rose-600 text-center "
               >{errorMessageFromLoader}</p>}

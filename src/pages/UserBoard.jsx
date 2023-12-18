@@ -1060,7 +1060,7 @@ py-5 `}>
 
               <UiButton
                 onClick={() => logoutUser()}
-                className=" lg:hidden block w-[min(calc(100%-20px),20rem)]
+                className="  block w-[min(calc(100%-20px),20rem)]
                 !mx-auto !py-2.5 !my-5  !text-lg !rounded-xl  !bg-red-400"
               >
 

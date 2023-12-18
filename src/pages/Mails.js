@@ -1,25 +1,24 @@
-import { useFilter } from "../Hooks/FilterHooks"
-import AnimatedText from "../components/AnimateText"
-import { Heading, Scrollable, TicketCounts } from "../components"
-import UiButton from "../components/UiButton"
-import { useLoaderData, useSearchParams } from "react-router-dom"
-import Mail from "../components/Mail"
-import customFetch from "../utils/customFetch"
 import { useQuery } from "@tanstack/react-query"
-
-import { sortedDateOptions, queryOptions, dateSortedOption } from "../utils/sortedOptions"
-import SelectSortDate from 'react-select';
-import Form from "../components/Form"
+import { motion } from "framer-motion"
+import { useLoaderData, useSearchParams } from "react-router-dom"
+import { useFilter } from "../Hooks/FilterHooks"
+import { Heading, Scrollable } from "../components"
+import AnimatedText from "../components/AnimateText"
 import FilterButton from "../components/FilterButton"
+import Form from "../components/Form"
+import Mail from "../components/Mail"
+import UiButton from "../components/UiButton"
+import customFetch from "../utils/customFetch"
 
 import { useMemo } from "react"
 const allMailsQuery = (params) => {
-  const { search, sort, page, quickdatesort } = params
+  const { search, sort, page, quickdatesort, daterange } = params
   const searchValues = {
     search: search ?? "",
     page: page ?? 1,
     sort: sort ?? "newest",/* mailStatus: mailStatus ?? "all" */
-    quickdatesort: quickdatesort || ""
+    quickdatesort: quickdatesort || "",
+    daterange: daterange || ""
   }
   return {
     queryKey: [
@@ -48,11 +47,8 @@ export const loader =
 
 
 const Mails = () => {
-
-
   const [querySearch] = useSearchParams()
   const { handleFilterChange } = useFilter()
-
   const { searchValues } = useLoaderData()
   const { mails, nHits,
     totalMailsSum,
@@ -62,7 +58,7 @@ const Mails = () => {
     useQuery(allMailsQuery(searchValues)).data || {}
 
 
-  const { obj, activeSearch } = useMemo(() => {
+  const {activeSearch } = useMemo(() => {
     const obj = {
       total: 0,
       pending: {
@@ -103,7 +99,10 @@ const Mails = () => {
       })
     }
 
-  }, [searchValues])
+  }, [searchValues,
+    totalSentMails,
+    totalPendingMails,
+    totalRecievedMails])
 
   return (
     <div>
@@ -120,7 +119,7 @@ const Mails = () => {
 
 
         <FilterButton className="!shadow-none"
-          value="all"
+          // value="all"
           label={`All (${nHits})`}
           name="mailStatus"
 
@@ -157,7 +156,17 @@ const Mails = () => {
       />
 
 
-      <div
+      <motion.div
+        key={"mailbox" + querySearch.get("mailStatus")}
+        initial={{
+          y: 20,
+          opacity: 0.2
+        }}
+        animate={{
+          y: 0,
+          opacity: 1
+        }}
+        transition={{ duration: 1 }}
         className="lg:px-24 px-8 gap-x-4 grid py-5 grid-cols-[repeat(auto-fit,minmax(min(calc(100%-20px),25rem),1fr))]"
 
       >
@@ -171,7 +180,7 @@ const Mails = () => {
           />
         }
 
-      </div>
+      </motion.div>
       {
         nHits &&
         <UiButton>

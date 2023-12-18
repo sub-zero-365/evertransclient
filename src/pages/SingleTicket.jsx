@@ -29,8 +29,8 @@ const singleTicket = (url, id) => {
     queryFn: async () => {
       const res = await customFetch.get(url)
       return res.data
-    }
-
+    },
+    refetchInterval: 1000
   })
 
 }
@@ -192,7 +192,7 @@ const User = () => {
               <QRCode
                 size={400}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={`https://ntaribotaken.vercel.app/assistant/${id}?sound=true&xyz=secret&readonly=7gu8dsutf8asdf&render_9368&beta47`}
+                value={`http://192.168.43.68:3000/assistant/${id}?sound=true&xyz=secret&readonly=7gu8dsutf8asdf&render_9368&beta47`}
                 viewBox={`0 0 256 256`}
               />
             </div>

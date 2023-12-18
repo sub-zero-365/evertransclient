@@ -1,11 +1,12 @@
 
-import { Outlet, useNavigate, redirect } from "react-router-dom"
-import Navbar from "./Navbar"
-import { createContext, useContext, useEffect, useState } from "react"
-import customFetch from "../utils/customFetch";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { setUser, clearUser } from '../actions/User'
-import { useDispatch, useSelector } from "react-redux"
+import { createContext, useContext } from "react";
+import { useDispatch } from "react-redux";
+import { Outlet, useNavigate, ScrollRestoration } from "react-router-dom";
+import { setUser } from '../actions/User';
+import customFetch from "../utils/customFetch";
+import Navbar from "./Navbar";
+// import ScrollRestoration from "./ScrollRestoration";
 const UserLayoutContext = createContext()
 
 const UserLayout = ({ isDarkThemeEnabled }) => {
@@ -45,11 +46,15 @@ const UserLayout = ({ isDarkThemeEnabled }) => {
         setUserDetails
       }}
     >
+      {/* <ScrollRestoration /> */}
       <Navbar
         user={data?.user}
         isDarkThemeEnabled={isDarkThemeEnabled}
       />
       <Outlet />
+      <ScrollRestoration
+        getKey={(location, matches) => { return location.pathname }}
+      />
 
     </UserLayoutContext.Provider>
   )
