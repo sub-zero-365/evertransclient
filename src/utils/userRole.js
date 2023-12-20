@@ -1,8 +1,11 @@
-export default function userRole(user){
+import { useUserLayoutContext } from '../components/UserLayout';
+export default function UserRole(user=null){
+    const { user:currentLoginUser } = useUserLayoutContext()
+    const currentUser=user==null?currentLoginUser:user;
     let userRole = "/login"
-    if (user?.role == "tickets") userRole = "/user"
-    else if (user?.role == "mails") userRole = "/user/mails"
-    else if (user?.role == "restaurants") userRole = "/restaurant"
+    if (currentUser?.role == "tickets") userRole = "/user"
+    else if (currentUser?.role == "mails") userRole = "/user/mails"
+    else if (currentUser?.role == "restaurants") userRole = "/restaurant"
     else userRole = "/login?message=please login to continue "
     return userRole
 }

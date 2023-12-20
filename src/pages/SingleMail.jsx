@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import { motion, useInView } from "framer-motion"
-import { Suspense, useEffect, useRef, useState } from "react"
+import { Suspense, createContext, useContext, useEffect, useRef, useState } from "react"
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { BsChevronCompactUp } from "react-icons/bs"
 import { GrCircleInformation } from "react-icons/gr"
@@ -22,10 +22,13 @@ import AnimatedText from "../components/AnimateText"
 import LoadingButton from "../components/LoadingButton"
 import UiButton from "../components/UiButton"
 import customFetch from "../utils/customFetch"
+import SingleTicketErrorElement from "../components/SingleTicketErrorElement"
 // const wait = () => new Promise(r => setTimeout(() => { r() }, 10000))
 const wait = (ms = 5000) => new Promise((r) => setTimeout(() => {
     r()
 }, ms))
+
+const UserTicketContext = createContext()
 const singleMail = (url, id) => {
     return ({
         queryKey: ["mail", id],
@@ -84,7 +87,11 @@ const MailTemplate = ({ url }) => {
     const id = useParams();
     const [isOpen, setIsOpen] = useState(false)
 
-    const { mail } = useQuery(singleMail(url, id))?.data || {}
+    const { mail } = useQuery(singleMail(url, id))?.data || {};
+    const { setUserMail } = useContext(UserTicketContext);
+    if (mail) {
+        setUserMail(mail)
+    }
     const ref = useRef(null);
     const isInView = useInView(ref)
     const [isImageLoading, setIsImageLoading] = useState(true)
@@ -469,6 +476,8 @@ after:content-[''] after:w-full after:h-1 after:border-b  after:border-4 after:i
 const SingleMail = () => {
     const navigate = useNavigate()
     const { Mail, url, id, readonly } = useLoaderData()
+    const [userMail, setUserMail] = useState({})//create context for the customer ticket when the loader loads 
+    // it will update the context of the mail ins
 
     let downloadbaseurl = null
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -480,7 +489,9 @@ const SingleMail = () => {
 
     }
     return (
-        <div>
+        <UserTicketContext.Provider
+            value={{ userMail, setUserMail }}
+        >
             <div
                 className="flex max-w-5xl mx-auto items-center justify-between py-4 px-4 border-b bg-slate-50--  mb-10"
             >
@@ -494,7 +505,7 @@ const SingleMail = () => {
                     />
 
                 </Rounded>
-                <h3 className="text-2xl hidden font-bold flex-1 text-center cursor-pointer "
+                <h3 className="text-2xl  font-bold flex-1 text-center cursor-pointer "
                     onClick={() => {
                         window?.navigator?.clipboard?.writeText(id).then(() => {
                             alert("copy success")
@@ -503,22 +514,24 @@ const SingleMail = () => {
                         // // document.execCommand("copy");
                         // document.execCommand('copy');
                     }}
-                >#{id}</h3>
+                >#{userMail?.id}</h3>
                 {/* <textarea type="text" value={id}
 ref={inputRef}
 id="GfGInput"
 // className='invisible w-0 h-0'
 /> */}
-                <UiButton
-                    className="flex-none"
-                >
-                    <a
-                        target="_blank"
-                        href={`${downloadbaseurl}/mails/download/${id}`}>
-                        DOWNLOAD
-                    </a>
+                {userMail?.id &&
+                    <UiButton
+                        className="flex-none"
+                    >
+                        <a
+                            target="_blank"
+                            href={`${downloadbaseurl}/mails/download/${userMail?._id}`}>
+                            DOWNLOAD
+                        </a>
 
-                </UiButton>
+                    </UiButton>
+                }
             </div>
             <Suspense
                 fallback={
@@ -606,7 +619,7 @@ id="GfGInput"
             >
                 <Await
                     resolve={Mail}
-                    errorElement={<div>something went wrong !!</div>}
+                    errorElement={<SingleTicketErrorElement />}
                 >
                     <MailTemplate
                         url={url}
@@ -615,7 +628,7 @@ id="GfGInput"
                     />
                 </Await>
             </Suspense>
-        </div>
+        </UserTicketContext.Provider>
     )
 }
 

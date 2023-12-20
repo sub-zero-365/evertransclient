@@ -155,7 +155,7 @@ const MailingPreview = () => {
 
 
 
-                <div className="py-10 border-black dark:border-gray-600  border-b  border-l">
+                <div className="py-10 px-4 border-black dark:border-gray-600  border-b  border-l">
                     <div className='flex items-center mb-5  justify-center'>
 
                         <Heading
@@ -191,7 +191,7 @@ const MailingPreview = () => {
 
 
                 </div>
-                <div className="py-10 border-black dark:border-gray-600  border-b  border-r">
+                <div className="py-10 px-4 border-black dark:border-gray-600  border-b  border-r">
                     <div className='flex items-center mb-5  justify-center'>
 
                         <Heading
@@ -219,7 +219,7 @@ const MailingPreview = () => {
 
 
                 </div>
-                <div className="py-10 border-black dark:border-gray-600  border-b  mb-4  border-l">
+                <div className="py-10 px-4 border-black dark:border-gray-600  border-b  mb-4  border-l">
                     <div className='flex items-center mb-5  justify-center'>
 
                         <Heading
@@ -281,7 +281,8 @@ const MailingPreview = () => {
             </div>
 
             <LoadingButton
-                className="!w-[min(30rem,calc(100%-0.5rem))] !mx-auto !py-4 !text-lg !rounded-xl"
+                className="!w-[min(30rem,calc(100%-0.5rem))] !mx-auto !py-4 !text-lg
+                !rounded-none"
             >
                 <>CheckOut <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
             </LoadingButton>

@@ -242,7 +242,7 @@ const MailingForm = () => {
 
 
 
-                
+
                 <div className='px-2'>
                     <div className="flex items-end pb-2 justify-start gap-x-4">
                         <BsTelephoneMinus
@@ -432,7 +432,8 @@ const MailingForm = () => {
                 <div className="md:hidden min-h-8
            flex items-center justify-center mt-5 sticky left-0 bottom-8 w-full">
                     <LoadingButton
-                        className="!w-[min(40rem,calc(100%-0.5rem))] !mx-auto !py-5 !text-lg !rounded-xl"
+                        className="!w-[min(40rem,calc(100%-0.5rem))] 
+                        !mx-auto !py-5 !text-lg !rounded-none"
                     >
                         <>Preview <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
                     </LoadingButton>

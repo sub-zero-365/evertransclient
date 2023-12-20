@@ -39,12 +39,11 @@ import {
 import dayjs from "dayjs"
 import { Helmet } from 'react-helmet'
 import { CiLogout } from 'react-icons/ci'
-import InputBox from '../components/InputBox'
 import { useFilter } from '../Hooks/FilterHooks'
+import InputBox from '../components/InputBox'
 import customFetch from '../utils/customFetch'
-import ShowBuses from './ShowBuses'
-import getdates from '../utils/getdates'
 import useGetdates from '../utils/getdates'
+import ShowBuses from './ShowBuses'
 
 // import { CiLogout } from 'react-icons/ci'
 const seats = []
@@ -1038,7 +1037,7 @@ py-5 `}>
               </div>
               <UiButton
                 // onClick={() => logoutUser()}
-                className=" hidden- lg:block w-[min(calc(100%-20px),20rem)]
+                className="  lg:block w-[min(calc(100%-20px),20rem)]
                 !mx-auto !py-2.5 !my-5  !text-lg !rounded-none  !bg-blue-800"
               >
                 <div className='flex items-center justify-center gap-x-2 text-sm lg:text-lg'

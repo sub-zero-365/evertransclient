@@ -1,9 +1,12 @@
-import { Link, useRouteError, useNavigate } from "react-router-dom"
+import { Link, useRouteError, useNavigate, useAsyncError } from "react-router-dom"
 import UiButton from "./UiButton"
 import AnimatedText from "./AnimateText"
+import UserRole from "../utils/userRole"
 
 const SingleTicketErrorElement = () => {
-    const error = useRouteError()
+    const navigatePath = UserRole()
+    const error = useRouteError();
+    const isAsyncError = useAsyncError()
     const navigate = useNavigate()
     // const rd_from =
     // console.log(error)
@@ -15,7 +18,7 @@ const SingleTicketErrorElement = () => {
             />
             <AnimatedText
                 className="!text-3xl !my-10 !text-rose-600"
-                text={error?.response?.data || error?.message || "something went wrong ,try again later"}
+                text={error?.response?.data || error?.message || isAsyncError?.response?.data || isAsyncError?.message || "something went wrong ,try again later"}
             />
 
             <UiButton
@@ -33,7 +36,7 @@ const SingleTicketErrorElement = () => {
                 className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-xl"
 
             >
-                <Link to="/user"
+                <Link to={navigatePath}
                     className="w-full"
                     replace>
                     Go To Dashboard

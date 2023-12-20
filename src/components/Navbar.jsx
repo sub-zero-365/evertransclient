@@ -51,6 +51,7 @@ const allRecieptsQuery = (params = {}, enable = false) => {
 }
 
 const Navbar = ({ }) => {
+    var redirectLink = userRole()
     const navRef = useRef(null)
     const { toggle: outside } = useOutsideAlerter(navRef)
     const [toggle, setToggle] = useState(false)
@@ -109,8 +110,7 @@ const Navbar = ({ }) => {
 
 
     const gotoUserPage = () => {
-        const userrole = userRole(user);
-        navigate(userrole)
+        navigate(redirectLink)
     }
     const [isOpen, setIsOpen] = useState(false)
     const currentUserRole = user?.role
@@ -142,17 +142,6 @@ const Navbar = ({ }) => {
             }
         }
     }
-    // const currentUserRole = user?.role;
-    var redirectLink = userRole(user)
-    // if (currentUserRole == "tickets") {
-    //     redirectLink = "/user"
-    // }
-    // else if (currentUserRole == "restaurants") {
-    //     redirectLink = "/user/restaurant"
-    // }
-    // else {
-    //     redirectLink = "/user/mails"
-    // }
 
 
     return (

@@ -47,6 +47,7 @@ import { useFilter } from '../Hooks/FilterHooks'
 import TicketDetail from '../components/TicketDetail'
 import customFetch from '../utils/customFetch'
 import { paymentOptions, sortTicketStatusOptions, sortedDateOptions } from "../utils/sortedOptions";
+import SingleTicketErrorElement from '../components/SingleTicketErrorElement'
 let downloadbaseurl = null
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     downloadbaseurl = process.env.REACT_APP_LOCAL_URL
@@ -242,7 +243,6 @@ text-center font-semibold mb-1 font-montserrat"> trip type </div>
 text-slate-300 dark:text-white uppercase
 text-center font-semibold mb-1 font-montserrat"> payment method </div>
                             <SelectTrip
-
                                 onChange={(e) => handleChange(e, "paymenttype")}
                                 options={
                                     [{ label: "All", value: "all" },
@@ -325,7 +325,7 @@ const Books = () => {
             >
 
                 <Await resolve={bookData}
-                    errorElement={<div>something went wrong !!</div>}
+                    errorElement={<SingleTicketErrorElement />}
                 >
                     <BookUi />
                 </Await>

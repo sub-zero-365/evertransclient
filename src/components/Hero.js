@@ -9,8 +9,8 @@ import { SiYourtraveldottv } from "react-icons/si";
 import { useUserLayoutContext } from './UserLayout';
 import userRole from "../utils/userRole"
 const Hero = () => {
-    const { user } = useUserLayoutContext()
-   const userrole= userRole(user)
+    // const { user } = useUserLayoutContext()
+   const userrole= userRole()
 
     return (
         <div className=" h-[min(35rem,100vh)]-- mb-10 text-white relative group ">
