@@ -14,7 +14,8 @@ import {
     , Await,
     useAsyncValue,
     useParams,
-    redirect
+    redirect,
+    useActionData
 } from "react-router-dom"
 import { toast } from "react-toastify"
 import { Heading, Rounded } from "../components"
@@ -23,6 +24,7 @@ import LoadingButton from "../components/LoadingButton"
 import UiButton from "../components/UiButton"
 import customFetch from "../utils/customFetch"
 import SingleTicketErrorElement from "../components/SingleTicketErrorElement"
+import { useUserLayoutContext } from "../components/UserLayout"
 // const wait = () => new Promise(r => setTimeout(() => { r() }, 10000))
 const wait = (ms = 5000) => new Promise((r) => setTimeout(() => {
     r()
@@ -53,7 +55,9 @@ export const action = (queryClient) => async ({ request }) => {
         toast.success("edited success ")
         // queryClient.
         await queryClient.invalidateQueries({ queryKey: ["mail", id] })
-        return redirect("/user/mails")
+        // return redirect("/user/mails")
+        return "edited success"
+
     } catch (err) {
         toast.error(err.response?.data || "something went wrong")
         // console.log(err.response.data)
@@ -85,13 +89,23 @@ export const loader = (queryClient) => async ({ request, params }) => {
 
 const MailTemplate = ({ url }) => {
     const id = useParams();
+    const { user } = useUserLayoutContext()
     const [isOpen, setIsOpen] = useState(false)
-
-    const { mail } = useQuery(singleMail(url, id))?.data || {};
+    let mail = {}
+    const { data, refetch } = useQuery(singleMail(url, id));
     const { setUserMail } = useContext(UserTicketContext);
-    if (mail) {
-        setUserMail(mail)
+    if (data) {
+        mail = data?.mail
+        setUserMail(data?.mail)
     }
+    const actiondata = useActionData();
+    // when using  defer my invalidate query couldnt not refetch 
+    // so i implented this code and its working fine
+    useEffect(() => {
+        if (actiondata === "edited success") {
+            refetch()
+        }
+    }, [actiondata])
     const ref = useRef(null);
     const isInView = useInView(ref)
     const [isImageLoading, setIsImageLoading] = useState(true)
@@ -279,7 +293,11 @@ const MailTemplate = ({ url }) => {
                     <p className="text-center text-slate-500 mb-4 text-lg">{mail?.recieverfullname || "n/a"}</p>
                     <h2 className="text-center  text-xl md:text-xl font-medium  "> Phone Number</h2>
                     <p className="text-center text-slate-500 mb-4 text-lg">{mail?.recieverphonenumber || "n/a"}</p>
-                    <Heading text="Edited History" className={"!text-center !font-bold italic"} />
+                    {
+                        mail?.editedBy?.length > 0 ? <Heading text="Edited History" className={"!text-center !font-bold italic"} />
+                            : "This mail have not being edited since created "
+                    }
+
 
                     <ol class="relative border-l border-gray-200 dark:border-gray-700">
 
@@ -287,12 +305,30 @@ const MailTemplate = ({ url }) => {
                             mail?.editedBy?.map(({ full_name,
                                 user_id,
                                 date,
-                                action }) => <li class="ml-4 mb-4" key={user_id}>
+                                action }) => {
+                                const createdByMe = user_id?.toString() == user?._id?.toString()
+                                return (<li class="ml-4 mb-4" key={user_id}>
                                     <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700"></div>
                                     <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">{dayjs(date).format("dddd, MMMM D, YYYY h:mm A")}</time>
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Edited By:{full_name}</h3>
-                                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">Action:{action}</p>
+                                    <h3 className={`text-lg font-semibold text-gray-900 dark:text-white `}>Edited By:
+                                        <span
+                                            className={`${createdByMe && "!text-rose-400"}`}
+                                        >
+
+                                            {
+                                                createdByMe ? " You  " :
+                                                    full_name}
+                                        </span>
+                                    </h3>
+                                    <p class="text-base
+                                    font-normal text-gray-500
+                                    dark:text-gray-400">Action:{
+                                            createdByMe ?
+                                                "You  " + action?.split(" ")?.slice(2)?.join(" ")
+                                                : action
+                                        }</p>
                                 </li>)
+                            })
                         }
 
                     </ol>
@@ -389,8 +425,15 @@ lg:py-10
             >
                 <h2 className="text-center  text-xl md:text-xl font-medium  ">createdBy</h2>
                 <p className="text-center text-slate-500 mb-4 text-lg">{mail?.doneby || "n/a"}</p>
+                <p className={`text-center animate-pulse text-gray-700 mb-4 text-xl
+                ${mail?.status == "pending" && "!text-rose-950"}
+                ${mail?.status == "sent" && "!text-orange-200"}
+                ${mail?.status == "recieved" && "!text-green-800"}
+                `}><span
+                        // className="text-green-500"
+                    >status: &nbsp;&nbsp;&nbsp;</span>{mail?.status || "n/a"}</p>
                 <Form method="post"
-                    replace
+                // replace
                 >
                     <input name="id" type="hidden" value={mail?._id} />
                     <ol class="flex items-center w-full mb-4 sm:mb-5 justify-center px-4">

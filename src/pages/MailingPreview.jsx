@@ -81,6 +81,7 @@ const MailingPreview = () => {
 
     return (
         <Form method="post" className='form' encType='multipart/form-data'
+        replace
         >
             {
                 location.state && Object.keys(location.state).map((input, index) => {
