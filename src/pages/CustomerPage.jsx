@@ -13,6 +13,7 @@ import { useFilter } from '../Hooks/FilterHooks'
 import FilterButton from '../components/FilterButton'
 import customFetch from '../utils/customFetch'
 import { dateSortedOption } from "../utils/sortedOptions"
+import SearchComponent from '../components/SearchBox'
 
 const topRankedQuery = (params) => {
     return (
@@ -79,63 +80,13 @@ const CustomerPage = () => {
 
                             />
                         </Rounded>
-
                     </div>
                     {/* search number form here  */}
-
-                    <form
-                        onSubmit={async (e) => {
-                            e.preventDefault()
-                            const formdata = new FormData(e.target)
-                            const name = await formdata.get("search")
-                            handleFilterChange("numberFilter", name)
-
-                        }}
-                        className='py-2 my-6  mx-2 bg-white px-4  rounded-md'>
-
-                        <div
-                            className='w-full  flex items-stretch '
-                        >
-                            <button type='submit' className='grid place-items-center border-none bg-transparent outline-none'>
-                                <BsSearch
-                                    color='gray'
-                                    size={20}
-                                    className='flex-none mr-4'
-                                />
-                            </button>
-                            {/* <AsyncCreatableSelect
-                                name="search"
-                                cacheOptions
-                                defaultOptions
-                                loadOptions={getCustomerPhone}
-                                type="tel"
-                            /> */}
-                            <input
-                                onChange={(e) => {
-                                    handleFilterChange("numberFilter", e.target.value)
-                                }}
-                                name="search"
-                                defaultValue={querySearch.get("numberFilter")}
-                                className='flex-1 
-                                min-h-[2.5rem] 
-                                outline-none
-                                focus:outline-none
-                                text-lg
-                                '
-                                type='tel'
-                                placeholder='search phone of customer'
-                            />
-                            <div className='grid place-items-center'
-                            >
-                                <BiChevronDown
-                                    color='gray'
-                                    size={20}
-                                    className='flex-none mr-4 cursor-pointer hover:text-gray-800'
-                                />
-                            </div>
-                        </div>
-                    </form>
-
+                    <SearchComponent
+                        type='tel'
+                        filterMethod='numberFilter'
+                        placeholder='Phone Number'
+                    />
                     {/* end of header here */}
                     <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5 scrollto">
                         {

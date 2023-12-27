@@ -3,23 +3,27 @@ import { useFilter } from '../Hooks/FilterHooks'
 import { useSearchParams } from "react-router-dom";
 import debounce from "../utils/debounceFnc"
 import { useState, useEffect, useRef } from "react";
-export default function SearchComponent() {
+export default function SearchComponent({
+
+    type = "search",
+    filterMethod = "search",
+    placeholder = "Search ..." }) {
     const searchRef = useRef(null)
     const [searchQuery] = useSearchParams()
-    const [searchTerm, setSearchTerm] = useState(searchQuery.get("search") || null);
+    const [searchTerm, setSearchTerm] = useState(searchQuery.get(filterMethod) || null);
     const { handleFilterChange } = useFilter()
     const handleChange = (event) => {
         setSearchTerm(event.target.value)
     };
     // clear
     useEffect(() => {
-        if (!searchQuery.get("search")) {
+        if (!searchQuery.get(filterMethod)) {
             searchRef.current.value = ""
         }
-    }, [searchQuery.get("search")])
+    }, [searchQuery.get(filterMethod)])
     useEffect(() => {
         console.log("search items here ", searchTerm)
-        handleFilterChange("search", searchTerm)
+        handleFilterChange(filterMethod, searchTerm)
     }, [searchTerm])
     const debouncedHandleChange = debounce(handleChange, 500);
     return (
@@ -40,12 +44,12 @@ export default function SearchComponent() {
                     />
                 </svg>
                 <input
-                
+
                     defaultValue={searchTerm}
                     ref={searchRef}
                     onChange={debouncedHandleChange}
-                    type="search"
-                    placeholder="Search"
+                    type={type}
+                    placeholder={placeholder}
                     className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
                 />
             </div>

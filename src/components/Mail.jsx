@@ -29,13 +29,14 @@ const Mail = ({ id, _id, collected,
             whileHover="whileHover"
             className='shadow border-b px-4   mb-2 py-5'>
             <Link to={"/user/mail/" + _id}
+                preventScrollReset={true}
                 className='  '>
                 <div
                     className='flex justify-between py-2  items-start'
                 >
                     <h1 className='text-start text-2xl capitalize font-bold mb-2'>{name ?? "n/a"}</h1>
                     <p className='text-gray-600 '>#ID {id}</p>
-                 
+
                 </div>
                 <div className='flex justify-between py-2  items-start'>
                     <div>

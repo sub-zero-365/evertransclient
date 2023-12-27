@@ -26,6 +26,7 @@ import { useQuery } from "@tanstack/react-query"
 import FilterButton from "../components/FilterButton"
 import { BsCashCoin } from "react-icons/bs"
 import { MdOutlineWarehouse } from "react-icons/md"
+import LoadingButton from "../components/LoadingButton"
 // import error from "../../../server/error"
 
 const errorToast = (msg = "Please select a seat and continue !!!") => toast.error(msg)
@@ -198,7 +199,9 @@ z-10  "
               className="w-full h-[calc(100vh-50px)] object-cover" alt="booking " />
 
           </div>
-          <Form method="post" className="flex-none px-2 w-full pb-24 lg:w-[35rem] lg:px-4
+          <Form method="post"
+            replace
+            className="flex-none px-2 w-full pb-24 lg:w-[35rem] lg:px-4
         dark:bg-slate-900 
         mx-auto max-h-[calc(100vh-50px)] overflow-y-auto lg:shadow-lg mt-6 py-6 pt-0"
             ref={constraintsRef}
@@ -329,7 +332,7 @@ z-10  "
             </div>
 
             <div className="hidden h-[80px] md:flex items-center justify-center mt-auto">
-              <UiButton
+              {/* <UiButton
                 disabled={(navigation.state == "submitting" ? true : false)}
                 className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none gold:text-color_gold !font-black"
               >
@@ -338,23 +341,20 @@ z-10  "
 
                 }
 
-              </UiButton>
-
+              </UiButton> */}
+              <LoadingButton initialText={"booking seat please wait ..."}
+                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none gold:text-color_gold !font-black"
+              >
+                <> Book Ticket <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
+              </LoadingButton>
 
             </div>
             <div className="md:hidden z-10 h-[50px] flex items-center justify-center mt-5 fixed bottom-8 w-full">
-              <UiButton
+              <LoadingButton initialText={"booking seat please wait ..."}
                 className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none gold:text-color_gold !font-black"
-                disabled={(navigation.state == "submitting" ? true : false)}
-
               >
-                {
-                  navigation.state == "submitting" ? "Loading please wait !!" : <> Book Ticket <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
-
-                }
-
-
-              </UiButton>
+                <> Book Ticket <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
+              </LoadingButton>
 
             </div>
           </Form>

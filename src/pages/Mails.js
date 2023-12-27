@@ -1,16 +1,15 @@
 import { useQuery } from "@tanstack/react-query"
 import { motion } from "framer-motion"
 import { useLoaderData, useSearchParams } from "react-router-dom"
-import { useFilter } from "../Hooks/FilterHooks"
 import { Heading, Scrollable } from "../components"
 import AnimatedText from "../components/AnimateText"
 import FilterButton from "../components/FilterButton"
-import Form from "../components/Form"
 import Mail from "../components/Mail"
 import UiButton from "../components/UiButton"
 import customFetch from "../utils/customFetch"
 
-import { useMemo } from "react"
+import { createContext, useMemo, useContext } from "react"
+import PageBtnContainer from "../components/PageBtnContainer"
 import SearchComponent from "../components/SearchBox"
 import NoItemMatch from "./NoItemMatch"
 const allMailsQuery = (params) => {
@@ -47,16 +46,18 @@ export const loader =
       return { searchValues: { ...params } };
     };
 
-
+const MailContextProvider = createContext();
 const Mails = () => {
   const [querySearch] = useSearchParams()
-  const { handleFilterChange } = useFilter()
+  // const { handleFilterChange } = useFilter()
   const { searchValues } = useLoaderData()
   const { mails, nHits,
     totalMailsSum,
     totalSentMails,
     totalPendingMails,
-    totalRecievedMails } =
+    totalRecievedMails,
+    numberOfPages,
+    currentPage } =
     useQuery(allMailsQuery(searchValues)).data || {}
 
 
@@ -107,7 +108,10 @@ const Mails = () => {
     totalRecievedMails])
 
   return (
-    <div>
+    <MailContextProvider.Provider value={{
+      numberOfPages,
+      currentPage
+    }}>
       <Heading
         text="Mails"
         className="!text-4xl !text-center !mb-10 !font-black"
@@ -179,12 +183,14 @@ const Mails = () => {
               text={`could find any mail with search value {${querySearch.get("search")}}`}
             /> : <NoItemMatch />
         }
-        {
+        {/* {numberOfPages > 1 && <PageBtnContainer />} */}
+
+        {/* {
           nHits < 1 && <AnimatedText
             className="!text-4xl"
             text="No Items matches your query "
           />
-        }
+        } */}
 
       </motion.div>
       {
@@ -193,8 +199,9 @@ const Mails = () => {
           LOAD MORE
         </UiButton>
       }
-    </div>
+    </MailContextProvider.Provider>
   )
 }
+export const useMailContext = () => useContext(MailContextProvider)
 
 export default Mails

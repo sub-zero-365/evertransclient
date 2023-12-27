@@ -29,13 +29,14 @@ const UserLayout = ({ isDarkThemeEnabled }) => {
     try {
       await customFetch.get('/auth/logout');
       // queryClient.invalidateQueries();
-      queryClient.removeQueries()
+      await queryClient.removeQueries()
       navigate("/login?message=" + error)
     } catch (err) {
       console.log("this is the fail response here", err.response?.data)
     }
 
   };
+
   return (
     <UserLayoutContext.Provider
       value={{
