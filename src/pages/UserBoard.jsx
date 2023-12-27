@@ -311,6 +311,7 @@ const Details = () => {
   py-5 `}>
 
             <AnimateText text="Please enter ticket id to get and edit tickett" className='!text-lg' />
+            
             <form
               onSubmit={handleSubmit}
               className='px-5 '

@@ -7,10 +7,11 @@ import { default as Select, default as SelectSortDate, default as SelectTrip } f
 import { AiOutlineSave } from 'react-icons/ai'
 // import { IoMdClose } from "react-icons/io"
 import { Suspense } from "react"
+import SearchComponent from '../components/SearchBox'
+
 import {
     Await,
     defer,
-    useAsyncValue,
     useLoaderData,
 
     useSearchParams
@@ -32,11 +33,10 @@ import ClearFilter from '../components/ClearFilter'
 
 import {
     AmountCount,
-    Form,
     FormatTable,
     Heading,
 
-    Scrollable, TicketCounts,
+    Scrollable, TicketCounts
 } from '../components'
 
 import {
@@ -44,10 +44,11 @@ import {
     useQuery
 } from '@tanstack/react-query'
 import { useFilter } from '../Hooks/FilterHooks'
+import SingleTicketErrorElement from '../components/SingleTicketErrorElement'
 import TicketDetail from '../components/TicketDetail'
 import customFetch from '../utils/customFetch'
-import { paymentOptions, sortTicketStatusOptions, sortedDateOptions } from "../utils/sortedOptions";
-import SingleTicketErrorElement from '../components/SingleTicketErrorElement'
+import { sortTicketStatusOptions, sortedDateOptions } from "../utils/sortedOptions"
+import NoItemMatch from './NoItemMatch'
 let downloadbaseurl = null
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     downloadbaseurl = process.env.REACT_APP_LOCAL_URL
@@ -299,16 +300,19 @@ text-center font-semibold mb-1 font-montserrat"> sorted date </div>
             "_id,xyx",
             "traveltime,no time",
         ]} />
+        <SearchComponent />
 
-        <Form
-            onChange={search => handleFilterChange("search", search)}
-        />
-        <div className='w-full max-w-full'>
-            <FormatTable
-                isPreviousData={isFetchingBooks}
-                ticketData={loaderBooks}
-            />
-        </div>
+        {
+            loaderBooks.tickets?.length > 0 ?
+                <div className='w-full max-w-full'>
+                    <FormatTable
+                        isPreviousData={isFetchingBooks}
+                        ticketData={loaderBooks}
+                    />
+                </div> : querySearch.get("search") ? <NoItemMatch
+                    text={`could find any customer with search value {${querySearch.get("search")}}`}
+                /> : <NoItemMatch />
+        }
     </>
 }
 const Books = () => {

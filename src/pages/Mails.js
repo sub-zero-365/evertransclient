@@ -11,6 +11,8 @@ import UiButton from "../components/UiButton"
 import customFetch from "../utils/customFetch"
 
 import { useMemo } from "react"
+import SearchComponent from "../components/SearchBox"
+import NoItemMatch from "./NoItemMatch"
 const allMailsQuery = (params) => {
   const { search, sort, page, quickdatesort, daterange } = params
   const searchValues = {
@@ -58,7 +60,7 @@ const Mails = () => {
     useQuery(allMailsQuery(searchValues)).data || {}
 
 
-  const {activeSearch } = useMemo(() => {
+  const { activeSearch } = useMemo(() => {
     const obj = {
       total: 0,
       pending: {
@@ -147,13 +149,10 @@ const Mails = () => {
 
       </Scrollable>
 
+      <div className="mb-5" />
 
+      <SearchComponent />
 
-      <Form
-        placeholder="search products, sendername ,recievername"
-        className="!mx-auto !max-w-lg w-full"
-        onChange={search => handleFilterChange("search", search)}
-      />
 
 
       <motion.div
@@ -170,9 +169,16 @@ const Mails = () => {
         className="lg:px-24 px-8 gap-x-4 grid py-5 grid-cols-[repeat(auto-fit,minmax(min(calc(100%-20px),25rem),1fr))]"
 
       >
-        {activeSearch?.map((mail) => <Mail key={mail._id}
-          {...mail}
-        />)}
+
+        {
+          activeSearch?.length > 0 ?
+            activeSearch?.map((mail) => <Mail key={mail._id}
+              {...mail}
+            />)
+            : querySearch.get("search") ? <NoItemMatch
+              text={`could find any mail with search value {${querySearch.get("search")}}`}
+            /> : <NoItemMatch />
+        }
         {
           nHits < 1 && <AnimatedText
             className="!text-4xl"
