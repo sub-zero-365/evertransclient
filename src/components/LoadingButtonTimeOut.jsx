@@ -6,7 +6,7 @@ const LoadingButtonTimeOut = ({
     children,
     duration = 5000,
     initialText,
-    loading_text="This is taking longer than usual. Please wait while backend services are getting started.",
+    loading_text = "This is taking longer than usual. Please wait while backend services are getting started.",
     ...props
 
 }) => {
@@ -22,7 +22,8 @@ const LoadingButtonTimeOut = ({
         }, [duration])
 
         return () => {
-            clearTimeout(timeRef.current)
+            clearTimeout(timeRef.current);
+            setLoadingText("")
         }
     }, [isPageLoading])
 
