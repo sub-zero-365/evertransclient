@@ -4,9 +4,10 @@ import {
 } from '@tanstack/react-query'
 import {
     Link,
-    useSearchParams, useNavigate, useLoaderData
+    useSearchParams, useNavigate, useLoaderData,
+    defer, Await, useAsyncValue, useRouteError
 } from "react-router-dom"
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { Heading, Scrollable } from '../components'
 import AnimateText from '../components/AnimateText'
 import LoadingButton from '../components/LoadingButton'
@@ -17,9 +18,22 @@ import {
 } from 'framer-motion'
 import dayjs from 'dayjs'
 import customFetch from "../utils/customFetch"
-import { dateSortedOption } from '../utils/sortedOptions'
-import FilterButton from '../components/FilterButton'
+// import { dateSortedOption } from '../utils/sortedOptions'
+// import FilterButton from '../components/FilterButton'
+const priceQuery = (params) => {
+    // console.log("this is the params oject here", params)
+    return {
+        queryKey: ["price", params],
+        queryFn: async () => {
+            const res = await customFetch.get("/routes/get", {
+                params: params
+            })
+            console.log("this is the price in the loader function", res.data, params)
+            return res.data
+        }
 
+    }
+}
 const busQuery = params => ({
     queryKey: ["buses", { params }],
     queryFn: async () => {
@@ -32,23 +46,13 @@ const busQuery = params => ({
     },
 
 })
-export const loader = (queryClient) => async ({ request }) => {
-    const params = Object.fromEntries([
-        ...new URL(request.url).searchParams.entries(),
-    ]);
-    params.time = params.traveltime
-    params.date = params.traveldate
-    delete params.traveltime
-    delete params.traveldate
-    await queryClient.ensureQueryData(busQuery(params));
-    return { searchValues: { ...params } }
-}
-
-const FindBus = () => {
+const RenderBusPage = () => {
+    // const { nHits, seats } = useAsyncValue();
+    // const [querySearch] = useSearchParams();
     const [querySearch] = useSearchParams();
     const [selected, setSelected] = useState(querySearch.get("bus"));
-    const { searchValues } = useLoaderData()
-    const { seats, nHits } = useQuery(busQuery(searchValues)).data
+    // const { searchValues } = useLoaderData()
+    // const { seats, nHits } = useQuery(busQuery(searchValues))?.data || {};
     const [bus, setBus] = useState({})
 
     const navigate = useNavigate()
@@ -100,11 +104,123 @@ const FindBus = () => {
         )
     }
 
+    const { searchValues } = useLoaderData();
+    const { nHits, seats } = useQuery(busQuery(searchValues))?.data || {};
+    return (<>
+
+        <AnimateText text={`Available Cars (${nHits})`} className="!text-2xl " />
+        <AnimateText text={dayjs(new Date(querySearch.get("traveldate")))
+            .format("dddd, MMMM D, YYYY")} className="!text-lg " />
+
+        {
+
+            seats?.map((arr, index) => {
+                return (
+                    <BusDetail {...arr} key={index} />
+                )
+            })
+        }
+        <AnimatePresence>
+            {
+                selected !== null && (
+                    <motion.div
+                        initial={
+                            {
+                                y: 10,
+                                opacity: 0
+                            }
+
+                        }
+                        animate={{
+                            y: 0,
+                            opacity: 1
+                        }}
+                        exit={{
+                            y: 10,
+                            opacity: 0
+                        }}
+                        transitions={{ duration: 2 }}
+
+                        className="lg:hidden min-h-8
+    flex items-center justify-center mt-5 fixed left-0 bottom-8 w-full">
+                        <LoadingButton onClick={Next}
+                            className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none"
+                        >
+                            Next <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " />
+                        </LoadingButton>
+
+                    </motion.div>
+                )
+            }
+        </AnimatePresence>
+        {/* </div> */}
+        <div className={`hidden overflow-hidden ${selected !== null && "lg:block px-4"} `} >
+            {/* <AnimateText text={"selected bus"} className="!text-3xl " /> */}
+            {/* <motion.div
+                key={selected}
+                initial={{ y: 60, opacity: 0.5 }}
+                animate={{ y: 0, opacity: 1 }}
+
+            >
+                <BusDetail {...bus} />
+
+            </motion.div> */}
+            <LoadingButton onClick={Next}
+                className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none"
+            >
+                Next <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " />
+            </LoadingButton>
+        </div>
+    </>)
+}
+export const loader = (queryClient) => async ({ request }) => {
+    const params = Object.fromEntries([
+        ...new URL(request.url).searchParams.entries(),
+    ]);
+    params.time = params.traveltime
+    params.date = params.traveldate
+    delete params.traveltime
+    delete params.traveldate
+    try {
+        const prices = await queryClient.ensureQueryData(priceQuery({ from: params.from, to: params.to }));
+        return defer({
+            BusQuery: queryClient.ensureQueryData(busQuery(params)),
+            searchValues: { ...params },
+            prices
+        })
+    } catch (err) {
+        throw err
+    }
+
+    // await queryClient.ensureQueryData(busQuery(params));
+
+
+    //   return { searchValues: { ...params } }
+}
+export const ErrorFindBus = () => {
+    const error = useRouteError();
+    // error element when bus loader throws an error ..
+    
+
+    return <div className='min-h-screen'>
+        <div className='space-y-5'>
+            <img
+                src="https://cdni.iconscout.com/illustration/premium/thumb/sorry-item-not-found-3328225-2809510.png"
+                className="mx-auto max-w-lg"
+            />
+            <p className='text-lg sm:text-xl text-center text-rose-700 pt-10 italic px-10'>
+                {error?.response?.data || error?.message || "something went wrong ,try again later"}
+            </p>
+        </div>
+    </div>
+}
+const FindBus = () => {
+    const { BusQuery } = useLoaderData()
 
     return (
 
         <div className="h-[calc(100vh-60px)] w-full container mx-auto">
-            <div className={`md:grid grid-cols-[1fr,30rem]  w-full  h-full   ${selected !== null && "lg:grid-cols-[1fr,30rem,25rem]"}`}>
+            <div className={`md:grid grid-cols-[1fr,30rem]  w-full  h-full   `}>
                 <div className="h-full hidden md:block">
 
                     <img
@@ -136,78 +252,18 @@ const FindBus = () => {
 
                         </ol>
                     </nav>
-                    <AnimateText text={`Available Cars (${nHits})`} className="!text-2xl " />
-                    <AnimateText text={dayjs(new Date(querySearch.get("traveldate")))
-                    .format("dddd, MMMM D, YYYY")} className="!text-lg " />
-                    {/* <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5">
-                        {
-                            dateSortedOption.map((query) => <FilterButton
-                                name="quickdatesort"
-                                {...query} key={query} />)
-                        }
-
-                    </Scrollable> */}
-                    {
-
-                        seats?.map((arr, index) => {
-                            return (
-                                <BusDetail {...arr} key={index} />
-                            )
-                        })
-                    }
-                    <AnimatePresence>
-                        {
-                            selected !== null && (
-                                <motion.div
-                                    initial={
-                                        {
-                                            y: 10,
-                                            opacity: 0
-                                        }
-
-                                    }
-                                    animate={{
-                                        y: 0,
-                                        opacity: 1
-                                    }}
-                                    exit={{
-                                        y: 10,
-                                        opacity: 0
-                                    }}
-                                    transitions={{ duration: 2 }}
-
-                                    className="lg:hidden min-h-8
-    flex items-center justify-center mt-5 fixed left-0 bottom-8 w-full">
-                                    <LoadingButton onClick={Next}
-                                        className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none"
-                                    >
-                                        Next <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " />
-                                    </LoadingButton>
-
-                                </motion.div>
-                            )
-                        }
-                    </AnimatePresence>
-                </div>
-                <div className={`hidden overflow-hidden ${selected !== null && "lg:block px-4"} `} >
-                    <AnimateText text={"selected bus"} className="!text-3xl " />
-                    <motion.div
-                        key={selected}
-                        initial={{ y: 60, opacity: 0.5 }}
-                        animate={{ y: 0, opacity: 1 }}
-
+                    <Suspense
+                        fallback={<div>loading please wait </div>}
                     >
-                        <BusDetail {...bus} />
+                        <Await
+                            resolve={BusQuery}
+                            errorElement={<div>something went wrong</div>}>
+                            <RenderBusPage />
+                        </Await>
 
-                    </motion.div>
-                    <LoadingButton onClick={Next}
-                        className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none"
-                    >
-                        Next <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " />
-                    </LoadingButton>
+                    </Suspense>
                 </div>
             </div>
-
         </div>
     )
 }
