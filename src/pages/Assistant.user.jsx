@@ -11,7 +11,7 @@ import { AiOutlineArrowLeft } from 'react-icons/ai'
 import customFetch from '../utils/customFetch';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import LoadingButton from "../components/LoadingButton"
-const onLoadFailure = () => toast.error("Something went wrong", {
+const onLoadFailure = (errorMessage = null) => toast.error(errorMessage || "Something went wrong", {
     position: toast.POSITION.TOP_CENTER
 })
 const assistantQuery = {
@@ -26,7 +26,7 @@ export const loader = (queryClient) => async ({ request }) => {
     try {
         return await queryClient.ensureQueryData(assistantQuery)
     } catch (err) {
-        onLoadFailure()
+        onLoadFailure(err?.response?.data)
         console.log("this is the error message : ", err.response.data)
         return redirect(`/login?message=something went wrong try again later&from=${new URL(request.url).pathname}`);
     }
@@ -60,7 +60,7 @@ const Assist = () => {
         setLoading(true)
         e.preventDefault()
         try {
-          await customFetch.patch("/assistant", {
+            await customFetch.patch("/assistant", {
                 oldpassword: password1.current.value,
                 newpassword: password2.current.value,
                 confirmpassword: password3.current.value
