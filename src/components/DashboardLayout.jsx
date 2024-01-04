@@ -35,7 +35,8 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
     const navigate = useNavigate()
     const logoutUser = async () => {
         await customFetch.get('/auth/admin/logout');
-        queryClient.invalidateQueries();
+        // queryClient.invalidateQueries();
+        queryClient.removeQueries()
         navigate("/auth")
     };
 

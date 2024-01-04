@@ -25,6 +25,7 @@ import UiButton from "../components/UiButton"
 import customFetch from "../utils/customFetch"
 import SingleTicketErrorElement from "../components/SingleTicketErrorElement"
 import { useUserLayoutContext } from "../components/UserLayout"
+import LoadingButtonTimeOut from "../components/LoadingButtonTimeOut"
 // const wait = () => new Promise(r => setTimeout(() => { r() }, 10000))
 const wait = (ms = 5000) => new Promise((r) => setTimeout(() => {
     r()
@@ -430,7 +431,7 @@ lg:py-10
                 ${mail?.status == "sent" && "!text-orange-200"}
                 ${mail?.status == "recieved" && "!text-green-800"}
                 `}><span
-                        // className="text-green-500"
+                    // className="text-green-500"
                     >status: &nbsp;&nbsp;&nbsp;</span>{mail?.status || "n/a"}</p>
                 <Form method="post"
                 // replace
@@ -499,9 +500,12 @@ after:content-[''] after:w-full after:h-1 after:border-b  after:border-4 after:i
 
                     </ul>
                     {
-                        mail?.status != "recieved" && <LoadingButton className="!block !my-5 !mx-auto !px-8 !py-2.5">
+                        mail?.status != "recieved" && <LoadingButtonTimeOut
+                            duration={10}
+                            loading_text="Be Patient trying to fullfill your request ..."
+                            className="!block !my-5 !mx-auto !px-8 !py-2.5">
                             Validate
-                        </LoadingButton >
+                        </LoadingButtonTimeOut >
                     }
 
 

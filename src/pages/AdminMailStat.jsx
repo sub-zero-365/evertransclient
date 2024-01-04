@@ -35,7 +35,7 @@ const allMailsQuery = (params) => {
             'mails', searchValues
         ],
         queryFn: async () => {
-            const { data } = await customFetch.get('/mails', {
+            const { data } = await customFetch.get('/mails/admins/mails', {
                 params: searchValues
             });
             return data;

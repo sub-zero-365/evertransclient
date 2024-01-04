@@ -2,7 +2,7 @@ import UiButton from "./UiButton"
 import { useNavigation } from 'react-router-dom'
 const LoadingButton = ({ className, children, onClick, initialText }) => {
     const navigation = useNavigation()
-    const isPageLoading = navigation.state === "submitting"
+    const isPageLoading = navigation.state === "submitting";
 
     return (
         <UiButton

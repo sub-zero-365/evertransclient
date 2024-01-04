@@ -13,6 +13,7 @@ import customFetch from "../utils/customFetch"
 import UiButton from "../components/UiButton"
 import { BsCashCoin } from "react-icons/bs"
 import { MdOutlineWarehouse } from "react-icons/md"
+import LoadingButtonTimeOut from "../components/LoadingButtonTimeOut"
 export const loader = async () => {
     return null
 }
@@ -281,12 +282,14 @@ const MailingPreview = () => {
                 </Scrollable>
             </div>
 
-            <LoadingButton
+            <LoadingButtonTimeOut
+            duration={5000}
+            loading_text="trying to book mail has take longer than expected please wait..."
                 className="!w-[min(30rem,calc(100%-0.5rem))] !mx-auto !py-4 !text-lg
                 !rounded-none"
             >
                 <>CheckOut <AiOutlineArrowRight size={20} className="!inline-block -rotate-45 ml-2 " /></>
-            </LoadingButton>
+            </LoadingButtonTimeOut>
         </Form>
     )
 }

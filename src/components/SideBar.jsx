@@ -42,11 +42,11 @@ const SideBar = ({ isDarkThemeEnabled }) => {
         icon: <TiMessages size={20} />
         , to: "/dashboard/tickets?view=all&admin=true"
       },
-      {
-        name: "Mails",
-        icon: <BiMailSend size={20} />
-        , to: "/dashboard/mails?view=all&admin=true"
-      },
+      // {
+      //   name: "Mails",
+      //   icon: <BiMailSend size={20} />
+      //   , to: "/dashboard/mails?view=all&admin=true"
+      // },
       {
 
         name: "Employees",

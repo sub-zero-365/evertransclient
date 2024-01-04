@@ -1,11 +1,14 @@
 
 
-import { useSearchParams, Form, 
-redirect, useLoaderData, useActionData } from "react-router-dom"
+import {
+  useSearchParams, Form,
+  redirect, useLoaderData, useActionData
+} from "react-router-dom"
 import LoadingButton from "../components/LoadingButton";
 import { toast } from "react-toastify"
 import customFetch from "../utils/customFetch";
 import { Helmet } from 'react-helmet'
+import LoadingButtonTimeOut from "../components/LoadingButtonTimeOut";
 
 export const loader = async ({ request }) => {
   const params = Object.fromEntries([
@@ -13,10 +16,12 @@ export const loader = async ({ request }) => {
   ]);
   return (params?.message || null)
 }
+const wait = async (ms = 10000) => new Promise((r) => setTimeout(() => { r() }, ms))
 export const action = (queryClient) => async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
 
+  await wait()
   try {
     var from = data.from
     const res = await customFetch.post('/auth/login', data);
@@ -60,7 +65,7 @@ const Login = () => {
 
           <div className="md:w-8/12 lg:ml-6 lg:w-5/12">
             <Form method="post"
-            replace
+              replace
             >
               {errorMessageFromLoader && <p
                 className="text-rose-600 text-center "
@@ -186,13 +191,21 @@ const Login = () => {
 
                 className="text-rose-600 "
               >{errorMessageFromAction}</p>}
-
-              <LoadingButton
+              <LoadingButtonTimeOut
+                duration={5000}
                 className="!w-[min(30rem,calc(100%-0.5rem))] !mx-auto !py-4 !text-lg !rounded-sm"
                 type="submit"
+                initialText={"please wait login..."}
               >
                 Login
-              </LoadingButton>
+              </LoadingButtonTimeOut>
+              {/* <LoadingButton
+                className="!w-[min(30rem,calc(100%-0.5rem))] !mx-auto !py-4 !text-lg !rounded-sm"
+                type="submit"
+              // initialText={getbackhere}
+              >
+                Login
+              </LoadingButton> */}
 
 
 

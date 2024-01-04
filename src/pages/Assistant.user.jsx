@@ -54,7 +54,7 @@ const Assist = () => {
     })
 
 
-    const { assistant } = useQuery(assistantQuery).data
+    const { assistant } = useQuery(assistantQuery)?.data || {}//to prevent some errors cause by the loader function
 
     const handleChangePassWord = async (e) => {
         setLoading(true)

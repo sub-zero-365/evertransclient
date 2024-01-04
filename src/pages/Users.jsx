@@ -226,16 +226,24 @@ const Appointment = ({ skip, currentPage }) => {
                 {/* <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users?.length}</h2> */}
             </div>
             <div className="lg:flex items-start lg:mb-14 w-full  lg:px-10">
+            {/* {
+            user?.role !== "admin"&& */}
                 <div className={` flex-1 relative  text-xs mx-0   rounded-lg `}
                 >
                     <div className="flex  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow
                     bg-white dark:bg-slate-800 mx-4">
-                        <div className="flex-1">
-                            <Heading text="Add A New Employee" className="!mb-2 !font-black mt-0" />
+                        <div className="flex-1">{
+                        user?.role == "user"&&
+                        <Heading text="Add A New Employee" className="!mb-2 !pl-4 !font-black mt-0" />
+                        
+                        
+                        }
                             <p className="mb-3 text-sm  px-6">
                                 {user?.role == "admin" ? "Inorder to add new employes login as normal admin" : " Employees added help to book ticket and give more data"}
                             </p>
                         </div>
+                        {
+                        user?.role !== "admin"&&
                         <motion.div onClick={() => setIsOpen(c => !c)}
                             initial={{ x: "-50%" }}
                             animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
@@ -257,6 +265,7 @@ z-10  "
                                 <AiOutlinePlus size={30} color="#fff" className="" />
                             </div>
                         </motion.div>
+                        }
 
                     </div>
                     <Scrollable
@@ -301,6 +310,7 @@ z-10  "
                     }
                     {/* <LineChart chartData={userData} /> */}
                 </div>
+            {/* } */}
                 {/* 
 */}
 
@@ -349,7 +359,10 @@ z-10  "
                         <MdOutlineClose
                             classNae="text-sm" />
                     </span>
-                    <AnimateText text="add a new Employee " className='!text-lg' />
+                    {/* {user?.role !== "admin"&& */}
+                    
+                    <AnimateText text="add a new Employee " className='!text-lg !pl-2' />
+                    {/* } */}
                     <form
                         onSubmit={handleSubmit}
                         className='px-5'
@@ -415,7 +428,7 @@ z-10  "
 
 
 
-            <form className="px-4 md:px-6 my-5 max-w-2xl mx-auto"
+            <form className="px-4 !hidden md:px-6 my-5 max-w-2xl mx-auto"
                 onSubmit={handleSubmit}>
                 <div className="flex relative min-h-[40px]">
                     <div className="relative w-full">
@@ -496,7 +509,7 @@ dark:border-gray-600
                                             <th className="px-2 py-4  flex items-center justify-center">
                                                 {
 
-                                                    (index + 1) + (skip ?? 2) * ((currentPage ?? 2) - 1)
+                                                    (index + 1) + (skip ?? 0) * ((currentPage ?? 2) - 1)
 
                                                 }
                                             </th>
