@@ -31,7 +31,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import Assist from "./pages/Assistant.user"
-import { loader as findBusLoader } from "./pages/FindBus"
+import { ErrorFindBus, loader as findBusLoader } from "./pages/FindBus"
 import { loader as busSitLoader } from "./pages/BusSits"
 import { loader as checkOutLoader, action as checkOutAction } from './pages/CheckOutInfo'
 import { loader as loginLoader, action as loginAction } from './pages/Login'
@@ -264,6 +264,7 @@ const router = createBrowserRouter([
             ,
             path: "bus",
             loader: findBusLoader(queryClient),
+            errorElement: <ErrorFindBus />
 
           },
           {
@@ -705,6 +706,8 @@ const router = createBrowserRouter([
     element: <Assist />,
     loader: singleAssistantLoader(queryClient),
     action: logoutAction(queryClient),
+    errorElement: <ErrorElement
+    />,
     children: [
       {
         path: ":id",
