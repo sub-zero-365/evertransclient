@@ -21,7 +21,7 @@ export const action = (queryClient) => async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
 
-  await wait()
+  // await wait()
   try {
     var from = data.from
     const res = await customFetch.post('/auth/login', data);
