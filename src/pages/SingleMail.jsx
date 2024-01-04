@@ -501,7 +501,7 @@ after:content-[''] after:w-full after:h-1 after:border-b  after:border-4 after:i
                     </ul>
                     {
                         mail?.status != "recieved" && <LoadingButtonTimeOut
-                            duration={10}
+                            duration={5000}
                             loading_text="Be Patient trying to fullfill your request ..."
                             className="!block !my-5 !mx-auto !px-8 !py-2.5">
                             Validate
