@@ -6,7 +6,7 @@ import AnimateText from '../components/AnimateText'
 import { onErrorToast, onSuccessToast } from '../utils/toastpopup'
 
 
-import { useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 import { motion } from 'framer-motion'
 import { AiOutlineSetting } from 'react-icons/ai'
@@ -65,7 +65,7 @@ const style = {
 
 
 }
-
+const UserBoardLayoutContext = createContext()
 
 const Details = () => {
   const constraintsRef = useRef(null);
@@ -140,7 +140,7 @@ const Details = () => {
 
 
   }
-  const { startdate,enddate} = useGetdates("daterange")
+  const { startdate, enddate } = useGetdates("daterange")
 
   const [startDate, setStartDate] = useState(startdate);
   const [endDate, setEndDate] = useState(enddate);
@@ -311,7 +311,7 @@ const Details = () => {
   py-5 `}>
 
             <AnimateText text="Please enter ticket id to get and edit tickett" className='!text-lg' />
-            
+
             <form
               onSubmit={handleSubmit}
               className='px-5 '
@@ -391,8 +391,11 @@ const Details = () => {
 
 
   }
+  const [open, setOpen] = useState(false)
   return (
-    <>
+    <UserBoardLayoutContext.Provider value={{
+      open, setOpen
+    }}>
       <Helmet>
         <title>
           User Dashboard
@@ -1045,7 +1048,10 @@ py-5 `}>
 
                   onClick={() => {
                     const currentUserRole = user?.role;
-                    if (currentUserRole == "tickets") navigate("/user/stats")
+                    if (currentUserRole == "tickets") {
+                      setOpen(true)
+                      setIsOpen(false)
+                    }
                     else navigate("/user/stats/mails?createdBy=" + user?._id)
                   }}
                 >
@@ -1081,8 +1087,8 @@ py-5 `}>
 
 
       </div >
-    </>
+    </UserBoardLayoutContext.Provider>
   )
 }
-
+export const useUserBoardLayoutContext = () => useContext(UserBoardLayoutContext)
 export default Details

@@ -18,6 +18,7 @@ import {
 } from 'framer-motion'
 import dayjs from 'dayjs'
 import customFetch from "../utils/customFetch"
+import { ThreeDCardDemo } from '../components/3DEffect'
 // import { dateSortedOption } from '../utils/sortedOptions'
 // import FilterButton from '../components/FilterButton'
 const priceQuery = (params) => {
@@ -77,7 +78,7 @@ const RenderBusPage = () => {
                 }}
                 className={`${selected === _id ? "bg-blue-200  dark:bg-slate-950" : busType ? "bg-rose-100 dark:bg-slate-600" : "bg-white dark:bg-slate-800"}
                border gold:border-none dark:text-white pt-5 px-3 w-full mx-1 ease duration-700 transition-colors rounded-lg mb-4
-                dark:shadow-sm dark:shadow-black shadow shadow-white pb-5   min-h-[3rem] gold:bg-color_gold/25`}>
+                dark:shadow-sm dark:shadow-black  shadow shadow-white pb-5   min-h-[3rem] gold:bg-color_gold/25`}>
 
                 <h2 className='font-black !text-2xl capitalize leading-9 px-5 py-5'>
                     {bus?.bus}
@@ -111,15 +112,20 @@ const RenderBusPage = () => {
         <AnimateText text={`Available Cars (${nHits})`} className="!text-2xl " />
         <AnimateText text={dayjs(new Date(querySearch.get("traveldate")))
             .format("dddd, MMMM D, YYYY")} className="!text-lg " />
+            
 
-        {
+       <div className="flex flex-col gap-y-2">
+       {
 
-            seats?.map((arr, index) => {
-                return (
-                    <BusDetail {...arr} key={index} />
-                )
-            })
-        }
+seats?.map((arr, index) => {
+    return (
+        // <ThreeDCardDemo>
+            <BusDetail {...arr} key={index} />
+         /* </ThreeDCardDemo> */
+    )
+})
+}
+       </div>
         <AnimatePresence>
             {
                 selected !== null && (
@@ -155,16 +161,7 @@ const RenderBusPage = () => {
         </AnimatePresence>
         {/* </div> */}
         <div className={`hidden overflow-hidden ${selected !== null && "lg:block px-4"} `} >
-            {/* <AnimateText text={"selected bus"} className="!text-3xl " /> */}
-            {/* <motion.div
-                key={selected}
-                initial={{ y: 60, opacity: 0.5 }}
-                animate={{ y: 0, opacity: 1 }}
 
-            >
-                <BusDetail {...bus} />
-
-            </motion.div> */}
             <LoadingButton onClick={Next}
                 className="!w-[min(30rem,calc(100%-2.5rem))] !mx-auto !py-3.5 !text-lg !rounded-none"
             >
@@ -200,7 +197,7 @@ export const loader = (queryClient) => async ({ request }) => {
 export const ErrorFindBus = () => {
     const error = useRouteError();
     // error element when bus loader throws an error ..
-    
+
 
     return <div className='min-h-screen'>
         <div className='space-y-5'>

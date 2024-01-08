@@ -46,9 +46,23 @@ import {
 import { useFilter } from '../Hooks/FilterHooks'
 import SingleTicketErrorElement from '../components/SingleTicketErrorElement'
 import TicketDetail from '../components/TicketDetail'
+import Modal from "../pages/ShowBuses"
 import customFetch from '../utils/customFetch'
+import { useState } from 'react'
 import { sortTicketStatusOptions, sortedDateOptions } from "../utils/sortedOptions"
 import NoItemMatch from './NoItemMatch'
+// import { DropdownIndicator } from 'react-select/dist/declarations/src/components/indicators'
+import StaggeredDropDown from '../components/DropDown'
+// import { BarChart, LineChart, PieChart } from ''
+
+import {
+    BarChart,
+    LineChart,
+    PieChart
+} from '../components'
+import FilterButton from '../components/FilterButton'
+import { useUserBoardLayoutContext, useUserLayoutContext } from './UserBoard'
+import BubbleTextHover from '../components/BubbleText'
 let downloadbaseurl = null
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     downloadbaseurl = process.env.REACT_APP_LOCAL_URL
@@ -114,30 +128,115 @@ export const loader =
 
 
 const BookUi = () => {
+
     const params = Object.fromEntries([
         ...new URL(window.location.href).searchParams.entries(),
     ]);
     const isFetchingBooks = useIsFetching({ queryKey: ['tickets', params] })
-    const { handleFilterChange, handleChange } = useFilter()
+    const { handleChange } = useFilter()
     const [querySearch] = useSearchParams();
     const loaderBooks = useQuery(allTicketsQuery(params))?.data || {}
+    // const [open, setOpen] = useState(false)
+    const { open, setOpen } = useUserBoardLayoutContext()
+    const userData = {
+        labels: ["Active", "Inactive"],
+        datasets: [
+            {
+                label: "Number vs MailStatus",
+                // data: users?.map((v) => v.total)
+                data: [
+                    loaderBooks?.totalActiveTickets || 0,
+                    loaderBooks?.totalInActiveTickets || 0,
+                    //   totalRecievedMails,
+                ],
+                backgroundColor: ["red", "blue"]
+            },
+        ]
+
+    }
     return <>
         <div
             className='flex w-full md:pl-5 '
         >
+            <Modal isOpen={open}
+                setIsOpen={setOpen}
+                className={"!z-[2000] "}
+                className2={" lg:w-[min(calc(100%-40px),600px)] scrollto !max-h-[calc(100%-40px)] overflow-y-auto"}
+            >
+                <BubbleTextHover text={"6 Months Stats"} />
+                <StaggeredDropDown />
+
+                <div
+                    className="!max-w-4xl mx-auto  
+                    lg:px-5 "
+                >
+                    {
+                        loaderBooks?.monthlyApplications?.length > 1 && <>
+                            <div
+                            ></div>
+                            {
+                                querySearch.get("chartOption") == "pie" && <PieChart chartData={
+                                    {
+                                        labels: loaderBooks?.monthlyApplications?.map(({ date }) => date),
+                                        datasets: [
+                                            {
+                                                label: "Number vs MailStatus",
+                                                // data: users?.map((v) => v.total)
+                                                data: loaderBooks?.monthlyApplications?.map(({ count }) => count)
+                                                // backgroundColor: ["red", "blue", "green"]
+                                            },
+                                        ]
+                                    }
+                                } />
+                                ||
+                                <BarChart chartData={
+                                    {
+                                        labels: loaderBooks?.monthlyApplications?.map(({ date }) => date),
+                                        datasets: [
+                                            {
+                                                label: "Number vs MailStatus",
+                                                // data: users?.map((v) => v.total)
+                                                data: loaderBooks?.monthlyApplications?.map(({ count }) => count)
+                                                // backgroundColor: ["red", "blue", "green"]
+                                            },
+                                        ]
+                                    }
+                                } />
+
+                            }
+
+
+                        </>
+                    }
+
+                    {/* {
+                        userData && (
+                            querySearch.get("chartOption") == "line" && <LineChart chartData={userData} />
+                            ||
+
+                            querySearch.get("chartOption") == "bar" && <BarChart chartData={userData} /> ||
+                            querySearch.get("chartOption") == "pie" && <PieChart chartData={userData} />
+
+                        )
+                    } */}
+
+                </div>
+            
+       
+            </Modal>
             <div
                 className="flex-none md:w-[15rem] lg:w-[18rem] hidden md:block
 "
             >
                 {/* display the recent tickets when we have 2 or more tickets */}
-                {loaderBooks?.tickets?.length > 0 && <>
+                {loaderBooks?.tickets?.length > 0 ?<>
                     <Heading text={"Recent Ticket(2)"} className={"!text-center !mb-2"} />
                     {
                         loaderBooks?.tickets?.slice(0, 2).map((ticket, i) => <TicketDetail key={ticket._id}
                             {...ticket}
                         />)
                     }
-                </>}
+                </>:"you most work atleast two months to see this chart"}
 
             </div>
             <div className='flex-1'>

@@ -26,6 +26,7 @@ import customFetch from "../utils/customFetch"
 import SingleTicketErrorElement from "../components/SingleTicketErrorElement"
 import { useUserLayoutContext } from "../components/UserLayout"
 import LoadingButtonTimeOut from "../components/LoadingButtonTimeOut"
+import ImageLoader from "../components/ImageLoader"
 // const wait = () => new Promise(r => setTimeout(() => { r() }, 10000))
 const wait = (ms = 5000) => new Promise((r) => setTimeout(() => {
     r()
@@ -109,10 +110,10 @@ const MailTemplate = ({ url }) => {
     }, [actiondata])
     const ref = useRef(null);
     const isInView = useInView(ref)
-    const [isImageLoading, setIsImageLoading] = useState(true)
-    const handleLoadingImage = async (e) => {
-        setIsImageLoading(false)
-    }
+    // const [isImageLoading, setIsImageLoading] = useState(true)
+    // const handleLoadingImage = async (e) => {
+    //     setIsImageLoading(false)
+    // }
     useEffect(() => {
         if (isInView) {
             setIsOpen(true)
@@ -150,49 +151,8 @@ const MailTemplate = ({ url }) => {
                         />
                     </div>
                     {
-
                         mail?.imgUrl &&
-
-
-                        <div className="relative h-[15rem]">
-                            {
-                                isImageLoading && <div
-                                    className="absolute top-1/2 -translate-y-1/2 inset-0 bg-slate-500/25"
-                                >
-                                    <AnimatedText
-                                        text="loading image please wait.."
-                                        className="!text-3xl"
-                                    />
-                                </div>
-
-                            }
-
-                            <a
-                                href={mail?.imgUrl}
-                                target="_blank" s
-                                className="cursor-pointer  border "
-                            >
-
-                                <motion.img
-
-                                    loading="lazy"
-                                    onLoad={handleLoadingImage}
-                                    whileHover={{
-                                        scale: 0.9, transition: {
-                                            duration: 0.4
-                                        }
-                                    }}
-                                    className="max-w-sm mx-auto h-[15rem] object-cover w-full"
-                                    src={mail?.imgUrl}
-                                    alt="product image"
-
-                                />
-
-                            </a>
-
-                        </div>
-
-
+                        <ImageLoader imgUrl={mail?.imgUrl} />
                     }
 
                     <div className='flex items-center mb-5 mt-8  justify-center'>

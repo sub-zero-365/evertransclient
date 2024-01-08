@@ -1,12 +1,12 @@
 import herobg from '../Assets/images/herobg.jpeg';
 import AnimateText from './AnimateText';
-// import herooverlay from '../Assets/images/herooverlay.png'
+import herooverlay from '../Assets/images/herooverlay.png'
 import { motion } from "framer-motion";
 import { Link, NavLink } from 'react-router-dom';
 import UiButton from './UiButton';
 import Write from './Write';
 import { SiYourtraveldottv } from "react-icons/si";
-import { useUserLayoutContext } from './UserLayout';
+// import { useUserLayoutContext } from './UserLayout';
 import userRole from "../utils/userRole"
 const Hero = () => {
     // const { user } = useUserLayoutContext()
@@ -14,7 +14,9 @@ const Hero = () => {
 
     return (
         <div className=" h-[min(35rem,100vh)]-- mb-10 text-white relative group ">
-      
+      {/* <img src={herobg}
+      className="absolute inset-0 h-full w-full max-w-5xl mx-auto opacity-40"
+      /> */}
             <div
                 className='h-full 
                   bg-opacity-80 px-5 lg:p-20 sm:px-10  py-10 relative z-1 dark:bg-slate-700/80-- bg-[#1a1f6f]-- gold:bg-yellow-400/20--'

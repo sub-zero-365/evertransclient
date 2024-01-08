@@ -12,6 +12,7 @@ import { createContext, useMemo, useContext } from "react"
 import PageBtnContainer from "../components/PageBtnContainer"
 import SearchComponent from "../components/SearchBox"
 import NoItemMatch from "./NoItemMatch"
+import ClearFilter from "../components/ClearFilter"
 const allMailsQuery = (params) => {
   const { search, sort, page, quickdatesort, daterange } = params
   const searchValues = {
@@ -156,7 +157,16 @@ const Mails = () => {
       <div className="mb-5" />
 
       <SearchComponent />
-
+      <ClearFilter keys={[
+        "sort,newest",
+        "ticketStatus,all",
+        "search,*",
+        "daterange,*",
+        "boardingRange,*",
+        "limit,100",
+        "sort,newest",
+        "mailStatus,all"
+      ]} />
 
 
       <motion.div
