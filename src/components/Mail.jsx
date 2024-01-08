@@ -20,7 +20,7 @@ const Mail = ({ id, _id, collected,
     name, senderfullname, senderidcardnumber,
     senderphonenumber, recieverfullname,
     recieverphonenumber, recieveridcardnumber,
-    status
+    status, isadmin
 }) => {
     const createdDate = dayjs().format("MMM D, YYYY")
     return (
@@ -28,7 +28,7 @@ const Mail = ({ id, _id, collected,
             variants={scalevariants}
             whileHover="whileHover"
             className='shadow border-b px-4   mb-2 py-5'>
-            <Link to={"/user/mail/" + _id}
+            <Link to={isadmin ? "" : "/user/mail/" + _id}
                 preventScrollReset={true}
                 className='  '>
                 <div

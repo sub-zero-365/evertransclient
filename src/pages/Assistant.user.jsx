@@ -28,14 +28,14 @@ export const loader = (queryClient) => async ({ request }) => {
     } catch (err) {
         onLoadFailure(err?.response?.data)
         console.log("this is the error message : ", err.response.data)
-        return redirect(`/login?message=something went wrong try again later&from=${new URL(request.url).pathname}`);
+        return redirect(`/login?message=something went wrong try again later&from=${new URL(request.url).pathname}${(new URL(request.url).search)}`);
     }
 
 }
 
 export const action = (queryClient) => async ({ }) => {
     try {
-        await customFetch.get("/auth/assistant/logout");
+        await customFetch.get("/auth/logout");
         await queryClient.removeQueries()
         return redirect("/")
     } catch (err) {

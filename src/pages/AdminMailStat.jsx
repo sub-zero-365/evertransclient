@@ -21,6 +21,7 @@ import {
     usersRoleOptions
 } from "../utils/sortedOptions"
 import { useSearchParams } from "react-router-dom"
+import SearchComponent from '../components/SearchBox'
 const allMailsQuery = (params) => {
     const { search, sort, page, quickdatesort, createdBy } = params
     const searchValues = {
@@ -35,7 +36,7 @@ const allMailsQuery = (params) => {
             'mails', searchValues
         ],
         queryFn: async () => {
-            const { data } = await customFetch.get('/mails/admins/mails', {
+            const { data } = await customFetch.get('/mails/admin/mails', {
                 params: searchValues
             });
             return data;
@@ -43,6 +44,15 @@ const allMailsQuery = (params) => {
         // keepPreviousData: true
     };
 };
+export const loader =
+    (queryClient) =>
+        async ({ request }) => {
+            const params = Object.fromEntries([
+                ...new URL(request.url).searchParams.entries(),
+            ]);
+            await queryClient.ensureQueryData(allMailsQuery(params));
+            return { searchValues: { ...params } };
+        };
 const MailsStat = () => {
     // const [querySearch] = useSearchParams()
 
@@ -162,6 +172,8 @@ const MailsStat = () => {
                 <div
                     className='flex-1 lg:w-1/2'
                 >
+                {/* <SearchComponent /> */}
+                
                     <Scrollable
                         className="max-w-5xl mx-auto !mb-5 "
                     >
@@ -172,38 +184,11 @@ const MailsStat = () => {
                                 {...query} key={Math.random()} />)
                         }
                     </Scrollable>
-                    <Scrollable
-                        className="!items-stretch mx-auto !max-w-4xl !grid grid-cols-1 lg:!grid-cols-2 gap-y-6 !px-4 "
-                    >
-                        <AmountCount
-                            className="!bg-blue-400 !flex-none !mb-0"
-                            text="Total coset of all tickets"
-                            icon={<MdOutlinePriceChange />}
-                            amount={totalMailsSum} />
-                        <PercentageCard
-                            percent={pendingMailsPercentage}
-                            total={totalPendingMails}
-                            heading={"Pending"}
-                            price={pendingSum}
-                            stroke="red"
-                        />
-                        <PercentageCard
-                            heading={"Sent"}
-                            percent={sentMailsPercentage}
-                            total={totalSentMails}
-                            price={sentSum}
-                            stroke="blue"
-                        />
-                        <PercentageCard
-                            percent={recievedMailsPercentage}
-                            total={totalRecievedMails}
-                            price={recievedSum}
-                            heading={"Recieved"}
-                            stroke="green" />
-                    </Scrollable>
+             
 
                 </div>
             </div>
+            
 
             <Scrollable className="!justify-start !mt-5 scrollto  !max-w-full !w-fit !mx-auto px-4 pb-5">
 
@@ -243,6 +228,7 @@ const MailsStat = () => {
             >
                 {activeSearch?.map((mail) => <Mail key={mail._id}
                     {...mail}
+                    isadmin
                 />)}
                 {
                     nHits < 1 && <AnimatedText

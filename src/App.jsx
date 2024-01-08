@@ -65,6 +65,7 @@ import { loader as customerStatsloader } from "./pages/CustomerStats"
 import { loader as newSeatloader, action as newSeatAction } from "./pages/AddNewBusPage"
 import { loader as singleRecieptLoader } from "./pages/SingleReciept"
 import { action as addProductAction } from "./pages/AddProduct"
+import {loader as AdminMailsLoader} from "./pages/AdminMailStat"
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
 import Mailing from './pages/Mailing'
@@ -561,7 +562,7 @@ const router = createBrowserRouter([
         element: <Suspense fallback={<FallBack />}>
           <AdminMailStat />
         </Suspense>,
-        loader: mailsLoader(queryClient)
+        loader: AdminMailsLoader(queryClient)
       },
       {
         element:
@@ -719,17 +720,17 @@ const router = createBrowserRouter([
         loader: singleTicketLOader(queryClient),
 
       },
-      {
-        element:
-          <Suspense fallback={<FallBack />}>
-            <SingleMail />
-          </Suspense>
-        ,
-        path: "mail/:id",
-        loader: singleMailLoader(queryClient),
-        errorElement: <SingleTicketErrorElement />
+      // {
+      //   element:
+      //     <Suspense fallback={<FallBack />}>
+      //       <SingleMail />
+      //     </Suspense>
+      //   ,
+      //   path: "mail/:id",
+      //   loader: singleMailLoader(queryClient),
+      //   errorElement: <SingleTicketErrorElement />
 
-      },
+      // },
 
     ]
 

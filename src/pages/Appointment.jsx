@@ -44,6 +44,7 @@ import { sortedDateOptions, sortTicketStatusOptions, skipOptions, timeOptions } 
 import customFetch from '../utils/customFetch'
 import UiButton from '../components/UiButton';
 import { AreaChart } from '../components/AreaChart';
+import AnimatedText from '../components/AnimateText';
 
 const ticketsQuery = (params = {}) => {
     return ({
@@ -148,9 +149,13 @@ const Appointment = () => {
     return (
         <div className="pt-4 px-2 max-w-full overflow-x-auto select-none
         max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark" >
+            <AnimatedText
+                className='!text-6xl'
+                text="Ticket Stats"
+            />
             <EmptyModal
                 className="!z-[200]"
-                
+
                 className2={"!w-[min(calc(100%-40px),700px)] max-h-[calc(100%-2.5rem)] !rounded-none !overflow-y-auto"}
                 isOpen={toggle}
                 setIsOpen={setToggle}
@@ -228,7 +233,7 @@ const Appointment = () => {
                                 value="Cash In"
                             >
                                 <p>Bar Chart</p>
-                             
+
                             </UiButton>
                             <UiButton
                                 onClick={() => setChart("area")}
@@ -237,7 +242,7 @@ const Appointment = () => {
                                 value="CM"
                             >
                                 <p>Area Chart </p>
-                               
+
 
                             </UiButton>
                             <UiButton
@@ -247,7 +252,7 @@ const Appointment = () => {
                                 value="CM"
                             >
                                 <p>Pie Chart </p>
-                               
+
 
                             </UiButton>
 
@@ -289,6 +294,7 @@ z-10  "
             </motion.div>
 
             <div>
+
                 <div className="lg:flex items-start justify-start gap-4"
                 >
                     <div className="flex-1 w-full pt-10 lg:pt-0 container mx-auto">
@@ -433,7 +439,7 @@ z-10  "
                                     }
                                     className='!border-none !h-8 mt-0' />
                             </div>
-                      
+
                             <div>
 
                                 <Heading text={"N Column"} className="!text-[0.8rem] !pl-0 !mb-0 uppercase text-slate-400" />

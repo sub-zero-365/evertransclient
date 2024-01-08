@@ -32,8 +32,16 @@ export const action = (queryClient) => async ({ request }) => {
     if (role == "tickets") from = data.from || "/user"
     else if (role == "mails") from = data.from || "/user/mails"
     else if (role == "restaurants") from = data.from || "/restaurant"
-    else from = data.from || "/assistant"
-    return redirect(from, { replace: true })
+    else {
+    
+    const url=new URL(request.url).search
+    // alert(url)
+      from = data.from?data.from+url: "/assistant"
+      // alert(from)
+    return redirect(from)
+      
+    }
+    return redirect(from)
   } catch (error) {
     toast.error(error?.response?.data);
     return error?.response?.data || " something went wrong";
