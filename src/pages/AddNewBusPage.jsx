@@ -1,21 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import customFetch from "../utils/customFetch";
-import { useLoaderData, redirect, Form, Link } from "react-router-dom";
-import AnimatedText from "../components/AnimateText";
 import { useState } from "react";
-import { getBuses, getCities } from "../utils/ReactSelectFunction";
-import BusSelect from 'react-select/async'
+import { Form, Link, redirect, useLoaderData } from "react-router-dom";
+import { default as BusSelect, default as FromSelect, default as ToSelect } from 'react-select/async';
 import { Heading, Scrollable } from "../components";
-import FromSelect from 'react-select/async'
-import ToSelect from 'react-select/async'
+import AnimatedText from "../components/AnimateText";
 import UiButton from "../components/UiButton";
+import { getBuses, getCities } from "../utils/ReactSelectFunction";
+import customFetch from "../utils/customFetch";
 // import React from 'react'
-import { toast } from "react-toastify"
-import { style, components } from "../utils/reactselectOptionsStyles"
-import LoadingButton from "../components/LoadingButton";
-import BusCard from "../components/BusCard";
-import dayjs from "dayjs";
 import { MdOutlineClose } from "react-icons/md";
+import { toast } from "react-toastify";
+import LoadingButton from "../components/LoadingButton";
+import { style } from "../utils/reactselectOptionsStyles";
 
 const busQuery = params => ({
     queryKey: ["buses", { params }],
@@ -136,7 +132,7 @@ const AddNewBusPage = () => {
                     </span>
                     <Form method="post">
                         <AnimatedText
-                            text="Add A New Bus"
+                            text="Add A New Car"
                             className="!text-2xl !text-center"
                         />
                         <Scrollable className="!overflow-visible !flex-col !justify-center !items-center">
@@ -326,7 +322,7 @@ hover:rounded-lg`}
 
                             : <AnimatedText
                                 className="!text-4xl"
-                                text="OOps no Aailable Bus Today "
+                                text="OOps no Aailable Car Today "
                             />
                     }
 
