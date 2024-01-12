@@ -66,7 +66,7 @@ const AddNewBusPage = () => {
             className="max-w-7xl mx-auto py-10"
         >
             <AnimatedText
-                text={`Available Buses for ${searchValues.date}`}
+                text={`Available Cars for ${searchValues.date}`}
                 className="!text-4xl lg:!text-6xl"
             />
             <UiButton
