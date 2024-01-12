@@ -5,7 +5,7 @@ import {
 import "react-toastify/dist/ReactToastify.css"
 import axios from "axios"
 import { UserLayout, DashboardLayout, ProtectedRoute } from "./components";
-import RestaurantLayout from "./components"
+// import RestaurantLayout from "./components"
 import { Home, Auth, SingleTicket } from "./pages";
 import {
   RouterProvider,
@@ -313,26 +313,26 @@ const router = createBrowserRouter([
                 </Suspense>,
                 loader: mailsLoader(queryClient)
               },
-              {
-                element:
-                  <Suspense fallback={<FallBack />}>
-                    <RestaurantUserPage />
-                  </Suspense>
-                ,
-                path: "restaurant",
-                errorElement: <SingleTicketErrorElement />,
-                loader: restaurantuserloader(queryClient)
+              // {
+              //   element:
+              //     <Suspense fallback={<FallBack />}>
+              //       <RestaurantUserPage />
+              //     </Suspense>
+              //   ,
+              //   path: "restaurant",
+              //   errorElement: <SingleTicketErrorElement />,
+              //   loader: restaurantuserloader(queryClient)
 
-              },
+              // },
             ]
 
           },
-          {
-            path: "restaurant",
-            element: <Suspense>
-              <Restaurant />
-            </Suspense>
-          },
+          // {
+          //   path: "restaurant",
+          //   element: <Suspense>
+          //     <Restaurant />
+          //   </Suspense>
+          // },
           {
             path: "shopping-bag",
             element: <Suspense>
