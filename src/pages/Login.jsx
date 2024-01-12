@@ -28,18 +28,17 @@ export const action = (queryClient) => async ({ request }) => {
     queryClient.invalidateQueries();
     toast.success('Login successful');
     const role = res.data?.user?.role
-    console.log("this is the user role", role)
+    // alert(role)
+    // console.log("this is the user role", role)
     if (role == "tickets") from = data.from || "/user"
     else if (role == "mails") from = data.from || "/user/mails"
-    else if (role == "restaurants") from = data.from || "/restaurant"
+    // else if (role == "restaurants") from = data.from || "/restaurant"
     else {
-    
-    const url=new URL(request.url).search
-    // alert(url)
-      from = data.from?data.from+url: "/assistant"
-      // alert(from)
-    return redirect(from)
-      
+
+      const url = new URL(request.url).search
+      from = data.from ? data.from + url : "/assistant"
+      // return redirect(from)
+
     }
     return redirect(from)
   } catch (error) {
