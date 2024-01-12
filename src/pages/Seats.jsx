@@ -1,37 +1,21 @@
-import { CustomDatePicker, PanigationButton, Scrollable, TicketCounts } from "../components"
-import { AiOutlineSave } from "react-icons/ai"
-import { VscFolderActive } from 'react-icons/vsc'
-import { useState, useEffect, useRef } from "react"
-import { useNavigate, useParams, useLoaderData, Form } from 'react-router-dom'
-import { Heading } from '../components'
-import { useSearchParams, redirect } from 'react-router-dom'
-import {
-    timeOptions
-} from "../utils/sortedOptions"
+import { useRef, useState } from "react"
+import { Form, redirect, useLoaderData, useNavigate, useSearchParams } from 'react-router-dom'
+import { CustomDatePicker, Heading, PanigationButton, Scrollable } from "../components"
 // import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai"
-import dateFormater from '../utils/DateFormater'
 import ClearFilter from '../components/ClearFilter'
+import dateFormater from '../utils/DateFormater'
 
-import FromSelect from 'react-select/async'
-import ToSelect from 'react-select/async'
-import TimeSelect from "react-select"
-import { getCities } from "../utils/ReactSelectFunction"
-import { components, style } from "../utils/reactselectOptionsStyles"
-import DatePicker from 'react-datepicker';
-import { PlaceHolderLoader } from '../components'
-import { Helmet } from 'react-helmet'
-import customFetch from '../utils/customFetch'
 import {
     useQuery,
 } from '@tanstack/react-query'
 import { motion } from "framer-motion"
-import AnimateText from "../components/AnimateText"
-import UiButton from "../components/UiButton"
-import { MdOutlineClose } from "react-icons/md"
+import DatePicker from 'react-datepicker'
+import { Helmet } from 'react-helmet'
 import { AiOutlinePlus } from "react-icons/ai"
-import InputBox from "../components/InputBox"
-import LoadingButton from "../components/LoadingButton"
+import { PlaceHolderLoader } from '../components'
+import UiButton from "../components/UiButton"
 import EmptyModal from "../pages/ShowBuses"
+import customFetch from '../utils/customFetch'
 // import day from dayjs
 import dayjs from "dayjs"
 // import { useMemo } from "react"
@@ -156,7 +140,7 @@ const Seats = () => {
                     bg-white dark:bg-slate-800 mx-4">
                         <div className="flex-1">
                             <Heading text="hey you can add a new route " className="!mb-2 !font-black mt-0" />
-                            <p className="mb-3 text-sm  px-6">they more the route the more the buses</p>
+                            <p className="mb-3 text-sm  px-6">create a new route and add a car</p>
                         </div>
                         <motion.div onClick={() => setIsOpen(c => !c)}
                             initial={{ x: "-50%" }}
@@ -273,7 +257,7 @@ z-10  "
                                                     Departure Time
                                                 </th>
                                                 <th scope="col" className="px-3 py-3">
-                                                    Bus
+                                                    car_name
                                                 </th>
 
                                                 <th scope="col" className="px-3 py-3">
@@ -292,7 +276,6 @@ z-10  "
                                                     to,
                                                     bus,
                                                     traveldate,
-                                                    traveltime,
                                                     _id
                                                 }, index) => (
                                                     <tr key={index}
