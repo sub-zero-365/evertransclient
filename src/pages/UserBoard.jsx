@@ -844,7 +844,7 @@ z-10  "
               <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
               <h4 className='text-sm text-slate-500 font-medium '>{user?.phone || "n/a"}</h4>
               <UiButton
-                name="Update Password" className="!mx-auto !rounded-lg !mt-2 !bg-blue-700"
+                name="Update Password" className="!mx-auto !hidden !rounded-lg !mt-2 !bg-blue-700"
                 onClick={() => {
                   setIsOpen(true)
                 }} />
