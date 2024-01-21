@@ -1,5 +1,5 @@
 
-import { Outlet, useNavigate, useLocation, Link, redirect, Form } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation, Link, redirect, Form, useSubmit } from 'react-router-dom';
 import { Heading } from '../components';
 import UiButton from '../components/UiButton';
 import { useState, useEffect, useRef } from 'react'
@@ -11,13 +11,14 @@ import { AiOutlineArrowLeft } from 'react-icons/ai'
 import customFetch from '../utils/customFetch';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import LoadingButton from "../components/LoadingButton"
+import { USER_ROLES } from '../utils/roles';
 const onLoadFailure = (errorMessage = null) => toast.error(errorMessage || "Something went wrong", {
     position: toast.POSITION.TOP_CENTER
 })
 const assistantQuery = {
     queryKey: ["assistant"],
     queryFn: async () => {
-        const res = await customFetch.get("/assistant/current-user");
+        const res = await customFetch.get("/users/current-user");
         return res.data
     }
 
@@ -28,7 +29,7 @@ export const loader = (queryClient) => async ({ request }) => {
     } catch (err) {
         onLoadFailure(err?.response?.data)
         console.log("this is the error message : ", err.response.data)
-        return redirect(`/login?message=something went wrong try again later&from=${new URL(request.url).pathname}${(new URL(request.url).search)}`);
+        return redirect(`/login?message=something went wrong try again later&from=${new URL(request.url).pathname}`);
     }
 
 }
@@ -43,7 +44,12 @@ export const action = (queryClient) => async ({ }) => {
         return err
     }
 }
+
+
 const Assist = () => {
+    const submit = useSubmit();
+
+    const navigate = useNavigate()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const password1 = useRef(null);
@@ -54,8 +60,24 @@ const Assist = () => {
     })
 
 
-    const { assistant } = useQuery(assistantQuery)?.data || {}//to prevent some errors cause by the loader function
+    const { user: assistant } = useQuery(assistantQuery)?.data || { user: null }//to prevent some errors cause by the loader function
+    useEffect(() => {
+        if (assistant?.role !== "scanner") {
+            const role = assistant.role
+          
+            if (role === USER_ROLES.admin || role === USER_ROLES.sub_admin || role === USER_ROLES.ticketer) {
+                toast.error("Incorrect Credentials to access this route!!", {
+                    position: toast.POSITION.TOP_CENTER
+                })
+                navigate(`/`)
+                return
+            }
 
+        }
+    },
+        [
+            assistant?.role
+        ])
     const handleChangePassWord = async (e) => {
         setLoading(true)
         e.preventDefault()
@@ -405,6 +427,53 @@ const Assist = () => {
                                     className="!text-center !pl-0"
                                 />
                             </>
+                            <div className='flex justify-center max-w-sm mx-auto gap-x-3 items-center'>
+                                <span className='flex-1 h-[1px] bg-gray-800'></span>
+                                <p className='text-xl font-bold'>OR</p>
+                                <span className='flex-1 h-[1px] bg-gray-800'></span>
+                            </div>
+                            <h1 className='text-xl leading-4 tracking-tight mt-6 text-center '>Enter the <span className='text-gray-600 font-black text-2xl'>ID</span> of the ticket below </h1>
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault()
+                                    const formData = new FormData(e.target)
+                                    const id = formData.get("id");
+                                    navigate(`${id}`)
+                                }}
+                                className="max-w-3xl mb-3 px-4 w-full mx-auto">
+                                <div className="relative">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="absolute top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                        />
+                                    </svg>
+                                    <input
+
+                                        id='id'
+                                        name='id'
+                                        className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-indigo-600"
+                                    />
+                                </div>
+                                <UiButton
+                                    type="submit"
+                                    className="!px-10 !py-3.5 !mt-6 !font-semibold
+                                !mx-auto !text-lg !bg-green-800
+                                "
+                                >
+                                    Check Status
+                                </UiButton>
+                            </form>
+
+
                         </div>
                     )
                 }

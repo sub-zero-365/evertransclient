@@ -213,7 +213,8 @@ const SideBar = ({ isDarkThemeEnabled }) => {
                 end
                 key={index}
                 onClick={toggleSideBar}
-                className={({ isActive }) => (isActive ? "!bg-violet-500 dark:shadow-black   !text-white !text-semibold flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md  dark:!shadow-sm ring-offset-slate-200 mb-2 rounded-md" : defaultClasses)}
+                className={({ isActive }) => (isActive ?
+                "!bg-violet-500 dark:shadow-black   !text-white !text-semibold flex text-medium hover:bg-violet-500 dark:hover:bg-violet-900 transition-colors duration-300 py-2 px-3 mt-4 shadow-md  dark:!shadow-sm ring-offset-slate-200 mb-2 rounded-md" : defaultClasses)}
               >
 
                 {icon}
@@ -223,7 +224,7 @@ const SideBar = ({ isDarkThemeEnabled }) => {
         }
       </div>
       <ThemeToggler
-        className={`${view && "!hidden"} md:!hidden`}
+        className={`${view && "!hidden"} sm:!hidden`}
         isDarkThemeEnabled={isDarkThemeEnabled}
       />
       {/*  */}

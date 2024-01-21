@@ -44,6 +44,8 @@ import InputBox from '../components/InputBox'
 import customFetch from '../utils/customFetch'
 import useGetdates from '../utils/getdates'
 import ShowBuses from './ShowBuses'
+import { USER_ROLES } from '../utils/roles'
+import LogOut from '../components/LogOut'
 
 // import { CiLogout } from 'react-icons/ci'
 const seats = []
@@ -70,9 +72,9 @@ const UserBoardLayoutContext = createContext()
 const Details = () => {
   const constraintsRef = useRef(null);
   // const [active, setActive] = useState(false)
-  const { logoutUser } = useUserLayoutContext()
+  const { setUser } = useUserLayoutContext()
   const location = useLocation()
-  const isInUserPage = location.pathname?.slice(1) == "user"
+  // const isInUserPage = location.pathname?.slice(1) == "user"
   // console.log("location path", location.pathname,isInUserPage)
   const [querySearch] = useSearchParams();
   const { handleFilterChange } = useFilter()
@@ -285,7 +287,7 @@ const Details = () => {
 
   const SearchQueryUser = ({ user }) => {
     const role = user?.role
-    if (role === "tickets") {
+    if (role === USER_ROLES.ticketer) {
       return (
 
         <div className="mt-10  md:mb-5">
@@ -342,8 +344,8 @@ const Details = () => {
         </div>
       )
     }
-    if (role === "mails" || role === "restaurants") {
-      const whichuserlogin = role == "mails"
+    if (role === USER_ROLES.mailer || role === USER_ROLES.restaurant_user) {
+      const whichuserlogin = role == USER_ROLES.mailer
       return (
         <div>
           <AnimateText text="Please enter Mailing Id to get Mail"
@@ -1048,7 +1050,7 @@ py-5 `}>
 
                   onClick={() => {
                     const currentUserRole = user?.role;
-                    if (currentUserRole == "tickets") {
+                    if (currentUserRole == USER_ROLES.ticketer) {
                       setOpen(true)
                       setIsOpen(false)
                     }
@@ -1061,8 +1063,11 @@ py-5 `}>
                 </div>
 
               </UiButton>
+              {/* <LogOut
 
-              <UiButton
+                setUser={setUser}
+              /> */}
+              {/* <UiButton
                 onClick={() => logoutUser()}
                 className="  block w-[min(calc(100%-20px),20rem)]
                 !mx-auto !py-2.5 !my-5  !text-lg !rounded-xl  !bg-red-400"
@@ -1074,7 +1079,7 @@ py-5 `}>
                   /> LogOut
                 </div>
 
-              </UiButton>
+              </UiButton> */}
 
 
             </div>

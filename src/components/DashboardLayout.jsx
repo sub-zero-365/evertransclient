@@ -16,7 +16,11 @@ import Header from './Header'
 const adminQuery = {
     queryKey: ["admin"],
     queryFn: async () => {
-        const res = await customFetch.get("/admin/user")
+        const res = await customFetch.get("/users/current-user", {
+            params: {
+                higherorderuser: "higherorderuser"
+            }
+        })
         return res.data
     }, staleTime: Infinity
 }
@@ -25,6 +29,7 @@ export const loader = (queryClient) => async ({ request }) => {
     try {
         return await queryClient.ensureQueryData(adminQuery);
     } catch (error) {
+        if (error?.response?.status == 423) return redirect("/suspended")
         return redirect(`/auth?message=something went wrong try again here&from=${new URL(request.url).pathname}`);
     }
 }
@@ -34,13 +39,13 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
     const queryClient = useQueryClient()
     const navigate = useNavigate()
     const logoutUser = async () => {
-        await customFetch.get('/auth/admin/logout');
-        // queryClient.invalidateQueries();
+        await customFetch.get('/auth/logout');
         queryClient.removeQueries()
         navigate("/auth")
     };
 
     const [isAuthError, setIsAuthError] = useState(false);
+    const [isBlockError, setIsBlockError] = useState(false);
 
 
 
@@ -65,20 +70,28 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
     customFetch.interceptors.response.use(
         (response) => {
             // console.log("this is the response before the request is being sent ", response)
-        
+
             return response;
         },
         (error) => {
             if (error?.response?.status === 401) {
                 setIsAuthError(true);
             }
+            if (error?.response?.status === 423) {
+                setIsBlockError(error?.response?.data);
+            }
             return Promise.reject(error);
         }
     );
     useEffect(() => {
-        if (!isAuthError) return;
-        logoutUser();
-    }, [isAuthError]);
+        if (isAuthError) {
+            logoutUser(isAuthError);
+        }
+        if (isBlockError) {
+            navigate("/suspended")
+            // logoutUser(isBlockError);
+        }
+    }, [isAuthError, isBlockError]);
     return (
         <DashBoardContext.Provider value={{
             user,
@@ -90,15 +103,15 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
             logoutUser
         }}>
             <OnlineDetector />
-            <Header 
-            
-            isDarkThemeEnabled={isDarkThemeEnabled}
+            <Header
+
+                isDarkThemeEnabled={isDarkThemeEnabled}
             />
             <div className="overflow-x-hidden xl:container mx-auto">
 
                 <div className={`flex ${view && "lg:flex-row-reverse"} ease duration-500 transition-all`}>
                     <SideBar
-                    isDarkThemeEnabled={isDarkThemeEnabled}
+                        isDarkThemeEnabled={isDarkThemeEnabled}
                     />
                     {
                         isPageLoading ? <AppSpinner /> : <Outlet

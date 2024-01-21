@@ -1,80 +1,64 @@
-import { useState, useEffect, createContext, useContext, useRef } from 'react'
-import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
-import { IoMdClose } from 'react-icons/io'
-import { BsBag, BsMoonStars, BsSearch, BsSun } from 'react-icons/bs';
-import { useNavigate, NavLink, Link } from 'react-router-dom';
-import { useravatar } from '../Assets/images';
-import logo from "../Assets/images/logo.png"
-import logotext from "../Assets/images/logotext.png"
-import { useSelector, useDispatch } from 'react-redux'
 import { AnimatePresence, motion } from "framer-motion";
-import Rounded from './Rounded';
-import { useUserLayoutContext } from './UserLayout';
-import UiButton from "./UiButton"
-import { useQueryClient } from "@tanstack/react-query";
-import customFetch from "../utils/customFetch";
-
-import { clearUser } from '../actions/User'
-import React from "react"
-import SearchResultContainer from './SearchResult';
-import SeachContainer from './SearchContainer';
-// import { useQuery } from "@tanstack/react-query"
+import { default as React, createContext, useContext, useEffect, useRef, useState } from "react";
+import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
+import { BsBag, BsSearch } from 'react-icons/bs';
+import { IoMdClose } from 'react-icons/io';
+import { useSelector } from 'react-redux';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useravatar } from '../Assets/images';
+import logotext from "../Assets/images/logotext.png";
+import useOutsideAlerter from "../Hooks/click-outside-hook";
+import { USER_ROLES } from "../utils/roles";
 import useToggleCartSlider from '../utils/useToggleCartSlider';
+import userRole from "../utils/userRole";
+import Rounded from './Rounded';
+import SeachContainer from './SearchContainer';
+import SearchResultContainer from './SearchResult';
 import ThemeToggler from './ThemeToggler';
-import useOutsideAlerter from "../Hooks/click-outside-hook"
-import userRole from "../utils/userRole"
-import {
-    useQuery
-} from '@tanstack/react-query'
+import { useUserLayoutContext } from './UserLayout';
+import LogOut from "./LogOut";
+// } from '@tanstack/react-query'
+// const allRecieptsQuery = (params = {}, enable = false) => {
+//     return (
+//         {
+//             queryKey: ["reciepts", {
+//                 ...params
+//             }],
+//             queryFn: async () => {
+//                 const { data } = await customFetch.get('/reciepts', {
+
+//                     ...params,
+//                     limits: 5
+//                     ,
+//                 });
+//                 return data;
+//             },
+//             enable: enable
+
+
+//         }
+//     )
+
+// }
+
 const SearchContext = createContext()
-const allRecieptsQuery = (params = {}, enable = false) => {
-    return (
-        {
-            queryKey: ["reciepts", {
-                ...params
-            }],
-            queryFn: async () => {
-                const { data } = await customFetch.get('/reciepts', {
-
-                    ...params,
-                    limits: 5
-                    ,
-                });
-                return data;
-            },
-            enable: enable
-
-
-        }
-    )
-
-}
-
 const Navbar = ({ }) => {
     var redirectLink = userRole()
     const navRef = useRef(null)
     const { toggle: outside } = useOutsideAlerter(navRef)
     const [toggle, setToggle] = useState(false)
     const { open } = useToggleCartSlider()
-    const queryClient = useQueryClient()
-    const disatch = useDispatch()
-    const { isDarkThemeEnabled, user } = useUserLayoutContext()
+    // const queryClient = useQueryClient()
+    // const disatch = useDispatch()
+    const { isDarkThemeEnabled, user, setUser } = useUserLayoutContext()
     const [search, setSeach] = useState("")
 
-    const isLogin = user?.fullname
+    const isLogin = user?._id ? true : false
     const navigate = useNavigate()
-    const logoutUser = async () => {
-        await customFetch.get('/auth/logout');
-        // queryClient.invalidateQueries();
-        queryClient.removeQueries()
-        navigate("/login")
-    };
-    const gotoLoginPage = () => {
-        localStorage.removeItem("token")
-        setIsOpen(false)
-        disatch(clearUser())
-        navigate("/login")
 
+    const gotoLoginPage = () => {
+        setIsOpen(false)
+        navigate("/login")
     }
     const gotoRegisterPage = () => {
         navigate("/register")
@@ -127,9 +111,9 @@ const Navbar = ({ }) => {
             setIsCartEmpty(false)
         }
     }, [totalAmount])
-    const { data, isPreviousData } =
-        useQuery(allRecieptsQuery({ search },
-            user?.role === "restaurants"))
+    const { data, isPreviousData } = {}
+    // useQuery(allRecieptsQuery({ search },
+    //     user?.role === "restaurants"))
 
     // console.log("this is the search data", data)
     const container = {
@@ -168,6 +152,7 @@ const Navbar = ({ }) => {
                             alt="logotext"
                         />
                     </Link>
+                    {/* bigger screen */}
                     <ul className="hidden flex-col lg:flex-row  lg:flex items-center">
                         <motion.li
                             initial={false}
@@ -176,57 +161,26 @@ const Navbar = ({ }) => {
                                 className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                             >Our Services</NavLink></motion.li>
                         {
-                            isLogin &&
-                            (user?.role === "tickets" ?
-                                <motion.li whileHover={{ scaleX: 1.2 }} className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
-                                    to="/booking"
-                                    className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                                >Book A Seat</NavLink></motion.li> :
-                                <motion.li whileHover={{ scaleX: 1.2 }} className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
-                                    to="/mailing"
-                                    className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                                >Mail Here</NavLink></motion.li>
-                            )
-
-                        }
-
-                        {/* <div className='group relative'>
-                        <h1
-                            className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300'
-                        >Book Services</h1>
-
-                        <div
-                            className='
-absolute
-top-[calc(100%+0.3rem)] 
-translate-y-5
-invisible 
-opacity-0 group-hover:opacity-100
-group-hover:visible
-group-hover:translate-y-0
-transition-all
-duration-200
-py-2
-min-w-fit
-bg-color_light  dark:bg-color_dark
-px-5
-left-0
--translate-x-[calc(calc(100%-100px)/2)]
-rounded-sm
-shadow
-'
-                        >
-                            <motion.li whileHover={{ scaleX: 1.2 }} className='links-item min-w-full  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                            isLogin && user?.role === USER_ROLES.ticketer &&
+                            <motion.li whileHover={{ scaleX: 1.2 }} className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                                 to="/booking"
                                 className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
-                            >Car Here</NavLink></motion.li>
-                            <motion.li whileHover={{ scaleX: 1.2 }} className='links-item min-w-full  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                            >Book A Seat</NavLink></motion.li>
+                        }
+
+
+                        {
+                            isLogin &&
+
+                            user?.role === USER_ROLES.mailer &&
+                            <motion.li whileHover={{ scaleX: 1.2 }} className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                                 to="/mailing"
                                 className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                             >Mail Here</NavLink></motion.li>
-                        </div>
 
-                    </div> */}
+
+                        }
+
 
 
 
@@ -240,7 +194,7 @@ shadow
                         >Contact Us</NavLink></li>
 
                         {
-                            user?.role == "tickets" && <li className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
+                            user?.role == USER_ROLES.ticketer && <li className='links-item  border-b-2- mx-4 md:mx-2 my-4 md:my-0 text-lg hover:cursor-pointer hover:text-blue-600 transition-colors duration-300' ><NavLink
                                 to="/seat"
                                 className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                             >Boarderaux</NavLink></li>
@@ -273,7 +227,7 @@ shadow
 
                         {
                             isLogin &&
-                            (user?.role === "tickets" ?
+                                user?.role === USER_ROLES.ticketer ?
 
                                 <motion.li
                                     initial={false}
@@ -293,7 +247,7 @@ shadow
                                         to="/mailing"
                                         className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                                     >Mail Service</NavLink></motion.li>
-                            )
+
 
                         }
 
@@ -318,7 +272,7 @@ shadow
                                 className={({ isActive, isPending }) => isPending ? "text-blue-500" : isActive ? "text-blue-500" : ""}
                             >Contact Us</NavLink></motion.li>
                         {
-                            user?.role == "tickets" &&
+                            user?.role == USER_ROLES.ticketer &&
                             <motion.li
                                 initial={false}
                                 animate={{ x: isOpen ? 0 : -1000 }}
@@ -395,19 +349,6 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                         </button>
                                     </div>
                                     ) : null
-                                // <UiButton
-                                //     onClick={async (e) => {
-                                //         e.stopPropagation()
-                                //         await logoutUser()
-                                //     }}
-                                //     className="!bg-rose-800 !py-3.5 !rounded-none !text-lg !mx-auto !w-[min(250px,calc(100%-0.5rem))] mb-5  "
-                                // >Logout: <span
-                                //     className="!text-slate-800 uppercase !font-medium !ml-0.5 pl-4"
-                                // >{
-
-                                //             // trying to prevent overflow when the name exceed 8 characters long
-                                //             user?.fullname?.length > 8 ?
-                                //                 user?.fullname?.slice(0, 8) + " ...?" : user?.fullname}</span> </UiButton>
                             }
 
                         </div>
@@ -455,7 +396,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                             </Rounded>
                         }
                         {
-                            user?.role == "restaurants" &&
+                            user?.role == USER_ROLES.restaurant_user &&
                             <Rounded>
 
                                 <motion.div className='relative'
@@ -519,13 +460,12 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
                                             </NavLink>
 
+                                            <LogOut
+                                             dont_show_logout_icon
+                                                setUser={setUser}
+                                                className={"xl:!block hidden !pt-1 !pb-1"} />
                                         </div>
 
-                                        <UiButton
-                                            className="bg-red-400 !hidden xl:block "
-                                            onClick={() => logoutUser()}>
-                                            Logout
-                                        </UiButton>
                                     </>
 
                                 ) : (
@@ -596,30 +536,39 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                         </Rounded>
 
                         {
-                            isLogin && <NavLink
-                                to={redirectLink}
-                                // relative='p'
-                                end
-                                className={({ isActive, isPending }) => isPending ? "text-blue-500 pending" : isActive ? "text-blue-500" : ""}
-                            >
-                                {({ isPending,
-                                    isActive }) => (
-                                    <Rounded className={` !flex-none  !relative `}>
-                                        {isPending ? <div class="lds-roller "
-                                            style={{
-                                                height: "40px",
-                                                width: "40px"
-                                            }}
-                                        >
-                                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-                                            :
-                                            <img src={useravatar} alt="user " className={`w-[40px] h-[40px] rounded-full shadow-2xl ${isActive && ""} `} onClick={gotoUserPage} />
+                            isLogin &&
+                            <>
 
-                                        }
-                                    </Rounded>
-                                )}
+                                <NavLink
+                                    to={redirectLink}
+                                    // relative='p'
+                                    end
+                                    className={({ isActive, isPending }) => isPending ? "text-blue-500 pending" : isActive ? "text-blue-500" : ""}
+                                >
+                                    {({ isPending,
+                                        isActive }) => (
+                                        <Rounded className={` !flex-none  !relative `}>
+                                            {isPending ? <div class="lds-roller "
+                                                style={{
+                                                    height: "40px",
+                                                    width: "40px"
+                                                }}
+                                            >
+                                                <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                                                :
+                                                <img src={useravatar} alt="user " className={`w-[40px] h-[40px] rounded-full shadow-2xl ${isActive && ""} `} onClick={gotoUserPage} />
 
-                            </NavLink>
+                                            }
+                                        </Rounded>
+                                    )}
+
+                                </NavLink>
+                                <LogOut
+                                    dont_show_logout_icon
+                                    setUser={setUser}
+                                    className={"block !w-fit sm:!hidden "} />
+
+                            </>
                         }
 
                         <div className="md:hidden h-[50px] w-[50px] rounded-full flex items-center justify-center hover:bg-slate-300" onClick={toggleNavBar}>

@@ -1,26 +1,25 @@
-import React, { useState, useRef } from 'react'
-import { onSuccessToast, onErrorToast, onWarningToast } from '../utils/toastpopup'
-import { LineChart, NextButton, PieChart, PrevButton, ToggleSwitch } from '../components'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import React, { useRef, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import InputBox from '../components/InputBox'
-import { Heading, PanigationButton } from '../components'
-import InputForm from '../components/InputForm'
-import UiButton, { UiButtonDanger } from '../components/UiButton'
-import GreetingText from '../components/GreetingText'
 import { SlOptions } from 'react-icons/sl'
-import dateFormater from '../utils/DateFormater'
-import ShowBuses from './ShowBuses'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import { Swiper } from 'swiper/react'
-import { SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Heading, NextButton, PanigationButton, PieChart, PrevButton, ToggleSwitch } from '../components'
+import GreetingText from '../components/GreetingText'
+import InputBox from '../components/InputBox'
+import InputForm from '../components/InputForm'
+import UiButton from '../components/UiButton'
+import dateFormater from '../utils/DateFormater'
 import customFetch from '../utils/customFetch'
+import { onErrorToast, onSuccessToast } from '../utils/toastpopup'
+import ShowBuses from './ShowBuses'
+import { USER_ROLES } from '../utils/roles'
+import RestrictUser from '../components/RestrictUser'
 
 const securityQuery = {
-    queryKey: ["alladmins"],
+    queryKey: ["all_subadmins"],
     queryFn: async () => {
-        const res = await customFetch.get("/admin/alladmins")
+        const res = await customFetch.get("/users/security")
         return res.data
     }
 }
@@ -44,19 +43,15 @@ const SecurityPage = ({ currentPage, skip }) => {
     const password2 = useRef(null)
     const setSelectedNull = () => setSelected(null)
     const { users, numberOfPages } = useQuery(securityQuery).data
-   
+
     const handleCreateNewAdmin = async () => {
-        return customFetch.post("/auth/admin/register", {
+        return customFetch.post("/auth/register", {
             phone: phone.current?.value,
             fullname: fullname.current?.value,
             password: password.current?.value,
-            password2: password2.current?.value
-        },
-            {
-                headers: {
-                    'Authorization': "makingmoney " + token
-                },
-            })
+            password2: password2.current?.value,
+            role: USER_ROLES.sub_admin
+        },)
     }
 
     const addAdmin = useMutation(handleCreateNewAdmin, {
@@ -68,7 +63,7 @@ const SecurityPage = ({ currentPage, skip }) => {
             onErrorToast((error.response.data ?? "Oops something bad happen try again later !!"))
         },
         onSettled: () => {
-            queryClient.invalidateQueries("alladmins")
+            queryClient.invalidateQueries("all_subadmins")
         }
     })
     return (
@@ -89,15 +84,13 @@ const SecurityPage = ({ currentPage, skip }) => {
                     <div>
                         <Heading text="Account Actions" className="!mb-0 !text-sm  !text-center" />
                         <Heading text={`${selected?.fullname ?? ""}`} className="!mb-3  !text-lg !font-black uppercase !text-center" />
-                        <ToggleSwitch state
-                            disabled
-                            message="account is frozen"
-                            initialMessage="Freeze User Account"
+                        <RestrictUser
+                            id={selected?._id}
                         />
                         <div className="mb-5" />
-                        <UiButton name="Confirm"
+                        {/* <UiButton name="Confirm"
                             className={"!w-[min(300px,calc(100%-30px))] !mx-auto !bg-green-800 !pb-2.5 pt-1.5"}
-                        />
+                        /> */}
                     </div>
                 </ShowBuses>
                 <Heading text={"Security"} className={""} />

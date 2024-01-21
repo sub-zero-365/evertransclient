@@ -6,27 +6,25 @@ import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { BsChevronCompactUp } from "react-icons/bs"
 import { GrCircleInformation } from "react-icons/gr"
 import QRCode from "react-qr-code"
+import { USER_ROLES } from "../utils/roles";
+
 import {
+    Await,
     Form,
+    defer,
+    useActionData,
     useLoaderData,
     useNavigate,
-    defer
-    , Await,
-    useAsyncValue,
-    useParams,
-    redirect,
-    useActionData
+    useParams
 } from "react-router-dom"
 import { toast } from "react-toastify"
 import { Heading, Rounded } from "../components"
-import AnimatedText from "../components/AnimateText"
-import LoadingButton from "../components/LoadingButton"
-import UiButton from "../components/UiButton"
-import customFetch from "../utils/customFetch"
-import SingleTicketErrorElement from "../components/SingleTicketErrorElement"
-import { useUserLayoutContext } from "../components/UserLayout"
-import LoadingButtonTimeOut from "../components/LoadingButtonTimeOut"
 import ImageLoader from "../components/ImageLoader"
+import LoadingButtonTimeOut from "../components/LoadingButtonTimeOut"
+import SingleTicketErrorElement from "../components/SingleTicketErrorElement"
+import UiButton from "../components/UiButton"
+import { useUserLayoutContext } from "../components/UserLayout"
+import customFetch from "../utils/customFetch"
 // const wait = () => new Promise(r => setTimeout(() => { r() }, 10000))
 const wait = (ms = 5000) => new Promise((r) => setTimeout(() => {
     r()
@@ -91,7 +89,7 @@ export const loader = (queryClient) => async ({ request, params }) => {
 
 const MailTemplate = ({ url }) => {
     const id = useParams();
-    const { user } = useUserLayoutContext()
+    const { user } = useUserLayoutContext() ?? {}
     const [isOpen, setIsOpen] = useState(false)
     let mail = {}
     const { data, refetch } = useQuery(singleMail(url, id));
@@ -133,7 +131,8 @@ const MailTemplate = ({ url }) => {
         downloadbaseurl = process.env.REACT_APP_PROD_URL
 
     }
-    return (<>
+    return (<div className="pt-4 px-2 max-w-full overflow-x-auto select-none
+    max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark">
         <div className="lg:flex flex flex-col lg:flex-row items-center lg:items-start !w-full lg:gap-x-10 justify-center">
 
             <div className="flex-1 lg:flex-none w-full max-w-2xl">
@@ -393,90 +392,96 @@ lg:py-10
                 `}><span
                     // className="text-green-500"
                     >status: &nbsp;&nbsp;&nbsp;</span>{mail?.status || "n/a"}</p>
-                <Form method="post"
-                // replace
-                >
-                    <input name="id" type="hidden" value={mail?._id} />
-                    <ol class="flex items-center w-full mb-4 sm:mb-5 justify-center px-4">
-                        <li class={`flex w-full items-center
+                {
+                    user?.role == USER_ROLES.mailer && <>
+
+                        <Form method="post"
+                        // replace
+                        >
+                            <input name="id" type="hidden" value={mail?._id} />
+                            <ol class="flex items-center w-full mb-4 sm:mb-5 justify-center px-4">
+                                <li class={`flex w-full items-center
 ${(mail?.status === "sent" || mail?.status == "recieved") ? " after:border-blue-600" : ""}
 after:content-[''] after:w-full after:h-1 after:border-b  after:border-4 after:inline-block  text-blue-600 dark:text-blue-500 dark:after:border-blue-800 `}>
-                            <div class="flex items-center justify-center w-10 h-10 bg-blue-300 rounded-full lg:h-12 lg:w-12  shrink-0">
-                                <svg class="w-4 h-4 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-                                    <path d="M18 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM6.5 3a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3.014 13.021l.157-.625A3.427 3.427 0 0 1 6.5 9.571a3.426 3.426 0 0 1 3.322 2.805l.159.622-6.967.023ZM16 12h-3a1 1 0 0 1 0-2h3a1 1 0 0 1 0 2Zm0-3h-3a1 1 0 1 1 0-2h3a1 1 0 1 1 0 2Zm0-3h-3a1 1 0 1 1 0-2h3a1 1 0 1 1 0 2Z" />
-                                </svg>
-                            </div>
-                        </li>
-                        <li class={`flex w-full items-center
+                                    <div class="flex items-center justify-center w-10 h-10 bg-blue-300 rounded-full lg:h-12 lg:w-12  shrink-0">
+                                        <svg class="w-4 h-4 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+                                            <path d="M18 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM6.5 3a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3.014 13.021l.157-.625A3.427 3.427 0 0 1 6.5 9.571a3.426 3.426 0 0 1 3.322 2.805l.159.622-6.967.023ZM16 12h-3a1 1 0 0 1 0-2h3a1 1 0 0 1 0 2Zm0-3h-3a1 1 0 1 1 0-2h3a1 1 0 1 1 0 2Zm0-3h-3a1 1 0 1 1 0-2h3a1 1 0 1 1 0 2Z" />
+                                        </svg>
+                                    </div>
+                                </li>
+                                <li class={`flex w-full items-center
 ${(mail?.status == "recieved") ? " after:border-blue-600" : ""}
 after:content-[''] after:w-full after:h-1 after:border-b  after:border-4 after:inline-block text-blue-600 dark:text-blue-500 dark:after:border-blue-800  `}>
-                            <div class={`${(mail?.status == "recieved") ? " bg-blue-300" : "bg-gray-100"} flex items-center justify-center w-10 h-10  rounded-full lg:h-12 lg:w-12 dark:bg-gray-700 shrink-0`}>
-                                <svg class={` w-4 h-4 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 14">
-                                    <path d="M18 0H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM2 12V6h16v6H2Z" />
-                                    <path d="M6 8H4a1 1 0 0 0 0 2h2a1 1 0 0 0 0-2Zm8 0H9a1 1 0 0 0 0 2h5a1 1 0 1 0 0-2Z" />
-                                </svg>
-                            </div>
-                        </li>
-                        <li class="flex items-center w-fit">
-                            <div class={`flex items-center justify-center w-10 h-10  ${(mail?.status == "recieved") ? " bg-blue-400" : "bg-gray-100"} rounded-full lg:h-12 lg:w-12 dark:bg-gray-700 shrink-0`}>
-                                <svg class="w-4 h-4 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
-                                    <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2ZM7 2h4v3H7V2Zm5.7 8.289-3.975 3.857a1 1 0 0 1-1.393 0L5.3 12.182a1.002 1.002 0 1 1 1.4-1.436l1.328 1.289 3.28-3.181a1 1 0 1 1 1.392 1.435Z" />
-                                </svg>
-                            </div>
-                        </li>
-                    </ol>
+                                    <div class={`${(mail?.status == "recieved") ? " bg-blue-300" : "bg-gray-100"} flex items-center justify-center w-10 h-10  rounded-full lg:h-12 lg:w-12 dark:bg-gray-700 shrink-0`}>
+                                        <svg class={` w-4 h-4 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 14">
+                                            <path d="M18 0H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM2 12V6h16v6H2Z" />
+                                            <path d="M6 8H4a1 1 0 0 0 0 2h2a1 1 0 0 0 0-2Zm8 0H9a1 1 0 0 0 0 2h5a1 1 0 1 0 0-2Z" />
+                                        </svg>
+                                    </div>
+                                </li>
+                                <li class="flex items-center w-fit">
+                                    <div class={`flex items-center justify-center w-10 h-10  ${(mail?.status == "recieved") ? " bg-blue-400" : "bg-gray-100"} rounded-full lg:h-12 lg:w-12 dark:bg-gray-700 shrink-0`}>
+                                        <svg class="w-4 h-4 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+                                            <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2ZM7 2h4v3H7V2Zm5.7 8.289-3.975 3.857a1 1 0 0 1-1.393 0L5.3 12.182a1.002 1.002 0 1 1 1.4-1.436l1.328 1.289 3.28-3.181a1 1 0 1 1 1.392 1.435Z" />
+                                        </svg>
+                                    </div>
+                                </li>
+                            </ol>
 
 
-                    <h3 class="mb-4 font-semibold text-gray-900 dark:text-white text-center text-xl">Mails Actions</h3>
-                    <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                        <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-                            <div class="flex items-center pl-3">
-                                <input id="vue-checkbox-list" type="checkbox" disabled checked class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                                <label for="vue-checkbox-list" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pending</label>
-                            </div>
-                        </li>
-                        <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-                            <div class="flex items-center pl-3">
-                                <input name="status" id="sent"
-                                    defaultChecked={mail?.status == "sent" || mail?.status == "recieved"}
-                                    disabled={mail?.status === "sent" || mail?.status == "recieved"}
-                                    type="checkbox" value="sent" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                                <label for="sent" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Sent</label>
-                            </div>
-                        </li>
+                            <h3 class="mb-4 font-semibold text-gray-900 dark:text-white text-center text-xl">Mails Actions</h3>
+                            <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+                                    <div class="flex items-center pl-3">
+                                        <input id="vue-checkbox-list" type="checkbox" disabled checked class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                        <label for="vue-checkbox-list" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pending</label>
+                                    </div>
+                                </li>
+                                <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+                                    <div class="flex items-center pl-3">
+                                        <input name="status" id="sent"
+                                            defaultChecked={mail?.status == "sent" || mail?.status == "recieved"}
+                                            disabled={mail?.status === "sent" || mail?.status == "recieved"}
+                                            type="checkbox" value="sent" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                        <label for="sent" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Sent</label>
+                                    </div>
+                                </li>
 
-                        {
-                            (mail?.status == "recieved" || mail?.status == "sent") && <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-                                <div class="flex items-center pl-3">
-                                    <input name="status" id="recieved" type="checkbox" value="recieved"
-                                        defaultChecked={mail?.status == "pending" || mail?.status == "recieved"}
-                                        // checked={mail?.status == "pending" || mail?.status == "recieved"}
-                                        disabled={mail?.status == "pending" || mail?.status == "recieved"}
-                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                                    <label for="recieved" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Recieved</label>
-                                </div>
-                            </li>
-                        }
+                                {
+                                    (mail?.status == "recieved" || mail?.status == "sent") && <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+                                        <div class="flex items-center pl-3">
+                                            <input name="status" id="recieved" type="checkbox" value="recieved"
+                                                defaultChecked={mail?.status == "pending" || mail?.status == "recieved"}
+                                                // checked={mail?.status == "pending" || mail?.status == "recieved"}
+                                                disabled={mail?.status == "pending" || mail?.status == "recieved"}
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                            <label for="recieved" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Recieved</label>
+                                        </div>
+                                    </li>
+                                }
 
-                    </ul>
-                    {
-                        mail?.status != "recieved" && <LoadingButtonTimeOut
-                            duration={5000}
-                            loading_text="Be Patient trying to fullfill your request ..."
-                            className="!block !my-5 !mx-auto !px-8 !py-2.5">
-                            Validate
-                        </LoadingButtonTimeOut >
-                    }
+                            </ul>
+                            {
+                                mail?.status != "recieved" && <LoadingButtonTimeOut
+                                    duration={5000}
+                                    loading_text="Be Patient trying to fullfill your request ..."
+                                    className="!block !my-5 !mx-auto !px-8 !py-2.5">
+                                    Validate
+                                </LoadingButtonTimeOut >
+                            }
 
 
-                </Form>
+                        </Form>
+                    </>
+                }
+
             </motion.div>
 
 
 
 
         </div>
-    </>)
+    </div>)
 }
 
 

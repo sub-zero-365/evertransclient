@@ -1,6 +1,6 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 // import { useDispatch } from "react-redux";
 // import { setUser } from '../actions/User';
 import { Outlet, useNavigate, ScrollRestoration } from "react-router-dom";
@@ -24,11 +24,13 @@ const UserLayout = ({ isDarkThemeEnabled }) => {
   };
 
   const data = useQuery(userQuery)
-
+  const [user, setUser] = useState(null)
+  useEffect(() => {
+    setUser(data?.data?.user)
+  }, [data?.data?.user])
   const logoutUser = async (error = "") => {
     try {
       await customFetch.get('/auth/logout');
-      // queryClient.invalidateQueries();
       await queryClient.removeQueries()
       navigate("/login?message=" + error)
     } catch (err) {
@@ -40,13 +42,13 @@ const UserLayout = ({ isDarkThemeEnabled }) => {
   return (
     <UserLayoutContext.Provider
       value={{
-        user: data?.data?.user,
+        user,
         isDarkThemeEnabled: isDarkThemeEnabled,
         logoutUser,
-        // setUserDetails
+        setUser
       }}
     >
-      {/* <ScrollRestoration /> */}
+
       <Navbar
         user={data?.user}
         isDarkThemeEnabled={isDarkThemeEnabled}

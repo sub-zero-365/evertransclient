@@ -56,7 +56,7 @@ const EditSingleTicket = () => {
     const isPageLoading = navigation.state === "loading"
 
     const id = useLoaderData()
-    const { ticket } = useQuery(singleTicket(id)).data
+    const { ticket } = useQuery(singleTicket(id))?.data ?? {}
     return (
         <EditSingleTicketContext.Provider
             value={{ ticket ,id}}

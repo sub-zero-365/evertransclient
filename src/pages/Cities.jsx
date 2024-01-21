@@ -14,7 +14,7 @@ import AnimatedText from '../components/AnimateText'
 const citiesQuery = {
   queryKey: ["cities"],
   queryFn: async () => {
-    const res = await customFetch.get("/allcities");
+    const res = await customFetch.get("/cities");
     return res.data
   }
 }
@@ -28,7 +28,7 @@ export const action = (queryClient) => async ({ request }) => {
     if (type == "addnewcity") {
       const cityName = formData.get("city_name")
       // run add new city here
-      await customFetch.post("/admin/city", { value: cityName })
+      await customFetch.post("/cities", { value: cityName })
     }
     else if (type == "deletecity") {
       const id = formData.get("id")
@@ -40,7 +40,7 @@ export const action = (queryClient) => async ({ request }) => {
       }
 
       // run add new city here
-      await customFetch.delete("/admin/city/" + id)
+      await customFetch.delete("/cities/" + id)
     }
     else {
       // run delete city here
@@ -72,7 +72,7 @@ const Cities = () => {
     }
   }, [open])
   const [edit, setEdit] = useState(false)
- 
+
   return (
     <div className="h-[calc(100vh-3rem)] overflow-y-auto w-full select-none">
 

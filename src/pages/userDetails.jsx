@@ -1,60 +1,50 @@
-import { toast } from "react-toastify"
-import 'react-datepicker/dist/react-datepicker.css'
-import DatePicker from 'react-datepicker';
-import { VscFolderActive } from 'react-icons/vsc'
-import Select from 'react-select';
-import SelectTrip from 'react-select';
-import SelectSortDate from 'react-select';
-import { useState, useEffect, useRef } from 'react';
-import { AiOutlineSave } from 'react-icons/ai';
-import { IoMdClose } from "react-icons/io"
-import { useParams, NavLink, useSearchParams, useLoaderData, redirect } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { AiOutlineSetting } from 'react-icons/ai';
-import formatQuery from "../utils/formatQueryStringParams"
-import dateFormater from "../utils/DateFormater"
-import axios from 'axios'
-import { BiCategory } from 'react-icons/bi'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { MdOutlinePriceChange } from 'react-icons/md'
-import { Autoplay, Navigation, Pagination } from 'swiper/modules'
 import {
-  useQuery, useMutation, useQueries
-} from '@tanstack/react-query'
-import "swiper/css"
-import "swiper/css/navigation"
-import "swiper/css/pagination"
-import "swiper/css/autoplay"
-import "swiper/css/a11y"
-import "swiper/css/scrollbar"
+  useQuery
+} from '@tanstack/react-query';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { AiOutlineSave, AiOutlineSetting } from 'react-icons/ai';
+import { BiCategory } from 'react-icons/bi';
+import { IoMdClose } from "react-icons/io";
+import { MdOutlinePriceChange } from 'react-icons/md';
+import { VscFolderActive } from 'react-icons/vsc';
+import { NavLink, redirect, useLoaderData, useSearchParams } from 'react-router-dom';
+import { default as Select, default as SelectSortDate, default as SelectTrip } from 'react-select';
+import { toast } from "react-toastify";
 import "swiper/css";
+import "swiper/css/a11y";
+import "swiper/css/autoplay";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 import "swiper/css/thumbs";
+import { Autoplay, Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import {
   AmountCount,
-  BarChart,
+  Form,
   FormatTable,
-  Heading
-  , PanigationButton, PieChart,
-  Scrollable, TicketCounts,
+  Heading,
   Loadingbtn,
-  BoxModel,
-  DataDay
-  , Form,
   NextButton,
+  PercentageBar,
   PlaceHolderLoader,
   PrevButton,
-  PercentageBar
-  , ToggleSwitch
+  Scrollable, TicketCounts,
+  ToggleSwitch
 } from '../components';
-import customFetch from "../utils/customFetch"
-import { sortedDateOptions, sortTicketStatusOptions } from "../utils/sortedOptions"
+import dateFormater from "../utils/DateFormater";
+import customFetch from "../utils/customFetch";
+import { sortTicketStatusOptions, sortedDateOptions } from "../utils/sortedOptions";
+import RestrictUser from '../components/RestrictUser';
 const singleUserQuery = (id) => {
   return ({
     queryKey: ["user", id],
     queryFn: async () => {
-      const res = await customFetch.get("/admin/alltickets?createdBy=" + id)
+      const res = await customFetch.get("/ticket?createdBy=" + id)
       return res.data
     }
   })
@@ -72,7 +62,7 @@ export const loader = (queryClient) => async ({ params: P, request }) => {
       searchValues: params
     })
   } catch (error) {
-    toast.error("something went wrong")
+    toast.error(error?.response?.data || error?.message || "something went wrong")
     return redirect("/dashboard/users");
   }
 }
@@ -98,7 +88,7 @@ const Details = () => {
     // {
     queryKey: ["current-user", id], queryFn: async () => {
       try {
-        const { data } = await customFetch.get("/admin/current-user/" + id);
+        const { data } = await customFetch.get("users/current-user/" + id);
         // console.log(data)
         return data?.user || {}
       } catch (err) {
@@ -412,7 +402,7 @@ z-10  "
             <h4 className='text-sm text-slate-500 font-medium '>{currentUser?.phone || "n/a"}</h4>
             <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '>{currentUser?.createdAt && (dateFormater().date) || "n/a"}</h4>
-            <ToggleSwitch
+            {/* <ToggleSwitch
               onChange={() => {
                 if (isUserBlock) {
                   removeRestrictedUser()
@@ -426,7 +416,9 @@ z-10  "
               initialMessage={"user is block from priinting tickets"}
               state={isUserBlock}
               disabled={(addFetching || rmFetching)}
-            />
+            /> */}
+            <RestrictUser
+              id={id} />
             <Swiper
               className='my-6
                             px-4 

@@ -39,7 +39,7 @@ import { loader as protectLoader } from "./components/ProtectedRoute"
 import { loader as singleTicketLOader } from "./pages/SingleTicket"
 import { loader as singleSeatLoader, action as singleSeatAction } from "./pages/SeatDetails"
 import { loader as dashboardLayoutLoader } from "./components/DashboardLayout"
-import { loader as ticketsloader } from "./pages/Appointment"
+import { loader as mainticketsloader } from "./pages/Appointment"
 import { loader as usersLoader, action as usersAction } from "./pages/Users"
 import { loader as userLoader } from "./pages/userDetails"
 import { loader as seatsLoader, action as seatAction } from "./pages/Seats"
@@ -65,7 +65,7 @@ import { loader as customerStatsloader } from "./pages/CustomerStats"
 import { loader as newSeatloader, action as newSeatAction } from "./pages/AddNewBusPage"
 import { loader as singleRecieptLoader } from "./pages/SingleReciept"
 import { action as addProductAction } from "./pages/AddProduct"
-import {loader as AdminMailsLoader} from "./pages/AdminMailStat"
+import { loader as AdminMailsLoader } from "./pages/AdminMailStat"
 import EditSingleTicket from './pages/EditSingleTicket'
 import DashboardHome from "./pages/DashBoardHome"
 import Mailing from './pages/Mailing'
@@ -83,6 +83,7 @@ const ContactUs = lazy(() => import("./pages/Contact"));
 const FindBusSingle = lazy(() => import("./pages/FindBusSingle"))
 const BusesSingle = lazy(() => import("./pages/BusesSingle"))
 const Seat = lazy(() => import("./pages/Seats"));
+const Suspended = lazy(() => import("./pages/Suspended"));
 const Assistant = lazy(() => import("./pages/Assistant"));
 
 const Bus = lazy(() => import("./pages/Bus"));
@@ -185,6 +186,16 @@ const router = createBrowserRouter([
 
         />,
         index: true,
+      }
+      , {
+        element: <Suspense
+          fallback={<FallBack />}
+        >
+          <Suspended />
+
+        </Suspense>
+        , path: "suspended"
+
       },
 
 
@@ -406,13 +417,13 @@ const router = createBrowserRouter([
             ]
 
           },
-          {
-            path: "user/reciept/:id",
-            element: <Suspense>
-              <SingleRecieptPage />
-            </Suspense>,
-            loader: singleRecieptLoader(queryClient)
-          },
+          // {
+          //   path: "user/reciept/:id",
+          //   element: <Suspense>
+          //     <SingleRecieptPage />
+          //   </Suspense>,
+          //   loader: singleRecieptLoader(queryClient)
+          // },
           {
             element: <Suspense
               fallback={<FallBack />}
@@ -533,7 +544,7 @@ const router = createBrowserRouter([
         element: <Suspense>
           <Appointment />
         </Suspense>,
-        loader: ticketsloader(queryClient),
+        loader: mainticketsloader(queryClient),
       },
 
       {
@@ -714,7 +725,7 @@ const router = createBrowserRouter([
         path: ":id",
         element:
           <Suspense>
-            < SingleTicket />,
+            < SingleTicket read_only />,
           </Suspense>,
         errorElement: <SingleTicketErrorElement />,
         loader: singleTicketLOader(queryClient),

@@ -48,7 +48,6 @@ import SingleTicketErrorElement from '../components/SingleTicketErrorElement'
 import TicketDetail from '../components/TicketDetail'
 import Modal from "../pages/ShowBuses"
 import customFetch from '../utils/customFetch'
-import { useState } from 'react'
 import { sortTicketStatusOptions, sortedDateOptions } from "../utils/sortedOptions"
 import NoItemMatch from './NoItemMatch'
 // import { DropdownIndicator } from 'react-select/dist/declarations/src/components/indicators'
@@ -57,12 +56,10 @@ import StaggeredDropDown from '../components/DropDown'
 
 import {
     BarChart,
-    LineChart,
     PieChart
 } from '../components'
-import FilterButton from '../components/FilterButton'
-import { useUserBoardLayoutContext, useUserLayoutContext } from './UserBoard'
 import BubbleTextHover from '../components/BubbleText'
+import { useUserBoardLayoutContext } from './UserBoard'
 let downloadbaseurl = null
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     downloadbaseurl = process.env.REACT_APP_LOCAL_URL
@@ -117,10 +114,7 @@ export const loader =
             const params = Object.fromEntries([
                 ...new URL(request.url).searchParams.entries(),
             ]);
-            // await wait();
-            // await queryClient.ensureQueryData(allTicketsQuery(params));
             return defer({
-                // searchValues: { ...params },
                 bookData: queryClient.ensureQueryData(allTicketsQuery(params))
             }
             );
@@ -138,22 +132,22 @@ const BookUi = () => {
     const loaderBooks = useQuery(allTicketsQuery(params))?.data || {}
     // const [open, setOpen] = useState(false)
     const { open, setOpen } = useUserBoardLayoutContext()
-    const userData = {
-        labels: ["Active", "Inactive"],
-        datasets: [
-            {
-                label: "Number vs MailStatus",
-                // data: users?.map((v) => v.total)
-                data: [
-                    loaderBooks?.totalActiveTickets || 0,
-                    loaderBooks?.totalInActiveTickets || 0,
-                    //   totalRecievedMails,
-                ],
-                backgroundColor: ["red", "blue"]
-            },
-        ]
+    // const userData = {
+    //     labels: ["Active", "Inactive"],
+    //     datasets: [
+    //         {
+    //             label: "Number vs MailStatus",
+    //             // data: users?.map((v) => v.total)
+    //             data: [
+    //                 loaderBooks?.totalActiveTickets || 0,
+    //                 loaderBooks?.totalInActiveTickets || 0,
+    //                 //   totalRecievedMails,
+    //             ],
+    //             backgroundColor: ["red", "blue"]
+    //         },
+    //     ]
 
-    }
+    // }
     return <>
         <div
             className='flex w-full md:pl-5 '
@@ -221,22 +215,22 @@ const BookUi = () => {
                     } */}
 
                 </div>
-            
-       
+
+
             </Modal>
             <div
                 className="flex-none md:w-[15rem] lg:w-[18rem] hidden md:block
 "
             >
                 {/* display the recent tickets when we have 2 or more tickets */}
-                {loaderBooks?.tickets?.length > 0 ?<>
+                {loaderBooks?.tickets?.length > 0 ? <>
                     <Heading text={"Recent Ticket(2)"} className={"!text-center !mb-2"} />
                     {
                         loaderBooks?.tickets?.slice(0, 2).map((ticket, i) => <TicketDetail key={ticket._id}
                             {...ticket}
                         />)
                     }
-                </>:"you most work atleast two months to see this chart"}
+                </> : "you most work atleast two months to see this chart"}
 
             </div>
             <div className='flex-1'>
@@ -360,24 +354,7 @@ text-center font-semibold mb-1 font-montserrat"> payment method </div>
                                 // onChange={handleSortTime}
                                 className='!border-none !h-8 mt-0' />
                         </div>
-                        <div className='mt-0'>
-                            <div className="text-[0.8rem]
-text-slate-300 dark:text-white uppercase
-text-center font-semibold mb-1 font-montserrat"> sorted date </div>
-                            <SelectSortDate
-                                options={sortedDateOptions}
-                                styles={style}
-                                defaultValue={{
-                                    label: querySearch.get("sort") || "createdAt -",
-                                    value: "newest"
-                                }}
-                                // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
-
-                                isSearchable={false}
-                                onChange={(e) => handleChange(e, "sort")}
-
-                                className='!border-none !h-8 mt-0' />
-                        </div>
+                      
                     </div>
 
 

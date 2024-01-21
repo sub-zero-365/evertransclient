@@ -43,32 +43,19 @@ export const loader = (queryClient) => async ({ request, params }) => {
   ]);
   try {
     var url = ""
-    const showDeactivateButton = searchParams.xyz === "secret"
     const isadminuser = searchParams.admin === "true";
-    const readonly = searchParams.readonly === "7gu8dsutf8asdf" || false
-    if (readonly) {
-      url = `/assistant/ticket/${params.id}`
-    } else {
-      if (isadminuser) {
-        url = `/admin/staticticket/${params.id}`
-      } else {
-        url = `/ticket/${params.id}`
-      }
-
-    }
-    // try to get the previous page from user being
-    // await wait(100)//wait for 10s testing 
-    const { ticket: { active } } = await queryClient.ensureQueryData(singleTicket(url, params.id));
+    url = `/ticket/${params.id}`
+    const { ticket: { active, _id } } = await queryClient.ensureQueryData(singleTicket(url, params.id));
     const audio = new Audio(succcesssound)
     if (active) {
       audio.play()
     }
     return {
       id: params.id,
+      _id,
       url,
       isadminuser,
-      readonly,
-      showDeactivateButton
+      // showDeactivateButton
     }
   } catch (err) {
     throw err
@@ -76,7 +63,9 @@ export const loader = (queryClient) => async ({ request, params }) => {
 
 }
 
-const User = () => {
+const User = ({ read_only }) => {
+  const readonly = read_only
+  const showDeactivateButton = read_only ? true : false;
   const location = useLocation()
   const { searchParams } = location.state ?? { searchParams: "" }
 
@@ -85,8 +74,9 @@ const User = () => {
   const queryClient = useQueryClient()
   const ref = useRef(null);
   const isInView = useInView(ref)
-  const { id, url, readonly, isadminuser, showDeactivateButton } = useLoaderData()
-  const { ticket } = useQuery(singleTicket(url, id)).data
+  const { id, url, _id, isadminuser } = useLoaderData()
+  const { ticket,
+    scanUrl } = useQuery(singleTicket(url, id)).data
   useEffect(() => {
     if (isInView) {
       setIsOpen(true)
@@ -115,7 +105,7 @@ const User = () => {
     setLoadbtn(true)
     setIsloading(true)
     try {
-      await customFetch.post("/assistant/edit/" + id, {}, {
+      await customFetch.post("/ticket/edit/" + _id, {}, {
         params
       }
       )
@@ -192,7 +182,7 @@ const User = () => {
               <QRCode
                 size={400}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={`http://192.168.43.68:3000/assistant/${id}?sound=true&xyz=secret&readonly=7gu8dsutf8asdf&render_9368&beta47`}
+                value={scanUrl}
                 viewBox={`0 0 256 256`}
               />
             </div>

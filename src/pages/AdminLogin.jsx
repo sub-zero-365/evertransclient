@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import customFetch from '../utils/customFetch';
 const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const url = "/auth/admin/login"
+  const url = "/auth/login"
   const [number, setNumber] = useState(null)
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false);

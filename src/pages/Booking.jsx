@@ -1,39 +1,37 @@
-import { useNavigate, useSearchParams, Link, useNavigation } from "react-router-dom"
-import {
-  Loader, Modal, Heading,
-  AnimateError
-} from "../components"
-import { BiChevronDown } from 'react-icons/bi'
-import { useState, forwardRef } from "react"
+import { forwardRef, useState } from "react"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { AiOutlineArrowRight } from 'react-icons/ai'
-import FromSelect from 'react-select/async'
-import ToSelect from 'react-select/async'
+import { BiChevronDown } from 'react-icons/bi'
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
+import { default as FromSelect, default as ToSelect } from 'react-select/async'
+import {
+  AnimateError,
+  Heading,
+  Loader, Modal
+} from "../components"
 // import TimeSelect from 'react-select'
-import React from 'react';
-import Alert from '../components/Alert'
 import { motion } from 'framer-motion'
+import React from 'react'
+import Alert from '../components/Alert'
 // import { timeOptions } from '../utils/sortedOptions'
 import { Helmet } from 'react-helmet'
 import "swiper/css"
+import "swiper/css/a11y"
+import "swiper/css/autoplay"
+import "swiper/css/free-mode"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
-import "swiper/css/autoplay"
-import "swiper/css/a11y"
 import "swiper/css/scrollbar"
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
-import { getCities, useCities } from "../utils/ReactSelectFunction";
+import "swiper/css/thumbs"
+import { getCities } from "../utils/ReactSelectFunction"
 
-import { style } from "../utils/reactselectOptionsStyles"
-import LoadingButton from '../components/LoadingButton'
 import { CiLocationOn } from "react-icons/ci"
+import LoadingButton from '../components/LoadingButton'
+import { style } from "../utils/reactselectOptionsStyles"
 // import { WiTime4 } from "react-icons/wi"
-import { GiPathDistance } from "react-icons/gi"
 import dayjs from "dayjs"
+import { GiPathDistance } from "react-icons/gi"
 
 const Booking = () => {
 

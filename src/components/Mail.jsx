@@ -1,10 +1,10 @@
-import React, { useRef } from 'react'
 import dayjs from "dayjs"
-import { Link } from 'react-router-dom'
-import { MdPendingActions } from "react-icons/md"
-import UiButton from './UiButton'
 import { motion } from "framer-motion"
+import React from 'react'
+import { Link } from 'react-router-dom'
 import { scalevariants } from '../utils/framermotionanimate'
+import UiButton from './UiButton'
+// import { useUserLayoutContext } from "../components/UserLayout"
 
 let downloadbaseurl = null
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -20,7 +20,7 @@ const Mail = ({ id, _id, collected,
     name, senderfullname, senderidcardnumber,
     senderphonenumber, recieverfullname,
     recieverphonenumber, recieveridcardnumber,
-    status, isadmin
+    status, isAdmin
 }) => {
     const createdDate = dayjs().format("MMM D, YYYY")
     return (
@@ -28,7 +28,7 @@ const Mail = ({ id, _id, collected,
             variants={scalevariants}
             whileHover="whileHover"
             className='shadow border-b px-4   mb-2 py-5'>
-            <Link to={isadmin ? "" : "/user/mail/" + _id}
+            <Link to={isAdmin ? "/dashboard/mail/" + _id : "/user/mail/" + _id}
                 preventScrollReset={true}
                 className='  '>
                 <div

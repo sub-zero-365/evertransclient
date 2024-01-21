@@ -28,13 +28,7 @@ const DashboardHome = () => {
         const getBuses = async () => {
 
             try {
-                const { data: { nHits } } = await axios.get("/bus",
-                    {
-                        headers: {
-                            'Authorization': "makingmoney " + token
-                        },
-                    }
-                )
+                const { data: { nHits } } = await axios.get("/bus")
                 setB_count(nHits)
 
             } catch (err) {
@@ -50,10 +44,7 @@ const DashboardHome = () => {
         getBuses()
         const getUsers = async () => {
             try {
-                const { data: { nHits } } = await axios.get("/admin/userticketlength", {
-                    headers: {
-                        'Authorization': "makingmoney " + token
-                    },
+                const { data: { nHits } } = await axios.get("/users/user-stats", {
                 })
                 setE_count(nHits)
             } catch (err) {
@@ -61,12 +52,10 @@ const DashboardHome = () => {
             }
         }
         (async function () {
-            const url = `/admin/alltickets`
+            const url = `/ticket`
             try {
                 const response = await axios.get(url, {
-                    headers: {
-                        'Authorization': "makingmoney " + token
-                    },
+               
                     params: { limit: 20 }
                 })
                 setTicketDataFunction({ ...response?.data })

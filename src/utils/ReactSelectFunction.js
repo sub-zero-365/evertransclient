@@ -1,15 +1,12 @@
 // import { useQuery } from '@tanstack/react-query'
 import customFetch from "./customFetch"
-// const cities = [
-//     { value: "Buea", label: "Buea" },
-//     { value: "Douala", label: "Douala" },
-// ]
+
 import { useQuery } from '@tanstack/react-query'
 const citiesQuery = (inputValue = "") => {
     return {
         queryKey: ["cities", inputValue],
         queryFn: async () => {
-            const res = await customFetch.get("/allcities", {
+            const res = await customFetch.get("/cities", {
                 params: {
                     search: (inputValue || "")
                 }
@@ -27,7 +24,7 @@ export const getCities = async (inputValue = "") => {
     // }, 200))
     // await wait()
     // return cities
-    const res = await customFetch.get("/allcities", {
+    const res = await customFetch.get("/cities", {
         params: {
             search: (inputValue || "")
         }

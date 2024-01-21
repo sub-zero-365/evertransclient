@@ -1,27 +1,18 @@
 import React, { useMemo } from 'react'
 import AnimatedText from "../components/AnimateText"
-import PercentageCard from '../components/PercentageCard'
 import Mail from "../components/Mail"
 
-import {
-    AmountCount,
-    Scrollable
-    , BarChart,
-    LineChart,
-    PieChart
-} from '../components'
-import { MdOutlinePriceChange } from 'react-icons/md'
-import { dateSortedOption } from '../utils/sortedOptions'
-import { useLoaderData } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
-import customFetch from "../utils/customFetch"
-import FilterButton from '../components/FilterButton';
+import { useLoaderData, useSearchParams } from "react-router-dom"
 import {
-    chatsOptions,
-    usersRoleOptions
-} from "../utils/sortedOptions"
-import { useSearchParams } from "react-router-dom"
-import SearchComponent from '../components/SearchBox'
+    BarChart,
+    LineChart,
+    PieChart,
+    Scrollable
+} from '../components'
+import FilterButton from '../components/FilterButton'
+import customFetch from "../utils/customFetch"
+import { chatsOptions, dateSortedOption } from '../utils/sortedOptions'
 const allMailsQuery = (params) => {
     const { search, sort, page, quickdatesort, createdBy } = params
     const searchValues = {
@@ -36,7 +27,7 @@ const allMailsQuery = (params) => {
             'mails', searchValues
         ],
         queryFn: async () => {
-            const { data } = await customFetch.get('/mails/admin/mails', {
+            const { data } = await customFetch.get('/mails', {
                 params: searchValues
             });
             return data;
@@ -228,7 +219,7 @@ const MailsStat = () => {
             >
                 {activeSearch?.map((mail) => <Mail key={mail._id}
                     {...mail}
-                    isadmin
+                    isAdmin
                 />)}
                 {
                     nHits < 1 && <AnimatedText

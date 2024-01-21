@@ -1,29 +1,33 @@
-import { FiRefreshCcw } from 'react-icons/fi'
 
-import { useNavigate } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
-import axios from 'axios';
-import AnimateText from '../components/AnimateText'
-import { MdOutlineClose } from 'react-icons/md'
+import { AnimatePresence, motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { MdOutlineClose } from 'react-icons/md';
+import { toast } from 'react-toastify';
 import { useravatar } from '../Assets/images';
-import { Loader, Button, Heading, DeleteModal } from '../components';
-import { AiOutlinePlus } from 'react-icons/ai'
-import { motion, AnimatePresence } from 'framer-motion'
-import AnimatedError from "../components/AnimateError"
-import { Loadingbtn } from "../components";
-import { UiButtonDanger } from '../components/UiButton'
-import { toast } from 'react-toastify'
+import { Heading, Loadingbtn } from '../components';
+import AnimatedError from "../components/AnimateError";
+import AnimateText from '../components/AnimateText';
+import { UiButtonDanger } from '../components/UiButton';
 // import FormatTable from '../components';
-import ShowBuses from './ShowBuses';
-import InputBox from '../components/InputBox';
-import customFetch from "../utils/customFetch"
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import InputBox from '../components/InputBox';
+import customFetch from "../utils/customFetch";
+import ShowBuses from './ShowBuses';
 
 const allAssistantQuery = {
-    queryKey: ["assistants"],
+    queryKey: ["scanusers"],
     queryFn: async () => {
-        const res = await customFetch.get("/assistant");
+        const res = await customFetch.get(
+            "/users/user-stats",
+            {
+                params: {
+                    userRole: "scanner"
+                }
+            }
+        )
         return res.data
+
     }
 
 }
@@ -38,7 +42,7 @@ export const action = (queryClient) => async ({ request }) => {
 
 const Appointment = () => {
     const queryClient = useQueryClient()
-    const data = useQuery(allAssistantQuery).data || {}
+    const data = useQuery(allAssistantQuery)?.data || {}
     const constraintsRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
     const password = useRef(null)
@@ -50,17 +54,22 @@ const Appointment = () => {
     const handleDeleteUser = async (id, index = null) => {
         const { _id } = id
         console.log("this is the sent id here", _id)
-        return customFetch.delete(`/assistant/${_id}`
-            )
+        return customFetch.delete("/users/delete-user/" + id, {
+            params: {
+                allowwithotpassword: true
+            }
+        }
+        )
     }
     const handleCreateNewAssistant = async () => {
         setErr(null)
         try {
             setIsLoading(true)
-          await customFetch.post("/auth/assistant/register", {
+            await customFetch.post("/auth/register", {
                 phone: phone.current.value,
                 password: password.current.value,
                 fullname: fullnames.current.value,
+                role: "scanner"
             },
             )
             setIsOpen(false)
@@ -69,7 +78,7 @@ const Appointment = () => {
             password.current.value = ""
             phone.current.value = ""
             queryClient.invalidateQueries({
-                queryKey: ["assistants"]
+                queryKey: ["scanusers"]
             })
 
         } catch (err) {
@@ -100,17 +109,24 @@ const Appointment = () => {
                 setIsOpen={setToggle}
             >
                 <div className='px-5 py-2 pb-4'>
-                    <Heading text={`Pleas enter phone Number to delete user account :`} className={"!text-sm !text-rose-500 !pl-0 !text-center lg:text-start"} />
+
+                    <Heading text={`Please enter phone Number to delete user account :774`}
+                        className={"!text-sm !text-rose-500 !pl-0 !text-center lg:text-start"} />
+
+                    {/* {JSON.stringify(toggle || {})} */}
+
                     <InputBox
                         name={"Phone Number"}
+                        className="!mt-10
+                        "
                         type={"tel"}
                         onChange={e => setPhoneNumber(e.target.value)}
                     />
                     <UiButtonDanger name="Delete"
-                        disabled={(phoneNumber === toggle?.phone && phoneNumber != null) ? false : true}
+                        disabled={((phoneNumber == toggle?.phone) && phoneNumber != null) ? false : true}
                         className={"w-[min(400px,calc(100%-30px))] pb-2.5 pt-1.5 mx-auto"}
-                        onClick={() => toast.promise(handleDeleteUser(toggle).then((data) => {
-                            queryClient.invalidateQueries(["assistants"])
+                        onClick={() => toast.promise(handleDeleteUser(toggle?._id).then((data) => {
+                            queryClient.invalidateQueries(["scanusers"])
                             setActiveIndex(null)
                             setToggle(null)
                         }), {
@@ -123,7 +139,7 @@ const Appointment = () => {
                 </div>
 
             </ShowBuses>
-   
+
             <div className="flex gap-x-1  items-center">
                 <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400"></h2>
             </div>
@@ -469,7 +485,7 @@ lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-g
                                 <tbody class="text-sm divide-y divide-gray-100">
                                     {
 
-                                        data?.assistants?.map((user, index) => {
+                                        data?.users?.map((user, index) => {
                                             const { fullname,
                                                 phone, createdAt,
                                                 numberOfTicketScan
@@ -512,8 +528,6 @@ lg:col-span-8 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-g
                                                             onClick={() => {
                                                                 setToggle(user)
                                                                 return
-                                                                setActiveIndex(_id)
-
                                                             }}
                                                             name="delete " />
                                                     </td>

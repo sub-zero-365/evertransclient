@@ -1,56 +1,56 @@
-import { useState, useEffect, useRef } from 'react'
-import 'react-datepicker/dist/react-datepicker.css'
-import { useSearchParams, useLoaderData } from 'react-router-dom'
+import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { AnimatePresence, motion } from 'framer-motion'
-import SkipSelect from 'react-select';
-import { useSelector, useDispatch } from 'react-redux';
-import Select from 'react-select';
-import Triptype from 'react-select';
-import ClearFilter from '../components/ClearFilter'
-import SelectSortDate from 'react-select';
-import TimeSelect from 'react-select';
+import 'react-datepicker/dist/react-datepicker.css';
 import { AiOutlineSetting } from 'react-icons/ai';
+import { useLoaderData, useSearchParams } from 'react-router-dom';
+import { default as Select, default as SkipSelect, default as Triptype } from 'react-select';
+import ClearFilter from '../components/ClearFilter';
 // import formatQuery from "../utils/formatQueryStringParams"
-import { components, style } from "../utils/reactselectOptionsStyles"
+import { Autoplay, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { components, style } from "../utils/reactselectOptionsStyles";
 
-import { useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query";
 
-import EmptyModal from "../pages/ShowBuses"
+import EmptyModal from "../pages/ShowBuses";
 
-import {
-    AmountCount, FormatTable,
-    Scrollable,
-    TicketCounts,
-    PanigationButton,
-    Loadingbtn,
-    Form,
-    Heading,
-    PercentageBar,
-    PrevButton,
-    NextButton, PlaceHolderLoader,
-    DataDay,
-    BarChart,
-    PieChart,
-    LineChart
-} from '../components';
 import { AiOutlineSave } from 'react-icons/ai';
-import { VscFolderActive } from 'react-icons/vsc';
 import { BiCategory } from 'react-icons/bi';
 import { MdOutlinePriceChange } from 'react-icons/md';
-import { sortedDateOptions, sortTicketStatusOptions, skipOptions, timeOptions } from "../utils/sortedOptions"
-import customFetch from '../utils/customFetch'
-import UiButton from '../components/UiButton';
-import { AreaChart } from '../components/AreaChart';
+import { VscFolderActive } from 'react-icons/vsc';
+import {
+    AmountCount,
+    BarChart,
+    DataDay,
+    Form,
+    FormatTable,
+    Heading,
+    LineChart,
+    Loadingbtn,
+    NextButton,
+    PercentageBar,
+    PieChart,
+    PlaceHolderLoader,
+    PrevButton,
+    Scrollable,
+    TicketCounts
+} from '../components';
 import AnimatedText from '../components/AnimateText';
+import { AreaChart } from '../components/AreaChart';
+import UiButton from '../components/UiButton';
+import customFetch from '../utils/customFetch';
+import { skipOptions, sortTicketStatusOptions } from "../utils/sortedOptions";
+import SearchComponent from '../components/SearchBox';
 
 const ticketsQuery = (params = {}) => {
     return ({
         queryKey: ["tickets", { ...params }],
         queryFn: async () => {
-            const res = await customFetch.get("/admin/alltickets")
+            const res = await customFetch.get("/ticket",
+                {
+                    params
+                })
             return res.data
         },
         keepPreviousData: true
@@ -60,8 +60,23 @@ export const loader = (queryClient) => async ({ request }) => {
     const params = Object.fromEntries([
         ...new URL(request.url).searchParams.entries(),
     ]);
-    await queryClient.ensureQueryData(ticketsQuery(params))
-    return ({ searchValues: params })
+    try {
+        const { search, page, ticketStatus, triptype,
+            sort, limit,
+            daterange, sortBy } = params
+        const formatQuery = {
+            search: search || "",
+            page: page ||  1,
+            daterange: daterange || "",
+            ticketStatus: ticketStatus || "all",
+            sortBy: sortBy || "createdAt",
+            triptype: triptype || "",
+        }
+        await queryClient.ensureQueryData(ticketsQuery(formatQuery))
+        return ({ searchValues: formatQuery })
+    } catch (err) {
+        return err
+    }
 
 }
 
@@ -686,8 +701,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 </div>
 
             </div>
-            <Form handleChangeText={handleChangeText}
-                params={querySearch} />
+ <SearchComponent filterMethod='search' placeholder='search customers'/>
             <Heading text={"Recent Regular Booking"} className="!mb-4 !text-center md:text-start first-letter:!text-4xl underline underline-offset-8" />
             {
                 false ? (<PlaceHolderLoader />) : (

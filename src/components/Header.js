@@ -1,21 +1,18 @@
-import { AiOutlineMenu } from "react-icons/ai"
-import { useNavigation, Link, redirect, useNavigate, } from "react-router-dom"
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion';
+import { AiOutlineMenu } from "react-icons/ai";
+import { Link, useNavigate } from "react-router-dom";
 import { useravatar } from '../Assets/images';
-import { BsMoonStars, BsSun } from 'react-icons/bs';
-import UiButton from "../components/UiButton"
-import { Rounded } from './'
-import { useDashBoardContext } from "./DashboardLayout"
-import themeToggler from '../utils/themeToggler';
+import UiButton from "../components/UiButton";
+import { useDashBoardContext } from "./DashboardLayout";
+import LogOut from "./LogOut";
 import ThemeToggler from './ThemeToggler';
 
-export default function Header({ isDarkThemeEnabled}) {
+export default function Header({ isDarkThemeEnabled }) {
     const navigate = useNavigate()
     const { user,
         toggleSideBar,
         view, setView
-       
-        ,logoutUser
+
     } = useDashBoardContext()
     return (
 
@@ -39,7 +36,7 @@ bg-white dark:bg-color_dark shadow-sm shadow-slate-300 container-- mx-auto px-4"
 
                 </div>
             </div>
-            <Link to="/dashboard" className="-auto">DashBoard </Link>
+            <Link to="/dashboard" className="-auto hidden sm:block">DashBoard </Link>
             <div className="md:space-x-6 space-x-3 flex items-center">
                 <UiButton name="Change view" className="hidden !text-xs lg:!inline-block !rounded-xl" onClick={() => setView(!view)} />
 
@@ -60,25 +57,15 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                     view site
                 </button>
                 <ThemeToggler
-                className="hidden md:block"
+                    className="hidden md:block"
                     isDarkThemeEnabled={isDarkThemeEnabled}
                 />
+                <LogOut className=" !w-fit"
+                    dont_show_logout_icon
+                />
 
-                <button
-                    data-te-ripple-init
-                    data-te-ripple-color="light"
-                    className="inline-block  rounded bg-red-500   px-2 py-1 text-xs font-montserrat font-medium 
-leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] 
-transition duration-150 ease-in-out hover:bg-red-600
-hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]
-focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-
-                    onClick={() => logoutUser()}
-                >
-                    logout
-                </button>
             </div>
+
         </div>
 
     )

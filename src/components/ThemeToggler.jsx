@@ -22,14 +22,15 @@ const tabs = [ {
             },
     ];
 
-const ChipTabs = ({isDarkThemeEnabled}) => {
-   const activeIndex= tabs?.findIndex((item) => isDarkThemeEnabled == item.title)
-  const [selected, setSelected] = useState(tabs[activeIndex]);
+const ChipTabs = ({isDarkThemeEnabled,className}) => {
+const _index=tabs?.findIndex((item) => isDarkThemeEnabled == item.title)
+   const activeIndex= _index>=0?_index:0
+  const [selected, setSelected] = useState(tabs[_index]);
 
   return (
     <div 
     
-    className="px-4 py-0 bg-slate-900-- inline-flex items-center flex-wrap gap-2">
+    className={`${className} px-4 py-0 bg-slate-900-- inline-flex items-center flex-wrap gap-2`}>
       {tabs.map((tab) => (
         <Chip
           text={tab}
@@ -77,6 +78,7 @@ const Chip = ({
       onClick={(e) => {
       e.stopPropagation()
       setSelected(text)
+      
         themeToggler(text.title)
       }}
       className={`${

@@ -9,6 +9,7 @@ import { toast } from "react-toastify"
 import customFetch from "../utils/customFetch";
 import { Helmet } from 'react-helmet'
 import LoadingButtonTimeOut from "../components/LoadingButtonTimeOut";
+import { USER_ROLES } from "../utils/roles";
 
 export const loader = async ({ request }) => {
   const params = Object.fromEntries([
@@ -23,22 +24,17 @@ export const action = (queryClient) => async ({ request }) => {
 
   // await wait()
   try {
+
     var from = data.from
     const res = await customFetch.post('/auth/login', data);
     queryClient.invalidateQueries();
     toast.success('Login successful');
     const role = res.data?.user?.role
-    // alert(role)
-    // console.log("this is the user role", role)
-    if (role == "tickets") from = data.from || "/user"
-    else if (role == "mails") from = data.from || "/user/mails"
-    // else if (role == "restaurants") from = data.from || "/restaurant"
+    if (role == USER_ROLES.ticketer) from = data.from || "/user"
+    else if (role == USER_ROLES.mailer) from = data.from || "/user/mails"
+    else if (role == USER_ROLES.admin || role == USER_ROLES.sub_admin) from = data.from || "/dashboard"
     else {
-
-      const url = new URL(request.url).search
-      from = data.from ? data.from + url : "/assistant"
-      // return redirect(from)
-
+      from = data.from || "/assistant"
     }
     return redirect(from)
   } catch (error) {

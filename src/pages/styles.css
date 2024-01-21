@@ -1,0 +1,19 @@
+swiper {
+  width: 300px;
+  height: 300px;
+  padding: 50px;
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  max-height: calc(100vh-40px);
+  height: fit-content;
+  overflow-y: auto;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+}

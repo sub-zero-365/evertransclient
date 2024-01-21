@@ -1,44 +1,44 @@
-import {  Form, redirect, useSearchParams } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
+import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { MdOutlineClose } from 'react-icons/md';
+import { Form, useSearchParams } from 'react-router-dom';
+import { UserData } from '../Assets/userdata';
 import {
     BarChart,
+    Button, Heading,
     LineChart,
+    Loadingbtn,
     PanigationButton,
     PieChart,
     Scrollable,
     TicketCounts
 } from '../components';
-import AnimateText from '../components/AnimateText'
-import { MdOutlineClose } from 'react-icons/md'
-import Alert from '../components/Alert'
-import { Button, Heading } from '../components';
-import { AiOutlinePlus } from 'react-icons/ai'
-import { motion } from 'framer-motion'
-import { UserData } from '../Assets/userdata';
-import { Loadingbtn } from "../components";
+import Alert from '../components/Alert';
+import AnimateText from '../components/AnimateText';
 import InputBox from '../components/InputBox';
 import UiButton, { UiButtonDanger } from '../components/UiButton';
 import dateFormater from '../utils/DateFormater';
 // import { SlOptions } from 'react-icons/sl';
 // import ShowBuses from './ShowBuses';
-import customFetch from '../utils/customFetch'
-import { useQuery } from "@tanstack/react-query"
-import { toast } from "react-toastify"
-import RoleSelect from "react-select"
-import { chatsOptions, usersRoleOptions } from "../utils/sortedOptions"
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import RoleSelect from "react-select";
+import { toast } from "react-toastify";
+import customFetch from '../utils/customFetch';
+import { chatsOptions, usersRoleOptions } from "../utils/sortedOptions";
 // import EmptyBox from "../components"
-import EmptyBox from './ShowBuses'
-import LoadingButton from '../components/LoadingButton';
-import ToggleSwitch from '../components';
-import { useDashBoardContext } from '../components/DashboardLayout';
-import FilterButton from '../components/FilterButton';
 import AnimatedText from '../components/AnimateText';
 import { AreaChart } from '../components/AreaChart';
+import { useDashBoardContext } from '../components/DashboardLayout';
+import FilterButton from '../components/FilterButton';
+import LoadingButton from '../components/LoadingButton';
+import { USER_ROLES } from '../utils/roles';
+import EmptyBox from './ShowBuses';
 const usersQuery = {
-    queryKey: ["user"],
+    queryKey: ["admin-users"],
     queryFn: async () => {
         const res = await customFetch.get(
-            "/admin/userticketlength"
+            "/users/user-stats"
         )
         return res.data
 
@@ -49,7 +49,7 @@ export const action = (queryClient) => async ({ request }) => {
         const form = await request.formData()
         const id = await form.get("id")
         const password = await form.get("password")
-        await customFetch.delete("/user/delete-user/" + id, {
+        await customFetch.delete("/users/delete-user/" + id, {
             data: { password }
         })
         await queryClient.invalidateQueries({
@@ -66,7 +66,11 @@ export const action = (queryClient) => async ({ request }) => {
 
 }
 export const loader = (queryClient) => async ({ params }) => {
-    return await queryClient.ensureQueryData(usersQuery)
+    try {
+        return await queryClient.ensureQueryData(usersQuery)
+    } catch (err) {
+        return err
+    }
 }
 
 const Appointment = ({ skip, currentPage }) => {
@@ -74,7 +78,7 @@ const Appointment = ({ skip, currentPage }) => {
         chartOption: "bar"
     })
     const { user } = useDashBoardContext()
-
+    const queryClient = useQueryClient()
     // const { user } = useDashBoardContext()
     const { userdetails: users } = useQuery(usersQuery)?.data || {}
     const data = {}
@@ -86,8 +90,8 @@ const Appointment = ({ skip, currentPage }) => {
     const password = useRef(null)
     const phone = useRef(null)
     const fullnames = useRef(null)
-    const email = useRef(null)
-    const [role, setRole] = useState("tickets")
+    // const email = useRef(null)
+    const [role, setRole] = useState(USER_ROLES.ticketer)
     let [t, setT] = useState(false)
 
     const handleSubmit = async (e) => {
@@ -102,7 +106,7 @@ const Appointment = ({ skip, currentPage }) => {
                 password: password?.current?.value,
                 phone: phone.current.value,
                 fullname: fullnames.current.value,
-                email: email.current.value,
+                // email: email.current.value,
                 role
             },
 
@@ -112,6 +116,7 @@ const Appointment = ({ skip, currentPage }) => {
             setT(true)
             // fetchData()
             setIsLoading(false)
+            queryClient.invalidateQueries(["admin-users"])//remove all queries when done adding a new employee/admin
         } catch (err) {
             console.log(err)
             setIsLoading(false)
@@ -226,45 +231,45 @@ const Appointment = ({ skip, currentPage }) => {
                 {/* <Heading text="Employees OverView" className="!mb-0" /> <h2 className="text-lg text-gray-400">{users?.length}</h2> */}
             </div>
             <div className="lg:flex items-start lg:mb-14 w-full  lg:px-10">
-            {/* {
+                {/* {
             user?.role !== "admin"&& */}
                 <div className={` flex-1 relative  text-xs mx-0   rounded-lg `}
                 >
                     <div className="flex  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow
                     bg-white dark:bg-slate-800 mx-4">
                         <div className="flex-1">{
-                        user?.role == "user"&&
-                        <Heading text="Add A New Employee" className="!mb-2 !pl-4 !font-black mt-0" />
-                        
-                        
+                            user?.role == "user" &&
+                            <Heading text="Add A New Employee" className="!mb-2 !pl-4 !font-black mt-0" />
+
+
                         }
                             <p className="mb-3 text-sm  px-6">
                                 {user?.role == "admin" ? "Inorder to add new employes login as normal admin" : " Employees added help to book ticket and give more data"}
                             </p>
                         </div>
                         {
-                        user?.role !== "admin"&&
-                        <motion.div onClick={() => setIsOpen(c => !c)}
-                            initial={{ x: "-50%" }}
-                            animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
-                            transition={{
-                                duration: 2,
-                                ease: "easeInOut",
-                                times: [0, 0.2, 0.5, 0.8, 1],
-                                repeat: Infinity,
-                                repeatDelay: 1
-                            }
+                            user?.role !== "admin" &&
+                            <motion.div onClick={() => setIsOpen(c => !c)}
+                                initial={{ x: "-50%" }}
+                                animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
+                                transition={{
+                                    duration: 2,
+                                    ease: "easeInOut",
+                                    times: [0, 0.2, 0.5, 0.8, 1],
+                                    repeat: Infinity,
+                                    repeatDelay: 1
+                                }
 
-                            }
-                            className="bottom-6 flex-none ml-2 shadow-2xl button-add  top-auto bg-blue-400 
+                                }
+                                className="bottom-6 flex-none ml-2 shadow-2xl button-add  top-auto bg-blue-400 
 w-[2rem] h-[2rem] rounded-full left-1/2 overflow-hidden 
 -translate-x-1/2
 z-10  "
-                        >
-                            <div className="flex h-full w-full items-center scale-animation justify-center ">
-                                <AiOutlinePlus size={30} color="#fff" className="" />
-                            </div>
-                        </motion.div>
+                            >
+                                <div className="flex h-full w-full items-center scale-animation justify-center ">
+                                    <AiOutlinePlus size={30} color="#fff" className="" />
+                                </div>
+                            </motion.div>
                         }
 
                     </div>
@@ -310,7 +315,7 @@ z-10  "
                     }
                     {/* <LineChart chartData={userData} /> */}
                 </div>
-            {/* } */}
+                {/* } */}
                 {/* 
 */}
 
@@ -360,7 +365,7 @@ z-10  "
                             classNae="text-sm" />
                     </span>
                     {/* {user?.role !== "admin"&& */}
-                    
+
                     <AnimateText text="add a new Employee " className='!text-lg !pl-2' />
                     {/* } */}
                     <form
@@ -377,11 +382,11 @@ z-10  "
                             name={"Phone Number"}
                         />
 
-                        <InputBox
+                        {/* <InputBox
                             ref={email}
                             type={"email"}
                             name={"Email Address"}
-                        />
+                        /> */}
 
                         <InputBox
                             ref={password}
@@ -540,7 +545,7 @@ dark:border-gray-600
                                             <td className="py-0 text-xs cursor-pointer hover:scale-110 transition-all duration-500 flex items-center justify-center"
                                             >
                                                 {
-                                                    role == "tickets" ? <Button
+                                                    role == USER_ROLES.ticketer ? <Button
                                                         className={"!max-w-[14rem] !w-full"}
                                                         name="View Employee"
                                                         href={`/dashboard/details/${_id}?admin=true&createdBy=${_id}`}

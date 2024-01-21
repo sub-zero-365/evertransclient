@@ -3,6 +3,7 @@ DeactiveStatusButton
   from '../components/DeactiveStatusButton';
 import dayjs from "dayjs"
 import ActiveStatusButton from '../components/ActiveStatusButton'
+import { USER_ROLES } from './roles';
 export const sortedDateOptions = [
 
   {
@@ -166,8 +167,18 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   },)
 }
 export const usersRoleOptions = [
-  ...__
-
+  {
+    value: USER_ROLES.ticketer,
+    label: "Ticketer"
+  },
+  {
+    value: USER_ROLES.mailer,
+    label: "Mailer"
+  },
+  // {
+  //   value: USER_ROLES.ticketer,
+  //   label: "Ticketer"
+  // },
 ]
 export const chatsOptions = [
   {

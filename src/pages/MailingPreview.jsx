@@ -1,19 +1,18 @@
 // import { RiDeleteBin6Line } from "react-icons/ri"
 // import { useMailingContext } from "./Mailing"
-import { Heading, Rounded, Scrollable } from "../components"
-import { useLocation, useNavigate, Form, redirect, Navigate, useActionData } from "react-router-dom"
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai"
-import LoadingButton from "../components/LoadingButton"
-import AnimatedText from "../components/AnimateText"
-import { toast } from "react-toastify"
-import { GrCircleInformation } from "react-icons/gr"
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from "react"
-import customFetch from "../utils/customFetch"
-import UiButton from "../components/UiButton"
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai"
 import { BsCashCoin } from "react-icons/bs"
+import { GrCircleInformation } from "react-icons/gr"
 import { MdOutlineWarehouse } from "react-icons/md"
+import { Form, Navigate, redirect, useActionData, useLocation, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import { Heading, Rounded, Scrollable } from "../components"
+import AnimatedText from "../components/AnimateText"
 import LoadingButtonTimeOut from "../components/LoadingButtonTimeOut"
+import UiButton from "../components/UiButton"
+import customFetch from "../utils/customFetch"
 export const loader = async () => {
     return null
 }

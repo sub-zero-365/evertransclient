@@ -1,14 +1,12 @@
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { Heading } from '../components'
-import { useState, useRef } from 'react';
-import { useLoaderData, Form, useNavigation, redirect } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { toast } from 'react-toastify'
+import { useState } from 'react';
+import { Form, Link, redirect, useLoaderData, useNavigation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Heading } from '../components';
 
-import UiButton, { UiButtonDanger } from '../components/UiButton';
+import { useQuery } from "@tanstack/react-query";
 import AnimatedText from '../components/AnimateText';
-import { useQuery } from "@tanstack/react-query"
-import customFetch from '../utils/customFetch'
+import UiButton, { UiButtonDanger } from '../components/UiButton';
+import customFetch from '../utils/customFetch';
 const singleBusQuery = (id) => {
     return ({
         queryKey: ["bus", id],

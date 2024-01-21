@@ -12,6 +12,7 @@ import { useRef } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import NavFooter from './NavFooter';
 import CartModal from './CartModal';
+import { USER_ROLES } from '../utils/roles';
 
 const ProtectedContext = createContext()
 
@@ -27,6 +28,7 @@ export const loader = (queryClient) => async ({ request }) => {
     try {
         return await queryClient.ensureQueryData(userQuery);
     } catch (error) {
+        if (error?.response?.status == 423) return redirect("/suspended")
         const errorMessage = error?.response?.data || error?.message || "something went wrong try again later"
         toast.error(errorMessage)
         return redirect(`/login?message=${errorMessage}&from=${new URL(request.url).pathname}`);
@@ -36,10 +38,12 @@ export const loader = (queryClient) => async ({ request }) => {
 const ProtectedRoute = () => {
 
     const navigate = useNavigate()
-    const { logoutUser } = useUserLayoutContext()
+    const { logoutUser, setUser } = useUserLayoutContext()
     const { user } = useQuery(userQuery).data || {}
+    setUser(user)
     // setUserDetails(user)
     const [isAuthError, setIsAuthError] = useState(false);
+    const [isBlockError, setIsBlockError] = useState(false);
     const navigation = useNavigation();
     const constraintsRef = useRef(null);
 
@@ -53,13 +57,21 @@ const ProtectedRoute = () => {
             if (error?.response?.status === 401) {
                 setIsAuthError(error?.response?.data);
             }
+            if (error?.response?.status === 423) {
+                setIsBlockError(error?.response?.data);
+            }
             return Promise.reject(error);
         }
     );
     useEffect(() => {
-        if (!isAuthError) return;
-        logoutUser(isAuthError);
-    }, [isAuthError]);
+        if (isAuthError) {
+            logoutUser(isAuthError);
+        }
+        if (isBlockError) {
+            navigate("/suspended")
+            // logoutUser(isBlockError);
+        }
+    }, [isAuthError, isBlockError]);
     return (
 
         <ProtectedContext.Provider
@@ -116,7 +128,7 @@ z-10  `}
                             <div
                                 onClick={() => {
                                     const currentUserRole = user?.role;
-                                    if (currentUserRole == "tickets") navigate("/booking")
+                                    if (currentUserRole == USER_ROLES.ticketer) navigate("/booking")
                                     else navigate("/mailing")
 
                                 }}
