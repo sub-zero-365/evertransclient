@@ -23,7 +23,6 @@ import {
     AmountCount,
     BarChart,
     DataDay,
-    Form,
     FormatTable,
     Heading,
     LineChart,
@@ -31,7 +30,6 @@ import {
     NextButton,
     PercentageBar,
     PieChart,
-    PlaceHolderLoader,
     PrevButton,
     Scrollable,
     TicketCounts
@@ -61,19 +59,19 @@ export const loader = (queryClient) => async ({ request }) => {
         ...new URL(request.url).searchParams.entries(),
     ]);
     try {
-        const { search, page, ticketStatus, triptype,
-            sort, limit,
-            daterange, sortBy } = params
-        const formatQuery = {
-            search: search || "",
-            page: page ||  1,
-            daterange: daterange || "",
-            ticketStatus: ticketStatus || "all",
-            sortBy: sortBy || "createdAt",
-            triptype: triptype || "",
-        }
-        await queryClient.ensureQueryData(ticketsQuery(formatQuery))
-        return ({ searchValues: formatQuery })
+        // const { search, page, ticketStatus, triptype,
+        //     sort, limit,
+        //     daterange, sortBy } = params
+        // const formatQuery = {
+        //     search: search || "",
+        //     page: page ||  1,
+        //     daterange: daterange || "",
+        //     ticketStatus: ticketStatus || "all",
+        //     sortBy: sortBy || "createdAt",
+        //     triptype: triptype || "",
+        // }
+        await queryClient.ensureQueryData(ticketsQuery(params))
+        return ({ searchValues: { ...params } })
     } catch (err) {
         return err
     }
@@ -106,9 +104,7 @@ const Appointment = () => {
 
         handleFilterChange("limit", evt.value)
     }
-    const handleChangeText = (e) => {
-        handleFilterChange("search", e.target.value)
-    }
+
 
     const handleFilterChange = (key, value = null) => {
         setQuerySearch(preParams => {
@@ -147,11 +143,7 @@ const Appointment = () => {
 
 
 
-    const handleSortTime = (evt) => {
-        if (querySearch.get("sort") == evt.value) return
-        handleFilterChange("page", 1)
-        handleFilterChange("sort", evt.value)
-    }
+
     const handleChange = (evt) => {
         if (querySearch.get("ticketStatus") == evt.value) return
         handleFilterChange("page", 1)
@@ -307,6 +299,7 @@ z-10  "
                     <AiOutlineSetting size={20} color="#fff" className="" />
                 </div>
             </motion.div>
+            {/* <SearchComponent /> */}
 
             <div>
 
@@ -701,21 +694,19 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 </div>
 
             </div>
- <SearchComponent filterMethod='search' placeholder='search customers'/>
-            <Heading text={"Recent Regular Booking"} className="!mb-4 !text-center md:text-start first-letter:!text-4xl underline underline-offset-8" />
-            {
-                false ? (<PlaceHolderLoader />) : (
-                    <FormatTable
-                        isPreviousData={isPreviousData}
-                        tickets={ticketData?.tickets}
-                        ticketData={ticketData}
-                        admin
-                    // skip={querySearch.get("limit")}
-                    // currentPage={querySearch.get("page")} 
-                    />
-                )
+            {/* <SearchComponent /> */}
+            {console.log("im running")}
 
-            }
+            <Heading text={"Recent Regular Booking"} className="!mb-4 !text-center md:text-start first-letter:!text-4xl underline underline-offset-8" />
+
+            <FormatTable
+                isPreviousData={isPreviousData}
+                tickets={ticketData?.tickets}
+                ticketData={ticketData}
+                admin
+
+            />
+
 
 
             <div className='mt-10 ' />
@@ -723,20 +714,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
                 className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto flex  md:gap-x-2"
 
             >
-                {/* {Array.from({
-                    length: ticketData?.numberOfPages
-                }, (text, index) => {
-                    return <PanigationButton
-                        text={index + 1}
-                        active={activeIndex}
-                        loading={isActiveIndexLoading}
-                        index={index}
 
-                        onClick={() => {
-                            setActiveIndex(index)
-                            checkPages(index + 1)
-                        }} />
-                })} */}
             </div>
         </div>
     )

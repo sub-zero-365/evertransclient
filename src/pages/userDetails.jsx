@@ -5,12 +5,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { AiOutlineSave, AiOutlineSetting } from 'react-icons/ai';
-import { BiCategory } from 'react-icons/bi';
+import { AiOutlineSetting } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io";
-import { MdOutlinePriceChange } from 'react-icons/md';
-import { VscFolderActive } from 'react-icons/vsc';
-import { NavLink, redirect, useLoaderData, useSearchParams } from 'react-router-dom';
+import { NavLink, Outlet, redirect, useParams, useSearchParams } from 'react-router-dom';
 import { default as Select, default as SelectSortDate, default as SelectTrip } from 'react-select';
 import { toast } from "react-toastify";
 import "swiper/css";
@@ -23,23 +20,20 @@ import "swiper/css/scrollbar";
 import "swiper/css/thumbs";
 import { Autoplay, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useFilter } from '../Hooks/FilterHooks';
 import {
-  AmountCount,
   Form,
   FormatTable,
   Heading,
   Loadingbtn,
   NextButton,
-  PercentageBar,
   PlaceHolderLoader,
-  PrevButton,
-  Scrollable, TicketCounts,
-  ToggleSwitch
+  PrevButton
 } from '../components';
+import RestrictUser from '../components/RestrictUser';
 import dateFormater from "../utils/DateFormater";
 import customFetch from "../utils/customFetch";
 import { sortTicketStatusOptions, sortedDateOptions } from "../utils/sortedOptions";
-import RestrictUser from '../components/RestrictUser';
 const singleUserQuery = (id) => {
   return ({
     queryKey: ["user", id],
@@ -68,20 +62,22 @@ export const loader = (queryClient) => async ({ params: P, request }) => {
 }
 
 const Details = () => {
-  const { id, searchValues } = useLoaderData()
+  const id = useParams().id
+  const { handleFilterChange } = useFilter()
+  
   const userData = useQuery(singleUserQuery(id)).data || {}
   const [querySearch, setQuerySearch] = useSearchParams();
-  const handleFilterChange = (key, value = null) => {
-    setQuerySearch(preParams => {
-      if (value == null) {
-        preParams.delete(key)
-      } else {
-        preParams.set(key, value)
-      }
-      return preParams
-    })
+  // const handleFilterChange = (key, value = null) => {
+  //   setQuerySearch(preParams => {
+  //     if (value == null) {
+  //       preParams.delete(key)
+  //     } else {
+  //       preParams.set(key, value)
+  //     }
+  //     return preParams
+  //   })
 
-  }
+  // }
   // const [currentUser, setCurrentUser] = useState({})
   const currentUser = useQuery({
     // queries: [
@@ -143,29 +139,7 @@ const Details = () => {
     // }
     // ]
   })
-  const { refetch: removeRestrictedUser, isFetching: rmFetching } = useQuery({
-    // queries: [
-    // {
-    queryKey: ["rmrestricteduser", id], queryFn: async () => {
-      try {
-        await customFetch.delete("/restricted/" + id, {});
-        // console.log(data)
-        // setIsUserBlock(true)
 
-      } catch (err) {
-        // setIsUserBlock(false)/
-        console.log("this is the error here", err)
-
-      }
-      finally {
-        refetch()
-      }
-    },
-    enabled: false
-    // staleTime: Infinity
-    // }
-    // ]
-  })
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
   const constraintsRef = useRef(null)
@@ -262,7 +236,8 @@ const Details = () => {
   const selectRef = useRef(null)
   return (
     <motion.div
-      className='pt-4 px-2 max-w-full overflow-x-auto select-none container mx-auto
+      className='pt-4 px-2 max-w-full overflow-x-auto !flex-1 !w-full select-none container mx-auto
+
     max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark' ref={constraintsRef}>
       <motion.div
         onClick={() => setToggle(true)}
@@ -312,69 +287,9 @@ z-10  "
       </nav>
       <div className="lg:flex items-start justify-start gap-4">
         <div className="flex-1   mb-6">
-          <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
-
-            <Scrollable className={`!mb-10 !justify-center ${viewAll && "!grid md:!grid-cols-2 gap-y-5"} !transition-all !duration-[1s]`}>
-              <PercentageBar
-                className={`${viewAll && "!min-w-[8rem]"}`}
-                percent={userData?.percentageActive} text="Active Ticket Ratio" />
-              <PercentageBar
-                className={`${viewAll && "!min-w-[8rem]"}`}
-                stroke="red"
-                percent={userData?.percentageInActive} text="InActive Ticket Ratio" />
-            </Scrollable>
-            {
-              false ?
-                <PlaceHolderLoader />
-
-                :
-                <>
-                  <div className='underline  mb-2 underline-offset-8 w-[400px] mx-auto text-center max-w-3xl md:hidden- font-medium text-slate-700 capitalize' onClick={() => {
-
-                    if (querySearch.get("view")) {
-                      handleFilterChange("view")
-                    } else {
-                      handleFilterChange("view", "all")
-                    }
-
-                  }} >{viewAll == "all" ? "view less" : "view all"}</div>
-                  <Scrollable className={`!px-5 ${viewAll && "!grid md:!grid-cols-2"} !transition-all !duration-[1s] `}>
-                    <TicketCounts counts={userData?.totalTickets}
-                      text={"Total Number Of Tickets"}
-                      icon={<AiOutlineSave />} />
-                    <TicketCounts counts={userData?.totalActiveTickets}
-                      text={"Total Number Of active Tickets"}
-                      icon={<VscFolderActive />} />
-                    <TicketCounts
-                      text={"Total Number Of Inactive Tickets"}
-                      counts={userData?.totalInActiveTickets} icon={<BiCategory />} />
-                  </Scrollable>
-                  <Scrollable className={`!px-5 ${viewAll && "!grid md:!grid-cols-2"}`}>
-                    <AmountCount
-                      className="!bg-blue-400"
-                      text="Total coset of all tickets"
-                      icon={<MdOutlinePriceChange />}
-                      amount={userData?.totalPrice} />
-                    <AmountCount
-                      className="!bg-green-400"
-
-                      text="Total coset of all active tickets"
-
-                      icon={<BiCategory />} amount={userData?.totalActivePrice} />
-                    <AmountCount
-                      className="!bg-red-400 !text-black"
-
-                      text="Total coset of all inactive tickets"
-
-                      icon={<BiCategory />} amount={userData?.totalInActivePrice} />
-                  </Scrollable>
-                </>
-            }
-
-
-          </div>
-
-
+      <Form handleChangeText={handleChangeText} params={querySearch} />
+        
+          <Outlet />
         </div>
         <div className={`flex-none py-5
         sidebarr m lg:rounded-lg shadow rounded-lg  overflow-y-auto--
@@ -400,23 +315,11 @@ z-10  "
 
             <Heading text={"Phone Number"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '>{currentUser?.phone || "n/a"}</h4>
+            <Heading text={"Role"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
+            <h4 className='text-sm text-slate-500 font-medium '>{currentUser?.role || "n/a"}</h4>
             <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '>{currentUser?.createdAt && (dateFormater().date) || "n/a"}</h4>
-            {/* <ToggleSwitch
-              onChange={() => {
-                if (isUserBlock) {
-                  removeRestrictedUser()
-                  // refetch()
-                } else {
-                  AddRestrictedUser()
-                }
-
-              }}
-              message={"User is block from printing tickets"}
-              initialMessage={"user is block from priinting tickets"}
-              state={isUserBlock}
-              disabled={(addFetching || rmFetching)}
-            /> */}
+    
             <RestrictUser
               id={id} />
             <Swiper
@@ -563,7 +466,7 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
         </div>
       </div>
 
-      <div className="flex justify-between gap-4 ppl-4
+      {/* <div className="flex justify-between gap-4 ppl-4
       flex-wrap pr-5 items-start mb-10">
         <h1 className="text-2xl mt-4 
         text-gray-700 pl-6
@@ -653,105 +556,15 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
         </div>
 
 
-      </div>
-      <AnimatePresence >
-
-        {
-          querySearch.get("daterange") && <motion.div
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-xs
-            tracking-tighter
-        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-
-            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-              onClick={() => {
-                handleFilterChange("daterange")
-              }}
-
-            >Clear Filter</span>
-            Date filter is on and query is from <span> {new Date(startDate).toLocaleDateString()}</span>
-            <span> {endDate !== null ? "to " + new Date(endDate).toLocaleDateString() : null}</span> </motion.div>
-        }
-        {
-          querySearch.get("search") && <motion.div
-
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-
-            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
-        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-
-            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-              onClick={() => {
-                handleFilterChange("search")
-                // const temp = params;
-                // if (temp.search) delete temp.search;
-                // setParams({ ...temp })
-
-              }}
-
-            >Clear Filter</span>
-            Text Filter is On  </motion.div>
-        }
-        {
-          querySearch.get("sort") && querySearch.get("sort") !== "newest" && <motion.div
-
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-
-            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
-        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-              onClick={() => {
-                handleFilterChange("sort")
-              }}
-
-            >Clear Filter</span>
-            Text Filter is On  </motion.div>
-        }
-        {
-          querySearch.get("ticketStatus") && querySearch.get("ticketStatus") !== "all" && <motion.div
-
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-
-            className='relative bg-red-300/25 mb-10 my-2 pt-1 pb-2 rounded-sm text-sm tracking-tighter
-        font-montserrat text-center w-[min(calc(100vw-2.5rem),25rem)] min-h-[2rem] mx-auto  shadow-lg ring-1 ring-red-300'>
-
-            <span className='absolute left-1/2 -translate-x-1/2 px-6 pt-1 pb-1.5 shadow font-montserrat top-10 rounded-lg text-xs lg:text-sm bg-green-400 '
-              onClick={() => {
-                handleFilterChange("ticketStatus")
-              }}
-
-            >Clear Filter</span>
-            Ticket are set to <span className='px-2 bg-red-300 text-black text-xs rounded-lg mx-4 ring-1 ring-red-900'>{querySearch.get("ticketStatus")}</span> Filter is On  </motion.div>
-        }
-      </AnimatePresence>
-
-      <Form handleChangeText={handleChangeText} params={querySearch} />
+      </div> */}
 
 
-      {
-
-        !false && <FormatTable
-          isPreviousData={false}
-          ticketData={userData}
-          admin
 
 
-        />
-      }
 
-      {
-        false && (
-          <PlaceHolderLoader />
-        )
-      }
+       
+
+     
       <div className='mt-10 ' />
       {/* <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
         {Array.from({

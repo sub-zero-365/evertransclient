@@ -1,78 +1,68 @@
-import { lazy, Suspense } from 'react'
+import axios from "axios";
+import { lazy, Suspense } from 'react';
 import {
   ToastContainer
-} from 'react-toastify'
-import "react-toastify/dist/ReactToastify.css"
-import axios from "axios"
-import { UserLayout, DashboardLayout, ProtectedRoute } from "./components";
+} from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { DashboardLayout, ProtectedRoute, UserLayout } from "./components";
 // import RestaurantLayout from "./components"
-import { Home, Auth, SingleTicket } from "./pages";
-import {
-  RouterProvider,
-  createBrowserRouter
-}
-  from 'react-router-dom'
-import { ErrorElement } from './components'
-import 'react-datepicker/dist/react-datepicker.css'
-import "swiper/css"
-import "swiper/css/navigation"
-import "swiper/css/pagination"
-import "swiper/css/autoplay"
-import "swiper/css/a11y"
-import "swiper/css/scrollbar"
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
-import "swiper/css/scrollbar"
-import "core-js/features/array/at";
 import {
   QueryClient,
   QueryClientProvider,
-} from '@tanstack/react-query'
-import Assist from "./pages/Assistant.user"
-import { ErrorFindBus, loader as findBusLoader } from "./pages/FindBus"
-import { loader as busSitLoader } from "./pages/BusSits"
-import { loader as checkOutLoader, action as checkOutAction } from './pages/CheckOutInfo'
-import { loader as loginLoader, action as loginAction } from './pages/Login'
-import { loader as protectLoader } from "./components/ProtectedRoute"
-import { loader as singleTicketLOader } from "./pages/SingleTicket"
-import { loader as singleSeatLoader, action as singleSeatAction } from "./pages/SeatDetails"
-import { loader as dashboardLayoutLoader } from "./components/DashboardLayout"
-import { loader as mainticketsloader } from "./pages/Appointment"
-import { loader as usersLoader, action as usersAction } from "./pages/Users"
-import { loader as userLoader } from "./pages/userDetails"
-import { loader as seatsLoader, action as seatAction } from "./pages/Seats"
-import { loader as ticketsLoader } from "./pages/Books"
-import { loader as busLoader } from "./pages/Bus"
-import { loader as singleBusLoader, action as singleBusAction } from "./pages/BusDetails"
-import { loader as assistantsLoader } from "./pages/Assistant"
-import { loader as securityLoader } from "./pages/SecurityPage"
-import { loader as editSingleLoader } from "./pages/EditSingleTicket"
-import { action as findBusAction } from './pages/FindBusSingle'
-import { loader as busesSingleLoader, action as editTicketAction } from "./pages/BusesSingle"
-import { loader as singleAssistantLoader } from "./pages/Assistant.user"
-import { action as mailingAction } from "./pages/MailingPreview"
-import { loader as mailsLoader } from "./pages/Mails"
-import { action as carAction } from "./pages/EditBusPage"
-import { action as logoutAction } from "./pages/Assistant.user"
-import { loader as singleMailLoader, action as editSingleMailAction } from "./pages/SingleMail"
-import { loader as routesLoader, action as routesActions } from "./pages/RoutesPage"
-import { loader as citiesLoader, action as cityActions } from "./pages/Cities"
-import { loader as restaurantuserloader } from "./pages/RestaurantUser"
-import SingleTicketErrorElement from './components/SingleTicketErrorElement'
-import { loader as customerStatsloader } from "./pages/CustomerStats"
-import { loader as newSeatloader, action as newSeatAction } from "./pages/AddNewBusPage"
-import { loader as singleRecieptLoader } from "./pages/SingleReciept"
-import { action as addProductAction } from "./pages/AddProduct"
-import { loader as AdminMailsLoader } from "./pages/AdminMailStat"
-import EditSingleTicket from './pages/EditSingleTicket'
-import DashboardHome from "./pages/DashBoardHome"
-import Mailing from './pages/Mailing'
-
-// import CustomerPage from './pages/CustomerPage'
-import MailingForm from './components/MailingForm'
-import MailingPreview from './pages/MailingPreview'
+} from '@tanstack/react-query';
+import "core-js/features/array/at";
+import 'react-datepicker/dist/react-datepicker.css';
+import {
+  createBrowserRouter,
+  RouterProvider
+} from 'react-router-dom';
+import "swiper/css";
+import "swiper/css/a11y";
+import "swiper/css/autoplay";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import "swiper/css/thumbs";
+import { ErrorElement } from './components';
+import { loader as dashboardLayoutLoader } from "./components/DashboardLayout";
+import { loader as protectLoader } from "./components/ProtectedRoute";
+import SingleTicketErrorElement from './components/SingleTicketErrorElement';
+import { Auth, Home, SingleTicket } from "./pages";
+import { action as newSeatAction, loader as newSeatloader } from "./pages/AddNewBusPage";
+import { action as addProductAction } from "./pages/AddProduct";
+import { loader as AdminMailsLoader } from "./pages/AdminMailStat";
+import { loader as mainticketsloader } from "./pages/Appointment";
+import { loader as assistantsLoader } from "./pages/Assistant";
+import Assist, { action as logoutAction, loader as singleAssistantLoader } from "./pages/Assistant.user";
+import { loader as ticketsLoader } from "./pages/Books";
+import { loader as busLoader } from "./pages/Bus";
+import { action as singleBusAction, loader as singleBusLoader } from "./pages/BusDetails";
+import { loader as busesSingleLoader, action as editTicketAction } from "./pages/BusesSingle";
+import { loader as busSitLoader } from "./pages/BusSits";
+import { action as checkOutAction, loader as checkOutLoader } from './pages/CheckOutInfo';
+import { loader as citiesLoader, action as cityActions } from "./pages/Cities";
+import { loader as customerStatsloader } from "./pages/CustomerStats";
+import DashboardHome from "./pages/DashBoardHome";
+import { action as carAction } from "./pages/EditBusPage";
+import EditSingleTicket, { loader as editSingleLoader } from './pages/EditSingleTicket';
+import { ErrorFindBus, loader as findBusLoader } from "./pages/FindBus";
+import { action as findBusAction } from './pages/FindBusSingle';
+import { action as loginAction, loader as loginLoader } from './pages/Login';
+import Mailing from './pages/Mailing';
+import { action as mailingAction } from "./pages/MailingPreview";
+import { loader as mailsLoader } from "./pages/Mails";
+import { action as routesActions, loader as routesLoader } from "./pages/RoutesPage";
+import { action as singleSeatAction, loader as singleSeatLoader } from "./pages/SeatDetails";
+import { action as seatAction, loader as seatsLoader } from "./pages/Seats";
+import { loader as securityLoader } from "./pages/SecurityPage";
+import { action as editSingleMailAction, loader as singleMailLoader } from "./pages/SingleMail";
+import { loader as singleTicketLOader } from "./pages/SingleTicket";
+import { loader as singleuserLoaderticket } from "./pages/UserDetailsTicket";
+import { action as usersAction, loader as usersLoader } from "./pages/Users";
+import {loader as singleUserMailQuery} from "./pages/UserDetailsMail"
+import MailingForm from './components/MailingForm';
+import MailingPreview from './pages/MailingPreview';
 import Policy from './pages/Policy';
 const FallBack = () => (<div className="h-screen w-full
 bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
@@ -85,7 +75,7 @@ const BusesSingle = lazy(() => import("./pages/BusesSingle"))
 const Seat = lazy(() => import("./pages/Seats"));
 const Suspended = lazy(() => import("./pages/Suspended"));
 const Assistant = lazy(() => import("./pages/Assistant"));
-
+const UserDetailsTicket = lazy(() => import("./pages/UserDetailsTicket"))
 const Bus = lazy(() => import("./pages/Bus"));
 const CustomerPage = lazy(() => import("./pages/CustomerPage"));
 const SingleMail = lazy(() => import("./pages/SingleMail"));
@@ -124,6 +114,7 @@ const CheckOutPage = lazy(() => import("./pages/CheckOut"));
 const AddProductPage = lazy(() => import("./pages/AddProduct"));
 const SingleRecieptPage = lazy(() => import("./pages/SingleReciept"));
 const ProductPreviewPage = lazy(() => import("./pages/ProductPreviewPage"));
+const UserDetailsMail = lazy(() => import("./pages/UserDetailsMail"));
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://evertrans.onrender.com"
 const setTheme = (theme) => {
@@ -611,10 +602,32 @@ const router = createBrowserRouter([
       },
       {
         path: "details/:id",
+
         element: <Suspense>
           <Details />
         </Suspense>,
-        loader: userLoader(queryClient),
+
+        children: [
+          {
+            index: true,
+            loader: singleuserLoaderticket(queryClient),
+            element: <Suspense>
+              <UserDetailsTicket />
+            </Suspense>
+          },
+          {
+            // index: true,
+            loader:singleUserMailQuery(queryClient),
+            path: "mailer",
+            element: <Suspense>
+              <UserDetailsMail />
+            </Suspense>
+          },
+
+
+        ],
+
+
       },
       {
         path: "bus",

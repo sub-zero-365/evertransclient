@@ -238,17 +238,17 @@ const Appointment = ({ skip, currentPage }) => {
                     <div className="flex  items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow
                     bg-white dark:bg-slate-800 mx-4">
                         <div className="flex-1">{
-                            user?.role == "user" &&
+                            user?.role == USER_ROLES.sub_admin &&
                             <Heading text="Add A New Employee" className="!mb-2 !pl-4 !font-black mt-0" />
 
 
                         }
                             <p className="mb-3 text-sm  px-6">
-                                {user?.role == "admin" ? "Inorder to add new employes login as normal admin" : " Employees added help to book ticket and give more data"}
+                                {user?.role == USER_ROLES.admin ? "Inorder to add new employes login as normal admin" : " Employees added help to book ticket and give more data"}
                             </p>
                         </div>
                         {
-                            user?.role !== "admin" &&
+                            user?.role !== USER_ROLES.admin &&
                             <motion.div onClick={() => setIsOpen(c => !c)}
                                 initial={{ x: "-50%" }}
                                 animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
@@ -319,7 +319,7 @@ z-10  "
                 {/* 
 */}
 
-                <div className={`${user?.role == "admin" && "!invisible"}
+                <div className={`${user?.role == USER_ROLES.admin && "!invisible"}
             ${isOpen ? "visible opacity-100 pointer-events-all " : "invisible opacity-0 pointer-events-none"}
             fixed 
             lg:static
@@ -552,7 +552,7 @@ dark:border-gray-600
                                                     ></Button> : <Button
                                                         className={"!max-w-[14rem] !w-full"}
                                                         name="View Employee"
-                                                        href={`/dashboard/mails?admin=true&createdBy=${_id}`}
+                                                        href={`/dashboard/details/${_id}/mailer`}
                                                     ></Button>
 
                                                 }

@@ -22,9 +22,6 @@ bg-white dark:bg-color_dark shadow-sm shadow-slate-300 container-- mx-auto px-4"
             <div className='hover:bg-slate-300 md:hidden w-[50px] h-[50px] transition-bg flex items-center justify-center rounded-full ' onClick={toggleSideBar}>
                 <AiOutlineMenu size={25} />
             </div>
-
-            <div className="flex gap-x-5">
-
                 <div className="hidden md:block gap-x-4">
                     <motion.div
                         initial={false}
@@ -35,8 +32,7 @@ bg-white dark:bg-color_dark shadow-sm shadow-slate-300 container-- mx-auto px-4"
                     <p className="w-fit mx-auto ">{user?.fullname || "loading"}</p>
 
                 </div>
-            </div>
-            <Link to="/dashboard" className="-auto hidden sm:block">DashBoard </Link>
+            <Link to="/dashboard" className="auto text-xl  sm:block font-semibold text-slate-700">DashBoard </Link>
             <div className="md:space-x-6 space-x-3 flex items-center">
                 <UiButton name="Change view" className="hidden !text-xs lg:!inline-block !rounded-xl" onClick={() => setView(!view)} />
 

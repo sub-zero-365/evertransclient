@@ -131,8 +131,7 @@ const MailTemplate = ({ url }) => {
         downloadbaseurl = process.env.REACT_APP_PROD_URL
 
     }
-    return (<div className="pt-4 px-2 max-w-full overflow-x-auto select-none
-    max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark">
+    return (<div className="">
         <div className="lg:flex flex flex-col lg:flex-row items-center lg:items-start !w-full lg:gap-x-10 justify-center">
 
             <div className="flex-1 lg:flex-none w-full max-w-2xl">
@@ -504,142 +503,145 @@ const SingleMail = () => {
         <UserTicketContext.Provider
             value={{ userMail, setUserMail }}
         >
-            <div
-                className="flex max-w-5xl mx-auto items-center justify-between py-4 px-4 border-b bg-slate-50--  mb-10"
-            >
-
-                <Rounded
-                    onClick={() => navigate(-1)}
-                    className="!w-10 !h-10"
+            <div className="w-full pt-4 px-2 max-w-full overflow-x-auto select-none
+    max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark">
+                <div
+                    className="flex max-w-5xl mx-auto items-center justify-between py-4 px-4 border-b bg-slate-50--  mb-10"
                 >
-                    <AiOutlineArrowLeft
-                        size={25}
-                    />
 
-                </Rounded>
-                <h3 className="text-2xl  font-bold flex-1 text-center cursor-pointer "
-                    onClick={() => {
-                        window?.navigator?.clipboard?.writeText(id).then(() => {
-                            alert("copy success")
-                        }).catch(err => alert("something went wrong"))
-                        // inputRef.current?.select();
-                        // // document.execCommand("copy");
-                        // document.execCommand('copy');
-                    }}
-                >#{userMail?.id}</h3>
-                {/* <textarea type="text" value={id}
+                    <Rounded
+                        onClick={() => navigate(-1)}
+                        className="!w-10 !h-10"
+                    >
+                        <AiOutlineArrowLeft
+                            size={25}
+                        />
+
+                    </Rounded>
+                    <h3 className="text-2xl  font-bold flex-1 text-center cursor-pointer "
+                        onClick={() => {
+                            window?.navigator?.clipboard?.writeText(id).then(() => {
+                                alert("copy success")
+                            }).catch(err => alert("something went wrong"))
+                            // inputRef.current?.select();
+                            // // document.execCommand("copy");
+                            // document.execCommand('copy');
+                        }}
+                    >#{userMail?.id}</h3>
+                    {/* <textarea type="text" value={id}
 ref={inputRef}
 id="GfGInput"
 // className='invisible w-0 h-0'
 /> */}
-                {userMail?.id &&
-                    <UiButton
-                        className="flex-none"
-                    >
-                        <a
-                            target="_blank"
-                            href={`${downloadbaseurl}/mails/download/${userMail?._id}`}>
-                            DOWNLOAD
-                        </a>
+                    {userMail?.id &&
+                        <UiButton
+                            className="flex-none"
+                        >
+                            <a
+                                target="_blank"
+                                href={`${downloadbaseurl}/mails/download/${userMail?._id}`}>
+                                DOWNLOAD
+                            </a>
 
-                    </UiButton>
-                }
-            </div>
-            <Suspense
-                fallback={
-                    <div role="status" class="w-full mx-auto max-w-5xl p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                        </UiButton>
+                    }
+                </div>
+                <Suspense
+                    fallback={
+                        <div role="status" class="w-full mx-auto max-w-5xl p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
                             </div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
                             </div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
                             </div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
                             </div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
                             </div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
                             </div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
                             </div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-                        </div>
-                        <div class="flex items-center justify-between pt-4">
-                            <div>
-                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                            <div class="flex items-center justify-between pt-4">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
                             </div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-                        </div>
-                        <div class="flex items-center justify-between pt-4">
-                            <div>
-                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                            <div class="flex items-center justify-between pt-4">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
                             </div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-                        </div>
-                        <div class="flex items-center justify-between pt-4">
-                            <div>
-                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                            <div class="flex items-center justify-between pt-4">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
                             </div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-                        </div>
-                        <div class="flex items-center justify-between pt-4">
-                            <div>
-                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-                                <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                            <div class="flex items-center justify-between pt-4">
+                                <div>
+                                    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                    <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                </div>
+                                <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
                             </div>
-                            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                            <span class="sr-only">Loading...</span>
                         </div>
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                }
-            >
-                <Await
-                    resolve={Mail}
-                    errorElement={<SingleTicketErrorElement />}
+                    }
                 >
-                    <MailTemplate
-                        url={url}
-                        id={id}
-                        readonly={readonly}
-                    />
-                </Await>
-            </Suspense>
+                    <Await
+                        resolve={Mail}
+                        errorElement={<SingleTicketErrorElement />}
+                    >
+                        <MailTemplate
+                            url={url}
+                            id={id}
+                            readonly={readonly}
+                        />
+                    </Await>
+                </Suspense>
+            </div>
         </UserTicketContext.Provider>
     )
 }

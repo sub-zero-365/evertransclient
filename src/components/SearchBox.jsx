@@ -4,7 +4,6 @@ import { useSearchParams } from "react-router-dom";
 import debounce from "../utils/debounceFnc"
 import { useState, useEffect, useRef } from "react";
 export default function SearchComponent({
-
     type = "search",
     filterMethod = "search",
     placeholder = "Search ..." }) {
