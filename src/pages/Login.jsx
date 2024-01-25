@@ -5,12 +5,14 @@ import {
   redirect, useLoaderData, useActionData
 } from "react-router-dom"
 import LoadingButton from "../components/LoadingButton";
+import { motion, AnimatePresence } from "framer-motion"
 import { toast } from "react-toastify"
 import customFetch from "../utils/customFetch";
 import { Helmet } from 'react-helmet'
 import LoadingButtonTimeOut from "../components/LoadingButtonTimeOut";
 import { USER_ROLES } from "../utils/roles";
-
+import { useState, forwardRef } from "react";
+import { Eye, LockKeyhole } from "lucide-react"
 export const loader = async ({ request }) => {
   const params = Object.fromEntries([
     ...new URL(request.url).searchParams.entries(),
@@ -21,6 +23,7 @@ const wait = async (ms = 10000) => new Promise((r) => setTimeout(() => { r() }, 
 export const action = (queryClient) => async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
+
 
   // await wait()
   try {
@@ -44,6 +47,15 @@ export const action = (queryClient) => async ({ request }) => {
 }
 
 const Login = () => {
+  const Eye_Icon = forwardRef((props, ref) => (
+    <Eye {...props} ref={ref} />
+  ))
+  const Password_Icon = forwardRef((props, ref) => (
+    <LockKeyhole {...props} ref={ref} />
+  ))
+  const EyeIcon = motion(Eye_Icon)
+  const PasswordIcon = motion(Password_Icon)
+  const [seepassword, setSeePassword] = useState(false)
   const [searchParams] = useSearchParams()
   const from = searchParams.get("from")
   const errorMessageFromLoader = useLoaderData()
@@ -137,11 +149,12 @@ const Login = () => {
                 </label>
               </div>
 
-              <div className="relative mb-6" data-te-input-wrapper-init>
-                <input
-                  name="password"
-                  type="password"
-                  className="
+              <div className="relative mb-6 flex items-stretch" data-te-input-wrapper-init>
+                <div className="flex-1">
+                  <input
+                    name="password"
+                    type={!seepassword ? "password" : "text"}
+                    className="
               peer block min-h-[auto] border-2 w-full rounded shadow-none
               focus:border-2
               focus:border-blue-400
@@ -153,11 +166,11 @@ const Login = () => {
               dark:text-neutral-200
               dark:placeholder:text-neutral-200
               [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                  id="exampleFormControlInput33"
-                  placeholder="Password" required />
-                <label
-                  htmlFor="exampleFormControlInput33"
-                  className="pointer-events-none 
+                    id="exampleFormControlInput33"
+                    placeholder="Password" required />
+                  <label
+                    htmlFor="exampleFormControlInput33"
+                    className="pointer-events-none 
               absolute left-3
               top-0 mb-0
               max-w-[90%]
@@ -186,8 +199,26 @@ const Login = () => {
               motion-reduce:transition-none
               dark:text-neutral-200
               dark:peer-focus:text-primary"
-                >Password
-                </label>
+                  >Password
+                  </label>
+                </div>
+                <motion.span
+                  // whileHover={{ scale: 1.2 }}
+                  className="flex-none flex justify-center cursor-pointer border-[1px_solid_orange] p-1 rounded-sm items-center ml-0.5 bg-slate-400/25"
+                  onClick={() => setSeePassword(password => !password)}
+                >
+                  <AnimatePresence mode="wait" initial={false}>
+                    {!seepassword ? <EyeIcon
+                      initial={{ scale: 0, x: -100 }}
+                      animate={{ scale: 1, x: 0 }}
+                      exit={{ scale: 10, x: -100 }}
+                    /> : <PasswordIcon
+                      initial={{ scale: 0, x: -100 }}
+                      animate={{ scale: 1, x: 0 }}
+                      exit={{ scale: 10, x: -100 }} />}
+                  </AnimatePresence>
+                </motion.span>
+
               </div>
 
               {errorMessageFromAction && <p
