@@ -7,16 +7,24 @@ import { MdOutlinePriceChange } from 'react-icons/md'
 import { BiCategory } from 'react-icons/bi'
 import { useFilter } from '../Hooks/FilterHooks'
 import { toast } from 'react-toastify'
-
+import SearchBox from "../components/SearchBox"
 import {
     useQuery
 } from '@tanstack/react-query';
 import { AiOutlineSave } from 'react-icons/ai'
-const singleUserQuery = (id) => {
+const singleUserQuery = (id, params = {}) => {
+    // const search
+    const { search } = params
     return ({
-        queryKey: ["user", id],
+        queryKey: ["user-details", {
+            id, search
+        }],
         queryFn: async () => {
-            const res = await customFetch.get("/ticket?createdBy=" + id)
+            const res = await customFetch.get("/ticket?createdBy=" + id, {
+                params: {
+                    search: search ?? ""
+                }
+            })
             return res.data
         }
     })
@@ -26,9 +34,10 @@ export const loader = (queryClient) => async ({ params: P, request }) => {
     const params = Object.fromEntries([
         ...new URL(request.url).searchParams.entries(),
     ]);
+    console.log(params)
+    await queryClient.ensureQueryData(singleUserQuery(P.id, params))
     try {
 
-        await queryClient.ensureQueryData(singleUserQuery(P.id))
         return ({
             id: P.id,
             searchValues: params
@@ -40,22 +49,12 @@ export const loader = (queryClient) => async ({ params: P, request }) => {
 }
 const UserDetailsTicket = () => {
     const { handleFilterChange } = useFilter()
-    // const { id } = useLoaderData()
+    const { searchValues } = useLoaderData()
     const id = useParams().id
-    const userData = useQuery(singleUserQuery(id)).data
+    const userData = useQuery(singleUserQuery(id, searchValues))?.data
     const [querySearch, setQuerySearch] = useSearchParams();
 
 
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(null);
-
-
-    const onChange = (dates) => {
-        const [start, end] = dates;
-        setStartDate(start);
-        setEndDate(end);
-        console.log(dates)
-    };
 
     const [_userData, _setUserData] = useState({
         labels: ["active tickets", "inactive tickets"],
@@ -89,35 +88,12 @@ const UserDetailsTicket = () => {
     const viewAll = querySearch.get("view");
 
 
-    const handleChangeText = (e) => {
-
-        handleFilterChange("search", e.target.value)
-    }
 
 
-    const handleBoardingRangeSearch = () => {
-        if (querySearch.get("daterange")) {
-            handleFilterChange("daterange", null)
-        }
-        handleFilterChange("boardingRange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
-    }
-    const handleFilterSearch = () => {
-        if (querySearch.get("boardingRange")) {
-            handleFilterChange("boardingRange", null)
-        }
-        handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
-    }
 
-    const handleSortTime = (evt) => {
-        if (querySearch.get("sort") == evt.value) return
-        handleFilterChange("sort", evt.value)
-    }
-    const handleChange = (evt) => {
-        if (querySearch.get("ticketStatus") == evt.value) return
-        handleFilterChange("ticketStatus", evt.value)
-    }
     return (
         <>
+
             <div className="flex items-start  flex-wrap gap-x-4 gap-y-6 justify-center ">
 
                 <Scrollable className={`!mb-10 !justify-center !w-full  flex ${viewAll && "!grid md:!grid-cols-2 gap-y-5"} !transition-all !duration-[1s]`}>

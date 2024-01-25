@@ -37,21 +37,6 @@ export const options = {
     },
 };
 
-// const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-// export const data = {
-//     labels,
-//     datasets: [
-//         {
-//             fill: true,
-//             label: 'Dataset 2',
-//             data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-//             borderColor: 'rgb(53, 162, 235)',
-//             backgroundColor: 'rgba(53, 162, 235, 0.5)',
-//         },
-//     ],
-// };
-
 export function AreaChart({ chartData }) {
     return <Line options={options} data={chartData} />;
 }

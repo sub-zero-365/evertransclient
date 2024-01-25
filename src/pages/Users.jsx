@@ -34,16 +34,18 @@ import FilterButton from '../components/FilterButton';
 import LoadingButton from '../components/LoadingButton';
 import { USER_ROLES } from '../utils/roles';
 import EmptyBox from './ShowBuses';
-const usersQuery = {
-    queryKey: ["admin-users"],
-    queryFn: async () => {
-        const res = await customFetch.get(
-            "/users/user-stats"
-        )
-        return res.data
+import ChartsOptionsUi from '../components/ChartsOptionsUi';
+import { useQueryFnc, usersQuery } from "../utils/tenstackqueryfnc"
+// const usersQuery = {
+//     queryKey: ["admin-users"],
+//     queryFn: async () => {
+//         const res = await customFetch.get(
+//             "/users/user-stats"
+//         )
+//         return res.data
 
-    }
-}
+//     }
+// }
 export const action = (queryClient) => async ({ request }) => {
     try {
         const form = await request.formData()
@@ -80,7 +82,7 @@ const Appointment = ({ skip, currentPage }) => {
     const { user } = useDashBoardContext()
     const queryClient = useQueryClient()
     // const { user } = useDashBoardContext()
-    const { userdetails: users } = useQuery(usersQuery)?.data || {}
+    const { userdetails: users } = useQueryFnc(usersQuery)?.data || {}
     const data = {}
     const [selected, setSelected] = useState(null)
 
@@ -141,7 +143,8 @@ const Appointment = ({ skip, currentPage }) => {
                 datasets: [
                     {
                         label: "ticket vs user data",
-                        data: users?.map((v) => v.total)
+                        data: users?.map((v) => v.total),
+
 
                     },
                 ]
@@ -179,7 +182,7 @@ const Appointment = ({ skip, currentPage }) => {
     return (
         <motion.div
 
-            className="max-w-full !flex-1 w-full   overflow-auto max-h-[calc(100vh-3rem)] pt-10 " >
+            className="max-w-full !flex-1 w-full   overflow-y-auto max-h-[calc(100vh-3rem)] h-full pt-10 " >
             <Alert toggle={t} message="Created successfully" setToggle={setT} />
             <EmptyBox
                 title="Delete  User Account"
@@ -282,16 +285,21 @@ z-10  "
                             text="Total Number Of Employees"
                         />
                     </Scrollable>
-                    <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5 scrollto">
+                    {/* <Scrollable className="!justify-start !max-w-full !w-fit !mx-auto px-4 pb-5 scrollto">
                         {
                             chatsOptions.map((query) => <FilterButton
                                 name="chartOption"
                                 {...query} key={query} />)
                         }
 
-                    </Scrollable>
+                    </Scrollable> */}
+                    <ChartsOptionsUi
+                        userData={userData}
+                        default_chart='pie'
+                        btn_position='bottom'
+                    />
                     {
-                        userData && (
+                        userData && false && (
                             searchParams.get("chartOption") == "line" && <LineChart chartData={userData} />
                             ||
 

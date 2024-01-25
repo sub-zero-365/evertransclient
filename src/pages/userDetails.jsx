@@ -1,3 +1,5 @@
+import SearchBox from "../components/SearchBox"
+
 import {
   useQuery
 } from '@tanstack/react-query';
@@ -8,7 +10,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { IoMdClose } from "react-icons/io";
 import { NavLink, Outlet, redirect, useParams, useSearchParams } from 'react-router-dom';
-import { default as Select, default as SelectSortDate, default as SelectTrip } from 'react-select';
 import { toast } from "react-toastify";
 import "swiper/css";
 import "swiper/css/a11y";
@@ -22,18 +23,14 @@ import { Autoplay, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useFilter } from '../Hooks/FilterHooks';
 import {
-  Form,
-  FormatTable,
   Heading,
   Loadingbtn,
   NextButton,
-  PlaceHolderLoader,
   PrevButton
 } from '../components';
 import RestrictUser from '../components/RestrictUser';
 import dateFormater from "../utils/DateFormater";
 import customFetch from "../utils/customFetch";
-import { sortTicketStatusOptions, sortedDateOptions } from "../utils/sortedOptions";
 const singleUserQuery = (id) => {
   return ({
     queryKey: ["user", id],
@@ -64,8 +61,7 @@ export const loader = (queryClient) => async ({ params: P, request }) => {
 const Details = () => {
   const id = useParams().id
   const { handleFilterChange } = useFilter()
-  
-  const userData = useQuery(singleUserQuery(id)).data || {}
+
   const [querySearch, setQuerySearch] = useSearchParams();
   // const handleFilterChange = (key, value = null) => {
   //   setQuerySearch(preParams => {
@@ -100,7 +96,7 @@ const Details = () => {
     setIsUserBlock] = useState(true
     )
 
-  const { refetch, isLoading } = useQuery({
+  const { refetch } = useQuery({
     // queries: [
     // {
     queryKey: ["current-user-status", id], queryFn: async () => {
@@ -143,17 +139,6 @@ const Details = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
   const constraintsRef = useRef(null)
-  const style = {
-    control: base => ({
-      ...base,
-      border: 0,
-      boxShadow: "none",
-      background: "transparent",
-      color: "red"
-    }
-    )
-
-  }
 
   const onChange = (dates) => {
     const [start, end] = dates;
@@ -191,13 +176,8 @@ const Details = () => {
   }
   )
 
-  const viewAll = querySearch.get("view");
 
 
-  const handleChangeText = (e) => {
-
-    handleFilterChange("search", e.target.value)
-  }
 
 
   const handleBoardingRangeSearch = () => {
@@ -213,14 +193,6 @@ const Details = () => {
     handleFilterChange("daterange", `start=${startDate ? new Date(startDate).toLocaleDateString('en-ZA') : null},end=${endDate ? new Date(endDate).toLocaleDateString('en-ZA') : null}`)
   }
 
-  const handleSortTime = (evt) => {
-    if (querySearch.get("sort") == evt.value) return
-    handleFilterChange("sort", evt.value)
-  }
-  const handleChange = (evt) => {
-    if (querySearch.get("ticketStatus") == evt.value) return
-    handleFilterChange("ticketStatus", evt.value)
-  }
 
 
 
@@ -233,12 +205,13 @@ const Details = () => {
 
   const [toggle, setToggle] = useState(false);
 
-  const selectRef = useRef(null)
+  // const selectRef = useRef(null)
   return (
     <motion.div
-      className='pt-4 px-2 max-w-full overflow-x-auto !flex-1 !w-full select-none container mx-auto
+      className='pt-4 px-2 max-w-full  overflow-x-auto !flex-1 !w-full select-none container mx-auto
 
-    max-h-[calc(100vh-4rem)] overflow-y-auto bg-color_light dark:bg-color_dark' ref={constraintsRef}>
+    max-h-[calc(100vh-4rem)]- overflow-y-auto bg-color_light dark:bg-color_dark' ref={constraintsRef}>
+
       <motion.div
         onClick={() => setToggle(true)}
         animate={{
@@ -285,16 +258,17 @@ z-10  "
 
         </ol>
       </nav>
-      <div className="lg:flex items-start justify-start gap-4">
-        <div className="flex-1   mb-6">
-      <Form handleChangeText={handleChangeText} params={querySearch} />
-        
+      <div className="lg:flex items-start justify-start gap-4 w-full">
+        <div className="flex-1- lg:w-[calc(100%-20rem)]  overflow-y-auto max-h-screen ">
+          {/* <Form handleChangeText={handleChangeText} params={querySearch} />
+          */}
+          <SearchBox />
           <Outlet />
         </div>
-        <div className={`flex-none py-5
-        sidebarr m lg:rounded-lg shadow rounded-lg  overflow-y-auto--
+        <div className={`flex-none py-5 lg:sticky top-[4rem]
+        sidebarr m lg:rounded-lg shadow rounded-lg  overflow-y-auto
         ${toggle ? "right-0" : "!-right-full"}
-        duration-500 transition-[right] shadow lg:shadow-none lg:max-w-sm lg:w-[22rem] 
+        duration-500 transition-[right] shadow lg:shadow-none lg:max-w-sm lg:w-[20rem] 
         text-center bg-white dark:bg-slate-800 rounded-sm right-0 top-12 h-fit
            w-[calc(100vw-3.5rem)] max-w-sm  z-20 fixed   lg:static px-4 `}>
           <span className="absolute w-[3.125rem] h-[3.125rem] top-0 
@@ -319,9 +293,9 @@ z-10  "
             <h4 className='text-sm text-slate-500 font-medium '>{currentUser?.role || "n/a"}</h4>
             <Heading text={"Created At"} className="!font-semibold !mb-0 !text-lg first-letter:text-2xl" />
             <h4 className='text-sm text-slate-500 font-medium '>{currentUser?.createdAt && (dateFormater().date) || "n/a"}</h4>
-    
-            <RestrictUser
-              id={id} />
+            {id && <RestrictUser
+              id={id} />}
+
             <Swiper
               className='my-6
                             px-4 
@@ -562,9 +536,9 @@ focus:outline-none focus:ring-0 active:bg-red-700 active:shadow-[0_8px_9px_-4px_
 
 
 
-       
 
-     
+
+
       <div className='mt-10 ' />
       {/* <Scrollable className="!mb-10 !gap-x-2 px-4 !flex-nowrap !overflow-x-auto">
         {Array.from({

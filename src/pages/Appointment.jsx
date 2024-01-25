@@ -9,51 +9,47 @@ import ClearFilter from '../components/ClearFilter';
 // import formatQuery from "../utils/formatQueryStringParams"
 import { Autoplay, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import ChartsOptionsUi from '../components/ChartsOptionsUi';
 import { components, style } from "../utils/reactselectOptionsStyles";
 
-import { useQuery } from "@tanstack/react-query";
 
 import EmptyModal from "../pages/ShowBuses";
-
+import { ticketsQuery, useQueryFnc } from "../utils/tenstackqueryfnc"
 import { AiOutlineSave } from 'react-icons/ai';
 import { BiCategory } from 'react-icons/bi';
 import { MdOutlinePriceChange } from 'react-icons/md';
 import { VscFolderActive } from 'react-icons/vsc';
 import {
     AmountCount,
-    BarChart,
     DataDay,
     FormatTable,
     Heading,
-    LineChart,
     Loadingbtn,
     NextButton,
     PercentageBar,
-    PieChart,
     PrevButton,
     Scrollable,
     TicketCounts
 } from '../components';
 import AnimatedText from '../components/AnimateText';
-import { AreaChart } from '../components/AreaChart';
+import SearchBox from '../components/SearchBox';
 import UiButton from '../components/UiButton';
 import customFetch from '../utils/customFetch';
 import { skipOptions, sortTicketStatusOptions } from "../utils/sortedOptions";
-import SearchComponent from '../components/SearchBox';
 
-const ticketsQuery = (params = {}) => {
-    return ({
-        queryKey: ["tickets", { ...params }],
-        queryFn: async () => {
-            const res = await customFetch.get("/ticket",
-                {
-                    params
-                })
-            return res.data
-        },
-        keepPreviousData: true
-    })
-}
+// const ticketsQuery = (params = {}) => {
+//     return ({
+//         queryKey: ["tickets", { ...params }],
+//         queryFn: async () => {
+//             const res = await customFetch.get("/ticket",
+//                 {
+//                     params
+//                 })
+//             return res.data
+//         },
+//         keepPreviousData: true
+//     })
+// }
 export const loader = (queryClient) => async ({ request }) => {
     const params = Object.fromEntries([
         ...new URL(request.url).searchParams.entries(),
@@ -93,7 +89,7 @@ const Appointment = () => {
     const { searchValues } = useLoaderData()
     const { data: ticketData,
         isPreviousData,
-    } = useQuery(ticketsQuery(searchValues))
+    } = useQueryFnc(ticketsQuery(searchValues))
 
     const viewAll = querySearch.get("view");
 
@@ -172,66 +168,25 @@ const Appointment = () => {
                     ticketData?.monthlyApplications && <>
                         <div
                         ></div>
-                        {chart == "bar" && <BarChart chartData={
-                            {
-                                labels: ticketData?.monthlyApplications?.map(({ date }) => date),
-                                datasets: [
-                                    {
-                                        label: "Number vs Tickets Book",
-                                        // data: users?.map((v) => v.total)
-                                        data: ticketData?.monthlyApplications?.map(({ count }) => count)
-                                        // backgroundColor: ["red", "blue", "green"]
-                                    },
-                                ]
+                        <ChartsOptionsUi
+                            donot_refresh
+                            btn_position="bottom"
+                            default_chart="pie"
+                            userData={
+                                {
+                                    labels: ticketData?.monthlyApplications?.map(({ date }) => date),
+                                    datasets: [
+                                        {
+                                            label: "Number vs Tickets Book",
+                                            data: ticketData?.monthlyApplications?.map(({ count }) => count)
+                                        },
+                                    ]
+                                }
                             }
-                        } />
-                        }
-                        {chart == "pie" && <PieChart chartData={
-                            {
-                                labels: ticketData?.monthlyApplications?.map(({ date }) => date),
-                                datasets: [
-                                    {
-                                        label: "Number vs Tickets Book",
-                                        // data: users?.map((v) => v.total)
-                                        data: ticketData?.monthlyApplications?.map(({ count }) => count)
-                                        // backgroundColor: ["red", "blue", "green"]
-                                    },
-                                ]
-                            }
-                        } />
-                        }
-                        {chart == "line" && <LineChart chartData={
-                            {
-                                labels: ticketData?.monthlyApplications?.map(({ date }) => date),
-                                datasets: [
-                                    {
-                                        label: "Number vs Tickets Book",
-                                        // data: users?.map((v) => v.total)
-                                        data: ticketData?.monthlyApplications?.map(({ count }) => count)
-                                        // backgroundColor: ["red", "blue", "green"]
-                                    },
-                                ]
-                            }
-                        } />
-                        }
-                        {chart == "area" && <AreaChart chartData={
-                            {
-                                labels: ticketData?.monthlyApplications?.map(({ date }) => date),
-                                datasets: [
-                                    {
-                                        fill: true,
-                                        borderColor: 'rgb(53, 162, 235)',
-                                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                                        label: "Number vs Tickets Book",
-                                        // data: users?.map((v) => v.total)
-                                        data: ticketData?.monthlyApplications?.map(({ count }) => count)
-                                        // backgroundColor: ["red", "blue", "green"]
-                                    },
-                                ]
-                            }
-                        } />
-                        }
-                        <Scrollable className="flex !mt-6  gap-x-6 !justify-center mb-5">
+                        />
+
+
+                        {/* <Scrollable className="flex !mt-6  gap-x-6 !justify-center mb-5">
 
                             <UiButton
                                 onClick={() => setChart("bar")}
@@ -263,7 +218,7 @@ const Appointment = () => {
 
                             </UiButton>
 
-                        </Scrollable>
+                        </Scrollable> */}
 
                     </>
                 }
@@ -318,6 +273,7 @@ z-10  "
 
                             }} >{viewAll == "all" ? "view less" : "view all"}</span>
                         </div>
+                        <SearchBox />
                         <Scrollable className={`!mb-10 !justify-center ${viewAll && "!grid md:!grid-cols-2 gap-y-5"} !transition-all !duration-[1s]`}>
                             <PercentageBar
                                 className={`${viewAll && "!min-w-[8rem]"}`}

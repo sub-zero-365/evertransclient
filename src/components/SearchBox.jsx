@@ -1,4 +1,3 @@
-import React from "react";
 import { useFilter } from '../Hooks/FilterHooks'
 import { useSearchParams } from "react-router-dom";
 import debounce from "../utils/debounceFnc"
@@ -14,6 +13,19 @@ export default function SearchComponent({
     const handleChange = (event) => {
         setSearchTerm(event.target.value)
     };
+    useEffect(() => {
+        const handleKeyPress = (e) => {
+            console.log(e)
+            if (e.key === "Insert") {
+                searchRef.current?.focus()
+            }
+        }
+        window.addEventListener("keyup", handleKeyPress)
+        return () => {
+            window.removeEventListener("keyup", handleKeyPress)
+
+        }
+    })
     // clear
     useEffect(() => {
         if (!searchQuery.get(filterMethod)) {

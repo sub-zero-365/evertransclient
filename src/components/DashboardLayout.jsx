@@ -14,7 +14,7 @@ import customFetch from '../utils/customFetch'
 import AppSpinner from './AppSpinner'
 import Header from './Header'
 const adminQuery = {
-    queryKey: ["admin"],
+    queryKey: ["user"],
     queryFn: async () => {
         const res = await customFetch.get("/users/current-user", {
             params: {
@@ -103,22 +103,24 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
             logoutUser
         }}>
             <OnlineDetector />
+           
             <Header
 
                 isDarkThemeEnabled={isDarkThemeEnabled}
             />
-            <div className="overflow-x-hidden xl:container mx-auto">
+            <div className="overflow-x-hidden xl:container mx-auto overflow-y-hidden">
 
                 <div className={`flex ${view && "lg:flex-row-reverse"} ease duration-500 transition-all`}>
                     <SideBar
                         isDarkThemeEnabled={isDarkThemeEnabled}
                     />
                     {
-                        isPageLoading ? <AppSpinner /> : <Outlet
-                            context={{ user }}
-                        />
+                        isPageLoading && <AppSpinner /> 
                     }
 
+                    <Outlet
+                        context={{ user }}
+                    />
                 </div>
             </div>
 

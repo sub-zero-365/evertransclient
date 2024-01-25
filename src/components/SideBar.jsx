@@ -192,7 +192,7 @@ const SideBar = ({ isDarkThemeEnabled }) => {
       >
         <BsSliders2Vertical size={25} />
       </span>
-      <div className="mt-10 mb-5 md:hidden">
+      <div className="mt-10 mb-5 --md:hidden">
         <motion.div
           initial={false}
           className="h-[60px] w-[60px]   mx-auto shadow-2xl border-2 overflow-hidden  rounded-full mt- p-0 ">

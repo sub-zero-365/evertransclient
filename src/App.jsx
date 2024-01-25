@@ -602,7 +602,6 @@ const router = createBrowserRouter([
       },
       {
         path: "details/:id",
-
         element: <Suspense>
           <Details />
         </Suspense>,

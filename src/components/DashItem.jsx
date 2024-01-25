@@ -12,7 +12,8 @@ const DashItem = ({ icon, Counts, href, Name }) => {
             <Heading text={Name || "loading"} className="!pl-0 first-letter:!text-2xl
             !text-lg !mb-0 !font-black !uppercase "/>
     
-    <Button name="view" className={"!shadow-xl  !rounded-sm  !text-white !px-5  !z-10 !mr-0"} href={href}/>
+    <Button name="view" 
+    className={"!shadow-xl  !rounded-sm  !text-white !px-5  !z-10 !mr-0"} href={href}/>
             </div>
             <div className="absolut top-auto bottom-0 h-1 mb-6 w-full right-0 transition-[width] bg-green-400 duration-700 group-hover:w-0"></div>
             

@@ -47,7 +47,12 @@ export const loader = (queryClient) => async ({ request, params }) => {
     url = `/ticket/${params.id}`
     const { ticket: { active, _id } } = await queryClient.ensureQueryData(singleTicket(url, params.id));
     const audio = new Audio(succcesssound)
-    if (active) {
+    const user_state = await queryClient.getQueryState({ queryKey: ["user"] })
+    const role = user_state?.data?.user?.role
+    console.log("this the use states here", user_state?.data?.user?.role)
+    // alert(role)
+    if (role == "scanner") {
+      // alert("enter here")
       audio.play()
     }
     return {
@@ -72,6 +77,7 @@ const User = ({ read_only }) => {
   // const [querySearch] = useSearchParams()
 
   const queryClient = useQueryClient()
+  // queryClient.get
   const ref = useRef(null);
   const isInView = useInView(ref)
   const { id, url, _id, isadminuser } = useLoaderData()

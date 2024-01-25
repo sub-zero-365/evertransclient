@@ -13,28 +13,29 @@ import {
 import FilterButton from '../components/FilterButton'
 import customFetch from "../utils/customFetch"
 import { chatsOptions, dateSortedOption } from '../utils/sortedOptions'
-const allMailsQuery = (params) => {
-    const { search, sort, page, quickdatesort, createdBy } = params
-    const searchValues = {
-        search: search ?? "",
-        page: page ?? 1,
-        sort: sort ?? "newest",/* mailStatus: mailStatus ?? "all" */
-        quickdatesort: quickdatesort || "",
-        createdBy
-    }
-    return {
-        queryKey: [
-            'mails', searchValues
-        ],
-        queryFn: async () => {
-            const { data } = await customFetch.get('/mails', {
-                params: searchValues
-            });
-            return data;
-        },
-        // keepPreviousData: true
-    };
-};
+import { useQueryFnc, allMailsQuery } from "../utils/tenstackqueryfnc"
+// const allMailsQuery = (params) => {
+//     const { search, sort, page, quickdatesort, createdBy } = params
+//     const searchValues = {
+//         search: search ?? "",
+//         page: page ?? 1,
+//         sort: sort ?? "newest",/* mailStatus: mailStatus ?? "all" */
+//         quickdatesort: quickdatesort || "",
+//         createdBy
+//     }
+//     return {
+//         queryKey: [
+//             'mails', searchValues
+//         ],
+//         queryFn: async () => {
+//             const { data } = await customFetch.get('/mails', {
+//                 params: searchValues
+//             });
+//             return data;
+//         },
+//         // keepPreviousData: true
+//     };
+// };
 export const loader =
     (queryClient) =>
         async ({ request }) => {
@@ -44,6 +45,7 @@ export const loader =
             await queryClient.ensureQueryData(allMailsQuery(params));
             return { searchValues: { ...params } };
         };
+
 const MailsStat = () => {
     // const [querySearch] = useSearchParams()
 
@@ -63,7 +65,7 @@ const MailsStat = () => {
         pendingSum,
         sentSum,
         recievedSum } =
-        useQuery(allMailsQuery(searchValues)).data || {}
+        useQueryFnc(allMailsQuery(searchValues))?.data || {}
     const userData = {
         labels: ["Pending", "Sent", "Recieved"],
         datasets: [
@@ -130,7 +132,7 @@ const MailsStat = () => {
                 text="Mail Stats"
             />
             <div
-                className='flex max-w-full flex-col lg:flex-rw lg:flex-row-reverse gap-x-2'
+                className='!hidden -flex max-w-full flex-col lg:flex-rw lg:flex-row-reverse gap-x-2'
             >
                 <div
                     className='flex-1 lg:w-1/2'
@@ -163,8 +165,8 @@ const MailsStat = () => {
                 <div
                     className='flex-1 lg:w-1/2'
                 >
-                {/* <SearchComponent /> */}
-                
+                    {/* <SearchComponent /> */}
+
                     <Scrollable
                         className="max-w-5xl mx-auto !mb-5 "
                     >
@@ -175,13 +177,13 @@ const MailsStat = () => {
                                 {...query} key={Math.random()} />)
                         }
                     </Scrollable>
-             
+
 
                 </div>
             </div>
-            
 
-            <Scrollable className="!justify-start !mt-5 scrollto  !max-w-full !w-fit !mx-auto px-4 pb-5">
+
+            <Scrollable className="!hidden !justify-start !mt-5 scrollto  !max-w-full !w-fit !mx-auto px-4 pb-5">
 
 
                 <FilterButton className="!shadow-none"

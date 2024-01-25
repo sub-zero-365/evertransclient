@@ -16,7 +16,7 @@ const onLoadFailure = (errorMessage = null) => toast.error(errorMessage || "Some
     position: toast.POSITION.TOP_CENTER
 })
 const assistantQuery = {
-    queryKey: ["assistant"],
+    queryKey: ["user"],
     queryFn: async () => {
         const res = await customFetch.get("/users/current-user");
         return res.data
