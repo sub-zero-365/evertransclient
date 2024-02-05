@@ -5,7 +5,7 @@ import {
 import {
     Link,
     useSearchParams, useNavigate, useLoaderData,
-    defer, Await, useAsyncValue, useRouteError
+    defer, Await, useAsyncValue, useRouteError, useAsyncError
 } from "react-router-dom"
 import { Suspense, useEffect, useState } from 'react'
 import { Heading, Scrollable } from '../components'
@@ -19,6 +19,7 @@ import {
 import dayjs from 'dayjs'
 import customFetch from "../utils/customFetch"
 import { ThreeDCardDemo } from '../components/3DEffect'
+import UiButton from '../components/UiButton'
 // import { dateSortedOption } from '../utils/sortedOptions'
 // import FilterButton from '../components/FilterButton'
 const priceQuery = (params) => {
@@ -112,20 +113,20 @@ const RenderBusPage = () => {
         <AnimateText text={`Available Cars (${nHits})`} className="!text-2xl " />
         <AnimateText text={dayjs(new Date(querySearch.get("traveldate")))
             .format("dddd, MMMM D, YYYY")} className="!text-lg " />
-            
 
-       <div className="flex flex-col gap-y-2">
-       {
 
-seats?.map((arr, index) => {
-    return (
-        // <ThreeDCardDemo>
-            <BusDetail {...arr} key={index} />
-         /* </ThreeDCardDemo> */
-    )
-})
-}
-       </div>
+        <div className="flex flex-col gap-y-2">
+            {
+
+                seats?.map((arr, index) => {
+                    return (
+                        // <ThreeDCardDemo>
+                        <BusDetail {...arr} key={index} />
+                        /* </ThreeDCardDemo> */
+                    )
+                })
+            }
+        </div>
         <AnimatePresence>
             {
                 selected !== null && (
@@ -194,20 +195,27 @@ export const loader = (queryClient) => async ({ request }) => {
 
     //   return { searchValues: { ...params } }
 }
-export const ErrorFindBus = () => {
+const ErrorFindBus_ = () => {
+    const [searchQuery] = useSearchParams()
     const error = useRouteError();
+    const isAsyncError = useAsyncError()
+    const errorMessage = error?.response?.data || error?.message || isAsyncError?.response?.data || isAsyncError?.message || "something went wrong try again later "
     // error element when bus loader throws an error ..
 
-
-    return <div className='min-h-screen'>
+    return <div className='min-h-screen flex-none max-w-lg w-full'>
         <div className='space-y-5'>
             <img
                 src="https://cdni.iconscout.com/illustration/premium/thumb/sorry-item-not-found-3328225-2809510.png"
                 className="mx-auto max-w-lg"
             />
             <p className='text-lg sm:text-xl text-center text-rose-700 pt-10 italic px-10'>
-                {error?.response?.data || error?.message || "something went wrong ,try again later"}
+                {errorMessage}
             </p>
+            <UiButton className="!text-center !italic !rounded-md !text-lg !bg-green-500 !mt-10 w-[min(200px,calc(100%-40px))] !mx-auto !py-4">
+                <Link to={`/booking?${searchQuery.toString()}`}>
+                    Go Back
+                </Link>
+            </UiButton>
         </div>
     </div>
 }
@@ -254,7 +262,7 @@ const FindBus = () => {
                     >
                         <Await
                             resolve={BusQuery}
-                            errorElement={<div>something went wrong</div>}>
+                            errorElement={<ErrorFindBus_ />}>
                             <RenderBusPage />
                         </Await>
 
@@ -264,4 +272,5 @@ const FindBus = () => {
         </div>
     )
 }
+export const ErrorFindBus = () => ErrorFindBus_();
 export default FindBus

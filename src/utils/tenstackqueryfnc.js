@@ -33,13 +33,21 @@ export const usersQuery = {
 
     }
 }
-export  const ticketsQuery = (params = {}) => {
+export const ticketsQuery = (params = {}) => {
+    const { search, ticketStatus, daterange, limit, page, createdBy} = params//checking for what the server needs to query the data 
     return ({
-        queryKey: ["tickets", { ...params }],
+        queryKey: ["tickets", {
+            search: search ?? "",
+            ticketStatus: ticketStatus ?? "all",
+            daterange: daterange ?? "",
+            limit: limit ?? 100,
+            page: page ?? 1,
+            createdBy: createdBy ?? ""
+        }],
         queryFn: async () => {
             const res = await customFetch.get("/ticket",
                 {
-                    params
+                    params: params
                 })
             return res.data
         },

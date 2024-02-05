@@ -4,9 +4,10 @@ import customFetch from '../utils/customFetch'
 import UiButton from './UiButton'
 import { CiLogout } from 'react-icons/ci'
 import { useNavigate } from 'react-router-dom'
+import { toast } from "react-toastify"
 // import { useUserLayoutContext } from './UserLayout'
 
-const LogOut = ({ error = "", className, setUser = (p) => 0,dont_show_logout_icon }) => {
+const LogOut = ({ error = "", className, setUser = (p) => 0, dont_show_logout_icon }) => {
     // const { setUser} = useUserLayoutContext()
 
     const navigate = useNavigate()
@@ -18,11 +19,13 @@ const LogOut = ({ error = "", className, setUser = (p) => 0,dont_show_logout_ico
         setLoading(true)
         try {
             // await wait(6000)
+            navigate(`/login`)
             await customFetch.get('/auth/logout');
             queryClient.invalidateQueries()
             queryClient.removeQueries()
+            toast.success('Logging out...');
+
             setUser(null)
-            navigate("/login?message=" + error)
         } catch (err) {
 
             console.log("this is the fail response here", err.response?.data)
@@ -42,11 +45,11 @@ const LogOut = ({ error = "", className, setUser = (p) => 0,dont_show_logout_ico
 
             <div className='flex items-center justify-center gap-x-2 text-xs'>
                 {loading ? "logging out" : <>
-                {!dont_show_logout_icon&& <CiLogout
+                    {!dont_show_logout_icon && <CiLogout
                         size={25}
                     />}
-                   
-                    
+
+
                     LogOut
                 </>}
             </div>

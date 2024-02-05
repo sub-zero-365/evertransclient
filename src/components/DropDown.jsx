@@ -11,7 +11,7 @@ import { useState, useEffect, useRef } from "react";
 import { useFilter } from "../Hooks/FilterHooks";
 import useOutsideAlerter from "../Hooks/click-outside-hook"
 
-const StaggeredDropDown = () => {
+const StaggeredDropDown = ({options,}) => {
     const ref = useRef(null)
     const { toggle } = useOutsideAlerter(ref)
     const [open, setOpen] = useState(false);
@@ -41,10 +41,14 @@ const StaggeredDropDown = () => {
                     style={{ originY: "top", translateX: "-50%" }}
                     className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden"
                 >
-                    <Option setOpen={setOpen} setOption={setOption} Icon={FiEdit} text="pie" />
-                    <Option setOpen={setOpen} setOption={setOption} Icon={FiPlusSquare} text="bar" />
-                    <Option setOpen={setOpen} setOption={setOption} Icon={FiShare} text="line" />
-                    {/* <Option setOpen={setOpen} setOption={setOption} Icon={FiTrash} text="Remove" /> */}
+                 {
+                 options?.map(({value,label,icon},idx)=>{
+                 return (
+                    <Option setOpen={setOpen} setOption={setOption} Icon={icon ?? FiEdit} text={label} />
+                 )
+                 })
+                 
+                 }                    {/* <Option setOpen={setOpen} setOption={setOption} Icon={FiTrash} text="Remove" /> */}
                 </motion.ul>
             </motion.div>
         </div>

@@ -12,35 +12,40 @@ import {
     useQuery
 } from '@tanstack/react-query';
 import { AiOutlineSave } from 'react-icons/ai'
-const singleUserQuery = (id, params = {}) => {
-    // const search
-    const { search } = params
-    return ({
-        queryKey: ["user-details", {
-            id, search
-        }],
-        queryFn: async () => {
-            const res = await customFetch.get("/ticket?createdBy=" + id, {
-                params: {
-                    search: search ?? ""
-                }
-            })
-            return res.data
-        }
-    })
-}
+import { ticketsQuery as singleUserQuery } from '../utils/tenstackqueryfnc'
+// const singleUserQuery = (id, params = {}) => {
+//     // const search
+//     const { search } = params
+//     return ({
+//         queryKey: ["user-details", {
+//             id, search
+//         }],
+//         queryFn: async () => {
+//             const res = await customFetch.get("/ticket?createdBy=" + id, {
+//                 params: {
+//                     search: search ?? ""
+//                 }
+//             })
+//             return res.data
+//         }
+//     })
+// }
 
 export const loader = (queryClient) => async ({ params: P, request }) => {
     const params = Object.fromEntries([
         ...new URL(request.url).searchParams.entries(),
     ]);
-    console.log(params)
-    await queryClient.ensureQueryData(singleUserQuery(P.id, params))
+    // console.log(params)
+    await queryClient.ensureQueryData(singleUserQuery({
+        ...params,
+        createdBy: P.id
+    }))
     try {
-
         return ({
-            id: P.id,
-            searchValues: params
+            searchValues: {
+                ...params,
+                createdBy: P.id
+            }
         })
     } catch (error) {
         toast.error(error?.response?.data || error?.message || "something went wrong")
@@ -51,7 +56,7 @@ const UserDetailsTicket = () => {
     const { handleFilterChange } = useFilter()
     const { searchValues } = useLoaderData()
     const id = useParams().id
-    const userData = useQuery(singleUserQuery(id, searchValues))?.data
+    const userData = useQuery(singleUserQuery(searchValues))?.data
     const [querySearch, setQuerySearch] = useSearchParams();
 
 

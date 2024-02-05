@@ -265,7 +265,7 @@ z-10  "
           <SearchBox />
           <Outlet />
         </div>
-        <div className={`flex-none py-5 lg:sticky top-[4rem]
+        <div className={`flex-none py-5 lg:sticky top-[4rem] fixed
         sidebarr m lg:rounded-lg shadow rounded-lg  overflow-y-auto
         ${toggle ? "right-0" : "!-right-full"}
         duration-500 transition-[right] shadow lg:shadow-none lg:max-w-sm lg:w-[20rem] 

@@ -40,9 +40,10 @@ font-montserrat
 
 }
 
-const UiButton = ({ className, onClick, name, title, disabled, type, children }) => {
+const UiButton = ({ className, onClick, name, title, disabled, type, children, myRef }) => {
     return (
         <button
+            ref={myRef}
             onClick={onClick}
             disabled={disabled}
             type={type}

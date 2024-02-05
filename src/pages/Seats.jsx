@@ -21,6 +21,7 @@ import dayjs from "dayjs"
 // import { useMemo } from "react"
 import FilterButton from "../components/FilterButton"
 import useGetdates from "../utils/getdates"
+import { USER_ROLES } from "../utils/roles"
 const seatsQuery = (params = {}) => ({
     queryKey: ["seats",
         params],
@@ -43,12 +44,17 @@ export const loader = (queryClient) => async ({ request }) => {
         ...new URL(request.url).searchParams.entries(),
     ]);
     await queryClient.ensureQueryData(seatsQuery(params))
-    return { searchValues: params }
+    const user_state = await queryClient.getQueryState({ queryKey: ["user"] })
+    const role = user_state?.data?.user?.role
+    return {
+        searchValues: params,
+        role
+    }
 }
 
 const Seats = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const { searchValues } = useLoaderData()
+    const { searchValues, role } = useLoaderData()
     const { seats, nHits, numberOfPages, routes_count } = useQuery(seatsQuery(searchValues)).data
     let downloadbaseurl = null
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -78,7 +84,7 @@ const Seats = () => {
             return preParams
         })
     }
-    const { startdate,enddate} = useGetdates("daterange")
+    const { startdate, enddate } = useGetdates("daterange")
     const [startDate, setStartDate] = useState(startdate);
     const [endDate, setEndDate] = useState(enddate);
     // ending here
@@ -120,6 +126,7 @@ const Seats = () => {
                     <CustomDatePicker
                         startDate={seatDate}
                         setStartDate={setSeatDate}
+                        maxDate={new Date(dayjs().add(2, "day"))}
                     />
                     <input
                         type="hidden"
@@ -134,37 +141,43 @@ const Seats = () => {
 
                 </Form>
             </EmptyModal>
+
             <div className="h-[calc(100vh-60px)] container mx-auto !flex-1 w-full overflow-y-auto">
                 <div className="max-w-4xl mx-auto ">
-                    <div className="flex p-4 items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow
-                    bg-white dark:bg-slate-800 mx-4">
-                        <div className="flex-1">
-                            <Heading text="hey you can add a new route " className="!mb-2 !font-black mt-0" />
-                            <p className="mb-3 text-sm  px-6">create a new route and add a car</p>
-                        </div>
-                        <motion.div onClick={() => setIsOpen(c => !c)}
-                            initial={{ x: "-50%" }}
-                            animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
-                            transition={{
-                                duration: 2,
-                                ease: "easeInOut",
-                                times: [0, 0.2, 0.5, 0.8, 1],
-                                repeat: Infinity,
-                                repeatDelay: 1
-                            }
+                    {
+                        role !== USER_ROLES.ticketer &&
+                        <div className="flex p-4 items-center  mb-10 mt-5 justify-between py-1 rounded-lg shadow
+                bg-white dark:bg-slate-800 mx-4">
+                            <div className="flex-1">
+                                <Heading text="hey you can add a new route " className="!mb-2 !font-black mt-0" />
+                                <p className="mb-3 text-sm  px-6">create a new route and add a car</p>
+                            </div>
+                            {role !== USER_ROLES.ticketer && <motion.div onClick={() => setIsOpen(c => !c)}
+                                initial={{ x: "-50%" }}
+                                animate={{ scale: [0.7, 1.2, 0.8], rotate: [0, 360] }}
+                                transition={{
+                                    duration: 2,
+                                    ease: "easeInOut",
+                                    times: [0, 0.2, 0.5, 0.8, 1],
+                                    repeat: Infinity,
+                                    repeatDelay: 1
+                                }
 
-                            }
-                            className="bottom-6 flex-none ml-2 shadow-2xl button-add  top-auto bg-blue-400 
+                                }
+                                className="bottom-6 flex-none ml-2 shadow-2xl button-add  top-auto bg-blue-400 
 w-[2rem] h-[2rem] rounded-full left-1/2 overflow-hidden 
 -translate-x-1/2
 z-10  "
-                        >
-                            <div className="flex h-full w-full items-center scale-animation justify-center ">
-                                <AiOutlinePlus size={30} color="#fff" className="" />
-                            </div>
-                        </motion.div>
+                            >
+                                <div className="flex h-full w-full items-center scale-animation justify-center ">
+                                    <AiOutlinePlus size={30} color="#fff" className="" />
+                                </div>
+                            </motion.div>}
 
-                    </div>
+
+                        </div>
+
+                    }
                     <div className="flex
             flex-col lg:flex-row justify-center
             lg:mt-10 lg:px-8 max-w-full rounded-sm shadow-sm lg:mx-10
@@ -325,7 +338,7 @@ z-10  "
                                                                 onClick={() => navigate(`${_id}?${isadminuser && "admin=true"}`)} name="details" />
 
                                                             {
-                                                                bus?.bus !== "Demo Car" ?
+                                                                true ?
                                                                     <UiButton
                                                                         className={"!bg-blue-900"}
                                                                     // onClick={() => navigate(`${_id}?${isadminuser && "admin=true"}`)} 
@@ -342,7 +355,7 @@ z-10  "
                                                                     <UiButton
                                                                         className={"!bg-blue-950"}
                                                                         title="Edit"
-                                                                        onClick={() => navigate(`${_id}?${isadminuser && "admin=true"}&edited=true`)}  />
+                                                                        onClick={() => navigate(`${_id}?${isadminuser && "admin=true"}&edited=true`)} />
 
 
                                                             }

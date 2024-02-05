@@ -1,4 +1,8 @@
+import { AnimatePresence, motion } from "framer-motion";
 
+import { FiAlertCircle } from "react-icons/fi";
+
+import { createContext, forwardRef, useContext, useState } from "react";
 import AnimatedText from "../components/AnimateText"
 import { Link, useParams, useNavigate, redirect, useLoaderData, Form } from 'react-router-dom'
 import {
@@ -12,12 +16,12 @@ import dayjs from "dayjs"
 import { useSearchParams } from 'react-router-dom'
 import { getBuses } from '../utils/ReactSelectFunction'
 import { components, style } from "../utils/reactselectOptionsStyles"
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import BusSelect from 'react-select/async'
 import {
     useQuery, useQueryClient
 } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
+// import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet'
 import { ToggleSwitch, DisplayUi } from "../components"
 import { AiOutlineWarning } from "react-icons/ai"
@@ -26,7 +30,8 @@ import customFetch from "../utils/customFetch"
 import EmptyModal from "../pages/ShowBuses"
 import UiButton from "../components/UiButton"
 import LoadingButton from "../components/LoadingButton"
-
+import Modal from "./ShowBuses"
+import LittleSeat from "../components/LittleSeat"
 const singleSeat = (id) => {
     return ({
         queryKey: ["seat", id],
@@ -84,26 +89,233 @@ export const action = (queryClient) => async ({ request }) => {
     }
 }
 
+
+
+const ExampleWrapper = () => {
+    //   const [isOpen, setIsOpen] = useState(false);
+    const { isModalOpen, setIsModalOpen, data } = useContext(ModalContext);
+
+    return (
+        <div className=" bg-slate-900 grid place-content-center">
+            {/* <button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-medium px-4 py-2 rounded hover:opacity-90 transition-opacity"
+            >
+                Open Modal
+            </button> */}
+            <SpringModal isOpen={isModalOpen} setIsOpen={setIsModalOpen}
+                {...data}
+            />
+        </div>
+    );
+};
+
+const SpringModal = ({ isOpen, setIsOpen, _id }) => {
+    const { id } = useParams()
+    // const { data,isLoading, } = useQuery(singleSeat(id));
+    const queryClient = useQueryClient();
+    const { from, to, traveldate, bus } = queryClient.getQueryData({ queryKey: ["seat", id] })?.seat
+    // alert(state?.data.seat.from)
+    const [tripType, setTripType] = useState("singletrip");
+    const typeBtn = forwardRef((props, ref) => (<UiButton myRef={ref} {...props} />))
+    const TypeButton = motion(typeBtn)
+    const RiAlertCircle =
+        forwardRef((props, ref) => (
+            <FiAlertCircle {...props} ref={ref} />
+        ))
+    // forwardRef((props, ref) => (<FiAlertCircle {...props} ref={ref}  />))
+    const FiAlertCircleMotion = motion(RiAlertCircle)
+    const navigate = useNavigate();
+
+    return (
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    initial={{ opacity: 0, }}
+                    animate={{ opacity: 1, }}
+                    exit={{ opacity: 0, }}
+                    onClick={() => setIsOpen(false)}
+                    transition={{
+                        duration: 0.75
+                    }}
+                    className={`bg-slate-900/20 group
+                    backdrop-blur p-8 fixed inset-0 z-50 grid 
+                    place-items-center overflow-y-scroll cursor-pointer ${isOpen && "active"}`}
+                >
+                    {/* {JSON.stringify(state)} */}
+                    <motion.div
+                        transition={{
+                            duration: .75 * .5
+                        }}
+                        initial={{ y: 200, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{
+                            y: -50, opacity: 0,
+                            transition: {
+                                duration: 0.5
+                            }
+                        }}
+
+                        onClick={(e) => e.stopPropagation()}
+                        className={`bg-gradient-to-br  from-violet-600
+                        to-indigo-600 text-white p-6 rounded-lg w-full
+                        max-w-lg shadow-xl cursor-default relative overflow-hidden 
+                        
+                        `}
+                    >
+                        <FiAlertCircleMotion
+
+
+                            className="text-white/10 
+                            
+                            group-[.active]:scale-[2]
+                            
+                            rotate-12 text-[250px] absolute z-0 -top-24 -left-24" />
+                        <div className="relative z-10 ">
+                            <div className="bg-white
+                             group-[.active]:animate-bounce
+                            w-16 h-16 mb-2 rounded-full text-3xl text-indigo-600 grid place-items-center mx-auto">
+                                <FiAlertCircleMotion
+
+                                />
+                            </div>
+                            <h3 className="text-3xl font-bold text-center mb-2">
+                                Book Seat From Here!
+                            </h3>
+                            <h3 className="text-lg  text-center mb-2">
+                                you have select seat number({_id + 1})
+                            </h3>
+                            <h5 className="text-lg font-medium text-center  ">Please select trip type</h5>
+                            <div className="relative gap-x-5 my-5  flex justify-center items-center">
+
+                                <TypeButton
+                                    onClick={() => {
+                                        setTripType("singletrip")
+                                    }}
+                                    initial={{
+                                        backgroundColor: tripType == "singletrip" ? "orange" : "blue",
+
+                                    }}
+                                    animate={{
+                                        scale: tripType == "singletrip" ? [1, 1.3, 1] : null,
+
+                                    }}
+
+                                    transition={{
+                                        duration: 2,
+                                        ease: "easeInOut",
+                                        times: [0, 0.2, 0.5, 0.8, 1],
+                                        repeat: Infinity,
+                                        repeatDelay: 1
+                                    }
+                                    }
+                                >Single</TypeButton>
+                                <TypeButton
+                                    onClick={() => {
+                                        setTripType("roundtrip")
+                                    }}
+                                    animate={{
+                                        scale: tripType == "roundtrip" ? [1, 1.3, 1] : null,
+
+                                    }}
+                                    initial={{
+                                        // scale: tripType == "roundtrip" ? [1, 2, 1, 3, 0, 1] : null,
+                                        backgroundColor: tripType == "roundtrip" ? "orange" : "blue",
+
+                                    }}
+
+                                    transition={{
+                                        duration: 2,
+                                        ease: "easeInOut",
+                                        times: [0, 0.2, 0.5, 0.8, 1],
+                                        repeat: Infinity,
+                                        repeatDelay: 1
+                                    }
+                                    }
+                                >round</TypeButton>
+                            </div>
+                            {/* <p className="text-center mb-6">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Id
+                                aperiam vitae, sapiente ducimus eveniet in velit.
+                            </p> */}
+                            <div className="flex gap-2">
+                                <button
+                                    // onClick={() => setIsOpen(false)}
+                                    onClick={() => {
+                                        navigate(`/bussits/${id}?from=${from}&to=${to}&traveldate=${traveldate}&type=singletrip&seatposition=${_id}&seat_id=${id}`)
+                                    }}
+                                    className="bg-transparent hover:bg-white/10 transition-colors text-white font-semibold w-full py-2 rounded"
+                                >
+                                    Book New
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        navigate(`/customer?from=${from}&to=${to}&traveldate=${traveldate}&type=${tripType}&seatposition=${_id}&seat_id=${id}`)
+                                    }}
+
+                                    className="bg-white
+                                    translate-y-10
+                                    group-[.active]:translate-y-0
+                                    delay-75
+                                    duration-[1s]
+                                    hover:opacity-90 transition-opacity text-indigo-600 font-semibold w-full py-2 rounded"
+                                >
+                                    Continue as customer
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+};
+
+const ModalContext = createContext()
+
 const SeatDetails = () => {
     const queryClient = useQueryClient()
     const id = useLoaderData()
-    const { handleChange: onChange, handleFilterChange } = useFilter()
-    const token = localStorage.getItem("token");
+    // const { handleChange: onChange, handleFilterChange } = useFilter()
+    // const token = localStorage.getItem("token");
     const [isOpen, setIsOpen] = useState(false)
-
+    const [toggle, setToggle] = useState(false)
     const [timer, setTimer] = useState(null)
+    const [isMouseDownTimer, setIsMouseDownTimer] = useState(false);
+    const [data, setData] = useState({})
+    useEffect(() => {
+        if (isMouseDownTimer) {
+            setToggle(true)
+        }
+        // alert("mouse is down")
+    }, [isMouseDownTimer])
 
-    const handleMouseDown = ({ _id }) => {
+    const handleMouseDown = (propsData) => {
+        const { isTaken, isReserved, _id, index } = propsData
         const _timer = setTimeout(() => {
+            // setIsMouseDownTimer(true)
             window.navigator?.vibrate([100])
-            setIsOpen(true)
-            setPos(_id)
+           
+            if (isTaken || isReserved) {
+                //   setse
+                // seatposition(_id)
+                setPos(_id)
+                setIsOpen(true)
+                return
+            }
+            setData({
+                ...propsData, id
+            })
+            setIsModalOpen(true)
+
             clearTimeout(timer)
         }, 1000);
         setTimer(_timer)
     }
     const handleMouseUp = () => {
         clearTimeout(timer)
+        setIsMouseDownTimer(false)
+        // setData({})
     }
 
 
@@ -139,24 +351,17 @@ const SeatDetails = () => {
     }, [activeSeat])
 
     const tickets = useQuery(seatDetails(id)).data;
-    const { seat } = useQuery(singleSeat(id)).data;
-    // useEffect(() => {
-
-    // }, [seat])
+    const { seat } = useQuery(singleSeat(id)).data ?? {};
     const navigate = useNavigate()
 
     const [state, setState] = useState(false);
     const [seatposition, setPos] = useState(null)
     const handleChange = () => {
         setState(true)
+        // alert(data._id)
         return customFetch.post("ticket/removeticketfrombus", {
             seat_id: id,
-            seatposition
-        }, {
-
-            headers: {
-                'Authorization': "makingmoney " + token
-            }
+            seatposition: seatposition
         })
 
     }
@@ -176,15 +381,53 @@ const SeatDetails = () => {
     //     //     handleFilterChange("edited", null)
     //     // }
     // }, [])
-
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     return (
-        <>
+        <ModalContext.Provider
+            value={{
+                isModalOpen, setIsModalOpen, data
+            }}
+        >
+            <ExampleWrapper />
+
             <Helmet>
                 <title>
                     Borderaux Details
                 </title>
             </Helmet>
+            <Modal isOpen={toggle} setIsOpen={setToggle} className2="!px-2"
+                title="You can book a seat straight from this page"
+            >
+                ask the user if the want to book a seat
+                {/* <div className="flex flex-wrap py-4 transition-transform duration-700 ">
+                    {Array.from({ length: 10 }, (arr, idx) => {
+                        return (
+
+                            <div
+                                className="w-1/4 group
+                          cursor-pointer hover:bg-green-950- transition duration-300 
+                          h-[3.75rem] p-2 px-3 select-none"
+                            >
+
+
+                                <LittleSeat
+                                    _id={idx}
+                                    isReserved={false}
+                                    isTaken={true}
+                                    // animate={ === _id}
+                                    key={idx}
+                                // selected={selected}
+                                // onClick={() => checkBusAvailabity(isTaken, isReserved, _id, true)}
+                                />
+                            </div>
+                        )
+                    })}
+                </div> */}
+                <Link
+                    to="/customer"
+                >Select</Link>
+            </Modal>
             <EmptyModal
                 title="Transfers a bus Seat"
                 isOpen={isOpen_}
@@ -347,10 +590,10 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                         <h1
                             className="text-3xl font-black text-slate-700 px-5 "
                         >{seat?.bus?.bus}</h1>
-                        <h1
+                        {/* <h1
                             onClick={() => setIsOpen_(true)}
                             className="text-xl font-medium cursor-pointer my-5 px-5"
-                        >Edit Seat</h1>
+                        >Edit Seat</h1> */}
 
                         <div className="flex justify-between px-2 pb-2">
                             <h1 className="text-xs lg:text- shadom-lg lg flex-1">
@@ -386,34 +629,10 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
                                                 ease: "easeInOut",
                                                 repeat: Infinity,
                                             }}
-                                            onTouchStart={() => {
-                                                if (isTaken === true || isReserved == true) {
-
-                                                    handleMouseDown({
-                                                        _id
-                                                    })
-                                                }
-                                            }}
-                                            onTouchEnd={() => {
-                                                if (isTaken === true || isReserved == true) {
-
-                                                    handleMouseUp()
-                                                }
-                                            }}
-                                            onMouseDown={() => {
-                                                if (isTaken === true || isReserved == true) {
-
-                                                    handleMouseDown({
-                                                        _id
-                                                    })
-                                                }
-                                            }}
-                                            onMouseUp={() => {
-                                                if (isTaken === true || isReserved == true) {
-
-                                                    handleMouseUp()
-                                                }
-                                            }}
+                                            onTouchStart={() => handleMouseDown({ isTaken, isReserved, _id, index })}
+                                            onTouchEnd={(e) => handleMouseUp(e)}
+                                            onMouseDown={() => handleMouseDown({ isTaken, isReserved, _id, index })}
+                                            onMouseUp={handleMouseUp}
                                             onClick={() => {
                                                 if (isTaken === true || isReserved == true) {
                                                     toast.promise(
@@ -553,9 +772,9 @@ focus:outline-none focus:ring-0 active:bg-blue-700 active:shadow-[0_8px_9px_-4px
 
 
             </div >
-        </>
+        </ModalContext.Provider>
     )
 
 }
-
+// export const useModalContext=()=>useContext(ModalContext)
 export default SeatDetails

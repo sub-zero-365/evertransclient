@@ -32,6 +32,7 @@ import { RiSteering2Line } from "react-icons/ri"
 import { toast } from "react-toastify"
 import UiButton from "../components/UiButton"
 import customFetch from "../utils/customFetch"
+import LittleSeat from "../components/LittleSeat"
 // import CustomerPage from "./CustomerPage"
 const singleSeat = (id) => {
   return ({
@@ -148,9 +149,7 @@ const
               <DisplayUi from={queryParameters.get("from")} to={queryParameters.get("to")} />
               <h1
                 className="text-4xl font-bold text-center leading-tight tracking-wide my-2 underline underline-offset-8"
-              >{seat?.bus?.bus} <Link to={`/seat/${id}?rd_from=busseatpage&edited=true&from=${userInfo?.from}&to=${userInfo?.to}&traveldate=${userInfo?.traveldate}&type=${userInfo.type}`}>
-                  <CiEdit className="inline-block ml-1" size={20} />
-                </Link></h1>
+              >{seat?.bus?.bus} </h1>
               <AnimateText text={dayjs(new Date(queryParameters.get("traveldate")))
                 .format("dddd, MMMM D, YYYY")} className="!text-lg " />
               <AnimateText text="Please Select Seat"
@@ -204,7 +203,16 @@ const
                           h-[3.75rem] p-2 px-3 select-none"
                             key={_id}
                           >
-                            <motion.div
+                            <LittleSeat
+                              _id={_id}
+                              isReserved={isReserved}
+                              isTaken={isTaken}
+                              animate={selected === _id }
+                              key={_id}
+                              selected={selected}
+                              onClick={()=>checkBusAvailabity(isTaken, isReserved, _id, true)}
+                            />
+                            {/* <motion.div
                               animate={{ scale: selected == _id ? [0.8, 1, 0.9] : null }}
                               onClick={() => checkBusAvailabity(isTaken, isReserved, _id, true)}
                               initial={false}
@@ -223,7 +231,7 @@ const
                                 className={`absolute group-hover:!translate-y-[1.3rem] transition-all duration-300 top-[-10px] bg-color_light text-[12px] dark:bg-color_dark gold:bg-color_gold  shadow-lg
                 px-2 rounded-sm `}>{_id + 1}</motion.div>
                               {isTaken ? (<div><TbArmchairOff size={30} /></div>) : <div><TbArmchair2 size={30} /></div>}
-                            </motion.div>
+                            </motion.div> */}
                           </div>
                         )
                       })

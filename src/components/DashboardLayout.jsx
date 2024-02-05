@@ -39,9 +39,9 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
     const queryClient = useQueryClient()
     const navigate = useNavigate()
     const logoutUser = async () => {
+        navigate("/")
         await customFetch.get('/auth/logout');
         queryClient.removeQueries()
-        navigate("/auth")
     };
 
     const [isAuthError, setIsAuthError] = useState(false);
@@ -103,7 +103,7 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
             logoutUser
         }}>
             <OnlineDetector />
-           
+
             <Header
 
                 isDarkThemeEnabled={isDarkThemeEnabled}
@@ -115,7 +115,7 @@ const DashBoardLayout = ({ isDarkThemeEnabled }) => {
                         isDarkThemeEnabled={isDarkThemeEnabled}
                     />
                     {
-                        isPageLoading && <AppSpinner /> 
+                        isPageLoading && <AppSpinner />
                     }
 
                     <Outlet

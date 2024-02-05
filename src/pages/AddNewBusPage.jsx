@@ -8,11 +8,12 @@ import UiButton from "../components/UiButton";
 import { getBuses, getCities } from "../utils/ReactSelectFunction";
 import customFetch from "../utils/customFetch";
 // import React from 'react'
-import { MdOutlineClose } from "react-icons/md";
+import { useMemo } from "react";
 import { toast } from "react-toastify";
 import LoadingButton from "../components/LoadingButton";
 import { style } from "../utils/reactselectOptionsStyles";
-
+import EmptyModal from "./ShowBuses";
+import { USER_ROLES } from "../utils/roles";
 const busQuery = params => ({
     queryKey: ["buses", { params }],
     queryFn: async () => {
@@ -26,16 +27,17 @@ const busQuery = params => ({
 
 })
 export const action = (queryClient) => async ({ request }) => {
-    // const params = Object.fromEntries([
-    //     ...new URL(request.url).searchParams.entries(),
-    // ]);
+
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
     // data.date
     try {
         await customFetch.post('/seat', data);
         queryClient.invalidateQueries(['seats']);
-        toast.success('Job added successfully ');
+        toast.success('Seat added successfully ');
+        const user_state = await queryClient.getQueryState({ queryKey: ["user"] })
+        const role = user_state?.data?.user?.role
+        if (role !== USER_ROLES.ticketer) return redirect("/dashboard/seat")
         return redirect("/seat")
     } catch (err) {
         toast.error(err?.response?.data || err.message || "something went wrong")
@@ -59,6 +61,10 @@ const AddNewBusPage = () => {
     const { seats,
         nHits
     } = useQuery(busQuery(searchValues)).data
+    const routesQuery = useMemo(() => {
+        return [...new Set([...seats?.map(({ from, to }) => `${from?.toLowerCase()}-${to?.toLowerCase()}`)])]
+    }, [searchValues])
+
     const [isOpen, setIsOpen] = useState(false)
 
     return (
@@ -71,70 +77,42 @@ const AddNewBusPage = () => {
             />
             <UiButton
                 onClick={() => setIsOpen(true)}
-                className="lg:hidden !w-[min(400px,calc(100%-1rem))] !mx-auto line-clamp-1 !py-4 !my-10"
+                className=" !w-[min(250px,calc(100%-1rem))] !mx-auto line-clamp-1 !py-4 !my-10"
             >
                 Add New Seat
             </UiButton>
             {/* {JSON.stringify(seats)} */}
 
+            {/* <Scrollable className="!justify-start scrollto  !max-w-full !w-fit !mx-auto px-4 pb-5">
+                        <FilterButton className="!shadow-none"
+                            value={null}
+                            label={`All`}
+                            name="routequery"
 
+                        />
+                        {routesQuery?.map((route) => <FilterButton className="!shadow-none"
+                            value={`${route}`}
+                            label={`${route}`}
+                            name="routequery"
+
+
+                        />)}
+
+
+
+                       
+
+                    </Scrollable> */}
 
             <div
                 className="lg:flex items-start justify-start flex-row-reverse w-full gap-x-5 "
             >
-                <div
-                    className={`
-                  ${isOpen ? "visible opacity-100 pointer-events-all " : "invisible opacity-0 pointer-events-none"}
-                  fixed 
-                  lg:static
-                  lg:opacity-100
-                  lg:visible
-                  lg:!pointer-events-auto
-                  transition-[opacity]
-                  left-1/2
-                  -translate-x-1/2
-                  w-[min(calc(100vw-2.5rem),30rem)]
-                  lg:w-[25rem]
-                  min-h-[10rem]
-                  bg-white
-                  dark:bg-slate-800
-                  dark:shadow-sm
-                  dark:shadow-dark
-                  z-20
-                  rounded-2xl
-                  top-1/2
-                  -translate-y-1/2
-                  lg:translate-x-0
-                  lg:translate-y-0
-                  shadow-xl
-                  shadow-slate-400
-                  py-5 pb-10`}
-                >
-                    <span
-                        className='absolute lg:hidden
-                    w-8 h-8  hover:ring-red-500
-           
-            md:h-10 md:w-10 rounded-full
-            grid place-items-center
-            text-xs
-            hover:shadow-xl
-            mx-4
-            mt-2
-            bg-slate-100
-            hover:bg-red-400
-            ease duration-500
-            transition-colors
-            right-0 top-0 '
-                        onClick={() => setIsOpen(false)}
-                    >
-                        <MdOutlineClose
-                            classNae="text-sm" />
-                    </span>
+
+                <EmptyModal
+                    title={"Add New Car To A Route"}
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}>
                     <Form method="post">
-                        <AnimatedText
-                            text="Add A New Car"
-                            className="!text-2xl !text-center"
-                        />
                         <Scrollable className="!overflow-visible !flex-col !justify-center !items-center">
                             <div>
                                 <Heading text="From " className={"!mb-1 !mt-2 !text-lg first-letter:font-black"} />
@@ -146,6 +124,7 @@ const AddNewBusPage = () => {
                                     catcheOptions
                                     loadOptions={getCities}
                                     required
+                                    isSearchable={false}
 
                                     styles={{
                                         ...style,
@@ -153,7 +132,7 @@ const AddNewBusPage = () => {
                                         fontSize: 10 + "px"
                                     }}
 
-                                    // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                    components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
                                     className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
                                 // onChange={evt => setFromCities(evt.value)}
@@ -164,16 +143,8 @@ const AddNewBusPage = () => {
                                 <Heading text="To" className={"!mb-1 !mt-2 !text-lg first-letter:font-black"} />
                                 <ToSelect
                                     name="to"
-                                    //   onChange={(e) => {
-                                    //     setQueryObj(
-                                    //       (prev) => {
-                                    //         return ({
-                                    //           ...prev, to: e.value
+                                    isSearchable={false}
 
-                                    //         })
-                                    //       }
-                                    //     )
-                                    //   }}
                                     defaultOptions
                                     catcheOptions
                                     loadOptions={getCities}
@@ -185,7 +156,7 @@ const AddNewBusPage = () => {
                                         fontSize: 10 + "px"
                                     }}
 
-                                    // components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
+                                    components={{ DropdownIndicator: () => null, IndicatorSeparator: () => null }}
 
                                     className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
                                 />
@@ -222,32 +193,23 @@ const AddNewBusPage = () => {
                                 }
                                 required
                                 isSearchable={false}
-                                //   onChange={(e) => {
-                                //     setSelectedIds((pre) => {
-                                //       return ({
-                                //         ...pre,
-                                //         bus_id: e.value
 
-                                //       })
-
-                                //     })
-                                //   }}
 
                                 className="dark:bg-slate-900 mx-2 min-h-8 text-black text-xs md:text-xl"
                             />
 
 
                         </div>
+
                         <LoadingButton
-                            className="!w-[min(400px,calc(100%-1rem))] !mx-auto line-clamp-1 !py-4 !-mb-4"
+                            className="!w-[min(250px,calc(100%-1rem))] !mx-auto line-clamp-1 !py-4 !-mb-4"
 
                         >
-                            Add New Seat
+                            Submit
                         </LoadingButton>
                     </Form>
 
-                </div>
-
+                </EmptyModal>
 
                 <div className={`relative max-w-2xl overflow-x-auto
                     bg-white flex-1
@@ -302,18 +264,14 @@ hover:rounded-lg`}
                                                     })}
 
                                             </div>
-                                            <UiButton
-                                                className="!w-[min(400px,calc(100%-1rem))] mt-10 !mx-auto line-clamp-1 !py-4 "
 
+                                            <Link
+                                                to={`/seat/${_id}`}
+                                                className="w-full h-full max-w-sm mx-auto text-gray-600 text-lg font-medium  text-center  my-5 italic block underline underline-offset-2"
                                             >
-                                                <Link
-                                                    to={`/seat/${_id}`}
-                                                    className="w-full h-full"
-                                                >
-                                                    View More Details
+                                                View More Details
 
-                                                </Link>
-                                            </UiButton>
+                                            </Link>
                                         </div>
 
                                     )
@@ -321,7 +279,7 @@ hover:rounded-lg`}
                             </div>
 
                             : <AnimatedText
-                                className="!text-4xl"
+                                className="!text-xl"
                                 text="OOps no Aailable Car Today "
                             />
                     }

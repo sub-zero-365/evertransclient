@@ -43,7 +43,7 @@ const Booking = () => {
   const [toCities, setToCities] = useState(queryParams.get("to"))
   const [isLine, setIsline] = useState(false)
   const navigate = useNavigate()
-  const gotoBusSits = () => navigate(`/bus?from=${fromCities}&to=${toCities}&traveldate=${dayjs(startDate).format("YYYY/MM/DD")}&type=${tripType}`)
+  const gotoBusSits = () => navigate(`/bus?from=${fromCities}&to=${toCities}&traveldate=${dayjs(new Date()).format("YYYY/MM/DD")}&type=${tripType}`)
   const [demoFetch, setDemoFetch] = useState(false);
   const loadDemoData = (evt) => {
     evt.preventDefault()
@@ -82,7 +82,6 @@ const Booking = () => {
 
 
 
-  const [shouldAnimate, setShoultAnimate] = useState(true)
   const [err, setErr] = useState(false)
   const [msg, setMsg] = useState("time must not be thesame !")
   return (
@@ -150,7 +149,7 @@ const Booking = () => {
                     className="text-sm" />
                 </span>
               </div>
-              <DatePicker
+              {/* <DatePicker
                 inline={isLine}
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
@@ -159,7 +158,8 @@ const Booking = () => {
                 required
                 customInput={<ExampleCustomInput />
                 }
-              /> </div>
+              /> */}
+              </div>
 
             <div className="flex items-center !mb-1 !mt-2 gap-x-2">
               <CiLocationOn size={20}
@@ -171,9 +171,13 @@ const Booking = () => {
               defaultOptions
               isSearchable={false}
               catcheOptions
+              // defaultInputValue="select something"
+              defaultValue={{
+                label:fromCities || "starting point",
+                value:fromCities
+              }}
               loadOptions={getCities}
               required
-
               styles={{
                 ...style,
                 wdith: "100%",
