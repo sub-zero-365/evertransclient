@@ -1,7 +1,7 @@
 export const USER_ROLES =
     {
         ticketer: "ticket",
-        mailer: "mail",
+        mailer: "mails",
         admin:"admin",
         sub_admin:"sub_admin",
         restaurant_user:"restaurant",
