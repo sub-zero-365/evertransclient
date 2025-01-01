@@ -18,8 +18,8 @@ const LogOut = ({ error = "", className, setUser = (p) => 0, dont_show_logout_ic
     const logoutUser = async () => {
         setLoading(true)
         try {
-            // await wait(6000)
             navigate(`/login`)
+            // await wait(1000)
             await customFetch.get('/auth/logout');
             queryClient.invalidateQueries()
             queryClient.removeQueries()
