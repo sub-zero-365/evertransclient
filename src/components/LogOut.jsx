@@ -16,23 +16,21 @@ const LogOut = ({ error = "", className, setUser = (p) => 0, dont_show_logout_ic
     // const wait = async (ms = 10000) => new Promise((r) => setTimeout(() => { r() }, ms))
 
     const logoutUser = async () => {
-        setLoading(true)
+        setLoading(true);
         try {
-            navigate(`/login`)
-            // await wait(1000)
-            await customFetch.get('/auth/logout');
-            queryClient.invalidateQueries()
-            queryClient.removeQueries()
+            await customFetch.get('/auth/logout');  // logout request
+            queryClient.invalidateQueries();
+            queryClient.removeQueries();
             toast.success('Logging out...');
-
-            setUser(null)
+    
+            setUser(null);
+    
+            navigate('/login');  // navigate after successful logout
         } catch (err) {
-
-            console.log("this is the fail response here", err.response?.data)
+            console.log("this is the fail response here", err.response?.data);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-
     };
     return (
 
