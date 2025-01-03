@@ -61,6 +61,7 @@ import { loader as singleTicketLOader } from "./pages/SingleTicket";
 import { loader as singleuserLoaderticket } from "./pages/UserDetailsTicket";
 import { action as usersAction, loader as usersLoader } from "./pages/Users";
 import {loader as singleUserMailQuery} from "./pages/UserDetailsMail"
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import MailingForm from './components/MailingForm';
 import MailingPreview from './pages/MailingPreview';
 import Policy from './pages/Policy';
@@ -766,10 +767,11 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient} >
         <RouterProvider
           router={router}
         />
+              {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
       <ToastContainer />
     </>

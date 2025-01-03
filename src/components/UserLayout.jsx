@@ -12,8 +12,6 @@ const UserLayoutContext = createContext()
 const UserLayout = ({ isDarkThemeEnabled }) => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  // const dispatch = useDispatch()
-  // const setUserDetails = (payload) => dispatch(setUser(payload))
   const userQuery = {
     queryKey: ['user'],
     queryFn: async () => {
