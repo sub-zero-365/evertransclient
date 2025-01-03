@@ -22,9 +22,9 @@ const LogOut = ({ error = "", className, setUser = (p) => 0, dont_show_logout_ic
             await queryClient.invalidateQueries();
             await queryClient.removeQueries();
             toast.success('Logging out...');
-            setUser(null);
-
+            
             navigate('/login');  // navigate after successful logout
+            setUser(null);
         } catch (err) {
             console.log("this is the fail response here", err.response?.data);
         } finally {

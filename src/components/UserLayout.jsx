@@ -21,10 +21,11 @@ const UserLayout = ({ isDarkThemeEnabled }) => {
     staleTime: Infinity
   };
 
-  const data = useQuery(userQuery)
+  // const data = useQuery(userQuery)
+  const data=null;
   const [user, setUser] = useState(null)
   useEffect(() => {
-    setUser(data?.data?.user)
+    // setUser(data?.data?.user)
   }, [data?.data?.user])
   const logoutUser = async (error = "") => {
     try {
