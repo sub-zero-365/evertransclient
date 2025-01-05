@@ -17,7 +17,6 @@ import SearchResultContainer from './SearchResult';
 import ThemeToggler from './ThemeToggler';
 import { useUserLayoutContext } from './UserLayout';
 import LogOut from "./LogOut";
-import customFetch from "../utils/customFetch";
 // } from '@tanstack/react-query'
 // const allRecieptsQuery = (params = {}, enable = false) => {
 //     return (
@@ -52,7 +51,7 @@ const Navbar = ({ }) => {
     const { open } = useToggleCartSlider()
     // const queryClient = useQueryClient()
     // const disatch = useDispatch()
-    const { isDarkThemeEnabled, user, setUser } = useUserLayoutContext()
+    const { isDarkThemeEnabled, user} = useUserLayoutContext()
     const [search, setSeach] = useState("")
 
     const isLogin = user?._id ? true : false
@@ -461,15 +460,10 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                                 )}
 
                                             </NavLink>
-                                            <button
-                                                onClick={()=>logoutUser()}
-                                            >
-                                                logout user
-                                            </button>
-                                            {/* <LogOut
+                                  
+                                            <LogOut
                                                 dont_show_logout_icon
-                                                setUser={setUser}
-                                                className={"xl:!block hidden !pt-1 !pb-1"} /> */}
+                                                className={"xl:!block hidden !pt-1 !pb-1"} />
                                         </div>
 
                                     </>
@@ -571,7 +565,6 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                 </NavLink>
                                 <LogOut
                                     dont_show_logout_icon
-                                    setUser={setUser}
                                     className={"block !w-fit sm:!hidden "} />
 
                             </>
