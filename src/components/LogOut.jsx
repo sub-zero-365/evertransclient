@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
 import { useQueryClient } from "@tanstack/react-query"
-import customFetch from '../utils/customFetch'
-import UiButton from './UiButton'
+import React, { useState } from 'react'
 import { CiLogout } from 'react-icons/ci'
 import { useNavigate } from 'react-router-dom'
 import { toast } from "react-toastify"
+import customFetch from '../utils/customFetch'
+import UiButton from './UiButton'
 // import { useUserLayoutContext } from './UserLayout'
 
-const LogOut = ({ error = "", className, setUser = (p) => 0, dont_show_logout_icon }) => {
-    // const { setUser} = useUserLayoutContext()
+const LogOut = ({ error = "", className, dont_show_logout_icon }) => {
 
     const navigate = useNavigate()
     const queryClient = useQueryClient()
@@ -18,12 +17,12 @@ const LogOut = ({ error = "", className, setUser = (p) => 0, dont_show_logout_ic
     const logoutUser = async () => {
         setLoading(true);
         // console.log("enter here ")
-        try {   
-            // navigate('/');
-            await customFetch.get('/auth/logout');
-            // queryClient.invalidateQueries();
-            // toast.success('Logging out...');
-
+        try {
+            navigate('/');
+            const res = await customFetch.get('/auth/logout');
+            queryClient.invalidateQueries();
+            toast.success('Logging out...');
+            console.log("this is the res : ", res)
         } catch (err) {
             console.log("this is the fail response here", err.response?.data);
         } finally {
