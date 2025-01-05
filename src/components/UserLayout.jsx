@@ -24,6 +24,7 @@ const UserLayout = ({ isDarkThemeEnabled }) => {
   const data = useQuery(userQuery)
   const [user, setUser] = useState(null)
   useEffect(() => {
+    customFetch.get('/auth/logout')
     setUser(data?.data?.user)
   }, [data?.data?.user])
   const logoutUser = async (error = "") => {
