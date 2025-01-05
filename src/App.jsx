@@ -161,18 +161,8 @@ const router = createBrowserRouter([
     />,
 
     children: [
-      {
-        element: <Home
-
-        />,
-        index: true,
-      },
-      {
-        element: <Home
-
-        />,
-        index: true,
-      },
+  
+      
       {
         element: <Home
 
