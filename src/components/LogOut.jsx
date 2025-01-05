@@ -18,7 +18,7 @@ const LogOut = ({ error = "", className, setUser = (p) => 0, dont_show_logout_ic
     const logoutUser = async () => {
         setLoading(true);
         // console.log("enter here ")
-        try {
+        try {   
             navigate('/');
             await customFetch.get('/auth/logout');
             queryClient.invalidateQueries();

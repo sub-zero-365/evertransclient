@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import { lazy, Suspense } from 'react';
 import {
   ToastContainer
@@ -116,7 +116,7 @@ const AddProductPage = lazy(() => import("./pages/AddProduct"));
 const SingleRecieptPage = lazy(() => import("./pages/SingleReciept"));
 const ProductPreviewPage = lazy(() => import("./pages/ProductPreviewPage"));
 const UserDetailsMail = lazy(() => import("./pages/UserDetailsMail"));
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 const setTheme = (theme) => {
   document.documentElement.className = ""
   document.documentElement.classList.add(theme)
