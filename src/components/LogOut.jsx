@@ -17,12 +17,16 @@ const LogOut = ({ error = "", className, setUser = (p) => 0, dont_show_logout_ic
 
     const logoutUser = async () => {
         setLoading(true);
-        console.log("enter here ")
+        // console.log("enter here ")
         try {
-            await customFetch.get('/auth/logout');  // logout request
-            setUser(null);
-            // navigate('/login');  // navigate after successful logout
-            await queryClient.removeQueries();
+            // await customFetch.get('/auth/logout');  // logout request
+            // setUser(null);
+            // // navigate('/login');  // navigate after successful logout
+            // await queryClient.removeQueries();
+            // toast.success('Logging out...');
+            navigate('/login');
+            await customFetch.get('/auth/logout');
+           await queryClient.invalidateQueries();
             toast.success('Logging out...');
             
         } catch (err) {
