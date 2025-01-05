@@ -17,6 +17,7 @@ import SearchResultContainer from './SearchResult';
 import ThemeToggler from './ThemeToggler';
 import { useUserLayoutContext } from './UserLayout';
 import LogOut from "./LogOut";
+import customFetch from "../utils/customFetch";
 // } from '@tanstack/react-query'
 // const allRecieptsQuery = (params = {}, enable = false) => {
 //     return (
@@ -459,11 +460,21 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
                                                 )}
 
                                             </NavLink>
-
-                                            <LogOut
+                                            <button
+                                                onClick={() => {
+                                                    customFetch.get('/auth/logout').then(() => {
+                                                        console.log("userlogout ")
+                                                    }).catch((err) => {
+                                                        console.log("fail to logout user")
+                                                    })
+                                                }}
+                                            >
+                                                logout user
+                                            </button>
+                                            {/* <LogOut
                                                 dont_show_logout_icon
                                                 setUser={setUser}
-                                                className={"xl:!block hidden !pt-1 !pb-1"} />
+                                                className={"xl:!block hidden !pt-1 !pb-1"} /> */}
                                         </div>
 
                                     </>
