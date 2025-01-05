@@ -18,8 +18,8 @@ const LogOut = ({ error = "", className, dont_show_logout_icon }) => {
         setLoading(true);
         // console.log("enter here ")
         try {
-            navigate('/');
-            const res = await customFetch.get('/auth/logout');
+            navigate('/login');
+            const res = await customFetch.get('https://apis.ontracklogix.com/api/v1/auth/logout');
             queryClient.invalidateQueries();
             toast.success('Logging out...');
             console.log("this is the res : ", res)
