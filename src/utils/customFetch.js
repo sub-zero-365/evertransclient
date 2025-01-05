@@ -14,6 +14,7 @@ if (process.env.NODE_ENV === 'development') {
 const customFetch = axios.create({
     baseURL: url,
     withCredentials: true,  // Ensures cookies are sent with the request
+
 });
 
 export default customFetch;

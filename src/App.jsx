@@ -117,7 +117,6 @@ const SingleRecieptPage = lazy(() => import("./pages/SingleReciept"));
 const ProductPreviewPage = lazy(() => import("./pages/ProductPreviewPage"));
 const UserDetailsMail = lazy(() => import("./pages/UserDetailsMail"));
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "https://evertrans.onrender.com"
 const setTheme = (theme) => {
   document.documentElement.className = ""
   document.documentElement.classList.add(theme)
