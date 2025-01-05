@@ -1,4 +1,4 @@
-// import axios from "axios";
+import axios from "axios";
 import { lazy, Suspense } from 'react';
 import {
   ToastContainer
@@ -89,7 +89,6 @@ const CheckOutInfo = lazy(() => import("./pages/CheckOutInfo"));
 const UserBoard = lazy(() => import("./pages/UserBoard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Login = lazy(() => import("./pages/Login"));
-const Register = lazy(() => import("./pages/Register"));
 const Booking = lazy(() => import("./pages/Booking"));
 const BusSits = lazy(() => import("./pages/BusSits"));
 const Cities = lazy(() => import("./pages/Cities"));
@@ -109,14 +108,14 @@ const AdminMailStat = lazy(() => import("./pages/AdminMailStat"));
 const Restaurant = lazy(() => import("./pages/Restaurant"));
 const NewBusPage = lazy(() => import("./pages/AddNewBusPage"));
 const ProductPage = lazy(() => import("./pages/Product"));
-const RestaurantUserPage = lazy(() => import("./pages/RestaurantUser"));
+// const RestaurantUserPage = lazy(() => import("./pages/RestaurantUser"));
 const ShoppingBagPage = lazy(() => import("./pages/ShoppingBag"));
 const CheckOutPage = lazy(() => import("./pages/CheckOut"));
 const AddProductPage = lazy(() => import("./pages/AddProduct"));
-const SingleRecieptPage = lazy(() => import("./pages/SingleReciept"));
+// const SingleRecieptPage = lazy(() => import("./pages/SingleReciept"));
 const ProductPreviewPage = lazy(() => import("./pages/ProductPreviewPage"));
 const UserDetailsMail = lazy(() => import("./pages/UserDetailsMail"));
-// axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
 const setTheme = (theme) => {
   document.documentElement.className = ""
   document.documentElement.classList.add(theme)

@@ -45,6 +45,7 @@ import customFetch from "../utils/customFetch";
 const SearchContext = createContext()
 const Navbar = ({ }) => {
     var redirectLink = userRole()
+    const {logoutUser}=useUserLayoutContext()
     const navRef = useRef(null)
     const { toggle: outside } = useOutsideAlerter(navRef)
     const [toggle, setToggle] = useState(false)
@@ -461,13 +462,7 @@ dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-
 
                                             </NavLink>
                                             <button
-                                                onClick={() => {
-                                                    customFetch.get('/auth/logout').then(() => {
-                                                        console.log("userlogout ")
-                                                    }).catch((err) => {
-                                                        console.log("fail to logout user")
-                                                    })
-                                                }}
+                                                onClick={()=>logoutUser()}
                                             >
                                                 logout user
                                             </button>
