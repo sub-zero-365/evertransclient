@@ -324,7 +324,7 @@ const SeatDetails = () => {
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
         downloadbaseurl = process.env.REACT_APP_LOCAL_URL
     } else {
-        downloadbaseurl = process.env.REACT_APP_PROD_URL
+        downloadbaseurl = "https://evertrans.onrender.com"
     }
 
     const [querySearch] = useSearchParams();

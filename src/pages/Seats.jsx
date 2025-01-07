@@ -62,7 +62,7 @@ const Seats = () => {
         // dev code
     } else {
         // production code
-        downloadbaseurl = process.env.REACT_APP_PROD_URL
+        downloadbaseurl = "https://evertrans.onrender.com"
 
     }
     const ref = useRef(null);
