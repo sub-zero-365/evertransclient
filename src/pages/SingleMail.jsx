@@ -128,7 +128,7 @@ const MailTemplate = ({ url }) => {
         // dev code
     } else {
         // production code
-        downloadbaseurl = process.env.REACT_APP_PROD_URL
+        downloadbaseurl = "https://evertrans.onrender.com"
 
     }
     return (<div className="">
@@ -539,7 +539,7 @@ id="GfGInput"
                         >
                             <a
                                 target="_blank"
-                                href={`${downloadbaseurl}/mails/download/${userMail?._id}`}>
+                                href={`${downloadbaseurl}/downloadmail/${userMail?._id}`}>
                                 DOWNLOAD
                             </a>
 
