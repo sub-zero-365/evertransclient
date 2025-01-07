@@ -144,7 +144,7 @@ const MailTemplate = ({ url }) => {
                         <QRCode
                             size={400}
                             style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                            value={`${downloadbaseurl}/downloadmail/${mail?._id}?sound=true&xyz=secret&readonly=7gu8dsutf8asdf&render_9368&beta47`}
+                            value={`${downloadbaseurl}/mails/download/${mail?._id}?sound=true&xyz=secret&readonly=7gu8dsutf8asdf&render_9368&beta47`}
                             viewBox={`0 0 256 256`}
                         />
                     </div>

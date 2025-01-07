@@ -12,7 +12,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     // dev code
 } else {
     // production code
-    downloadbaseurl = process.env.REACT_APP_PROD_URL
+    downloadbaseurl = "https://evertrans.onrender.com"
 
 }
 
@@ -71,7 +71,7 @@ const Mail = ({ id, _id, collected,
                 className="!block !mt-3"
             > <a
                 target="_blank"
-                href={`${downloadbaseurl}/mails/download/${_id}`}>
+                href={`${downloadbaseurl}/downloadmail/${_id}`}>
                     DOWNLOAD
                 </a></UiButton>
         </motion.div>
