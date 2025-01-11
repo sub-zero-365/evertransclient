@@ -490,15 +490,15 @@ const SingleMail = () => {
     const [userMail, setUserMail] = useState({})//create context for the customer ticket when the loader loads 
     // it will update the context of the mail ins
 
-    let downloadbaseurl = null
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-        downloadbaseurl = process.env.REACT_APP_LOCAL_URL
-        // dev code
-    } else {
-        // production code
-        downloadbaseurl = "https://evertrans.onrender.com"
+let downloadbaseurl = null
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    downloadbaseurl = process.env.REACT_APP_LOCAL_URL
+    // dev code
+} else {
+    // production code
+    downloadbaseurl = process.env.REACT_APP_PROD_URL
 
-    }
+}
     return (
         <UserTicketContext.Provider
             value={{ userMail, setUserMail }}
