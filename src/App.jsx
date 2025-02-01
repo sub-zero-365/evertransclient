@@ -60,11 +60,12 @@ import { action as editSingleMailAction, loader as singleMailLoader } from "./pa
 import { loader as singleTicketLOader } from "./pages/SingleTicket";
 import { loader as singleuserLoaderticket } from "./pages/UserDetailsTicket";
 import { action as usersAction, loader as usersLoader } from "./pages/Users";
-import {loader as singleUserMailQuery} from "./pages/UserDetailsMail"
+import { loader as singleUserMailQuery } from "./pages/UserDetailsMail"
 // import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import MailingForm from './components/MailingForm';
 import MailingPreview from './pages/MailingPreview';
 import Policy from './pages/Policy';
+import AnimatedText from "./components/AnimateText";
 const FallBack = () => (<div className="h-screen w-full
 bg-slate-300 dark:bg-slate-900 bg-opacity-75  flex items-center justify-center">    <div class="lds-roller">
     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -159,8 +160,8 @@ const router = createBrowserRouter([
     />,
 
     children: [
-  
-      
+
+
       {
         element: <Home
 
@@ -605,7 +606,7 @@ const router = createBrowserRouter([
           },
           {
             // index: true,
-            loader:singleUserMailQuery(queryClient),
+            loader: singleUserMailQuery(queryClient),
             path: "mailer",
             element: <Suspense>
               <UserDetailsMail />
@@ -753,13 +754,23 @@ const router = createBrowserRouter([
 )
 
 function App() {
+  const notPaid = true
   return (
     <>
       <QueryClientProvider client={queryClient} >
-        <RouterProvider
-          router={router}
-        />
-              {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        {
+          notPaid ?
+            <div className="h-screen flex items-center justify-center">
+              <AnimatedText
+                className="!text-5xl md:!text-6xl lg:leading-tight !font-poppins-- !font-bricolage
+                            lg:!text-left-- lg:!text-7xl !text-center  !text-rose-800 dark:!text-rose-800  !pt-6 !font-black"
+                text="SORRY PLATFORM CLOSE BECAUSE OF UNPAID FEES CONTACT NTARIBO TAKEM TO CONTACT WEBSITE MAINTAINER THANKS"
+              />
+            </div> : <RouterProvider
+              router={router}
+            />
+        }
+
       </QueryClientProvider>
       <ToastContainer />
     </>
