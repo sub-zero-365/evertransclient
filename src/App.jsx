@@ -754,7 +754,7 @@ const router = createBrowserRouter([
 )
 
 function App() {
-  const notPaid = true
+  const notPaid = false
   return (
     <>
       <QueryClientProvider client={queryClient} >
